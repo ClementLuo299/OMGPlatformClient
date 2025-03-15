@@ -1,55 +1,59 @@
 package gameLogicTests;
+import core.gamelogic.PieceType;
 import core.gamelogic.Pieces.*;
 import org.junit.*;
-import org.junit.jupiter.api.BeforeEach;
+
 
 import java.io.*;
 import java.util.*;
 
 
 public class ShufflingTests {
-    private List<Card> cards;
+    private CardPile cardPile;
+    private ArrayList<Card> cards;
     @Before
     public void setUp() {
         cards = new ArrayList<>();
-        for (int i = 1; i <= 13; i++) {
-            cards.add(new Card(SuitType.CLUBS, i, true));
+        for (int i = 1; i <=13; i++) {
+            cards.add(new Card(PieceType.CARD, false, SuitType.CLUBS, i, true));
         }
-        for (int i = 1; i <= 13; i++) {
-            cards.add(new Card(SuitType.DIAMONDS, i, true));
+        for (int i = 1; i <=13; i++) {
+            cards.add(new Card(PieceType.CARD, false, SuitType.DIAMONDS, i, true));
         }
-        for (int i = 1; i <= 13; i++) {
-            cards.add(new Card(SuitType.SPADES, i, true));
+        for (int i = 1; i <=13; i++) {
+            cards.add(new Card(PieceType.CARD, false, SuitType.SPADES, i, true));
         }
-        for (int i = 1; i <= 13; i++) {
-            cards.add(new Card(SuitType.HEARTS, i, true));
+        for (int i = 1; i <=13; i++) {
+            cards.add(new Card(PieceType.CARD, false, SuitType.HEARTS, i, true));
         }
+        cardPile = new CardPile(cards);
     }
 
     @Test
     public void testRiffleShuffle() {
-        System.out.println("Original deck: " + CardPile.toString(cards));
+        System.out.println("Original deck: " + cardPile.toString());
         int i = 0;
         while (i < 10) {
-            cards = CardPile.riffleShuffle(cards);
-            System.out.println("Current deck: " + CardPile.toString(cards));
+            cardPile.riffleShuffle();
+            System.out.println("Current deck: " + cardPile.toString());
             i++;
         }
 
-        System.out.println("Riffle shuffle deck: " + CardPile.toString(cards));
+        System.out.println("Riffle shuffle deck: " + cardPile.toString() + "\n");
     }
 
     @Test
     public void testScrambleShuffle() {
-        System.out.println("Original deck: " + CardPile.toString(cards));
-        cards = CardPile.scrambleShuffle(cards);
-        System.out.println("Scramble shuffle deck: " + CardPile.toString(cards));
+        System.out.println("Original deck: " + cardPile.toString());
+        cardPile.scrambleShuffle();
+        System.out.println("Scramble shuffle deck: " + cardPile.toString() + "\n");
     }
 
     @Test
     public void testCut() {
-        System.out.println("Original deck: " + CardPile.toString(cards));
-        cards = CardPile.cut(cards);
-        System.out.println("Cut deck: " + CardPile.toString(cards));
+        System.out.println("Original deck: " + cardPile.toString());
+        cardPile.cut();
+        System.out.println("Cut deck: " + cardPile.toString() + "\n");
     }
+
 }

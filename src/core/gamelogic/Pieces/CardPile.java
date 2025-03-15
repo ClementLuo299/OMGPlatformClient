@@ -125,11 +125,11 @@ public class CardPile {
      *
      * @return The newly shuffled Card List
      */
-    public List<Card> riffleShuffle() {
+    public void riffleShuffle() {
         // The List which will store the shuffle result
         List<Card> shuffledCards = new ArrayList<>();
         // The size of half the Card Pile
-        int deckHalf = (int) (this.cards.size() / 2);
+        int deckHalf = (int) (cards.size() / 2);
 
         // The Lists for storing each half of the Card Pile after splitting it
         List<Card> topHalf = new ArrayList<>();
@@ -138,14 +138,14 @@ public class CardPile {
         // Loops through the Card List, first from the start to the midpoint, then from the midpoint to the end
         // Each half is placed into separate Lists
         for (int i = 0; i < deckHalf; i++) {
-            topHalf.add(this.cards.get(i));
+            topHalf.add(cards.get(i));
         }
-        for (int i = deckHalf; i < this.cards.size(); i++) {
-            bottomHalf.add(this.cards.get(i));
+        for (int i = deckHalf; i < cards.size(); i++) {
+            bottomHalf.add(cards.get(i));
         }
 
         // Performs the Riffle Shuffle on the Card Pile until all the Cards are in the Shuffled Cards List
-        while (shuffledCards.size() < this.cards.size()) {
+        while (shuffledCards.size() < cards.size()) {
             // Randomly generates a number to determine which half of the Cards goes first
             int randomNum = randomNum(2);
 
@@ -169,9 +169,7 @@ public class CardPile {
                 topHalf.removeLast();
             }
         }
-
-        // Returns the resulting list of shuffled Cards
-        return shuffledCards;
+        this.cards = shuffledCards;
     }
 
     /**
@@ -180,7 +178,7 @@ public class CardPile {
      *
      * @return The newly shuffled Card List
      */
-    public List<Card> scrambleShuffle() {
+    public void scrambleShuffle() {
         List<Card> shuffledCards = new ArrayList<>(); //create list for shuffled cards
         int deckSize = this.cards.size(); //int stored for purpose of loop parameter
 
@@ -189,8 +187,7 @@ public class CardPile {
             shuffledCards.add(this.cards.get(randomNum)); //add random card to shuffled list
             this.cards.remove(randomNum); //remove the card from the original list to avoid duplicates
         }
-
-        return shuffledCards; //return shuffled deck
+        this.cards = shuffledCards;
     }
 
     /**
@@ -199,7 +196,7 @@ public class CardPile {
      *
      * @return The newly cut Card List
      */
-    public List<Card> cut () {
+    public void cut() {
         List<Card> cutDeck = new ArrayList<>(); //list that will be returned at the end
         int randomNum = randomNum(this.cards.size()); //will find a spot in the deck to cut
 
@@ -210,9 +207,7 @@ public class CardPile {
         for (int i = 0; i < randomNum; i++) { //top part
             cutDeck.add(this.cards.get(i));
         }
-
-        //return cut deck
-        return cutDeck;
+        this.cards = cutDeck;
     }
 
     /**
@@ -223,7 +218,7 @@ public class CardPile {
      *
      * @Return shuffled card list
      */
-    public static List<Card> overheadShuffle(List<Card> cards) {
+    public void overheadShuffle(List<Card> cards) {
         List<Card> shuffledCards = new ArrayList<>(); //list for shuffled deck
         int overheadRepetition = randomNum(10+1); //will allow for up to 10 repetitions of the overhead shuffle
         for (int i = 0; i < overheadRepetition; i++) {
@@ -242,7 +237,8 @@ public class CardPile {
      *
      * @return The String of the ordered Card List
      */
-    public static String toString(List<Card> cards) {
+    @Override
+    public String toString() {
         // Initialized String to return
         StringBuilder cardList = new StringBuilder("[");
 
