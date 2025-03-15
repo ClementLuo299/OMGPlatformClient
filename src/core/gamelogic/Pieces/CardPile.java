@@ -215,6 +215,25 @@ public class CardPile {
         return cutDeck;
     }
 
+    /**
+     * Overhead shuffle algorithm
+     * Simulates when the deck is cut and cards are dispersed randomly throughout the deck
+     *
+     * @Param card list
+     *
+     * @Return shuffled card list
+     */
+    public static List<Card> overheadShuffle(List<Card> cards) {
+        List<Card> shuffledCards = new ArrayList<>(); //list for shuffled deck
+        int overheadRepetition = randomNum(10+1); //will allow for up to 10 repetitions of the overhead shuffle
+        for (int i = 0; i < overheadRepetition; i++) {
+            int randomCut = randomNum(cards.size()); //cuts the deck at a random point
+            List<Card> topCards = cards.subList(0, randomCut);
+            List<Card> bottomCards = cards.subList(randomCut, cards.size());
+
+        }
+    }
+
 
     /**
      * Creates a String which represents a given Card Pile
