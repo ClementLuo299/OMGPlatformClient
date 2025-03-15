@@ -6,3 +6,11 @@ Features  Proposals that I think we can consider for team Echo
 5.	In-Game Currency & Cosmetic Customization
 6.	Friend & Clan System with Private Matches
 7.	Auto-Generated Daily/Weekly Challenges
+
+
+Feature proposals for team Bravo
+1. Offline games/ AI opponent - players can use the platform without internet
+2. Record games and allow users to review them
+3. Add chess variants
+4. Allow players to block others from joining their games, chatting with them, or interacting with them in any other way.
+5. Create a database of blocked words and not allow players to use those words in their name or in chat
