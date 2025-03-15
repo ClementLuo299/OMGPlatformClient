@@ -1,4 +1,5 @@
 package gameLogicTests;
+import core.gamelogic.PieceType;
 import core.gamelogic.Pieces.*;
 import org.junit.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,14 +22,14 @@ public class CardTests {
     @Test
     public void testCreation() {
         // Instantiates the Cards to test
-        Card testAce = new Card(CARD, true, DIAMONDS, 1, false);
-        Card testKing = new Card(CARD, true, SPADES, 13, false);
-        Card testQueen = new Card(CARD, true, HEARTS, 12, false);
-        Card testJack = new Card(CARD, true, CLUBS, 11, false);
-        Card testTen = new Card(CARD, true, DIAMONDS, 10, false);
-        Card testEight = new Card(CARD, true, SPADES, 8, false);
-        Card testFive = new Card(CARD, true, HEARTS, 5, false);
-        Card testTwo = new Card(CARD, true, CLUBS, 2, false);
+        Card testAce = new Card(PieceType.CARD, true, SuitType.DIAMONDS, 1, false);
+        Card testKing = new Card(PieceType.CARD, true, SuitType.SPADES, 13, false);
+        Card testQueen = new Card(PieceType.CARD, true, SuitType.HEARTS, 12, false);
+        Card testJack = new Card(PieceType.CARD, true, SuitType.CLUBS, 11, false);
+        Card testTen = new Card(PieceType.CARD, true, SuitType.DIAMONDS, 10, false);
+        Card testEight = new Card(PieceType.CARD, true, SuitType.SPADES, 8, false);
+        Card testFive = new Card(PieceType.CARD, true, SuitType.HEARTS, 5, false);
+        Card testTwo = new Card(PieceType.CARD, true, SuitType.CLUBS, 2, false);
 
         // Prints the Cards
         System.out.println(testAce.toString());
