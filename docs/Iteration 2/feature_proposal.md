@@ -14,3 +14,7 @@ Feature proposals for team Bravo
 3. Add chess variants
 4. Allow players to block others from joining their games, chatting with them, or interacting with them in any other way.
 5. Create a database of blocked words and not allow players to use those words in their name or in chat
+6. Allow players to save their games and continue playing another time
+7. Spectate games
+8. Allow players to report one another
+9. Add scenarios (e.g. connect 4 with tokens already placed, chess puzzles)
