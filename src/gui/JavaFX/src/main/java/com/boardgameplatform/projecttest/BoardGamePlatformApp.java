@@ -13,10 +13,10 @@ public class BoardGamePlatformApp extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/boardgameplatform/projecttest/Login.fxml"));
         AnchorPane root = loader.load();
 
-        Scene scene = new Scene(root, 1280, 720); // Adjust size as needed
+        Scene scene = new Scene(root, 1280, 730); // Adjust size as needed
         scene.getStylesheets().add(getClass().getResource("/com/boardgameplatform/projecttest/login.css").toExternalForm());
 
-        primaryStage.setTitle("Login");
+        primaryStage.setTitle("OMG Platform");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();

@@ -72,7 +72,7 @@ public class LoginController {
             Stage stage = (Stage) createAccountButton.getScene().getWindow();
 
             // Set the new scene to the stage (this will display the Register screen)
-            stage.setTitle("Board Game Registration");
+            stage.setTitle("OMG Platform");
             stage.setScene(registerScene);
 
         } catch (Exception e) {
