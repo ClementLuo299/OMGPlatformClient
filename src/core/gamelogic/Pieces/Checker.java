@@ -51,7 +51,7 @@ public class Checker extends GamePiece {
      * @return The Colour to be retrieved
      */
     public Colour getColour() {
-        return this.colour;
+        return colour;
     }
 
     /**
@@ -60,7 +60,7 @@ public class Checker extends GamePiece {
      * @return The integer Y Coordinate to be retrieved
      */
     public int getYPosition() {
-        return this.yPosition;
+        return yPosition;
     }
 
     /**
@@ -69,7 +69,7 @@ public class Checker extends GamePiece {
      * @return The integer X Coordinate to be retrieved
      */
     public int getXPosition() {
-        return this.xPosition;
+        return xPosition;
     }
 
     /**
@@ -78,7 +78,7 @@ public class Checker extends GamePiece {
      * @return The boolean Stack status to be retrieved
      */
     public boolean isStacked() {
-        return this.stacked;
+        return stacked;
     }
 
 

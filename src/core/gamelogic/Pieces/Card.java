@@ -45,7 +45,7 @@ public class Card extends GamePiece {
      * @return The Suit Type to be retrieved
      */
     public SuitType getSuit() {
-        return this.suit;
+        return suit;
     }
 
     /**
@@ -73,7 +73,7 @@ public class Card extends GamePiece {
      * Flips this Card to change its Face visibility
      */
     protected void flip() {
-        faceDown = !faceDown;
+        this.faceDown = !faceDown;
     }
 
     /**
