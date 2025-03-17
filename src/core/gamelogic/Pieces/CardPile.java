@@ -108,6 +108,17 @@ public class CardPile {
         this.cards = newCards;
     }
 
+    /**
+     * Get size of deck
+     *
+     * @Param none
+     *
+     * @Return size of deck
+     */
+    public int getSize() {
+        return cards.size();
+    }
+
 
     // METHODS
 
@@ -245,15 +256,39 @@ public class CardPile {
      *
      * @Return shuffled card list
      */
-    public void overheadShuffle(List<Card> cards) {
+    public void overheadShuffle() {
         List<Card> shuffledCards = new ArrayList<>(); //list for shuffled deck
         int overheadRepetition = randomNum(10+1); //will allow for up to 10 repetitions of the overhead shuffle
         for (int i = 0; i < overheadRepetition; i++) {
-            int randomCut = randomNum(cards.size()); //cuts the deck at a random point
-            List<Card> topCards = cards.subList(0, randomCut);
-            List<Card> bottomCards = cards.subList(randomCut, cards.size());
+            int randomCut = randomNum(cards.size()); //cuts the deck at a random point while avoiding cutting at 0
+            while (randomCut == 0) {
+                randomCut = randomNum(cards.size());
+            }
+            List<Card> topCards = new ArrayList<>(cards.subList(0, randomCut));
+            List<Card> bottomCards = new ArrayList<>(cards.subList(randomCut, cards.size()));
 
+            for (int j = 0; j < randomCut; j++) {
+                int randomNum = randomNum(2); //chooses whether to add top or bottom deck card
+                //check if decks are empty so that if one is empty just add from the other
+                if (topCards.isEmpty()) {
+                    shuffledCards.add(bottomCards.get(0));
+                    bottomCards.remove(0);
+                } else if (bottomCards.isEmpty()) {
+                    shuffledCards.add(topCards.get(0));
+                    topCards.remove(0);
+                } else { //proceed to random placement for top or bottom
+                    if (randomNum == 1) { //add from top deck and remove top element of the deck
+                        shuffledCards.add(topCards.get(0));
+                        topCards.remove(0);
+                    } else if (randomNum == 0) { //add from bottom deck and remove top element of the deck
+                        shuffledCards.add(bottomCards.get(0));
+                        bottomCards.remove(0);
+                    }
+                }
+
+            }
         }
+        this.cards = shuffledCards;
     }
 
 

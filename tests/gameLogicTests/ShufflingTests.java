@@ -2,6 +2,8 @@ package gameLogicTests;
 import core.gamelogic.PieceType;
 import core.gamelogic.Pieces.*;
 import org.junit.*;
+import static org.junit.Assert.*;
+
 
 
 import java.io.*;
@@ -40,6 +42,7 @@ public class ShufflingTests {
         }
 
         System.out.println("Riffle shuffle deck: " + cardPile.toString() + "\n");
+        assertEquals(52, cardPile.getSize());
     }
 
     @Test
@@ -47,6 +50,8 @@ public class ShufflingTests {
         System.out.println("Original deck: " + cardPile.toString());
         cardPile.scrambleShuffle();
         System.out.println("Scramble shuffle deck: " + cardPile.toString() + "\n");
+
+        assertEquals(52, cardPile.getSize());
     }
 
     @Test
@@ -54,6 +59,16 @@ public class ShufflingTests {
         System.out.println("Original deck: " + cardPile.toString());
         cardPile.cut();
         System.out.println("Cut deck: " + cardPile.toString() + "\n");
+
+        assertEquals(52, cardPile.getSize());
+    }
+
+    @Test
+    public void testOverheadShuffle() {
+        System.out.println("Original deck: " + cardPile.toString());
+        cardPile.overheadShuffle();
+        System.out.println("Overhead Shuffle deck: " + cardPile.toString() + "\n");
+        assertEquals(52, cardPile.getSize());
     }
 
 }
