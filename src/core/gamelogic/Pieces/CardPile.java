@@ -267,25 +267,25 @@ public class CardPile {
             List<Card> topCards = new ArrayList<>(cards.subList(0, randomCut));
             List<Card> bottomCards = new ArrayList<>(cards.subList(randomCut, cards.size()));
 
-            for (int j = 0; j < randomCut; j++) {
+            while (!topCards.isEmpty() || !bottomCards.isEmpty()) {
                 int randomNum = randomNum(2); //chooses whether to add top or bottom deck card
-                //check if decks are empty so that if one is empty just add from the other
-                if (topCards.isEmpty()) {
-                    shuffledCards.add(bottomCards.get(0));
-                    bottomCards.remove(0);
-                } else if (bottomCards.isEmpty()) {
-                    shuffledCards.add(topCards.get(0));
-                    topCards.remove(0);
-                } else { //proceed to random placement for top or bottom
-                    if (randomNum == 1) { //add from top deck and remove top element of the deck
-                        shuffledCards.add(topCards.get(0));
-                        topCards.remove(0);
-                    } else if (randomNum == 0) { //add from bottom deck and remove top element of the deck
-                        shuffledCards.add(bottomCards.get(0));
-                        bottomCards.remove(0);
+                if (randomNum == 0) { //add from top deck
+                    if (topCards.isEmpty()) { //checks to make sure that there is still cards in the deck and just adds from other deck if not
+                        shuffledCards.add(bottomCards.remove(0)); //pop the top card
+                    } else { //if both decks still have cards add from top
+                        shuffledCards.add(topCards.remove(0)); //pop top card into shuffled deck
+                    }
+                } else if (randomNum == 1) {
+                    if (bottomCards.isEmpty()) { //makes sure bottom deck has cards and add from top if not
+                        shuffledCards.add(topCards.remove(0)); //pop from top deck
+                    } else {
+                        shuffledCards.add(bottomCards.remove(0)); //pop from bottom deck
                     }
                 }
-
+            }
+            this.cards = shuffledCards; //resets the main deck to the new shuffled deck for next iteration
+            if (i != overheadRepetition - 1) { //reset shuffledCards if it is not the last iteration
+                shuffledCards = new ArrayList<>();
             }
         }
         this.cards = shuffledCards;
