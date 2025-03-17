@@ -1,3 +1,5 @@
+package core.gamelogic;
+
 public interface IGame {
 
     public Player getWinner();

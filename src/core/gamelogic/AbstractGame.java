@@ -1,3 +1,5 @@
+package core.gamelogic;
+
 public abstract class AbstractGame implements IGame{
 
     // all game boards will be stored as a String

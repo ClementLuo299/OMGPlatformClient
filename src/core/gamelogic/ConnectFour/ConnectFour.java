@@ -1,6 +1,8 @@
+package core.gamelogic.ConnectFour;
 
+import core.gamelogic.*;
 
-public class ConnectFour extends AbstractGame{
+public class ConnectFour extends AbstractGame {
 
     private static final int ROWS = 6;
     private static final int COLS = 7;
@@ -149,3 +151,4 @@ public class ConnectFour extends AbstractGame{
         return true;
     }
 }
+
