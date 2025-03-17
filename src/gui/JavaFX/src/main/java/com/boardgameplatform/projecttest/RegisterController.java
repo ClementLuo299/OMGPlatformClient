@@ -76,9 +76,9 @@ public class RegisterController {
     private void backToLogin(ActionEvent event) {
         try {
             // Load the login FXML
-            Parent loginView = FXMLLoader.load(getClass().getResource("/Login.fxml"));
+            Parent loginView = FXMLLoader.load(getClass().getResource("/com/boardgameplatform/projecttest/Login.fxml"));
             Scene loginScene = new Scene(loginView);
-            loginScene.getStylesheets().add(getClass().getResource("/login.css").toExternalForm());
+            loginScene.getStylesheets().add(getClass().getResource("/com/boardgameplatform/projecttest/login.css").toExternalForm());
 
             // Get the stage
             Stage stage = (Stage) loginButton.getScene().getWindow();
