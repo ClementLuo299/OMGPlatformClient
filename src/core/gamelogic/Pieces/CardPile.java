@@ -259,6 +259,9 @@ public class CardPile {
     public void overheadShuffle() {
         List<Card> shuffledCards = new ArrayList<>(); //list for shuffled deck
         int overheadRepetition = randomNum(10+1); //will allow for up to 10 repetitions of the overhead shuffle
+        while (overheadRepetition == 0) { //ensures the number cannot be 0
+            overheadRepetition = randomNum(10+1);
+        }
         for (int i = 0; i < overheadRepetition; i++) {
             int randomCut = randomNum(cards.size()); //cuts the deck at a random point while avoiding cutting at 0
             while (randomCut == 0) {
