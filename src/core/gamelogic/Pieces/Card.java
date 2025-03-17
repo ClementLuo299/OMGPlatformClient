@@ -86,21 +86,21 @@ public class Card extends GamePiece {
         String cardTitle;
 
         // Checks the Rank of the Card to appropriately title it
-        switch (this.rank) {
+        switch (rank) {
             case 1:
-                cardTitle = "Ace of " + this.suit.getDisplayName();
+                cardTitle = "Ace of " + suit.getDisplayName();
                 break;
             case 13:
-                cardTitle = "King of " + this.suit.getDisplayName();
+                cardTitle = "King of " + suit.getDisplayName();
                 break;
             case 12:
-                cardTitle = "Queen of " + this.suit.getDisplayName();
+                cardTitle = "Queen of " + suit.getDisplayName();
                 break;
             case 11:
-                cardTitle = "Jack of " + this.suit.getDisplayName();
+                cardTitle = "Jack of " + suit.getDisplayName();
                 break;
             default:
-                cardTitle = this.rank + " of " + this.suit.getDisplayName();
+                cardTitle = rank + " of " + suit.getDisplayName();
                 break;
 
         }

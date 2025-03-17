@@ -11,7 +11,7 @@ import java.util.*;
 /**
  * Tests the functionality of Cards
  *
- * @authors Dylan Shiels
+ * @authors Dylan Shiels, Sameer Askar
  * @date March 14, 2025
  */
 public class CardTests {
