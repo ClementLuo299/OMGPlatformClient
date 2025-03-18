@@ -54,6 +54,7 @@ public class LoginController {
 
         if (database.validateAccountPassword(username, password)) {
             System.out.println("Login successful!");
+            switchToDashboard(event);
         } else {
             System.out.println("Invalid credentials");
         }
@@ -86,4 +87,35 @@ public class LoginController {
         // Implement forgot password functionality
         System.out.println("Forgot password link clicked");
     }
+
+    private void switchToDashboard(ActionEvent event) {
+        try {
+            // Load Dashboard.fxml
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/boardgameplatform/projecttest/Dashboard.fxml"));
+            Parent dashboardView = loader.load();
+
+            // Pass user data to DashboardController
+            DashboardController dashboardController = loader.getController();
+
+
+            // Set up the new scene
+            Scene dashboardScene = new Scene(dashboardView);
+            dashboardScene.getStylesheets().add(getClass().getResource("/com/boardgameplatform/projecttest/dashboard.css").toExternalForm());
+
+            // Get the current stage
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+
+            // Switch to the Dashboard scene
+            stage.setTitle("OMG Platform - Dashboard");
+            stage.setScene(dashboardScene);
+            stage.show();
+
+            System.out.println("Switched to Dashboard screen!");
+
+        } catch (Exception e) {
+            System.out.println("Error loading Dashboard: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }
