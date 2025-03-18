@@ -1,5 +1,7 @@
 package com.boardgameplatform.projecttest;
 
+import core.networking.DatabaseStub;
+import core.networking.accounts.UserAccountRegistration;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,10 +18,10 @@ import java.time.LocalDate;
 public class RegisterController {
 
     @FXML
-    private TextField nameField;
+    private TextField fullNameField;
 
     @FXML
-    private TextField emailField;
+    private TextField usernameField;
 
     @FXML
     private PasswordField passwordField;
@@ -36,6 +38,9 @@ public class RegisterController {
     @FXML
     private Button loginButton;
 
+    private static final DatabaseStub database = new DatabaseStub();
+    private final UserAccountRegistration registration = new UserAccountRegistration(database);
+
     @FXML
     public void initialize() {
         // Initialize your components here if needed
@@ -46,14 +51,14 @@ public class RegisterController {
     }
 
     private void handleRegistration(ActionEvent event) {
-        String name = nameField.getText();
-        String email = emailField.getText();
+        String fullName = fullNameField.getText();
+        String username = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
         LocalDate dob = dobPicker.getValue();
 
         // Simple validation
-        if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || dob == null) {
+        if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || dob == null) {
             System.out.println("Please fill all fields");
             return;
         }
@@ -63,11 +68,12 @@ public class RegisterController {
             return;
         }
 
-        // In a real app, save to database here
-        System.out.println("Registration successful!");
-        System.out.println("Name: " + name);
-        System.out.println("Email: " + email);
-        System.out.println("Date of Birth: " + dob);
+        boolean success = registration.registerUser(fullName, username, password, confirmPassword, dob.toString());
+        if (success) {
+            System.out.println("Account created successfully!");
+        } else {
+            System.out.println("Registration failed.");
+        }
 
         // Navigate back to login screen after successful registration
         backToLogin(event);

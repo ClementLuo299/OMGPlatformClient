@@ -11,6 +11,7 @@ module com.boardgameplatform.projecttest {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires javafx.swt;
+    requires core;
 
 
     opens com.boardgameplatform.projecttest to javafx.fxml;

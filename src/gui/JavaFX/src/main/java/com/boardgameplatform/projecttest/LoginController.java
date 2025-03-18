@@ -1,5 +1,6 @@
 package com.boardgameplatform.projecttest;
 
+import core.networking.DatabaseStub;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,7 +12,7 @@ import javafx.stage.Stage;
 public class LoginController {
 
     @FXML
-    private TextField emailField;
+    private TextField usernameField;
 
     @FXML
     private PasswordField passwordField;
@@ -28,6 +29,8 @@ public class LoginController {
     @FXML
     private Button createAccountButton;
 
+    private static final DatabaseStub database = new DatabaseStub();
+
     @FXML
     public void initialize() {
         // Initialize your components here if needed
@@ -39,20 +42,18 @@ public class LoginController {
     }
 
     private void handleLogin(ActionEvent event) {
-        String email = emailField.getText();
+        String username = usernameField.getText();
         String password = passwordField.getText();
 
         // Simple validation
-        if (email.isEmpty() || password.isEmpty()) {
+        if (username.isEmpty() || password.isEmpty()) {
             // Show an error message
             System.out.println("Please enter both email and password");
             return;
         }
 
-        // For testing - in a real app, check against a database
-        if (email.equals("admin@example.com") && password.equals("password")) {
+        if (database.validateAccountPassword(username, password)) {
             System.out.println("Login successful!");
-            // Here you would navigate to the main game screen
         } else {
             System.out.println("Invalid credentials");
         }

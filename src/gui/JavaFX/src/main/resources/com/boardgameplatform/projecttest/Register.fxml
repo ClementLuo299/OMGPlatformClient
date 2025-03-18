@@ -19,11 +19,11 @@
 
         <!-- Full Name -->
         <Label prefHeight="20.0" prefWidth="334.0" styleClass="input-label" text="Full Name" />
-        <TextField fx:id="nameField" promptText="Enter your full name" styleClass="input-field" />
+        <TextField fx:id="fullNameField" promptText="Enter your full name" styleClass="input-field" />
 
         <!-- Email -->
         <Label prefHeight="20.0" prefWidth="343.0" styleClass="input-label" text="Email" />
-        <TextField fx:id="emailField" promptText="Enter your email" styleClass="input-field" />
+        <TextField fx:id="usernameField" promptText="Enter your email" styleClass="input-field" />
 
         <!-- Password -->
         <Label prefHeight="20.0" prefWidth="344.0" styleClass="input-label" text="Password" />
