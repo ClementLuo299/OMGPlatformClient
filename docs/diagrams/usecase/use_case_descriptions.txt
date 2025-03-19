@@ -2,36 +2,6 @@ USE CASE DIAGRAM - Leveling
 
 USE CASE DIAGRAM - Matchmaking
 
-USE CASE DIAGRAM - Statistics
-Account Deletion with Data Anonymization
-Iteration: 2, modified March 19
-Primary Actor: User
-Goal in Context: Allow users to permanently delete their account while anonymizing their data.
-Preconditions:
-
-The user is logged in and has an active account.
-Trigger:
-
-The user initiates account deletion.
-Scenario:
-
-The user navigates to account settings.
-The system displays a warning message about data deletion.
-The user confirms the deletion request.
-The system removes personal data but anonymizes leaderboard and match history instead of fully deleting them.
-The user is logged out and cannot access the account again.
-Exceptions:
-
-If the deletion request fails, the system informs the user and suggests retrying later.
-Priority: Medium-High
-When Available: Second increment
-Frequency of Use: Rare
-Channel to Actor: Via device
-Secondary Actors: Database system
-Channels to Secondary Actors: Game Platform
-
-
-
 Use Case Descriptions: Levelling
 Award Points for Win
 Iteration: 2, modified March 6
@@ -1507,5 +1477,35 @@ Secondary Actors: The database (to update session status).
 Channel to Secondary Actors: The system interacts with the database via queries.
 Open Issues:
 1. Should there be an option to stay logged in?
+USE CASE DIAGRAM - Statistics
+Account Deletion with Data Anonymization
+Iteration: 2, modified March 19
+Primary Actor: User
+Goal in Context: Allow users to permanently delete their account while anonymizing their data.
+Preconditions:
+
+The user is logged in and has an active account.
+Trigger:
+
+The user initiates account deletion.
+Scenario:
+
+The user navigates to account settings.
+The system displays a warning message about data deletion.
+The user confirms the deletion request.
+The system removes personal data but anonymizes leaderboard and match history instead of fully deleting them.
+The user is logged out and cannot access the account again.
+Exceptions:
+
+If the deletion request fails, the system informs the user and suggests retrying later.
+Priority: Medium-High
+When Available: Second increment
+Frequency of Use: Rare
+Channel to Actor: Via device
+Secondary Actors: Database system
+Channels to Secondary Actors: Game Platform
+
+
+
 
 
