@@ -20,3 +20,4 @@ Feature proposals for team Bravo
 7. Spectate games
 8. Allow players to report one another
 9. Add scenarios (e.g. connect 4 with tokens already placed, chess puzzles)
+10.Cached Last Played Game - Store the last played game in memory to allow instant resume instead of reloading from a file.
