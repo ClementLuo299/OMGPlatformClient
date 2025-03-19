@@ -6,6 +6,8 @@ Features  Proposals that I think we can consider for team Echo
 5.	In-Game Currency & Cosmetic Customization
 6.	Friend & Clan System with Private Matches
 7.	Auto-Generated Daily/Weekly Challenges
+8.  	Undo Move (Limited Use Per Game) - Players can undo their last move once per game in single-player mode.
+9.	Auto-Save & Resume Game - If a game crashes, it saves progress and allows players to resume later
 
 
 Feature proposals for team Bravo
