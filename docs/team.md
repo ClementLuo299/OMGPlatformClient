@@ -14,8 +14,8 @@
 | Jason Bakajika      | 30208299 |
 | Matin Rezaei        | 30188989 |
 | Melissa Aoko        | 30230823 |
+| Rion Mukai          | 30230326 |
 | Sameer Askar        | 30208216 |
 | Scott Brown         | 30193949 |
 | Susmita Chakrabarty | 30215210 |
 | Zaman Dogar         | 30222423 |
-| Rion Mukai          | 30230326 |
