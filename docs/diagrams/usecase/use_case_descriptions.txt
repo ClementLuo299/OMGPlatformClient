@@ -1337,6 +1337,32 @@ Channel to Secondary Actors: The system interacts with the game server via netwo
 Open Issues:
 1. Should private messages or voice chat be implemented in future iterations?
 2. Should there be filters for inappropriate or offensive words and terms?
+Reporting and Moderating Chat Messages
+Iteration: 2, modified March 19
+Primary Actor: User
+Goal in Context: Allow players to report inappropriate behavior in chat.
+Preconditions:
+
+The chat feature is active.
+Trigger:
+
+A player encounters inappropriate or offensive messages.
+Scenario:
+
+The player selects a message in chat.
+The system provides an option to report the message.
+The report is sent to a moderation system for review.
+If the report is valid, the offending player may receive a warning, temporary mute, or chat ban.
+Exceptions:
+
+If the report system is down, the user is notified and asked to report via a support ticket.
+Priority: High
+When Available: Second increment
+Frequency of Use: Occasional
+Channel to Actor: Via device
+Secondary Actors: Moderators
+Channels to Secondary Actors: Game Platform
+
 
 Use Case: Quit Game
 Iteration: 1
@@ -1477,6 +1503,7 @@ Secondary Actors: The database (to update session status).
 Channel to Secondary Actors: The system interacts with the database via queries.
 Open Issues:
 1. Should there be an option to stay logged in?
+
 USE CASE DIAGRAM - Statistics
 Account Deletion with Data Anonymization
 Iteration: 2, modified March 19
