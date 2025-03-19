@@ -1,0 +1,7 @@
+I. Introduction
+This document outlines the potential risks associated with the development of an Online Multiplayer Board Game Platform. It is based on a review of project planning documents submitted by various development sub-teams on team Bravo. Effective risk management is crucial for the successful completion of this project. This assessment identifies key risk areas, analyzes their potential impact and probability, and proposes mitigation strategies.
+
+II. Risks Identified.
+Below are all the several risks that were identified on team Bravo.
+    - Timeline Risks
+        - Several teams have timelines that are too aggressive or fail to account for potential delays. The GUI team, for example, plans to implement core GUI components with stubs in just one week (Week 3) could be challenging given the team has merely 5 people each with two roles.
