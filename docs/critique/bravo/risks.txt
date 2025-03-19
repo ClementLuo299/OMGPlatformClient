@@ -19,6 +19,10 @@ Technical Risks:
 The Initial Draft Documentation mentions potential performance bottlenecks in the networking module when handling a large number of concurrent users.
 There is a risk of security vulnerabilities in the networking module that require continuous updates to address.
 
+User Experience Risks
+The GUI team lacks a structured usability plan, which may result in a non-intuitive user interface.
+There is no clear feedback mechanism for players when actions fail (e.g., failed move submission, unsuccessful login).
+
 III. Mitigation Strategies
 Improved Planning and Communication:
 Teams should incorporate buffer time into their timelines to account for potential delays.
@@ -34,7 +38,6 @@ The Game Logic and Mechanics Team should ensure that multiplayer matches sync pr
 The Networking Team should simulate network interactions to test latency, packet loss, error handling, and recovery.
 Security Focus:
 The Networking Team should prioritize security and authentication, with mechanisms to handle user logins and logouts, and continuous updates to address vulnerabilities.
-
 
 IV. Conclusion
 Identifying and analyzing potential risks is crucial for the success of the Online Multiplayer Board Game Platform project. By implementing appropriate mitigation strategies and maintaining a proactive approach to risk management, the development teams can minimize the likelihood and impact of these risks, ensuring the delivery of a high-quality and successful product.
