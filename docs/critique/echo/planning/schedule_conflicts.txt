@@ -1,0 +1,62 @@
+*Analysis Section:*
+
+"**" Means differing dates for a similar activity
+"/" Means all teams complete this task without conflict
+"X" Means there is some sort of conflict
+"~" Means unsureness
+
+Dates:
+*Feb 24 - Mar 7*
+- ~/ Identify required documents (Networking, Authentication, Game Logic, GUI, ~Statistics)
+   - (Statistics team did not specify document identification)
+- / Create Structure Diagrams (Networking, Authentication, Game Logic, GUI, Statistics)
+- / Create Use Case Descriptions and Diagrams (Networking, Authentication, Game Logic, GUI, Statistics)
+- / Combine Structure Diagrams (Game Logic)
+   - (Game Logic team specifies handling document merging)
+   - Task not completed
+- ~/ ** Begin Coding (Authentication, Game Logic)
+   - (Very early to begin coding)
+
+*Mar 8 - 21*
+- / Document Structure Plan (Networking)
+   - (Networking team could have done this during first iteration)
+- ~X ** Begin Coding (Networking, GUI, Statistics)
+   - (Iteration 2 deliverables are absent in the planning documents)
+- X ** Collaborative Coding (Networking-GUI;Game Logic, Authentication-Networking;GUI;Statistics, GUI-Authentication;Networking;Statistics;Game Logic, Statistics-Game Logic;Networking)
+   - (GUI team specifies collaboration before other teams have code ready)
+- / ** Begin Testing (Networking)
+
+*Mar 22 - Apr 11*
+- / ** Collaborative Coding (Game Logic-GUI;Networking)
+- / Finalize Coding (Networking, Authentication, Game Logic, GUI, Statistics)
+- / ** Begin Testing (Authentication, GUI)
+- ~X Consolidate Codebase (~Networking, Authentication, Game Logic, GUI, ~Statistics)
+   - (Networking and Statistics teams did not specify final code integration)
+
+
+
+
+*Conclusion Section:*
+
+Observations:
+Their planning document is incredibly well-made and detailed. There is no Integration team specified, which implies that
+integration work is the responsibility of each team. All teams pay particularly strong attention to potential conflicts
+in schedules which kept them largely organized and with minimal conflict. The Game Logic team has the most realistic
+scope for development with half of their workload as well as their integration work within Iteration 3 instead of the
+bulk of it in Iteration 2. The Statistics team had a broad plan that resulted in their team not causing too many issues,
+however they also lack several key milestones for the project. This team has very few conflicts, with only one of them
+being notably serious.
+
+Strong Conflicts:
+Every team indicates that the bulk of their independent coding will occur during Iteration 2 with no mentions made about
+the deliverables required for the iteration which could lead to significant bottlenecks by needing to push tasks further
+along than initially planned to accommodate completing the unaccounted deliverables. Secondly, the GUI team specifies
+working on integration early on during Iteration 2 while the other teams are only just starting to develop their systems
+which will block the GUI team from accomplishing their goals on time.
+
+Weak Conflicts:
+The Networking team waits until Iteration 2 before creating a written design document which means that they are spending
+time on something in Iteration 2 that could have been completed in Iteration 1. The Networking and Statistics teams did
+not specify final integration work for Iteration 3 which could mean that other teams are expected to take on that work
+when it is not in their schedules. The front-loading of collaborative coding means that the Game Logic branch may have
+difficulties with other teams due to not being ready for integration until Iteration 3.

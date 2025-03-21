@@ -5,7 +5,7 @@ planning_doc_timeline.pdf
 
 
 
-Integration Team:
+Integration:
 *Iteration 3*
 - *** Integrate Authentication to rest of program (Mar 22 - Apr 11)
 - *** Integrate Game Logic to rest of program (Mar 22 - Apr 11)
@@ -83,7 +83,7 @@ GUI Team Schedule: (GUI team keeps excellent track of dependencies)
 - Identify needed screens (Feb 24 - Mar 7)
 - Create rough mockup screens (Feb 24 - Mar 7)
 - Prepare branch for GUI coding (Feb 24 - Mar 7)
-- Identify needed deliverables (Feb 24 - Mar 7)
+- *** Identify needed deliverables (Feb 24 - Mar 7)
 - Design visual elements and style guide (Feb 24 - Mar 7)
 
 *Iteration 2*
