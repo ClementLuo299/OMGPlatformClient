@@ -1,0 +1,197 @@
+Documents related to scheduling:
+- Project_Plan_Integration.pdf
+- GUI_Timeline.pdf
+- Leaderboard_And_Matchmaking_Planning_Documents.pdf
+- Project_Timeline.pdf (Game Logic)
+- ProjectTimeline_Networking.pdf
+- PROJECT-TIMELINE-AUTHENTICATION-TEAM.pdf
+
+"***" Means a significant event for cross-team collaboration
+
+
+
+Integration (Overall?) Team Schedule:
+*Iteration 1*
+- Set Up Repository (Feb 22 - 28)
+- Create 5 Use Case Descriptions (Mar 1 - 7)
+- Create Diagrams for Descriptions (Mar 1 - 7)
+- *** Create Cumulative Class Structure Diagram (Mar 1 - 7)
+- Create Demonstration Videos (Mar 1 - 7)
+
+*Iteration 2*
+- *** Complete and Sign Contract (Mar 8 - 14)
+- Review other Team's Use-case Diagrams/ Descriptions (Mar 8 - 14)
+- Create Document that covers said review (Mar 8 - 14)
+- Edit mistakes in original diagrams (Mar 8 - 14)
+- Identify improvements (Mar 8 - 14)
+- Provide constructive feedback for letter (Mar 15 - 21)
+- Grade Adjustment (Mar 15 - 21)
+- *** Complete Planning Doc Review (Mar 15 - 21)
+- Grade Letter Proposal (Mar 15 - 21)
+- *** Begin coding with other teams (Mar 15 - 21)
+
+*Iteration 3*
+- Make changes based on feedback (Mar 22 - 28)
+- Collaborate with other teams on code (Mar 22 - 28)
+- Start Linking Up Systems and troubleshooting (Mar 22 - 28)
+- *** Complete integration work (Mar 29 - Apr 4)
+- Improve test cases and documentation (Mar 29 - Apr 4)
+
+
+
+Networking Team Schedule:
+*Iteration 1*
+- Create at least 5 use-case descriptions (Mar 1 - 7)
+- Divvy up work (Mar 1 - 7)
+- Create diagrams for use cases (Mar 1 - 7)
+- Write planning docs (Mar 1 - 7)
+- Prepare deliverables (Mar 1 - 7)
+
+*Iteration 2*
+- *** Create Contract (Mar 8 - 14)
+- Review and document other teams' networking designs (Mar 8 - 14)
+- Review and document use case diagrams and descriptions (Mar 8 - 14)
+- Begin api stub coding (Mar 8 - 14)
+- Code for network simulation (Mar 8 - 14)
+- *** Create Grade Adjustment Table (Mar 15 - 21)
+- Suggest feature proposals/improvements for other teams (Mar 15 - 21)
+- *** Create formal feedback doc for letter (Mar 15 - 21)
+- *** Prep and submit deliverables (Mar 15 - 21)
+- Improve stub code (Mar 15 - 21)
+- *** Simulate leaderboard and chat (Mar 15 - 21)
+
+*Iteration 3*
+- Complete bulk of networking code (Mar 22 - 28)
+- Incorporate feedback from other teams (Mar 22 - 28)
+- Simulate network errors (Mar 22 - 28)
+- *** Collaborate with Game Logic Team for code (Mar 22 - 28)
+- *** Test Matchmaking, Authentication, and Game Logic stubs (Mar 22 - 28)
+- *** Simulate database interactions (Mar 22 - 28)
+- *** Finish Core Networking Features (Mar 29 - Apr 4)
+- *** Collaborate with GUI team for code (Mar 29 - Apr 4)
+- *** Collaborate with Integration Team for code (Mar 29 - Apr 4)
+- *** Collaborate with Matchmaking team for code (Mar 29 - Apr 4)
+- Create test cases for multiplayer (Mar 29 - Apr 4)
+- *** Finalize Networking stubs (Mar 29 - Apr 4)
+- *** Collaborate with all other teams to document improvement (Apr 5 - 11)
+- Create demo video for networking (Apr 5 - 11)
+- Complete tests (Apr 5 - 11)
+- Finalize documentation (Apr 5 - 11)
+
+
+
+Authentication Team Schedule:
+*Iteration 1*
+- Create Repo (Feb 22 - 28)
+- Create Discord (Feb 22 - 28)
+- Add everyone to team.md (Feb 22 - 28)
+- Create 5 use case descriptions (Mar 1 - 7)
+- Divvy up work (Mar 1 - 7)
+- *** Create use case diagram (Mar 1 - 7)
+- Create planning documents (Mar 1 - 7)
+- Prepare deliverables (Mar 1 - 7)
+
+*Iteration 2*
+- *** Create Contract (Mar 8 - 14)
+- Examine authentication design from other teams (Mar 8 - 14)
+- Evaluate use case descriptions (Mar 8 - 14)
+- Create feedback document (Mar 8 - 14)
+- *** Create grade adjustment table (Mar 15 - 21)
+- Suggest major improvements for other teams (Mar 15 - 21)
+- *** Create formal feedback document (Mar 15 - 21)
+- *** Create feature proposal document (Mar 15 - 21)
+- Prep deliverables (Mar 15 - 21)
+
+*Iteration 3*
+- Complete bulk of authentication code (Mar 22 - 28)
+- Incorporate feedback from other teams (Mar 22 - 28)
+- *** Simulate database interactions for auth and stats (Mar 22 - 28)
+- *** Finish coding authentication (Mar 29 - Apr 4)
+- *** Collaborate with GUI team for code (Mar 29 - Apr 4)
+- *** Collaborate with integration team for code (Mar 29 - Apr 4)
+- *** Collaborate with statistics team for code (Mar 29 - Apr 4)
+- Create test cases for code (Mar 29 - Apr 4)
+- *** Collaborate with other teams to document improvement (Apr 5 - 11)
+- Create demo video (Apr 5 - 11)
+- Complete test cases (Apr 5 - 11)
+
+
+
+Game Logic Team Schedule: (Notable realism and conflict issues)
+*Iteration 1*
+- Create use case descriptions and diagram (Feb 22 - Mar 7)
+- *** Create deliverables (Feb 22 - Mar 7)
+- Divvy up coding tasks (Feb 22 - Mar 7)
+
+*Iteration 2* (Potentially Unrealistic)
+- Create contract (Mar 8 - 14)
+- Implement game logic for Chess (Mar 8 - 14)
+- Implement game logic for Go (Mar 8 - 14)
+- Implement game logic for Connect 4 (Mar 8 - 14)
+- Implement game logic for Tic Tac Toe (Mar 8 - 14)
+- Create unit tests for all games (Mar 8 - 14)
+- *** Collaborate with matchmaking and networking team for Chess code (Mar 15 - 21)
+- *** Collaborate with matchmaking and networking team for Go code (Mar 15 - 21)
+- *** Collaborate with matchmaking and networking team for Connect 4 code (Mar 15 - 21)
+- *** Collaborate with matchmaking and networking team for TicTacToe code (Mar 15 - 21)
+- *** Create grade adjustment document (Mar 15 - 21)
+
+*Iteration 3*
+- Intensive testing and bug reporting of all games (Mar 22 - 28)
+- *** Optimize and finalize game code (Mar 22 - 28)
+- *** Finalize testing (Mar 29 - Apr 4)
+- Create demo video (Apr 5 - 11)
+
+
+
+GUI Team Schedule:
+*Iteration 1*
+- *** Create use case descriptions and diagrams (Mar 3 - 7)
+- Make rough prototypes for screens (Mar 3 - 7)
+- *** Create structure diagram (Mar 3 - 7)
+- Create planning docs (Mar 3 - 7)
+
+*Iteration 2*
+- Create high quality prototypes for screens (Mar 10 - 14)
+- Prepare P2 deliverables (Mar 17 - 21)
+- Create all screens as stubs (Mar 17 - 21)
+
+*Iteration 3*
+- *** Collaborate with teams who are ready for code (Mar 24 - 28)
+- *** Collaborate with all teams for code (Mar 31 - Apr 4)
+- Create Demo Video (Apr 7 - 11)
+- Prepare deliverables (Apr 7 - 11)
+
+
+
+Statistics Team Schedule:
+*Iteration 1*
+- Set up repository (Feb 22 - 28)
+- Set up communication (Feb 22 - 28)
+- *** Create use case descriptions and diagrams (Mar 1 - 7)
+- *** Create structure diagram (Mar 1 - 7)
+- Create timeline (Mar 1 - 7)
+
+*Iteration 2*
+- *** Create Contract (Mar 8 - 14)
+- Analyze matchmaking design of other teams (Mar 8 - 14)
+- Analyze matchmaking use cases of other teams (Mar 8 - 14)
+- Analyze one(or more) planning document(s) (Mar 8 - 14)
+- Create skeleton code (Mar 8 - 14)
+- *** Create grade adjustment document (Mar 15 - 21)
+- *** Collaborate with other teams to identify improvements (Mar 15 - 21)
+- *** Combine all work into letter (Mar 15 - 21)
+- Create feature proposal document (Mar 15 - 21)
+- *** Create letter grade proposal (Mar 15 - 21)
+- Start working on code (Mar 15 - 21)
+
+*Iteration 3*
+- *** Finish bulk of coding (Mar 22 - 28)
+- Incorporate changes from other teams (Mar 22 - 28)
+- *** Finish Coding (Mar 29 - Apr 4)
+- *** Collaborate with GUI team for code (Mar 29 - Apr 4)
+- *** Collaborate with Integration team for code (Mar 29 - Apr 4)
+- Start on test cases (Mar 29 - Apr 4)
+- *** Collaborate with whole team for changes made document (Apr 5 - 11)
+- Create demo video (Apr 5 - 11)
+- Finish Test Cases (Apr 5 - 11)
