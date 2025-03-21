@@ -46,7 +46,7 @@ Testing and Validation:
     - The Game Logic and Mechanics Team should ensure that multiplayer matches sync properly between players and that game states are consistent.
     - The Networking Team should simulate network interactions to test latency, packet loss, error handling, and recovery.
 Security Focus:
-    - The Networking Team should prioritize security and authentication, with mechanisms to handle user logins and logouts, and continuous updates to address vulnerabilities.
+    - The Networking Team should establish a security protocol and adhere to it instead of planning on continuous updates to address vulnerabilities.
 Code Maintainability Guidelines:
     - The Development Leads should establish a coding standard guide to ensure consistency across all teams.
     - The Repository Maintainers should define a branching strategy (e.g., feature branches, bug-fix branches) to streamline version control.

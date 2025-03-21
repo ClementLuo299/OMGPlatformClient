@@ -1,11 +1,45 @@
 I. Introduction
-This document outlines the potential risks associated with the development of an Online Multiplayer Board Game Platform. It is based on a review of project planning documents submitted by various development sub-teams on Echo. A wide list of planning documents were used in other to create this report. Effective risk management is crucial for the successful completion of this project. This assessment identifies key risk areas, analyzes their potential impact and probability, and proposes solutions.
+This document outlines the potential risks associated with the development of an Online Multiplayer Board Game Platform. It is based on a review of project planning documents submitted by various development sub-teams on Echo. A wide range of planning documents was used in order to create this report. Effective risk management is crucial for the successful completion of this project. This assessment identifies key risk areas, analyzes their potential impact and probability, and proposes solutions.
 
 II. Risks Identified
+Timeline Risks:
+    - The GUI Team has an aggressive timeline, with critical UI components planned for completion in a single sprint (Sprint 2: Mar 8 - Mar 21), which may lead to incomplete features or high defect rates. The sub-team also failed to account reviews needed for Iteration 2.
+    - The Game Logic Team aims to implement core logic for multiple games simultaneously, potentially leading to rushed coding and for there to be numerous bugs.
+    - Dependencies between teams, such as GUI and Authentication, may cause bottlenecks and blockers if one team fails to deliver on time.
+Integration Risks:
+    - The Integration Team must ensure alignment with other teams, but the lack of early-stage integration planning increases the risk of misalignment.
+    - The Integration Team is responsible for merging all components, and delays in API or mismatched structures could cause major setbacks.
+Synchronization Risks:
+    - Multiplayer synchronization issues could result in inconsistencies in game states, leading to frustration among users.
+    - The lack of detailed testing procedures in the planning documents increases the likelihood of undetected synchronization bugs.
+Dependency Risks:
+    - The GUI Team depends on backend teams for authentication and game logic, meaning delays in API completion could cause UI roadblocks and blockers.
+    - The Matchmaking and Leaderboard Team requires real-time data from Networking and Game Logic teams, which may cause cascading delays.
+Technical Risks:
+    - Performance bottlenecks in the networking module could impact the responsiveness of real-time gameplay.
+    - Security concerns, such as vulnerabilities in authentication and session handling, pose risks of unauthorized access.
 
+III. Analysis of Risks and Their Impact
+Timeline Risks:
+    - Timeline risks could significantly impact the project if tasks are not completed on schedule, potentially causing delays in other areas. There is a high probability of this occurring, given the aggressive deadlines outlined in the planning documents.
+Integration Risks:
+    - Integration risks could lead to setbacks if different teams fail to align their components properly. The probability of this occurring is moderate, but the impact could be severe, especially if critical functionalities do not work together as expected.
+Dependency Risks:
+    - Dependency risks can cause workflow interruptions if one team falls behind on deliverables that other teams rely on. However, since workarounds can often be implemented, the probability of this occurring is low, and its impact is moderate.
+Technical Risks:
+    Technical risks, such as networking performance issues and security vulnerabilities, could disrupt gameplay and compromise user data. The probability of these occurring is relatively low, but if they do, they could significantly impact platform stability.
 
-III. Mitigation Strategies
-
-
+IV. Mitigation Strategies
+Improved Planning and Communication:
+    - Introduce buffer time in sprint planning to accommodate delays.
+    - Establish clearer inter-team communication channels (e.g., shared documentation, weekly sync meetings).
+    - Require and enforce early-stage API testing to prevent integration roadblocks.
+Robust Development Practices:
+    - Implement error handling in UI and networking modules to manage unexpected failures.
+    - Ensure authentication mechanisms follow best security practices, such as hashed passwords and session validation.
+Testing and Validation:
+    - The Networking Team should establish a security protocol and adhere to it instead of planning on continuous updates to address vulnerabilities.
+Code Maintainability Guidelines:
+    - Members from other teams should be encouraged to jump to other teams that are code heavy if they are done with their tasks.
 V. Conclusion
-Identifying and analyzing potential risks is crucial for the success of the Online Multiplayer Board Game Platform project. By implementing appropriate solutions and maintaining a proactive approach to risk management, the development teams can minimize the likelihood and impact of these risks, ensuring the delivery of a high-quality and successful product.
+Identifying and analyzing potential risks is crucial for the success of the Online Multiplayer Board Game Platform project. By implementing appropriate solutions and maintaining a proactive approach to risk management, the Game Logic and Mechanics Team can minimize the likelihood and impact of these risks, ensuring the delivery of high-quality and successful game logic for the platform.
