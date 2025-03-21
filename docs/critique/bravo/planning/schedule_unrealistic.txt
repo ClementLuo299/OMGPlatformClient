@@ -1,0 +1,7 @@
+The Game Logic team asserts that they can complete 4 separate games during the first half of Iteration 2, then work with
+the Networking and Statistics teams to fully integrate their systems by the end of the iteration. This is unrealistic in
+a few ways: This scheduling expects that all teams have finished major portions of the OMG system just halfway into the
+iteration such that integration work between the systems is even possible. Furthermore, this scheduling expects that
+integrating every system together will also only be completed by the end of the iteration. These expectations are not
+only realistic on their own, but are also expected while the group should be occupied with completing the necessary
+critique of two other group's Iteration 1 work.
