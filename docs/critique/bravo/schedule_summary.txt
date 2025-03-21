@@ -25,9 +25,9 @@ Integration (Overall?) Team Schedule:
 - Edit mistakes in original diagrams (Mar 8 - 14)
 - Identify improvements (Mar 8 - 14)
 - Provide constructive feedback for letter (Mar 15 - 21)
-- Grade Adjustment (Mar 15 - 21)
+- *** Grade Adjustment (Mar 15 - 21)
 - *** Complete Planning Doc Review (Mar 15 - 21)
-- Grade Letter Proposal (Mar 15 - 21)
+- *** Grade Letter Proposal (Mar 15 - 21)
 - *** Begin coding with other teams (Mar 15 - 21)
 
 *Iteration 3*
@@ -119,7 +119,9 @@ Authentication Team Schedule:
 
 Game Logic Team Schedule: (Notable realism and conflict issues)
 *Iteration 1*
-- Create use case descriptions and diagram (Feb 22 - Mar 7)
+- Create use case descriptions (Feb 22 - 28)
+- Create use case diagram (Mar 1 - 7)
+- Create Structure Diagram (Feb 22 - Mar 7)
 - *** Create deliverables (Feb 22 - Mar 7)
 - Divvy up coding tasks (Feb 22 - Mar 7)
 
@@ -181,7 +183,7 @@ Statistics Team Schedule:
 - *** Create grade adjustment document (Mar 15 - 21)
 - *** Collaborate with other teams to identify improvements (Mar 15 - 21)
 - *** Combine all work into letter (Mar 15 - 21)
-- Create feature proposal document (Mar 15 - 21)
+- *** Create feature proposal document (Mar 15 - 21)
 - *** Create letter grade proposal (Mar 15 - 21)
 - Start working on code (Mar 15 - 21)
 

@@ -1,0 +1,81 @@
+*Analysis Section:*
+
+"**" Means differing dates for a similar activity
+"/" Means all teams complete this task without conflict
+"X" Means there is some sort of conflict
+"~" Means unsureness
+
+Dates:
+*Feb 22 - 28*
+- / Set up Repository (Integration, Authentication, Statistics)
+- / Set Up Discord (Authentication, Statistics)
+- / Create Team.md (Authentication)
+
+*Mar 1 - 7*
+- / Create Use Case Descriptions and Diagrams (Integration, Networking, Authentication, Game Logic, GUI, Statistics)
+   - (Why is the integration team making use case diagrams?)
+- ~/ Create Structure Diagrams (~Networking, ~Authentication, Game Logic, GUI, Statistics)
+   - (Networking and Authentication team did not specify creating Structure Diagrams)
+- / Combine All Class Structure Diagrams (Integration)
+   - Task not completed
+
+*Mar 8 - 14*
+- / Create and Sign Contract (Integration, Networking, Authentication, Game Logic, ~GUI, Statistics)
+   - (GUI team did not specify creating Contract)
+- X ** Complete Bulk of Code (Game Logic)
+- X Review and Document team specific Use Case Descriptions and Diagrams (Integration, Networking, Authentication, GUI, Statistics)
+   - (Why is the integration team reviewing use case diagrams?)
+   - (Game logic team schedules coding instead of this)
+- X Review and Document team specific Structure Diagrams (Networking, Authentication, GUI, Statistics)
+   - (Game logic team schedules coding instead of this)
+- X ** Document team specific Suggested Improvements (Integration, Authentication, GUI)
+   - (Game logic team schedules coding instead of this)
+
+*Mar 15 - 21*
+- X ** Document team specific Suggested Improvements (Networking, Statistics)
+   - (Game logic team schedules coding instead of this)
+- X ** Collaborative Coding (Game Logic-ALL)
+   - (No other teams have started coding yet)
+- / Create Grade Adjustment Document (Integration, Networking, Authentication, Game Logic, GUI, Statistics)
+- X Document feedback cohesively for Feedback Letter (Networking, Authentication, ~GUI, Statistics)
+   - (Game Logic team schedules coding instead of this)
+   - (GUI team did not specify consolidating feedback)
+- / Create Feedback Letter (Integration)
+- ~/ Create Letter Grade Proposal (Integration, Statistics)
+- / Begin Coding (Networking, GUI, Statistics)
+- ~/ ** Collaborative Coding (Integration-All)
+
+*Mar 22 - 28*
+- ~X Make Changes Based on Feedback (Integration, Networking, Authentication, ~GUI, Statistics)
+   - (Game Logic team created most of their code before this)
+   - (GUI team did not specify making recommended changes)
+- / Bug Testing (Game Logic)
+- / ** Complete Bulk of Code (Networking, Authentication, Statistics)
+- / Collaborative Coding (Integration-All, GUI-All(Ready), Networking-Game Logic)
+- / ** Finalize Code (Game Logic)
+
+*Mar 29 - Apr 4*
+- ~X Collaborative Coding (Networking-Integration;GUI;Statistics, Authentication-GUI;Integration;Statistics, GUI-All, ~Statistics-GUI;Integration)
+   - (Statistics team did not specify working with Networking or Authentication)
+   - (Game Logic team already finalized code)
+- / ** Finalize Code (Networking, Authentication, ~GUI, Statistics)
+   - (GUI team did not specify finalization)
+- / ** Create Test Cases (Authentication, Game Logic, ~GUI, Statistics)
+   - (GUI team did not specify making tests)
+- / Consolidate Codebase (Integration)
+- ~X Improve Test Cases (Integration)
+   - (Networking team did not complete tests yet)
+- ~X Improve Documentation (Integration)
+   - (Networking team did not complete documentation yet)
+
+*Apr 5 - 11*
+- ~X ** Finish Test Cases (Networking, Authentication, Statistics)
+   - (Integration already started improving tests)
+- ~X Finish Documentation (Networking)
+   - (Integration already started improving documentation)
+- / Create Demo Video (Networking, Authentication, Game Logic, GUI, Statistics)
+
+
+
+
+*Conclusion Section:*
