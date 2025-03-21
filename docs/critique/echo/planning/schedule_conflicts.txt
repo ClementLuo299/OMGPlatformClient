@@ -45,14 +45,17 @@ in schedules which kept them largely organized and with minimal conflict. The Ga
 scope for development with half of their workload as well as their integration work within Iteration 3 instead of the
 bulk of it in Iteration 2. The Statistics team had a broad plan that resulted in their team not causing too many issues,
 however they also lack several key milestones for the project. This team has very few conflicts, with only one of them
-being notably serious.
+being notably serious. No team specifies Iteration 2 deliverables, implementing improvements, or creating a demo video
+at the end of Iteration 3.
 
 Strong Conflicts:
 Every team indicates that the bulk of their independent coding will occur during Iteration 2 with no mentions made about
 the deliverables required for the iteration which could lead to significant bottlenecks by needing to push tasks further
 along than initially planned to accommodate completing the unaccounted deliverables. Secondly, the GUI team specifies
 working on integration early on during Iteration 2 while the other teams are only just starting to develop their systems
-which will block the GUI team from accomplishing their goals on time.
+which will block the GUI team from accomplishing their goals on time. Finally, pushing to have so much of the coding
+done this early on will make the implementation of the improvements and changes given as feedback from another team will
+be difficult and possibly require redoing a substantial amount of already completed work.
 
 Weak Conflicts:
 The Networking team waits until Iteration 2 before creating a written design document which means that they are spending
