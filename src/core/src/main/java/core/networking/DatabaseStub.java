@@ -1,13 +1,39 @@
 package core.networking;
 
 import core.networking.accounts.UserAccount;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Simulates an external database.
+ *
+ * Schema:
+ *
+ * Table users - Unique String username, String password
  */
+
 public class DatabaseStub {
+    //File paths for tables
+    HashMap<String, String> paths = new HashMap<String, String>();
+
+    //Constructor
+    public DatabaseStub(){
+        //Add file paths
+        paths.put("users","");
+    }
+
+    /**
+     * Table of users.
+     * The first column stores the username, which is a unique string
+     * The second column stores the password, which is a string
+     */
+    ArrayList<String[]> users = new ArrayList<String[]>();
+
     private static final Map<String, UserAccount> userDatabase = new HashMap<>();
 
     // Insert new user account
@@ -28,5 +54,10 @@ public class DatabaseStub {
     public boolean validateAccountPassword(String username, String password) {
         UserAccount user = userDatabase.get(username);
         return user != null && user.getPassword().equals(password);
+    }
+
+    public void saveDBState() throws IOException {
+        //
+        FileWriter file = new FileWriter(paths.get("users"));
     }
 }

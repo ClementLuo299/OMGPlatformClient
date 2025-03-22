@@ -2,6 +2,7 @@ package com.boardgameplatform.projecttest;
 
 import core.networking.DatabaseStub;
 import core.networking.accounts.UserAccountRegistration;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
