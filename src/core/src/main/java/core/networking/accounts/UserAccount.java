@@ -3,6 +3,9 @@ package core.networking.accounts;
 public class UserAccount {
     private String username;
     private String password;
+    private String email;
+    private String created_date;
+    private String bio;
     private String fullName;
     private String dob; // Date of Birth as String
 

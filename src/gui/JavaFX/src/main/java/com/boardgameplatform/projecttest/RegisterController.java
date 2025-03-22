@@ -1,7 +1,6 @@
 package com.boardgameplatform.projecttest;
 
-import core.networking.DatabaseStub;
-import core.networking.accounts.UserAccountRegistration;
+import core.networking.IO.DatabaseIOHandler;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -39,8 +38,8 @@ public class RegisterController {
     @FXML
     private Button loginButton;
 
-    private static final DatabaseStub database = new DatabaseStub();
-    private final UserAccountRegistration registration = new UserAccountRegistration(database);
+    //Database IO Handler
+    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
 
     @FXML
     public void initialize() {
@@ -59,22 +58,28 @@ public class RegisterController {
         LocalDate dob = dobPicker.getValue();
 
         // Simple validation
+        /*
         if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || dob == null) {
             System.out.println("Please fill all fields");
             return;
         }
+         */
 
         if (!password.equals(confirmPassword)) {
             System.out.println("Passwords don't match");
             return;
         }
 
+        db.RegisterAccount(username,password);
+
+        /*
         boolean success = registration.registerUser(fullName, username, password, confirmPassword, dob.toString());
         if (success) {
             System.out.println("Account created successfully!");
         } else {
             System.out.println("Registration failed.");
         }
+         */
 
         // Navigate back to login screen after successful registration
         backToLogin(event);

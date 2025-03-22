@@ -1,13 +1,34 @@
 package core.networking.IO;
 
+import core.networking.DatabaseStub;
+
 /**
  * Handles communication between the database and the program.
  * Compatible with the built-in database stub.
- *
- * @author Clement Luo
  */
 public class DatabaseIOHandler {
-    public DatabaseIOHandler(){}
+    //Database
+    private DatabaseStub db;
+
+    private static DatabaseIOHandler instance;
+
+    //Constructor
+    private DatabaseIOHandler(){
+        DatabaseStub db = new DatabaseStub();
+        db.populateDB();
+        this.db = db;
+    }
+
+    public static DatabaseIOHandler getInstance() {
+        if (instance == null) {
+            instance = new DatabaseIOHandler();
+        }
+        return instance;
+    }
+
+    public void saveDBData() {
+        db.saveDBState();
+    }
 
     /**
      * Register an account.
@@ -18,7 +39,7 @@ public class DatabaseIOHandler {
      *            The password of the account.
      */
     public void RegisterAccount(String username, String password){
-        //
+        db.insertAccountData(username,password);
     }
 
     /**
@@ -32,7 +53,7 @@ public class DatabaseIOHandler {
      */
     public boolean CheckAccountExists(String username){
         //
-        return true;
+        return db.checkAccountExists(username);
     }
 
     /**
@@ -48,7 +69,7 @@ public class DatabaseIOHandler {
         //Password should be at least 8 characters
         //Password should have at least 1 number
         //Password should have at least special character
-        //Password shoudl have at least 1 uppercase letter
+        //Password should have at least 1 uppercase letter
         int characterCount = 0;
         int numberCount = 0;
         int specialCharCount = 0;

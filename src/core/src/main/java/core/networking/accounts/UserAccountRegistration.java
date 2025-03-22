@@ -9,6 +9,7 @@ public class UserAccountRegistration {
         this.database = database;
     }
 
+    /*
     public boolean registerUser(String fullName, String username, String password, String confirmPassword, String dob) {
         if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || dob.isEmpty()) {
             System.out.println("Please fill all fields.");
@@ -28,4 +29,5 @@ public class UserAccountRegistration {
             return false;
         }
     }
+     */
 }

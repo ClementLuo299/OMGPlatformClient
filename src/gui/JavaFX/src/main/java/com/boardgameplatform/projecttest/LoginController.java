@@ -1,6 +1,7 @@
 package com.boardgameplatform.projecttest;
 
 import core.networking.DatabaseStub;
+import core.networking.IO.DatabaseIOHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,7 +30,8 @@ public class LoginController {
     @FXML
     private Button createAccountButton;
 
-    private static final DatabaseStub database = new DatabaseStub();
+    //Database IO Handler
+    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
 
     @FXML
     public void initialize() {
@@ -52,7 +54,7 @@ public class LoginController {
             return;
         }
 
-        if (database.validateAccountPassword(username, password)) {
+        if (db.CheckAccountExists(username)) {
             System.out.println("Login successful!");
             switchToDashboard(event);
         } else {

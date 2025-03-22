@@ -1,5 +1,6 @@
 package com.boardgameplatform.projecttest;
 
+import core.networking.IO.DatabaseIOHandler;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,6 +21,11 @@ public class BoardGamePlatformApp extends Application {
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
+    }
+
+    @Override
+    public void stop(){
+        DatabaseIOHandler.getInstance().saveDBData();
     }
 
     public static void main(String[] args) {
