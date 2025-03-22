@@ -6,3 +6,4 @@ the group to put substantial time into rescheduling everything to fix those bloc
 little work into Iteration 3, which is the longest of the Iterations because the coding work is the most in depth of the
 project's entire workload. Iteration 2 is supposed to be predominantly dedicated to the critiquing of other group's
 design and planning documents, but there is very little room in this schedule to accommodate that workload.
+By overlapping intense development work with integration and document review, the current plan results in spreading team focus too thin, which can lead to burnout and lower-quality outputs across all deliverables.
