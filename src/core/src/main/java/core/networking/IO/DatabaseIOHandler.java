@@ -10,15 +10,20 @@ public class DatabaseIOHandler {
     //Database
     private DatabaseStub db;
 
+    //Universal DatabaseIOHandler
     private static DatabaseIOHandler instance;
 
     //Constructor
     private DatabaseIOHandler(){
+        //Create and populate database
         DatabaseStub db = new DatabaseStub();
         db.populateDB();
         this.db = db;
     }
 
+    /**
+     * Retrieve the database input/output handler
+     */
     public static DatabaseIOHandler getInstance() {
         if (instance == null) {
             instance = new DatabaseIOHandler();
@@ -26,6 +31,9 @@ public class DatabaseIOHandler {
         return instance;
     }
 
+    /**
+     * Save database state
+     */
     public void saveDBData() {
         db.saveDBState();
     }
