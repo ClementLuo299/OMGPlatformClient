@@ -30,7 +30,7 @@ public class DatabaseStub {
     //Constructor
     public DatabaseStub(){
         //Add file paths
-        paths.put("users","./src/core/src/main/java/core/networking/users.txt");
+        paths.put("users",System.getProperty("user.home") + "/Downloads/Data/users.txt");
     }
 
     /**
@@ -54,7 +54,7 @@ public class DatabaseStub {
     public String[] getAccountData(String username){
         String[] data = null;
         for(String[] i : users){
-            if(i[1].equals(username)){
+            if(i[0].equals(username)){
                 data = i;
                 break;
             }
@@ -68,7 +68,7 @@ public class DatabaseStub {
     public boolean checkAccountExists(String username){
         boolean result = false;
         for(String[] i : users){
-            if (i[1].equals(username)) {
+            if (i[0].equals(username)) {
                 result = true;
                 break;
             }
