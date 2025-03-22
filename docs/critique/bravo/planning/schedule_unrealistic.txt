@@ -5,3 +5,4 @@ iteration such that integration work between the systems is even possible. Furth
 integrating every system together will also only be completed by the end of the iteration. These expectations are not
 only unrealistic on their own, but are also expected while the group should be occupied with completing the necessary
 critique of two other group's Iteration 1 work.
+Moreover, the timeline overlooks the likelihood of encountering bugs, design flaws, or unexpected complexities that naturally arise during development, particularly with four separate game implementations.
