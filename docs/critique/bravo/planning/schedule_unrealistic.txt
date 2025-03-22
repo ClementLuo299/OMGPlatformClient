@@ -1,8 +1,8 @@
-The Game Logic team asserts that they can complete 4 separate games during the first half of Iteration 2, then work with
-the Networking and Statistics teams to fully integrate their systems by the end of the iteration. This is unrealistic in
-a few ways: This scheduling expects that all teams have finished major portions of the OMG system just halfway into the
-iteration such that integration work between the systems is even possible. Furthermore, this scheduling expects that
-integrating every system together will also only be completed by the end of the iteration. These expectations are not
-only unrealistic on their own, but are also expected while the group should be occupied with completing the necessary
-critique of two other group's Iteration 1 work.
-Moreover, the timeline overlooks the likelihood of encountering bugs, design flaws, or unexpected complexities that naturally arise during development, particularly with four separate game implementations.
+Unrealistic Scheduling by Game Logic Team
+
+The Game Logic team asserts that they can complete four separate games during the first half of Iteration 2, followed by full integration with the Networking and Statistics teams by the end of the iteration. However, this timeline is unrealistic for several reasons:
+
+It assumes that all teams will have completed the majority of their systems midway through the iteration, allowing for seamless integration — a scenario that is highly unlikely given the complexity and coordination required.
+It expects full system integration to be completed within the same timeframe, despite the need for testing, adjustments, and collaborative development.
+These expectations are further complicated by the fact that this period overlaps with the group’s obligation to review and critique two other teams’ Iteration 1 submissions.
+Additionally, the plan fails to account for the inevitable presence of bugs, design flaws, or unforeseen complexities that typically arise during development, especially when building multiple games in parallel.
