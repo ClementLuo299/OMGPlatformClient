@@ -51,6 +51,25 @@ public class DatabaseIOHandler {
     }
 
     /**
+     * Check if an account exists and password matches.
+     *
+     * @param username
+     *            The username of the account.
+     * @param password
+     *            The password of the account.
+     * @return boolean
+     *             true if the account exists and password matches,
+     *             false otherwise
+     */
+    public boolean verifyCredentials(String username, String password) {
+        String[] accountData = db.getAccountData(username);
+        if (accountData != null && accountData[1].equals(password)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Check if an account exists.
      *
      * @param username
@@ -59,8 +78,7 @@ public class DatabaseIOHandler {
      *             true if the account exists,
      *             false otherwise
      */
-    public boolean CheckAccountExists(String username){
-        //
+    private boolean CheckAccountExists(String username) {
         return db.checkAccountExists(username);
     }
 
@@ -84,5 +102,18 @@ public class DatabaseIOHandler {
         int uppercaseCount = 0;
 
         return true;
+    }
+
+    /**
+     * Check if an account exists (for registration).
+     *
+     * @param username
+     *            The username of the account.
+     * @return boolean
+     *             true if the account exists,
+     *             false otherwise
+     */
+    public boolean isAccountExists(String username) {
+        return db.checkAccountExists(username);
     }
 }

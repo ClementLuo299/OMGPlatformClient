@@ -69,7 +69,7 @@ public class RegisterController {
             return;
         }
 
-        if (db.CheckAccountExists(username)) {
+        if (db.isAccountExists(username)) {
             showAlert("Registration Error", "Username already exists");
             return;
         }

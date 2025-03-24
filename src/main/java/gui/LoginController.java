@@ -49,16 +49,15 @@ public class LoginController {
 
         // Simple validation
         if (username.isEmpty() || password.isEmpty()) {
-            // Show an error message
-            System.out.println("Please enter both email and password");
+            showAlert("Login Error", "Please enter both username and password");
             return;
         }
 
-        if (db.CheckAccountExists(username)) {
+        if (db.verifyCredentials(username, password)) {
             System.out.println("Login successful!");
             switchToDashboard(event);
         } else {
-            System.out.println("Invalid credentials");
+            showAlert("Login Error", "Invalid username or password");
         }
     }
 
@@ -94,6 +93,14 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
 }
