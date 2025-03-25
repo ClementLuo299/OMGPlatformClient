@@ -1,5 +1,5 @@
 package gameLogicTests;
-import java.gamelogic.Pieces.*;
+import old.gamelogic.Pieces.*;
 import org.junit.*;
 import java.io.*;
 import java.util.*;

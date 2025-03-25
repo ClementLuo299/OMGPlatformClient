@@ -1,4 +1,4 @@
-package java.gamelogic.tictactoe;
+package old.gamelogic.tictactoe;
 
 public class TicTacToe extends AbstractGame {
 

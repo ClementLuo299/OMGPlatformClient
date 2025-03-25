@@ -1,4 +1,4 @@
-package java.networking;
+package old.networking;
 
 /**
  * Simulates an external database.

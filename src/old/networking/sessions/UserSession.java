@@ -1,4 +1,4 @@
-package java.networking.sessions;
+package old.networking.sessions;
 
 /**
  * A user's login session.
