@@ -1,4 +1,4 @@
-package core.networking.sessions;
+package old.networking.sessions;
 
 /**
  * A gameplay session.

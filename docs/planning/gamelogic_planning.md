@@ -2,7 +2,7 @@
 # Game Logic Team - Planning Document
 
 ## Responsibilities
-- Implement core game mechanics for selected board games
+- Implement old game mechanics for selected board games
 - Develop turn-based logic for multiplayer gameplay
 - Ensure rule enforcement and game state validation
 - Provide an interface for the GUI and Networking teams to integrate game logic

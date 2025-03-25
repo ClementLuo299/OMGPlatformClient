@@ -1,4 +1,4 @@
-package core.networking;
+package old.networking;
 
 /**
  * Handles communication between the program and gameplay.

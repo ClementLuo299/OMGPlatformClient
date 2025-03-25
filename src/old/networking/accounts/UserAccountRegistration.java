@@ -1,4 +1,4 @@
-package core.networking.accounts;
+package old.networking.accounts;
 
 public class UserAccountRegistration {
 }
