@@ -1,4 +1,4 @@
-package core.networking.records;
+package java.networking.records;
 
 /**
  * A record of a game played.

@@ -1,4 +1,4 @@
-package core.networking.sessions;
+package java.networking.sessions;
 
 /**
  * A gameplay session.

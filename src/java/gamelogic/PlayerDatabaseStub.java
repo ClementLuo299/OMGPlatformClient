@@ -1,4 +1,4 @@
-package core.gamelogic;
+package java.gamelogic;
 
 import java.util.Random;
 
