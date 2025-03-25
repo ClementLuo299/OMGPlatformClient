@@ -1,6 +1,6 @@
 package core.networking.accounts;
 
-import core.networking.DatabaseStub;
+import main.java.networking.DatabaseStub;
 
 public class UserAccountRegistration {
     private final DatabaseStub database;

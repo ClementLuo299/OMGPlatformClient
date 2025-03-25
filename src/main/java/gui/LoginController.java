@@ -1,6 +1,5 @@
 package gui;
 
-import core.networking.DatabaseStub;
 import core.networking.IO.DatabaseIOHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

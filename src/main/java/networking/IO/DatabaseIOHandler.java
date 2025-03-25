@@ -1,6 +1,6 @@
 package core.networking.IO;
 
-import core.networking.DatabaseStub;
+import main.java.networking.DatabaseStub;
 
 /**
  * Handles communication between the database and the program.

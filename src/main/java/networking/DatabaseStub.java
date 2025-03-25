@@ -1,4 +1,4 @@
-package core.networking;
+package main.java.networking;
 
 import java.io.*;
 import java.util.ArrayList;
