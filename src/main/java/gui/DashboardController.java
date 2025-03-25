@@ -1,114 +1,87 @@
 package gui;
 
-import core.networking.IO.DatabaseIOHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.event.ActionEvent;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.io.IOException;
-import javafx.scene.Node;
 
 public class DashboardController {
-
     @FXML
-    private Label username;
-
+    private VBox sidebar;
     @FXML
-    private TextField searchBar;
-
+    private Button dashboardBtn;
     @FXML
-    private Button dashboardButton, gameLibraryButton, leaderboardButton, profileButton, settingsButton;
+    private Button gamesBtn;
+    @FXML
+    private Button leaderboardBtn;
+    @FXML
+    private Button settingsBtn;
+    @FXML
+    private Button signOutBtn;
+    @FXML
+    private ListView<String> activityList;
+    @FXML
+    private Label usernameLabel;
+    @FXML
+    private Label totalGames;
+    @FXML
+    private Label winRate;
+    @FXML
+    private Label currentRank;
+    @FXML
+    private Label bestGame;
 
-    // User information variables (passed from LoginController)
-    private String loggedInUsername;
-    private String mostPlayedGame = "Connect 4";
-    private int totalGamesPlayed = 128;
-    private int totalWins = 64;
-    private int gameLevel = 3;
-
-    /**
-     * Initialize Dashboard with user data
-     */
     @FXML
     public void initialize() {
-        System.out.println(" Dashboard Loaded!");
+        // Initialize activity list with some sample data
+        activityList.getItems().addAll(
+            "Played Connect 4 - Won",
+            "Played Checkers - Lost",
+            "Played Whist - Won",
+            "Reached Level 12 in Connect 4"
+        );
 
-        // Set the username (default until login data is passed)
-        username.setText(loggedInUsername != null ? loggedInUsername : "Guest");
-
-        // Debug logs
-        System.out.println("User: " + loggedInUsername);
-        System.out.println("Most Played Game: " + mostPlayedGame);
-        System.out.println("Total Games Played: " + totalGamesPlayed);
-        System.out.println("Total Wins: " + totalWins);
+        // Set initial stats
+        usernameLabel.setText("PlayerName");
+        totalGames.setText("42");
+        winRate.setText("64%");
+        currentRank.setText("#156");
+        bestGame.setText("Connect 4");
     }
 
-    /**
-     * Method to set user details from LoginController
-     */
-    public void setUserData(String username) {
-        this.loggedInUsername = username;
-        this.username.setText(username);
-    }
-
-    /**
-     * Handles button clicks for navigation
-     */
     @FXML
-    private void handleNavigation(ActionEvent event) {
-        if (event.getSource() == gameLibraryButton) {
-            System.out.println("📚 Switching to Game Library...");
-            switchScene("GameLibrary.fxml");
-        } else if (event.getSource() == leaderboardButton) {
-            System.out.println("🏆 Switching to Leaderboard...");
-            switchScene("Leaderboard.fxml");
-        } else if (event.getSource() == profileButton) {
-            System.out.println("👤 Switching to Profile...");
-            switchScene("Profile.fxml");
-        } else if (event.getSource() == settingsButton) {
-            System.out.println("⚙ Switching to Settings...");
-            switchScene("Settings.fxml");
-        }
-    }
-
-    /**
-     * Helper function to switch scenes
-     */
-    private void switchScene(String fxmlFile) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
-            Parent view = loader.load();
-            Scene scene = new Scene(view);
-            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
-
-            // Get the current stage
-            Stage stage = (Stage) username.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            System.out.println("Error loading " + fxmlFile + ": " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void handleLogout(ActionEvent event) {
+    private void signOut() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/login.css").toExternalForm());
             
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Stage stage = (Stage) signOutBtn.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void playConnect4() {
+        // TODO: Implement Connect 4 game launch
+    }
+
+    @FXML
+    private void playCheckers() {
+        // TODO: Implement Checkers game launch
+    }
+
+    @FXML
+    private void playWhist() {
+        // TODO: Implement Whist game launch
     }
 }
