@@ -1,4 +1,4 @@
-
+package java.gamelogic.ConnectFour;
 
 public class ConnectFour extends AbstractGame{
 

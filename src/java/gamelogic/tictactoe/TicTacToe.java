@@ -1,3 +1,5 @@
+package java.gamelogic.tictactoe;
+
 public class TicTacToe extends AbstractGame {
 
     //private String board;
