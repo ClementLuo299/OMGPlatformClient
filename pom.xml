@@ -7,7 +7,6 @@
   <groupId>com.boardgameplatform</groupId>
   <artifactId>BoardGamePlatform</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>seng300-w25-project</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,7 +15,6 @@
     <javafx.version>21.0.2</javafx.version>
     <junit.version>5.10.0</junit.version>
   </properties>
-
 
   <dependencies>
     <!-- JavaFX Dependencies -->
@@ -73,7 +71,7 @@
       <version>0.4.0</version>
     </dependency>
 
-    <!-- Testing Dependencies -->
+    <!-- Testing -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -98,7 +96,9 @@
           <source>${maven.compiler.source}</source>
           <target>${maven.compiler.target}</target>
           <excludes>
-            <!-- Exclusions -->
+            <exclude>**/core/gamelogic/**/*.java</exclude>
+            <exclude>**/core/exceptions/**/*.java</exclude>
+            <exclude>**/core/gamelogic/PlayerDatabaseStub.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -106,21 +106,9 @@
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-maven-plugin</artifactId>
         <version>0.0.8</version>
-        <executions>
-          <execution>
-            <!-- Default configuration for running with: mvn clean javafx:run -->
-            <id>default-cli</id>
-            <configuration>
-              <mainClass>gui.BoardGamePlatformApp</mainClass>
-              <launcher>app</launcher>
-              <jlinkZipName>app</jlinkZipName>
-              <jlinkImageName>app</jlinkImageName>
-              <noManPages>true</noManPages>
-              <stripDebug>true</stripDebug>
-              <noHeaderFiles>true</noHeaderFiles>
-            </configuration>
-          </execution>
-        </executions>
+        <configuration>
+          <mainClass>gui.BoardGamePlatformApp</mainClass>
+        </configuration>
       </plugin>
     </plugins>
   </build>
