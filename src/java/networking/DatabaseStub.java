@@ -30,7 +30,7 @@ public class DatabaseStub {
     //Constructor
     public DatabaseStub(){
         //Add file paths - using relative path from resources
-        String dataDir = "src/main/resources/data";
+        String dataDir = "src/resources/data";
         paths.put("users", dataDir + "/users.txt");
     }
 
