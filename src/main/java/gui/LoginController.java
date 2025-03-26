@@ -1,4 +1,4 @@
-package main.java.gui;
+package gui;
 
 import main.java.networking.IO.DatabaseIOHandler;
 
@@ -63,35 +63,38 @@ public class LoginController {
 
     private void openRegisterScreen(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Register.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Register.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/css/register.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/register.css").toExternalForm());
             
             Stage stage = (Stage) createAccountButton.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+            showAlert("Error", "Could not open register screen: " + e.getMessage());
         }
     }
 
     private void handleForgotPassword(ActionEvent event) {
         // Implement forgot password functionality
+        showAlert("Info", "Forgot password functionality not implemented yet");
     }
 
     private void switchToDashboard(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Dashboard.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
             
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+            showAlert("Error", "Could not open dashboard: " + e.getMessage());
         }
     }
 

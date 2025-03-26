@@ -9,13 +9,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="730.0" prefWidth="1280" styleClass="root-container" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DashboardController">
+<HBox prefHeight="730.0" prefWidth="1280" styleClass="root-container" stylesheets="@css/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DashboardController">
     <!-- Left Sidebar Navigation -->
     <VBox fx:id="sidebar" prefHeight="400.0" prefWidth="250.0" styleClass="sidebar">
         <!-- App Title -->
         <HBox styleClass="app-title">
             <ImageView fitHeight="24" fitWidth="24">
-                <Image url="@../icons/games.png" />
+                <Image url="@icons/games.png" />
             </ImageView>
             <Label styleClass="title-text" text="Board Game Hub" />
         </HBox>
@@ -26,7 +26,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/dashboard.png" />
+                            <Image url="@icons/dashboard.png" />
                         </ImageView>
                         <Label text="Dashboard" />
                     </HBox>
@@ -37,7 +37,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@icons/games.png" />
                         </ImageView>
                         <Label text="Games" />
                     </HBox>
@@ -48,7 +48,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/leaderboard.png" />
+                            <Image url="@icons/leaderboard.png" />
                         </ImageView>
                         <Label text="Leaderboard" />
                     </HBox>
@@ -59,7 +59,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/settings.png" />
+                            <Image url="@icons/settings.png" />
                         </ImageView>
                         <Label text="Settings" />
                     </HBox>
@@ -72,7 +72,7 @@
             <graphic>
                 <HBox styleClass="nav-button-content">
                     <ImageView fitHeight="20" fitWidth="20">
-                        <Image url="@../icons/sign-out.png" />
+                        <Image url="@icons/sign-out.png" />
                     </ImageView>
                     <Label text="Sign Out" />
                 </HBox>
@@ -81,10 +81,10 @@
     </VBox>
 
     <!-- Main Content Area -->
-    <VBox styleClass="content-area" stylesheets="@../css/dashboard.css" HBox.hgrow="ALWAYS">
+    <VBox styleClass="content-area" stylesheets="@css/dashboard.css" HBox.hgrow="ALWAYS">
         <!-- Page Header -->
-        <HBox styleClass="page-header" stylesheets="@../css/dashboard.css">
-            <VBox stylesheets="@../css/dashboard.css">
+        <HBox styleClass="page-header" stylesheets="@css/dashboard.css">
+            <VBox stylesheets="@css/dashboard.css">
                 <Label styleClass="page-title" text="Dashboard" />
                 <Label styleClass="page-subtitle" text="Welcome back to your gaming hub" />
             </VBox>
@@ -139,7 +139,7 @@
                 <VBox styleClass="game-stat-card">
                     <HBox>
                         <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@icons/games.png" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Connect 4" />
@@ -154,7 +154,7 @@
                 <VBox styleClass="game-stat-card">
                     <HBox>
                         <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@icons/games.png" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Checkers" />
@@ -169,7 +169,7 @@
                 <VBox styleClass="game-stat-card">
                     <HBox>
                         <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@icons/games.png" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Whist" />

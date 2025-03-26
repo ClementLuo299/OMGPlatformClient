@@ -1,4 +1,4 @@
-package main.java.gui;
+package gui;
 
 import main.java.networking.IO.DatabaseIOHandler;
 
@@ -92,16 +92,17 @@ public class RegisterController {
 
     private void backToLogin(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Login.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/css/login.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
             
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
+            showAlert("Error", "Could not return to login screen: " + e.getMessage());
         }
     }
 }
