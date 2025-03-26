@@ -1,6 +1,6 @@
-package main.java.gamelogic.ConnectFour;
+package gamelogic.ConnectFour;
 
-import main.java.gamelogic.*;
+import gamelogic.*;
 
 public class ConnectFour extends AbstractGame {
 

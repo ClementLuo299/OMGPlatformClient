@@ -1,4 +1,4 @@
-package main.java.statistics;
+package statistics;
 
 /**
  * Handles the awarding of Points to Players at the conclusion of a Game

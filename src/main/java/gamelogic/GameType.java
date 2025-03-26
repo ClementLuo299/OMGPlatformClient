@@ -1,4 +1,4 @@
-package main.java.gamelogic;
+package gamelogic;
 
 public enum GameType {
     ALL,

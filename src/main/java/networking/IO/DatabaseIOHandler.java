@@ -1,6 +1,6 @@
-package main.java.networking.IO;
+package networking.IO;
 
-import main.java.networking.DatabaseStub;
+import networking.DatabaseStub;
 
 /**
  * Handles communication between the database and the program.

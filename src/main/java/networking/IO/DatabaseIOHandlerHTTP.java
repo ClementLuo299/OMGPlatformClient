@@ -1,4 +1,4 @@
-package main.java.networking.IO;
+package networking.IO;
 
 import java.net.URI;
 import java.net.URLEncoder;

@@ -1,4 +1,4 @@
-package main.java.gamelogic;
+package gamelogic;
 
 public abstract class AbstractGame implements IGame {
 

@@ -1,4 +1,4 @@
-package main.java.networking.records;
+package networking.records;
 
 public class GameStats {
 }

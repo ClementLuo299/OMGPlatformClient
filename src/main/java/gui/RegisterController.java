@@ -1,6 +1,6 @@
 package gui;
 
-import main.java.networking.IO.DatabaseIOHandler;
+import networking.IO.DatabaseIOHandler;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

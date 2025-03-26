@@ -1,6 +1,6 @@
-package main.java.gamelogic.tictactoe;
+package gamelogic.tictactoe;
 
-import main.java.gamelogic.*;
+import gamelogic.*;
 
 public class TicTacToe extends AbstractGame {
 

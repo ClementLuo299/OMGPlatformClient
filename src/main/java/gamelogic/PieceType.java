@@ -1,4 +1,4 @@
-package main.java.gamelogic;
+package gamelogic;
 
 /**
  * Enums used to define the Type of a Game Piece

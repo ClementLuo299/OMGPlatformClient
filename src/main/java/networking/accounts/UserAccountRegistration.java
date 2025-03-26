@@ -1,6 +1,6 @@
-package main.java.networking.accounts;
+package networking.accounts;
 
-import main.java.networking.DatabaseStub;
+import networking.DatabaseStub;
 
 public class UserAccountRegistration {
     private final DatabaseStub database;

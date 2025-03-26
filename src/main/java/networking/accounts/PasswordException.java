@@ -1,4 +1,4 @@
-package main.java.networking.accounts;
+package networking.accounts;
 
 /**
  * Invalid password exception, thrown when password does not meet complexity requirements.

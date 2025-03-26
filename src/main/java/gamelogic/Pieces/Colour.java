@@ -1,4 +1,4 @@
-package main.java.gamelogic.Pieces;
+package gamelogic.Pieces;
 
 public enum Colour {
     RED,
