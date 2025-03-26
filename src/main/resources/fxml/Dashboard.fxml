@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox prefHeight="730.0" prefWidth="1280" styleClass="root-container" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DashboardController">
+    <!-- Left Sidebar Navigation -->
+    <VBox fx:id="sidebar" prefHeight="400.0" prefWidth="250.0" styleClass="sidebar">
+        <!-- App Title -->
+        <HBox styleClass="app-title">
+            <ImageView fitHeight="24" fitWidth="24">
+                <Image url="@../icons/games.png" />
+            </ImageView>
+            <Label styleClass="title-text" text="Board Game Hub" />
+        </HBox>
+
+        <!-- Navigation Items -->
+        <VBox styleClass="nav-items" VBox.vgrow="ALWAYS">
+            <Button fx:id="dashboardBtn" styleClass="nav-button,selected">
+                <graphic>
+                    <HBox styleClass="nav-button-content">
+                        <ImageView fitHeight="20" fitWidth="20">
+                            <Image url="@../icons/dashboard.png" />
+                        </ImageView>
+                        <Label text="Dashboard" />
+                    </HBox>
+                </graphic>
+            </Button>
+            
+            <Button fx:id="gamesBtn" styleClass="nav-button">
+                <graphic>
+                    <HBox styleClass="nav-button-content">
+                        <ImageView fitHeight="20" fitWidth="20">
+                            <Image url="@../icons/games.png" />
+                        </ImageView>
+                        <Label text="Games" />
+                    </HBox>
+                </graphic>
+            </Button>
+            
+            <Button fx:id="leaderboardBtn" styleClass="nav-button">
+                <graphic>
+                    <HBox styleClass="nav-button-content">
+                        <ImageView fitHeight="20" fitWidth="20">
+                            <Image url="@../icons/leaderboard.png" />
+                        </ImageView>
+                        <Label text="Leaderboard" />
+                    </HBox>
+                </graphic>
+            </Button>
+            
+            <Button fx:id="settingsBtn" styleClass="nav-button">
+                <graphic>
+                    <HBox styleClass="nav-button-content">
+                        <ImageView fitHeight="20" fitWidth="20">
+                            <Image url="@../icons/settings.png" />
+                        </ImageView>
+                        <Label text="Settings" />
+                    </HBox>
+                </graphic>
+            </Button>
+        </VBox>
+
+        <!-- Sign Out Button (at bottom) -->
+        <Button fx:id="signOutBtn" onAction="#signOut" styleClass="nav-button,sign-out">
+            <graphic>
+                <HBox styleClass="nav-button-content">
+                    <ImageView fitHeight="20" fitWidth="20">
+                        <Image url="@../icons/sign-out.png" />
+                    </ImageView>
+                    <Label text="Sign Out" />
+                </HBox>
+            </graphic>
+        </Button>
+    </VBox>
+
+    <!-- Main Content Area -->
+    <VBox styleClass="content-area" stylesheets="@../css/dashboard.css" HBox.hgrow="ALWAYS">
+        <!-- Page Header -->
+        <HBox styleClass="page-header" stylesheets="@../css/dashboard.css">
+            <VBox stylesheets="@../css/dashboard.css">
+                <Label styleClass="page-title" text="Dashboard" />
+                <Label styleClass="page-subtitle" text="Welcome back to your gaming hub" />
+            </VBox>
+            <Pane HBox.hgrow="ALWAYS" />
+            <VBox styleClass="profile-summary">
+                <ImageView fx:id="profileImage" fitHeight="40" fitWidth="40" styleClass="profile-image" />
+                <Label fx:id="usernameLabel" styleClass="username" text="PlayerName" />
+                <Label fx:id="playerLevel" styleClass="player-level" text="Level 10" />
+            </VBox>
+        </HBox>
+
+        <!-- Stats Overview -->
+        <HBox styleClass="stats-container">
+            <VBox styleClass="stat-card">
+                <Label styleClass="stat-label" text="Total Games" />
+                <Label fx:id="totalGames" styleClass="stat-value" text="42" />
+                <Label styleClass="stat-description" text="Games played" />
+            </VBox>
+            
+            <VBox styleClass="stat-card">
+                <Label styleClass="stat-label" text="Win Rate" />
+                <Label fx:id="winRate" styleClass="stat-value" text="64%" />
+                <Label styleClass="stat-description" text="Average success" />
+            </VBox>
+            
+            <VBox styleClass="stat-card">
+                <Label styleClass="stat-label" text="Current Rank" />
+                <Label fx:id="currentRank" styleClass="stat-value" text="#156" />
+                <Label styleClass="stat-description" text="Global ranking" />
+            </VBox>
+            
+            <VBox styleClass="stat-card">
+                <Label styleClass="stat-label" text="Best Game" />
+                <Label fx:id="bestGame" styleClass="stat-value" text="Connect 4" />
+                <Label styleClass="stat-description" text="Highest rated" />
+            </VBox>
+        </HBox>
+
+        <!-- Recent Activity and Game Stats -->
+        <HBox styleClass="content-container">
+            <!-- Recent Activity -->
+            <VBox styleClass="activity-section">
+                <Label styleClass="section-title" text="Recent Activity" />
+                <ListView fx:id="activityList" styleClass="activity-list" VBox.vgrow="ALWAYS" />
+            </VBox>
+
+            <!-- Game Stats -->
+            <VBox styleClass="game-stats">
+                <Label styleClass="section-title" text="Your Games" />
+                
+                <!-- Connect 4 Stats -->
+                <VBox styleClass="game-stat-card">
+                    <HBox>
+                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
+                            <Image url="@../icons/games.png" />
+                        </ImageView>
+                        <VBox>
+                            <Label styleClass="game-name" text="Connect 4" />
+                            <Label styleClass="game-details" text="Level 12 • 72% Win Rate" />
+                        </VBox>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button onAction="#playConnect4" styleClass="play-button" text="Play" />
+                    </HBox>
+                </VBox>
+
+                <!-- Checkers Stats -->
+                <VBox styleClass="game-stat-card">
+                    <HBox>
+                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
+                            <Image url="@../icons/games.png" />
+                        </ImageView>
+                        <VBox>
+                            <Label styleClass="game-name" text="Checkers" />
+                            <Label styleClass="game-details" text="Level 8 • 47% Win Rate" />
+                        </VBox>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button onAction="#playCheckers" styleClass="play-button" text="Play" />
+                    </HBox>
+                </VBox>
+
+                <!-- Whist Stats -->
+                <VBox styleClass="game-stat-card">
+                    <HBox>
+                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
+                            <Image url="@../icons/games.png" />
+                        </ImageView>
+                        <VBox>
+                            <Label styleClass="game-name" text="Whist" />
+                            <Label styleClass="game-details" text="Level 5 • 50% Win Rate" />
+                        </VBox>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button onAction="#playWhist" styleClass="play-button" text="Play" />
+                    </HBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </VBox>
+</HBox>

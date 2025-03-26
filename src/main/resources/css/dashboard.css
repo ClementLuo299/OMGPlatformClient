@@ -1,0 +1,234 @@
+/* Color Variables */
+* {
+    -fx-primary-color: #FFFFFF;    /* 60% - White */
+    -fx-secondary-color: #F5F6FA;  /* 30% - Grey */
+    -fx-accent-color: #3B82F6;     /* 10% - Light Blue */
+    -fx-text-color: #1a1a1a;
+}
+
+.root-container {
+    -fx-background-color: -fx-primary-color;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    -fx-background-color: -fx-primary-color;
+    -fx-min-width: 250px;
+    -fx-max-width: 250px;
+    -fx-padding: 16px 12px;
+    -fx-spacing: 24px;
+    -fx-border-width: 0 1px 0 0;
+    -fx-border-color: -fx-secondary-color;
+}
+
+.app-title {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 8px 8px;
+}
+
+.title-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+/* Navigation Buttons */
+.nav-items {
+    -fx-spacing: 4px;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-padding: 12px;
+    -fx-alignment: center-left;
+    -fx-min-width: 226px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+
+.nav-button:hover {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.nav-button.selected {
+    -fx-background-color: -fx-accent-color;
+}
+
+.nav-button.selected .nav-button-content Label {
+    -fx-text-fill: white;
+}
+
+.nav-button-content {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+}
+
+.nav-icon {
+    -fx-fit-width: 20px;
+    -fx-fit-height: 20px;
+}
+
+/* Sign Out Button */
+.sign-out {
+    -fx-border-width: 0;
+}
+
+.sign-out .nav-button-content Label {
+    -fx-text-fill: #EF4444;  /* Red color for sign out */
+}
+
+.sign-out:hover {
+    -fx-background-color: #FEE2E2;  /* Light red background on hover */
+}
+
+/* Content Area */
+.content-area {
+    -fx-background-color: -fx-primary-color;
+    -fx-padding: 24px;
+    -fx-spacing: 24px;
+}
+
+/* Page Header */
+.page-header {
+    -fx-padding: 0 0 20px 0;
+    -fx-border-color: -fx-secondary-color;
+    -fx-border-width: 0 0 1px 0;
+    -fx-alignment: center;
+}
+
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.page-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+/* Profile Summary */
+.profile-summary {
+    -fx-alignment: center;
+    -fx-spacing: 4px;
+}
+
+.profile-image {
+    -fx-background-radius: 20px;
+    -fx-background-color: -fx-secondary-color;
+}
+
+.username {
+    -fx-font-weight: bold;
+}
+
+.player-level {
+    -fx-text-fill: #666666;
+    -fx-font-size: 12px;
+}
+
+/* Stats Container */
+.stats-container {
+    -fx-spacing: 16px;
+    -fx-padding: 0 0 16px 0;
+}
+
+.stat-card {
+    -fx-background-color: -fx-secondary-color;
+    -fx-padding: 16px;
+    -fx-spacing: 8px;
+    -fx-background-radius: 8px;
+    -fx-min-width: 180px;
+    -fx-alignment: center-left;
+}
+
+.stat-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+.stat-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.stat-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}
+
+/* Content Container */
+.content-container {
+    -fx-spacing: 24px;
+}
+
+/* Activity Section */
+.activity-section {
+    -fx-background-color: -fx-secondary-color;
+    -fx-padding: 16px;
+    -fx-spacing: 16px;
+    -fx-background-radius: 8px;
+    -fx-min-width: 300px;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.activity-list {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 0;
+}
+
+.activity-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 8px;
+}
+
+.activity-list .list-cell:hover {
+    -fx-background-color: derive(-fx-secondary-color, -5%);
+}
+
+/* Game Stats */
+.game-stats {
+    -fx-spacing: 16px;
+    -fx-min-width: 400px;
+}
+
+.game-stat-card {
+    -fx-background-color: -fx-secondary-color;
+    -fx-padding: 16px;
+    -fx-background-radius: 8px;
+}
+
+.game-stat-card HBox {
+    -fx-spacing: 16px;
+    -fx-alignment: center-left;
+}
+
+.game-icon {
+    -fx-background-radius: 8px;
+}
+
+.game-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.game-details {
+    -fx-font-size: 12px;
+    -fx-text-fill: #666666;
+}
+
+.play-button {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.play-button:hover {
+    -fx-background-color: derive(-fx-accent-color, 20%);
+} 
