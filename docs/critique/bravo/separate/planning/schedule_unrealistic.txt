@@ -1,0 +1,8 @@
+Unrealistic Scheduling by Game Logic Team
+
+The Game Logic team asserts that they can complete four separate games during the first half of Iteration 2, followed by full integration with the Networking and Statistics teams by the end of the iteration. However, this timeline is unrealistic for several reasons:
+
+It assumes that all teams will have completed the majority of their systems midway through the iteration, allowing for seamless integration — a scenario that is highly unlikely given the complexity and coordination required.
+It expects full system integration to be completed within the same timeframe, despite the need for testing, adjustments, and collaborative development.
+These expectations are further complicated by the fact that this period overlaps with the group’s obligation to review and critique two other teams’ Iteration 1 submissions.
+Additionally, the plan fails to account for the inevitable presence of bugs, design flaws, or unforeseen complexities that typically arise during development, especially when building multiple games in parallel.
