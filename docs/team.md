@@ -14,9 +14,9 @@
 | Jason Bakajika      | 30208299 |
 | Matin Rezaei        | 30188989 |
 | Melissa Aoko        | 30230823 |
+| Om Loke             | 30218987 |
 | Rion Mukai          | 30230326 |
 | Sameer Askar        | 30208216 |
 | Scott Brown         | 30193949 |
 | Susmita Chakrabarty | 30215210 |
 | Zaman Dogar         | 30222423 |
-| Om Loke             | 30218987 |
