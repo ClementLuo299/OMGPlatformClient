@@ -1,4 +1,4 @@
-package gamelogic.Pieces;
+package gamelogic.pieces;
 
 public enum Colour {
     RED,

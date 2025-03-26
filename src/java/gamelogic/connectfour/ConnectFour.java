@@ -1,4 +1,4 @@
-package gamelogic.ConnectFour;
+package gamelogic.connectfour;
 
 import gamelogic.*;
 

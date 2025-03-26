@@ -1,4 +1,4 @@
-package gamelogic.Pieces;
+package gamelogic.pieces;
 
 import java.util.ArrayList;
 import java.util.List;

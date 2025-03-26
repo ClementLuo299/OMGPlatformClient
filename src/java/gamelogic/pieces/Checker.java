@@ -1,4 +1,4 @@
-package gamelogic.Pieces;
+package gamelogic.pieces;
 
 import gamelogic.GamePiece;
 import gamelogic.PieceType;
