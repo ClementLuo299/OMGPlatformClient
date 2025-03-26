@@ -1,12 +1,6 @@
-<<<<<<<< HEAD:src/java/gamelogic/AbstractGame.java
-<<<<<<<< HEAD:src/old/gamelogic/AbstractGame.java
-========
-package java.gamelogic;
+package main.java.gamelogic;
 
->>>>>>>> gamelogic:src/java/gamelogic/AbstractGame.java
-========
->>>>>>>> matchmaking:src/old/gamelogic/AbstractGame.java
-public abstract class AbstractGame implements IGame{
+public abstract class AbstractGame implements IGame {
 
     // all game boards will be stored as a String
     protected String board;

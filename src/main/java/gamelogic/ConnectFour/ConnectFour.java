@@ -1,14 +1,8 @@
-<<<<<<<< HEAD:src/old/gamelogic/ConnectFour/ConnectFour.java
-package old.gamelogic.ConnectFour;
+package main.java.gamelogic.ConnectFour;
 
-public class ConnectFour extends AbstractGame{
-========
-package java.gamelogic.ConnectFour;
-
-import java.gamelogic.*;
+import main.java.gamelogic.*;
 
 public class ConnectFour extends AbstractGame {
->>>>>>>> gamelogic:src/java/gamelogic/ConnectFour/ConnectFour.java
 
     private static final int ROWS = 6;
     private static final int COLS = 7;
@@ -44,10 +38,10 @@ public class ConnectFour extends AbstractGame {
     public void drop(Player player, int column) {
         // if the passed column is full or does not exist
         if(column>COLS-1 || this.board.charAt(column)!='o'){
-            throw new IllegalMoveExeption();
+            //throw new IllegalMoveExeption();
         }
         if(player!=player1 && player!=player2){
-            throw new PlayerExeption();
+            //throw new PlayerExeption();
         }
         // if no checker has been dropped in this column
         if(this.board.charAt(((ROWS-1)*COLS)+column)=='o'){
@@ -138,8 +132,6 @@ public class ConnectFour extends AbstractGame {
     }
 
 
-
-
     public boolean drew() {
         // if there was a winner
         if(this.getWinner()!=null){
@@ -156,9 +148,6 @@ public class ConnectFour extends AbstractGame {
         }
         return true;
     }
-<<<<<<<< HEAD:src/old/gamelogic/ConnectFour/ConnectFour.java
-}
-========
-}
 
->>>>>>>> gamelogic:src/java/gamelogic/ConnectFour/ConnectFour.java
+
+}

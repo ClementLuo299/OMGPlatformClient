@@ -1,7 +1,7 @@
-package java.statistics;
+package main.java.statistics;
 
-import java.gamelogic.GameType;
-import old.networking.accounts.UserAccount;
+import main.java.gamelogic.GameType;
+import main.java.networking.accounts.UserAccount;
 
 import java.util.HashMap;
 

@@ -1,12 +1,4 @@
-<<<<<<<< HEAD:src/java/gamelogic/PlayerDatabaseStub.java
-<<<<<<<< HEAD:src/old/gamelogic/PlayerDatabaseStub.java
-package old.gamelogic;
-========
-package java.gamelogic;
->>>>>>>> gamelogic:src/java/gamelogic/PlayerDatabaseStub.java
-========
-package old.gamelogic;
->>>>>>>> matchmaking:src/old/gamelogic/PlayerDatabaseStub.java
+package main.java.gamelogic;
 
 import java.util.Random;
 

@@ -1,4 +1,6 @@
-package old.gamelogic.tictactoe;
+package main.java.gamelogic.tictactoe;
+
+import main.java.gamelogic.*;
 
 public class TicTacToe extends AbstractGame {
 
@@ -27,14 +29,14 @@ public class TicTacToe extends AbstractGame {
     public void place(Player turn, int position) {
         if(this.board.charAt(position)==PLAYER_ONE_CHAR ||
            this.board.charAt(position)==PLAYER_TWO_CHAR) {
-            throw new IllegalMoveExeption();
+            //throw new IllegalMoveExeption();
         }
         if(turn==player1) {
             this.board = this.board.substring(0, position) + PLAYER_ONE_CHAR + this.board.substring(position + 1);
         } else if(turn==player2) {
             this.board = this.board.substring(0, position) + PLAYER_TWO_CHAR + this.board.substring(position + 1);
         } else {
-            throw new PlayerException();
+            //throw new PlayerException();
         }
     }
 

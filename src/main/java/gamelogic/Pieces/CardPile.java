@@ -1,9 +1,8 @@
-package java.gamelogic.Pieces;
+package main.java.gamelogic.Pieces;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.*;
 
 /**
  * Handles the creation and handling of Piles of Cards for Playing Card Games.
@@ -251,10 +250,6 @@ public class CardPile {
     /**
      * Overhead shuffle algorithm
      * Simulates when the deck is cut and cards are dispersed randomly throughout the deck
-     *
-     * @Param card list
-     *
-     * @Return shuffled card list
      */
     public void overheadShuffle() {
         List<Card> shuffledCards = new ArrayList<>(); //list for shuffled deck

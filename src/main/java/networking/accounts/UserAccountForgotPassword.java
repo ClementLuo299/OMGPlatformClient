@@ -1,4 +1,4 @@
-package old.networking.accounts;
+package main.java.networking.accounts;
 
 public class UserAccountForgotPassword {
 }

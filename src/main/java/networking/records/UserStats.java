@@ -1,4 +1,4 @@
-package core.networking.records;
+package main.java.networking.records;
 
 public class UserStats {
 }

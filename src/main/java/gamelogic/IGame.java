@@ -1,11 +1,5 @@
-<<<<<<<< HEAD:src/java/gamelogic/IGame.java
-<<<<<<<< HEAD:src/old/gamelogic/IGame.java
-========
-package java.gamelogic;
+package main.java.gamelogic;
 
->>>>>>>> gamelogic:src/java/gamelogic/IGame.java
-========
->>>>>>>> matchmaking:src/old/gamelogic/IGame.java
 public interface IGame {
 
     public Player getWinner();

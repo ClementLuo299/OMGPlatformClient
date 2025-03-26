@@ -1,12 +1,4 @@
-<<<<<<<< HEAD:src/old/networking/DatabaseIOHandlerHTTP.java
-<<<<<<<< HEAD:src/old/networking/IO/DatabaseIOHandlerHTTP.java
-package old.networking.IO;
-========
-package old.networking;
->>>>>>>> gamelogic:src/old/networking/DatabaseIOHandlerHTTP.java
-========
-package core.networking.IO;
->>>>>>>> GUI:src/main/java/networking/IO/DatabaseIOHandlerHTTP.java
+package main.java.networking.IO;
 
 import java.net.URI;
 import java.net.URLEncoder;

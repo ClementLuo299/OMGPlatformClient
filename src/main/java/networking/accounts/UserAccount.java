@@ -1,4 +1,4 @@
-package core.networking.accounts;
+package main.java.networking.accounts;
 
 /**
  * Represents a user account.

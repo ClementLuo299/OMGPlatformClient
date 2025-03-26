@@ -1,6 +1,7 @@
-package gui;
+package main.java.gui;
 
-import core.networking.IO.DatabaseIOHandler;
+import main.java.networking.IO.DatabaseIOHandler;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

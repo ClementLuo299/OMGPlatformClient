@@ -1,7 +1,7 @@
-package java.gamelogic.Pieces;
+package main.java.gamelogic.Pieces;
 
-import java.gamelogic.GamePiece;
-import java.gamelogic.PieceType;
+import main.java.gamelogic.GamePiece;
+import main.java.gamelogic.PieceType;
 
 /**
  * Handles the creation and handling of Checkers for Checker Games

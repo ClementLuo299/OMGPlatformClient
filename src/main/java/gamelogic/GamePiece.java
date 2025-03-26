@@ -1,4 +1,4 @@
-package java.gamelogic;
+package main.java.gamelogic;
 
 /**
  * Handles the creation and handling of Game Pieces for Games

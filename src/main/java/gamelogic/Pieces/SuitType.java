@@ -1,4 +1,4 @@
-package java.gamelogic.Pieces;
+package main.java.gamelogic.Pieces;
 
 public enum SuitType { //Contains every suit type to be used for the array of cards
     HEARTS("Hearts"),

@@ -1,4 +1,4 @@
-package core.networking.IO;
+package main.java.networking.IO;
 
 /**
  * Handles communication between the program and gameplay.
