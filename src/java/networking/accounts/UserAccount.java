@@ -2,9 +2,6 @@ package networking.accounts;
 
 /**
  * Represents a user account.
- *
- * @authors Clement Luo,
- * @date March 4, 2025
  */
 public class UserAccount {
     private String username;

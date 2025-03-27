@@ -3,22 +3,32 @@ package networking.IO;
 import networking.DatabaseStub;
 
 /**
- * Handles communication between the backend and the program.
+ * Handles communication between the database and the program.
  * Compatible with the built-in database stub.
- *
- * @authors Clement Luo,
- * @date March 4, 2025
  */
 public class DatabaseIOHandler {
-    //Database stub
+    //Database
     private DatabaseStub db;
 
+    //Universal DatabaseIOHandler
+    private static DatabaseIOHandler instance;
+
     //Constructor
-    public DatabaseIOHandler(){
+    private DatabaseIOHandler(){
         //Create and populate database
         DatabaseStub db = new DatabaseStub();
         db.populateDB();
         this.db = db;
+    }
+
+    /**
+     * Retrieve the database input/output handler
+     */
+    public static DatabaseIOHandler getInstance() {
+        if (instance == null) {
+            instance = new DatabaseIOHandler();
+        }
+        return instance;
     }
 
     /**
