@@ -1,6 +1,6 @@
 package gui;
 
-import networking.IO.DatabaseIOHandler;
+import networking.Backend;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +33,7 @@ public class BoardGamePlatformApp extends Application {
     @Override
     public void stop() {
         try {
-            DatabaseIOHandler.getInstance().saveDBData();
+            Backend.getInstance().saveDBState();
         } catch (Exception e) {
             System.err.println("Error saving database data: " + e.getMessage());
             e.printStackTrace();

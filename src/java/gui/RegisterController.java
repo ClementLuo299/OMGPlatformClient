@@ -1,5 +1,6 @@
 package gui;
 
+import networking.Backend;
 import networking.IO.DatabaseIOHandler;
 
 import javafx.event.ActionEvent;
@@ -39,8 +40,8 @@ public class RegisterController {
     @FXML
     private Button loginButton;
 
-    //Database IO Handler
-    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
+    //Backend
+    private Backend backend = Backend.getInstance();
 
     @FXML
     public void initialize() {

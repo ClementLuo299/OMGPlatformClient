@@ -10,28 +10,15 @@ import networking.DatabaseStub;
  * @date March 4, 2025
  */
 public class DatabaseIOHandler {
-    //Database
+    //Database stub
     private DatabaseStub db;
 
-    //Universal DatabaseIOHandler
-    private static DatabaseIOHandler instance;
-
     //Constructor
-    private DatabaseIOHandler(){
+    public DatabaseIOHandler(){
         //Create and populate database
         DatabaseStub db = new DatabaseStub();
         db.populateDB();
         this.db = db;
-    }
-
-    /**
-     * Retrieve the database input/output handler
-     */
-    public static DatabaseIOHandler getInstance() {
-        if (instance == null) {
-            instance = new DatabaseIOHandler();
-        }
-        return instance;
     }
 
     /**
