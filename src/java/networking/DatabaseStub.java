@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Simulates an external database.
- *
- * Schema (columns are in order):
+ * Database schema (columns are in order):
  *
  * Table users:
  * Not Null Unique int uid,
@@ -19,6 +17,14 @@ import java.util.HashMap;
  * Not Null String dateCreated,
  * String bio,
  * String fullName
+ */
+
+
+/**
+ * Simulates an external database.
+ *
+ * @authors Clement Luo, Fatin Abrar Ankon,
+ * @date March 4, 2025
  */
 public class DatabaseStub {
     //File paths for tables

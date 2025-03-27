@@ -3,8 +3,11 @@ package networking.IO;
 import networking.DatabaseStub;
 
 /**
- * Handles communication between the database and the program.
+ * Handles communication between the backend and the program.
  * Compatible with the built-in database stub.
+ *
+ * @authors Clement Luo,
+ * @date March 4, 2025
  */
 public class DatabaseIOHandler {
     //Database
