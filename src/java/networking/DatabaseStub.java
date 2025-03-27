@@ -39,7 +39,7 @@ public class DatabaseStub {
     //Delimiter for text data
     char delim = '\u0007';
 
-    //UID counter
+    //UID counter, inital UID is 1
     int uidCounter = 1;
 
     // TABLES
@@ -51,7 +51,7 @@ public class DatabaseStub {
 
     // CONSTRUCTOR
 
-    public DatabaseStub(){
+    public DatabaseStub() {
         //Add file paths - using relative path from resources
         String dataDir = "src/resources/data";
         paths.put("users", dataDir + "/users.txt");
@@ -60,9 +60,11 @@ public class DatabaseStub {
     // USERS TABLE METHODS
 
     /**
-     * Insert data for a new user.
+     * Insert a new entry into the users table,
+     * replaces the entry if the uid matches
      */
     public void insertAccountData(
+            String uid, //Generate a new one if null
             String username,
             String password,
             String email,
@@ -74,14 +76,16 @@ public class DatabaseStub {
             String middleName,
             String lastName)
     {
-        //Get UID
-        String uid = Integer.toString(uidCounter);
-
         //Enforce database restrictions
 
         //Check not null fields
         if(username == null || password == null || dateCreated == null){
             return;
+        }
+
+        //Generate new UID if
+        if(uid == null){
+            //
         }
 
         //Check unique fields
@@ -98,53 +102,6 @@ public class DatabaseStub {
                 uid = Integer.toString(uidCounter);
             }
         }
-
-        //Insert data
-        String[] arr = new String[11];
-        arr[0] = uid;
-        arr[1] = username;
-        arr[2] = password;
-        arr[3] = email;
-        arr[4] = dob;
-        arr[5] = Integer.toString(privacyLevel);
-        arr[6] = dateCreated;
-        arr[7] = bio;
-        arr[8] = firstName;
-        arr[9] = middleName;
-        arr[10] = lastName;
-        users.add(arr);
-    }
-
-    /**
-     * Reinsert account given uid, used for updating entries.
-     */
-    public void insertAccountData(
-            String uid,
-            String username,
-            String password,
-            String email,
-            String dob,
-            int privacyLevel,
-            String dateCreated,
-            String bio,
-            String firstName,
-            String middleName,
-            String lastName)
-    {
-        //Enforce database restrictions
-
-        //Check not null fields
-        if(username == null || password == null || dateCreated == null || uid == null){
-            return;
-        }
-
-        //Check unique fields
-        for(String[] i : users){
-            if(i[0].equals(uid) || [1].equals(username) || i[3].equals(email)){
-                return;
-            }
-        }
-
 
         //Insert data
         String[] arr = new String[11];
