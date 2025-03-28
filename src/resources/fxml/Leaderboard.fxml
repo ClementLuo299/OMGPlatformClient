@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="730.0" prefWidth="1280" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LeaderboardController">
+    <left>
+        <VBox fx:id="sidebar" styleClass="sidebar">
+            <!-- App Title with Toggle -->
+            <HBox styleClass="app-title">
+                <ImageView fitHeight="24" fitWidth="24">
+                    <Image url="@../icons/games.png" />
+                </ImageView>
+                <Label styleClass="title-text" text="Board Game Hub" />
+            </HBox>
+
+            <!-- Navigation Items -->
+            <VBox styleClass="nav-items" VBox.vgrow="ALWAYS">
+                <Button fx:id="dashboardBtn" styleClass="nav-button">
+                    <graphic>
+                        <HBox styleClass="nav-button-content">
+                            <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                                <Image url="@../icons/dashboard.png" />
+                            </ImageView>
+                            <Label text="Dashboard" />
+                        </HBox>
+                    </graphic>
+                </Button>
+                
+                <Button fx:id="gamesBtn" styleClass="nav-button">
+                    <graphic>
+                        <HBox styleClass="nav-button-content">
+                            <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                                <Image url="@../icons/games.png" />
+                            </ImageView>
+                            <Label text="Games" />
+                        </HBox>
+                    </graphic>
+                </Button>
+                
+                <Button fx:id="leaderboardBtn" styleClass="nav-button,selected">
+                    <graphic>
+                        <HBox styleClass="nav-button-content">
+                            <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                                <Image url="@../icons/leaderboard.png" />
+                            </ImageView>
+                            <Label text="Leaderboard" />
+                        </HBox>
+                    </graphic>
+                </Button>
+                
+                <Button fx:id="settingsBtn" styleClass="nav-button">
+                    <graphic>
+                        <HBox styleClass="nav-button-content">
+                            <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                                <Image url="@../icons/settings.png" />
+                            </ImageView>
+                            <Label text="Settings" />
+                        </HBox>
+                    </graphic>
+                </Button>
+            </VBox>
+
+            <!-- Sign Out Button (at bottom) -->
+            <Button fx:id="signOutBtn" styleClass="nav-button,sign-out">
+                <graphic>
+                    <HBox styleClass="nav-button-content">
+                        <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                            <Image url="@../icons/sign-out.png" />
+                        </ImageView>
+                        <Label text="Sign Out" />
+                    </HBox>
+                </graphic>
+            </Button>
+        </VBox>
+    </left>
+    
+    <center>
+        <VBox styleClass="content-area">
+            <!-- Leaderboard Header -->
+            <HBox styleClass="leaderboard-header">
+                <Label styleClass="leaderboard-title" text="Leaderboards" />
+                <Label styleClass="leaderboard-subtitle" text="Track player rankings and achievements" />
+            </HBox>
+            
+            <!-- Leaderboard Tabs -->
+            <TabPane fx:id="leaderboardTabs" styleClass="leaderboard-tabs" tabClosingPolicy="UNAVAILABLE">
+                <!-- Global Leaderboard Tab -->
+                <Tab text="Global" styleClass="leaderboard-tab">
+                    <VBox styleClass="tab-content">
+                        <!-- Global Rankings Section -->
+                        <HBox styleClass="ranking-header">
+                            <Label styleClass="ranking-title" text="Global Player Rankings" />
+                        </HBox>
+                        
+                        <!-- Global Leaderboard Tables -->
+                        <HBox styleClass="leaderboard-tables">
+                            <!-- Account Level Rankings -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Highest Account Level" />
+                                <TableView fx:id="accountLevelTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn fx:id="alRankColumn" styleClass="rank-column" text="Rank" />
+                                        <TableColumn fx:id="alPlayerColumn" styleClass="player-column" text="Player" />
+                                        <TableColumn fx:id="alLevelColumn" styleClass="level-column" text="Level" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                            
+                            <!-- Most Wins Rankings -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Most Wins" />
+                                <TableView fx:id="mostWinsTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn fx:id="mwRankColumn" styleClass="rank-column" text="Rank" />
+                                        <TableColumn fx:id="mwPlayerColumn" styleClass="player-column" text="Player" />
+                                        <TableColumn fx:id="mwWinsColumn" styleClass="value-column" text="Wins" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                            
+                            <!-- Most Games Played Rankings -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Most Games Played" />
+                                <TableView fx:id="mostGamesTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn fx:id="mgRankColumn" styleClass="rank-column" text="Rank" />
+                                        <TableColumn fx:id="mgPlayerColumn" styleClass="player-column" text="Player" />
+                                        <TableColumn fx:id="mgGamesColumn" styleClass="games-column" text="Games" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </Tab>
+                
+                <!-- Connect 4 Tab -->
+                <Tab text="Connect 4" styleClass="leaderboard-tab">
+                    <VBox styleClass="tab-content">
+                        <!-- Connect 4 Rankings Header -->
+                        <HBox styleClass="ranking-header">
+                            <ImageView styleClass="game-icon" fitHeight="32" fitWidth="32">
+                                <Image url="@../icons/games.png" />
+                            </ImageView>
+                            <Label styleClass="ranking-title" text="Connect 4 Rankings" />
+                        </HBox>
+                        
+                        <!-- Connect 4 Leaderboard Tables -->
+                        <HBox styleClass="leaderboard-tables">
+                            <!-- Highest Level -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Highest Level" />
+                                <TableView fx:id="c4LevelTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="level-column" text="Level" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                            
+                            <!-- Most Wins -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Most Wins" />
+                                <TableView fx:id="c4WinsTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="value-column" text="Wins" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                            
+                            <!-- Best Player (Win Rate) -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Best Players" />
+                                <TableView fx:id="c4BestTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="win-percent-column" text="Win %" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Connect 4 Tab - Most Games Played Section -->
+                        <HBox styleClass="leaderboard-section-full">
+                            <VBox>
+                                <Label styleClass="section-title" text="Most Games Played" />
+                                <TableView fx:id="connect4MostGamesTable" styleClass="leaderboard-table-wide">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="games-column" text="Games" />
+                                        <TableColumn styleClass="win-percent-column" text="Win %" />
+                                        <TableColumn styleClass="level-column" text="Level" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </Tab>
+                
+                <!-- Checkers Tab -->
+                <Tab text="Checkers" styleClass="leaderboard-tab">
+                    <VBox styleClass="tab-content">
+                        <!-- Checkers Rankings Header -->
+                        <HBox styleClass="ranking-header">
+                            <ImageView styleClass="game-icon" fitHeight="32" fitWidth="32">
+                                <Image url="@../icons/games.png" />
+                            </ImageView>
+                            <Label styleClass="ranking-title" text="Checkers Rankings" />
+                        </HBox>
+                        
+                        <!-- Checkers Leaderboard Tables -->
+                        <HBox styleClass="leaderboard-tables">
+                            <!-- Highest Level -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Highest Level" />
+                                <TableView fx:id="checkersLevelTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="level-column" text="Level" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                            
+                            <!-- Most Wins -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Most Wins" />
+                                <TableView fx:id="checkersWinsTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="value-column" text="Wins" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                            
+                            <!-- Best Player (Win Rate) -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Best Players" />
+                                <TableView fx:id="checkersBestTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="win-percent-column" text="Win %" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Checkers Tab - Most Games Played Section -->
+                        <HBox styleClass="leaderboard-section-full">
+                            <VBox>
+                                <Label styleClass="section-title" text="Most Games Played" />
+                                <TableView fx:id="checkersMostGamesTable" styleClass="leaderboard-table-wide">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="games-column" text="Games" />
+                                        <TableColumn styleClass="win-percent-column" text="Win %" />
+                                        <TableColumn styleClass="level-column" text="Level" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </Tab>
+                
+                <!-- Whist Tab -->
+                <Tab text="Whist" styleClass="leaderboard-tab">
+                    <VBox styleClass="tab-content">
+                        <!-- Whist Rankings Header -->
+                        <HBox styleClass="ranking-header">
+                            <ImageView styleClass="game-icon" fitHeight="32" fitWidth="32">
+                                <Image url="@../icons/games.png" />
+                            </ImageView>
+                            <Label styleClass="ranking-title" text="Whist Rankings" />
+                        </HBox>
+                        
+                        <!-- Whist Leaderboard Tables -->
+                        <HBox styleClass="leaderboard-tables">
+                            <!-- Highest Level -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Highest Level" />
+                                <TableView fx:id="whistLevelTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="level-column" text="Level" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                            
+                            <!-- Most Wins -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Most Wins" />
+                                <TableView fx:id="whistWinsTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="value-column" text="Wins" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                            
+                            <!-- Best Player (Win Rate) -->
+                            <VBox styleClass="leaderboard-section">
+                                <Label styleClass="section-title" text="Best Players" />
+                                <TableView fx:id="whistBestTable" styleClass="leaderboard-table">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="win-percent-column" text="Win %" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </HBox>
+                        
+                        <!-- Whist Tab - Most Games Played Section -->
+                        <HBox styleClass="leaderboard-section-full">
+                            <VBox>
+                                <Label styleClass="section-title" text="Most Games Played" />
+                                <TableView fx:id="whistMostGamesTable" styleClass="leaderboard-table-wide">
+                                    <columns>
+                                        <TableColumn styleClass="rank-column" text="Rank" />
+                                        <TableColumn styleClass="player-column" text="Player" />
+                                        <TableColumn styleClass="games-column" text="Games" />
+                                        <TableColumn styleClass="win-percent-column" text="Win %" />
+                                        <TableColumn styleClass="level-column" text="Level" />
+                                    </columns>
+                                </TableView>
+                            </VBox>
+                        </HBox>
+                    </VBox>
+                </Tab>
+            </TabPane>
+        </VBox>
+    </center>
+    
+    <stylesheets>
+        <URL value="@../css/leaderboard.css" />
+    </stylesheets>
+</BorderPane> 

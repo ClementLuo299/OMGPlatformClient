@@ -11,6 +11,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert.AlertType;
+import javafx.application.Platform;
+
+import java.io.IOException;
 
 public class GameLibraryController {
     
@@ -56,6 +59,8 @@ public class GameLibraryController {
     public void initialize() {
         // Set up button event handlers
         dashboardBtn.setOnAction(event -> backToDashboard());
+        gamesBtn.getStyleClass().add("selected"); // Mark current button as selected
+        leaderboardBtn.setOnAction(event -> openLeaderboard());
         signOutBtn.setOnAction(event -> signOut());
         settingsBtn.setOnAction(event -> openSettings());
         
@@ -96,19 +101,38 @@ public class GameLibraryController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Dashboard.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 1280, 730);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
+            DashboardController controller = loader.getController();
+            controller.setCurrentUser(currentUsername, isGuest);
             
-            // Pass current user information
-            DashboardController dashboardController = loader.getController();
-            dashboardController.setCurrentUser(currentUsername, isGuest);
-            
-            Stage stage = (Stage) dashboardBtn.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            Platform.runLater(() -> {
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
+                Stage stage = (Stage) dashboardBtn.getScene().getWindow();
+                stage.setScene(scene);
+            });
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Error", "Could not return to dashboard: " + e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void openLeaderboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Leaderboard.fxml"));
+            Parent root = loader.load();
+            LeaderboardController controller = loader.getController();
+            controller.setCurrentUser(currentUsername, isGuest);
+            
+            Platform.runLater(() -> {
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getClassLoader().getResource("css/leaderboard.css").toExternalForm());
+                Stage stage = (Stage) leaderboardBtn.getScene().getWindow();
+                stage.setScene(scene);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Navigation Error", "Could not open leaderboard: " + e.getMessage());
         }
     }
     
@@ -117,12 +141,13 @@ public class GameLibraryController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Login.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 1280, 730);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
             
-            Stage stage = (Stage) signOutBtn.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            Platform.runLater(() -> {
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
+                Stage stage = (Stage) signOutBtn.getScene().getWindow();
+                stage.setScene(scene);
+            });
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Error", "Could not sign out: " + e.getMessage());
@@ -140,16 +165,15 @@ public class GameLibraryController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Setting.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 1280, 730);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/setting.css").toExternalForm());
+            SettingController controller = loader.getController();
+            controller.setCurrentUser(currentUsername);
             
-            // Pass the current user to settings
-            SettingController settingController = loader.getController();
-            settingController.setCurrentUser(currentUsername);
-            
-            Stage stage = (Stage) settingsBtn.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            Platform.runLater(() -> {
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getClassLoader().getResource("css/setting.css").toExternalForm());
+                Stage stage = (Stage) settingsBtn.getScene().getWindow();
+                stage.setScene(scene);
+            });
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Error", "Could not open settings: " + e.getMessage());

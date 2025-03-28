@@ -3,23 +3,32 @@ AnchorPane {
     -fx-background-color: #ffffff;
 }
 
+/* StackPane ensures content stays centered */
+StackPane {
+    -fx-background-color: #ffffff;
+}
+
 /* Title */
 .title {
     -fx-font-size: 22px;
     -fx-font-weight: bold;
     -fx-text-fill: #000000;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
 }
 
 /* Subtitle */
 .subtitle {
     -fx-font-size: 14px;
     -fx-text-fill: #666666;
+    -fx-padding: 0 0 10 0;
 }
 
 /* Labels */
 .input-label {
     -fx-font-size: 14px;
     -fx-text-fill: #333333;
+    -fx-padding: 5 0 5 0;
 }
 
 /* Input Fields */
@@ -78,5 +87,18 @@ AnchorPane {
 
 .create-account-button:hover {
     -fx-background-color: #f1f1f1;
+}
+
+/* Login form containers */
+.login-form {
+    -fx-min-width: 300px;
+    -fx-max-width: 350px;
+    -fx-padding: 20px;
+}
+
+/* Vertical divider line */
+.divider-line {
+    -fx-stroke: #cccccc;
+    -fx-stroke-width: 1;
 }
 

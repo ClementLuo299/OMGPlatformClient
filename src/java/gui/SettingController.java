@@ -17,6 +17,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class SettingController {
     @FXML
     private VBox sidebar;
@@ -66,6 +68,8 @@ public class SettingController {
         // Set up button event handlers
         dashboardBtn.setOnAction(event -> navigateToDashboard());
         gamesBtn.setOnAction(event -> navigateToGameLibrary());
+        leaderboardBtn.setOnAction(event -> navigateToLeaderboard());
+        settingsBtn.getStyleClass().add("selected"); // Mark current button as selected
         signOutBtn.setOnAction(event -> signOut());
         changePasswordBtn.setOnAction(event -> handlePasswordChange());
         
@@ -95,48 +99,35 @@ public class SettingController {
      */
     private void handlePasswordChange() {
         if (!isEditingPassword) {
-            // Enable password field for editing
-            passwordField.setEditable(true);
-            passwordField.setFocusTraversable(true);
+            // Enable password editing
+            passwordField.setDisable(false);
             passwordField.setPromptText("Enter new password");
-            passwordField.setText("");
             changePasswordBtn.setText("Save Password");
             isEditingPassword = true;
-            passwordField.requestFocus();
         } else {
-            // Save the new password
+            // Save new password
             String newPassword = passwordField.getText();
-            
-            // Validate password
-            if (newPassword == null || newPassword.isEmpty()) {
-                showAlert(AlertType.ERROR, "Error", "Password cannot be empty");
+            if (newPassword == null || newPassword.trim().isEmpty()) {
+                showAlert(AlertType.WARNING, "Warning", "Password cannot be empty");
                 return;
             }
             
-            if (newPassword.length() < 6) {
-                showAlert(AlertType.ERROR, "Error", "Password must be at least 6 characters long");
-                return;
-            }
+            // In a real implementation, validate password complexity
             
-            // Update the password in the database
+            // Update password in database
             boolean success = db.updatePassword(currentUsername, newPassword);
-            
             if (success) {
-                // Save the changes to the database file
-                db.saveDBData();
-                showAlert(AlertType.INFORMATION, "Success", "Password changed successfully");
+                showAlert(AlertType.INFORMATION, "Success", "Password updated successfully");
+                
+                // Reset UI
+                passwordField.clear();
+                passwordField.setDisable(true);
+                passwordField.setPromptText("********");
+                changePasswordBtn.setText("Change Password");
+                isEditingPassword = false;
             } else {
                 showAlert(AlertType.ERROR, "Error", "Failed to update password");
-                return;
             }
-            
-            // Reset password field
-            passwordField.setEditable(false);
-            passwordField.setFocusTraversable(false);
-            passwordField.setPromptText("••••••••");
-            passwordField.setText("");
-            changePasswordBtn.setText("Change Password");
-            isEditingPassword = false;
         }
     }
     
@@ -189,7 +180,7 @@ public class SettingController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Dashboard.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 1280, 730);
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
             
             // Pass the current user to the dashboard
@@ -210,7 +201,7 @@ public class SettingController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/GameLibrary.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 1280, 730);
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/library.css").toExternalForm());
             
             // Pass the current user to the game library
@@ -227,11 +218,32 @@ public class SettingController {
     }
     
     @FXML
+    private void navigateToLeaderboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Leaderboard.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/leaderboard.css").toExternalForm());
+            
+            // Pass current user information
+            LeaderboardController leaderboardController = loader.getController();
+            leaderboardController.setCurrentUser(currentUsername, false); // Not a guest since settings are for registered users
+            
+            Stage stage = (Stage) leaderboardBtn.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Error", "Could not navigate to leaderboard: " + e.getMessage());
+        }
+    }
+    
+    @FXML
     private void signOut() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Login.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root, 1280, 730);
+            Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
             
             Stage stage = (Stage) signOutBtn.getScene().getWindow();

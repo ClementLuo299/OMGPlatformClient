@@ -1,0 +1,371 @@
+/* Base style definitions */
+* {
+    /* Only use these 4 colors */
+    -fx-primary-color: #FFFFFF;    /* 60% - White */
+    -fx-secondary-color: #F5F6FA;  /* 30% - Grey */
+    -fx-accent-color: #3B82F6;     /* 10% - Light Blue */
+    -fx-text-color: #1a1a1a;
+    
+    /* Shadow and transition properties */
+    -fx-card-shadow: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 4);
+    -fx-transition-duration: 0.2s;
+}
+
+.main-container {
+    -fx-background-color: -fx-primary-color;
+}
+
+/* SIDEBAR STYLING - EXACTLY MATCHING DASHBOARD.CSS */
+.sidebar {
+    -fx-background-color: -fx-primary-color;
+    -fx-min-width: 250px;
+    -fx-max-width: 250px;
+    -fx-padding: 16px 12px;
+    -fx-spacing: 24px;
+    -fx-border-width: 0 1px 0 0;
+    -fx-border-color: -fx-secondary-color;
+    -fx-transition: all 0.3s ease;
+}
+
+.app-title {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 8px 8px;
+}
+
+.title-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+/* Navigation Buttons */
+.nav-items {
+    -fx-spacing: 4px;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-padding: 12px;
+    -fx-alignment: center-left;
+    -fx-min-width: 226px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+
+.nav-button:hover {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.nav-button.selected {
+    -fx-background-color: -fx-accent-color;
+}
+
+.nav-button.selected .nav-button-content Label {
+    -fx-text-fill: white;
+}
+
+.nav-button-content {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+}
+
+.nav-icon {
+    -fx-fit-width: 20px;
+    -fx-fit-height: 20px;
+}
+
+/* Sign Out Button */
+.sign-out {
+    -fx-border-width: 0;
+}
+
+.sign-out .nav-button-content Label {
+    -fx-text-fill: #EF4444;  /* Red color for sign out */
+}
+
+.sign-out:hover {
+    -fx-background-color: #FEE2E2;  /* Light red background on hover */
+}
+
+/* Content Area Styling */
+.content-area {
+    -fx-background-color: -fx-secondary-color;
+    -fx-padding: 30px;
+    -fx-spacing: 24px;
+}
+
+/* Leaderboard Header */
+.leaderboard-header {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 16px 0;
+}
+
+.leaderboard-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.leaderboard-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #64748B;
+    -fx-padding: 10px 0 0 8px;
+}
+
+/* Tabs Styling */
+.leaderboard-tabs {
+    -fx-tab-min-width: 120px;
+    -fx-tab-max-width: 120px;
+    -fx-tab-min-height: 40px;
+}
+
+.leaderboard-tabs .tab-header-area {
+    -fx-padding: 0 0 8px 0;
+}
+
+.leaderboard-tabs .tab {
+    -fx-background-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-border-width: 0 0 2px 0;
+    -fx-border-color: transparent;
+    -fx-padding: 4px 12px;
+    -fx-cursor: hand;
+}
+
+.leaderboard-tabs .tab:selected {
+    -fx-background-color: transparent;
+    -fx-border-color: -fx-accent-color;
+}
+
+.leaderboard-tabs .tab:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.03);
+}
+
+.leaderboard-tabs .tab .tab-label {
+    -fx-text-fill: #64748B;
+    -fx-font-size: 14px;
+    -fx-font-weight: normal;
+}
+
+.leaderboard-tabs .tab:selected .tab-label {
+    -fx-text-fill: -fx-accent-color;
+    -fx-font-weight: bold;
+}
+
+.leaderboard-tabs .tab-content-area {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+}
+
+/* Tab Content */
+.tab-content {
+    -fx-spacing: 24px;
+    -fx-padding: 8px 0 0 0;
+}
+
+/* Ranking Header */
+.ranking-header {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 16px 0;
+}
+
+.ranking-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.game-icon {
+    -fx-opacity: 0.9;
+}
+
+/* Leaderboard Tables Container */
+.leaderboard-tables {
+    -fx-spacing: 24px;
+    -fx-alignment: center-left;
+}
+
+/* Individual Leaderboard Section */
+.leaderboard-section {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+    -fx-min-width: 240px;
+    -fx-max-width: 240px;
+    -fx-effect: -fx-card-shadow;
+    -fx-alignment: center-left;
+}
+
+.leaderboard-section-full {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 12px;
+    -fx-padding: 20px;
+    -fx-spacing: 12px;
+    -fx-effect: -fx-card-shadow;
+    -fx-alignment: center-left;
+    -fx-margin-top: 24px;
+    -fx-min-width: 100%;
+}
+
+.leaderboard-section-full VBox {
+    -fx-min-width: 600px;
+    -fx-max-width: 600px;
+    -fx-spacing: 12px;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+    -fx-padding: 0 0 8px 0;
+}
+
+/* Table Styling */
+.leaderboard-table, .leaderboard-table-wide {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.leaderboard-table .column-header, 
+.leaderboard-table-wide .column-header {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-padding: 8px 12px;
+}
+
+.leaderboard-table .column-header-background,
+.leaderboard-table-wide .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.leaderboard-table .column-header .label,
+.leaderboard-table-wide .column-header .label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #64748B;
+    -fx-alignment: center-left;
+}
+
+.leaderboard-table .table-row-cell,
+.leaderboard-table-wide .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-width: 0 0 1px 0;
+    -fx-border-color: rgba(0, 0, 0, 0.05);
+    -fx-padding: 8px 0;
+}
+
+.leaderboard-table .table-row-cell:hover,
+.leaderboard-table-wide .table-row-cell:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.02);
+}
+
+.leaderboard-table .table-row-cell:selected,
+.leaderboard-table-wide .table-row-cell:selected {
+    -fx-background-color: rgba(59, 130, 246, 0.1);
+}
+
+.leaderboard-table .table-row-cell:selected .table-cell,
+.leaderboard-table-wide .table-row-cell:selected .table-cell {
+    -fx-text-fill: -fx-accent-color;
+}
+
+.leaderboard-table .table-cell,
+.leaderboard-table-wide .table-cell {
+    -fx-border-width: 0;
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-color;
+    -fx-alignment: center-left;
+}
+
+/* Column Styling */
+.rank-column {
+    -fx-pref-width: 60px;
+    -fx-max-width: 60px;
+    -fx-alignment: center;
+}
+
+.player-column {
+    -fx-pref-width: 140px;
+    -fx-max-width: 140px;
+    -fx-alignment: center-left;
+}
+
+.value-column {
+    -fx-pref-width: 80px;
+    -fx-max-width: 80px;
+    -fx-alignment: center;
+}
+
+/* Additional column styles for Most Games Played table */
+.games-column {
+    -fx-pref-width: 80px;
+    -fx-max-width: 80px;
+    -fx-alignment: center;
+}
+
+.win-percent-column {
+    -fx-pref-width: 80px;
+    -fx-max-width: 80px;
+    -fx-alignment: center;
+}
+
+.level-column {
+    -fx-pref-width: 80px;
+    -fx-max-width: 80px;
+    -fx-alignment: center;
+}
+
+/* Medal Colors for Top 3 */
+.leaderboard-table .table-row-cell:nth-child(1) .rank-column,
+.leaderboard-table-wide .table-row-cell:nth-child(1) .rank-column {
+    -fx-text-fill: #F59E0B; /* Gold */
+    -fx-font-weight: bold;
+}
+
+.leaderboard-table .table-row-cell:nth-child(2) .rank-column,
+.leaderboard-table-wide .table-row-cell:nth-child(2) .rank-column {
+    -fx-text-fill: #94A3B8; /* Silver */
+    -fx-font-weight: bold;
+}
+
+.leaderboard-table .table-row-cell:nth-child(3) .rank-column,
+.leaderboard-table-wide .table-row-cell:nth-child(3) .rank-column {
+    -fx-text-fill: #B45309; /* Bronze */
+    -fx-font-weight: bold;
+}
+
+/* Scrollbar styling */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10px;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+}
+
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+} 
