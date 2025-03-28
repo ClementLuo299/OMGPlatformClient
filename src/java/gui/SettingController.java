@@ -1,5 +1,7 @@
 package gui;
 
+import networking.IO.DatabaseIOHandler;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -34,8 +36,6 @@ public class SettingController {
     private TextField nameField;
     @FXML
     private TextField usernameField;
-    @FXML
-    private TextField emailField;
     
     // Toggle Elements
     @FXML
@@ -47,6 +47,12 @@ public class SettingController {
     
     private boolean isDarkTheme = false;
     private boolean isChatEnabled = true;
+    
+    // Current user info
+    private String currentUsername;
+    
+    // Database IO Handler
+    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
 
     @FXML
     public void initialize() {
@@ -57,6 +63,23 @@ public class SettingController {
         
         // Set up toggle handlers
         setupToggleHandlers();
+    }
+    
+    /**
+     * Set the current user for this controller
+     * @param username The username of the current user
+     */
+    public void setCurrentUser(String username) {
+        this.currentUsername = username;
+        
+        // Set the username field
+        usernameField.setText(username);
+        
+        // Try to get and set the full name from database
+        String fullName = db.getUserFullName(username);
+        if (fullName != null && !fullName.isEmpty()) {
+            nameField.setText(fullName);
+        }
     }
     
     private void setupToggleHandlers() {
@@ -111,6 +134,10 @@ public class SettingController {
             Scene scene = new Scene(root, 1280, 730);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
             
+            // Pass the current user to the dashboard
+            DashboardController dashboardController = loader.getController();
+            dashboardController.setCurrentUser(currentUsername, false); // Not a guest since settings are for registered users
+            
             Stage stage = (Stage) dashboardBtn.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
@@ -127,6 +154,10 @@ public class SettingController {
             Parent root = loader.load();
             Scene scene = new Scene(root, 1280, 730);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/library.css").toExternalForm());
+            
+            // Pass the current user to the game library
+            GameLibraryController gameLibraryController = loader.getController();
+            gameLibraryController.setCurrentUser(currentUsername, false); // Not a guest since settings are for registered users
             
             Stage stage = (Stage) gamesBtn.getScene().getWindow();
             stage.setScene(scene);

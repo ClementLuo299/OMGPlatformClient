@@ -126,12 +126,6 @@
                 </HBox>
                 
                 <HBox styleClass="form-row">
-                    <!-- Email Field -->
-                    <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
-                        <Label styleClass="field-label" text="Email" />
-                        <TextField fx:id="emailField" styleClass="password-mask" promptText="Your Email" editable="false" focusTraversable="false" text="user.email@example.com" />
-                    </VBox>
-                    
                     <!-- Password Field -->
                     <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
                         <Label styleClass="field-label" text="Password" />

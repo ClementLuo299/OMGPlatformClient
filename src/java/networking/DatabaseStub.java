@@ -13,7 +13,6 @@ import java.util.HashMap;
  * Not Null Unique int uid,
  * Not Null Unique String username,
  * Not Null String password,
- * Unique String email,
  * String dob,
  * int privacyLevel,
  * Not Null String dateCreated,

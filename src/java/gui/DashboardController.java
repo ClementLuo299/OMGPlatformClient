@@ -42,6 +42,9 @@ public class DashboardController {
     // Current logged-in username
     private String currentUsername;
     
+    // Guest status flag
+    private boolean isGuest;
+    
     // Database IO Handler
     private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
 
@@ -70,18 +73,39 @@ public class DashboardController {
     /**
      * Set the currently logged in user
      * @param username The username of the logged in user
+     * @param isGuest Whether the user is a guest
      */
-    public void setCurrentUser(String username) {
+    public void setCurrentUser(String username, boolean isGuest) {
         this.currentUsername = username;
+        this.isGuest = isGuest;
         
-        // Get the user's full name from the database
-        String fullName = db.getUserFullName(username);
-        
-        // If we have a full name, display it; otherwise, use the username
-        if (fullName != null && !fullName.isEmpty()) {
-            usernameLabel.setText(fullName);
+        if (isGuest) {
+            // For guest users, display username with "Guest" prefix
+            usernameLabel.setText("Guest: " + username);
+            
+            // Disable settings for guest users
+            settingsBtn.setDisable(true);
+            
+            // Clear activity list for guest users
+            activityList.getItems().clear();
+            activityList.getItems().add("Welcome to the platform as a guest!");
+            activityList.getItems().add("Note: Your progress will not be saved.");
+            
+            // Reset stats for guest users
+            totalGames.setText("0");
+            winRate.setText("0%");
+            currentRank.setText("--");
+            bestGame.setText("--");
         } else {
-            usernameLabel.setText(username);
+            // For registered users, try to get full name
+            String fullName = db.getUserFullName(username);
+            
+            // If we have a full name, display it; otherwise, use the username
+            if (fullName != null && !fullName.isEmpty()) {
+                usernameLabel.setText(fullName);
+            } else {
+                usernameLabel.setText(username);
+            }
         }
     }
 
@@ -113,6 +137,10 @@ public class DashboardController {
             String cssPath = getClass().getClassLoader().getResource("css/library.css").toExternalForm();
             scene.getStylesheets().add(cssPath);
             
+            // Pass the current user info to GameLibraryController
+            GameLibraryController gameLibraryController = loader.getController();
+            gameLibraryController.setCurrentUser(currentUsername, isGuest);
+            
             Stage stage = (Stage) gamesBtn.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
@@ -124,11 +152,21 @@ public class DashboardController {
 
     @FXML
     private void openSettings() {
+        // Don't allow guests to access settings
+        if (isGuest) {
+            showAlert("Not Available", "Settings are not available for guest users");
+            return;
+        }
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Setting.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root, 1280, 730);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/setting.css").toExternalForm());
+            
+            // Pass the current user to settings
+            SettingController settingController = loader.getController();
+            settingController.setCurrentUser(currentUsername);
             
             Stage stage = (Stage) settingsBtn.getScene().getWindow();
             stage.setScene(scene);

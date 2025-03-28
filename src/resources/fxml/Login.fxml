@@ -10,17 +10,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Line?>
 
-<AnchorPane prefHeight="730.0" prefWidth="1280" xmlns="http://javafx.com/javafx/21.0" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
+<AnchorPane prefHeight="730.0" prefWidth="1280" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
 
     <!-- Title -->
     <Label layoutX="423.0" layoutY="74.0" prefHeight="32.0" prefWidth="435.0" styleClass="title" text="Online Multiplayer Board Game Platform" />
 
-    <VBox alignment="TOP_CENTER" layoutX="490.0" layoutY="155.0" prefWidth="300" spacing="15">
+    <VBox alignment="TOP_CENTER" layoutX="273.0" layoutY="172.0" prefWidth="300" spacing="15">
         <Label styleClass="subtitle" text="Welcome! Please enter your details." />
 
-        <!-- Email Field -->
-        <Label prefHeight="20.0" prefWidth="306.0" styleClass="input-label" text="Email" />
+        <!-- Username Field -->
+        <Label prefHeight="20.0" prefWidth="306.0" styleClass="input-label" text="Username" />
         <TextField fx:id="usernameField" promptText="Enter your username" styleClass="input-field" />
 
         <!-- Password Field -->
@@ -32,7 +33,7 @@
             <CheckBox fx:id="rememberMe" styleClass="checkbox" text="Remember me" />
             <Hyperlink fx:id="forgotPasswordLink" styleClass="link" text="Forgot password" />
         </HBox>
-
+   
         <!-- Sign In Button -->
         <Button fx:id="loginButton" styleClass="login-button" text="Sign in" />
 
@@ -42,6 +43,16 @@
 
 
     </VBox>
+   <VBox alignment="TOP_CENTER" layoutX="708.0" layoutY="172.0" prefWidth="300" spacing="15">
+      <children>
+         <Label prefHeight="20.0" prefWidth="116.0" styleClass="subtitle" text="Continue as Guest" />
+         <Label prefHeight="20.0" prefWidth="306.0" styleClass="input-label" text="Username" />
+         <TextField fx:id="usernameField1" promptText="Enter your username" styleClass="input-field" />
+         <HBox alignment="CENTER_LEFT" spacing="60" />
+         <Button fx:id="loginButton1" styleClass="login-button" text="Sign in" />
+      </children>
+   </VBox>
+   <Line endX="-100.0" endY="342.0" layoutX="740.0" layoutY="193.0" startX="-100.0" startY="-14.0" />
     <stylesheets>
         <URL value="@../css/login.css" />
     </stylesheets>

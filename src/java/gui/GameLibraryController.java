@@ -37,6 +37,10 @@ public class GameLibraryController {
     @FXML
     private ListView<?> availableMatchesList;
     
+    // User info
+    private String currentUsername;
+    private boolean isGuest;
+    
     @FXML
     public void initialize() {
         // Set up button event handlers
@@ -49,6 +53,21 @@ public class GameLibraryController {
         
         // Populate active matches
         populateActiveMatches();
+    }
+    
+    /**
+     * Set the current user for this controller
+     * @param username The username of the current user
+     * @param isGuest Whether this user is a guest
+     */
+    public void setCurrentUser(String username, boolean isGuest) {
+        this.currentUsername = username;
+        this.isGuest = isGuest;
+        
+        // Disable settings button for guest users
+        if (isGuest) {
+            settingsBtn.setDisable(true);
+        }
     }
     
     private void populateGamesGrid() {
@@ -68,6 +87,10 @@ public class GameLibraryController {
             Parent root = loader.load();
             Scene scene = new Scene(root, 1280, 730);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
+            
+            // Pass current user information
+            DashboardController dashboardController = loader.getController();
+            dashboardController.setCurrentUser(currentUsername, isGuest);
             
             Stage stage = (Stage) dashboardBtn.getScene().getWindow();
             stage.setScene(scene);
@@ -97,11 +120,21 @@ public class GameLibraryController {
     
     @FXML
     private void openSettings() {
+        // Don't allow guests to access settings
+        if (isGuest) {
+            showAlert("Not Available", "Settings are not available for guest users");
+            return;
+        }
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Setting.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root, 1280, 730);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/setting.css").toExternalForm());
+            
+            // Pass the current user to settings
+            SettingController settingController = loader.getController();
+            settingController.setCurrentUser(currentUsername);
             
             Stage stage = (Stage) settingsBtn.getScene().getWindow();
             stage.setScene(scene);
