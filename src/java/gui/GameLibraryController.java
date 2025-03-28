@@ -10,6 +10,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.control.Alert.AlertType;
 
 public class GameLibraryController {
     
@@ -36,6 +37,16 @@ public class GameLibraryController {
     
     @FXML
     private ListView<?> availableMatchesList;
+    
+    // Game card buttons
+    @FXML
+    private Button connect4Button;
+    
+    @FXML
+    private Button checkersButton;
+    
+    @FXML
+    private Button whistButton;
     
     // User info
     private String currentUsername;
@@ -72,7 +83,7 @@ public class GameLibraryController {
     
     private void populateGamesGrid() {
         // This will be implemented to dynamically populate the games grid
-        // For now, we leave it empty as a placeholder
+        // For now, we leave it empty as a placeholder since we've added static cards
     }
     
     private void populateActiveMatches() {
@@ -97,7 +108,7 @@ public class GameLibraryController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Could not return to dashboard: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Could not return to dashboard: " + e.getMessage());
         }
     }
     
@@ -114,7 +125,7 @@ public class GameLibraryController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Could not sign out: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Could not sign out: " + e.getMessage());
         }
     }
     
@@ -122,7 +133,7 @@ public class GameLibraryController {
     private void openSettings() {
         // Don't allow guests to access settings
         if (isGuest) {
-            showAlert("Not Available", "Settings are not available for guest users");
+            showAlert(AlertType.INFORMATION, "Not Available", "Settings are not available for guest users");
             return;
         }
         
@@ -141,12 +152,32 @@ public class GameLibraryController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Could not open settings: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Could not open settings: " + e.getMessage());
         }
     }
     
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    // Game launch methods
+    
+    @FXML
+    private void playConnect4() {
+        showAlert(AlertType.INFORMATION, "Game Launch", "Connect 4 game will launch here");
+        // TODO: Implement actual game launch
+    }
+    
+    @FXML
+    private void playCheckers() {
+        showAlert(AlertType.INFORMATION, "Game Launch", "Checkers game will launch here");
+        // TODO: Implement actual game launch
+    }
+    
+    @FXML
+    private void playWhist() {
+        showAlert(AlertType.INFORMATION, "Game Launch", "Whist Card Game will launch here");
+        // TODO: Implement actual game launch
+    }
+    
+    private void showAlert(AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);

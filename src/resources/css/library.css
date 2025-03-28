@@ -104,9 +104,31 @@
     -fx-spacing: 24px;
 }
 
+/* Game Library Header */
+.games-header {
+    -fx-padding: 0 0 10px 0;
+    -fx-spacing: 10px;
+}
+
+.games-header VBox {
+    -fx-spacing: 4px;
+}
+
+.games-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.games-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #64748B;
+    -fx-padding: 0 0 0 4px;
+}
+
 .game-filters {
     -fx-spacing: 10px;
-    -fx-padding: 0 0 20px 0;
+    -fx-padding: 0 0 16px 0;
 }
 
 .filter-button {
@@ -130,19 +152,25 @@
     -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 8, 0, 0, 2);
 }
 
-/* Game Grid Styling */
-.games-grid {
-    -fx-background-color: transparent;
-    -fx-hgap: 24px;
-    -fx-vgap: 24px;
+/* Game Cards Container */
+.game-cards-container {
+    -fx-spacing: 24px;
+    -fx-padding: 0 0 24px 0;
+    -fx-alignment: center-left;
 }
 
+/* Game Card Styling */
 .game-card {
     -fx-background-color: -fx-primary-color;
     -fx-background-radius: 16px;
     -fx-padding: 20px;
+    -fx-spacing: 12px;
+    -fx-min-width: 240px;
+    -fx-max-width: 240px;
+    -fx-min-height: 350px;
     -fx-effect: -fx-card-shadow;
     -fx-transition: -fx-effect -fx-transition-duration ease-out, -fx-translate-y -fx-transition-duration ease-out;
+    -fx-alignment: center-left;
 }
 
 .game-card:hover {
@@ -150,22 +178,37 @@
     -fx-translate-y: -3px;
 }
 
+.game-image {
+    -fx-alignment: center;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+}
+
 .game-title {
     -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: -fx-text-color;
+    -fx-padding: 8px 0 0 0;
+}
+
+.game-info {
+    -fx-spacing: 16px;
+    -fx-alignment: center-left;
+}
+
+.game-players, .game-time {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748B;
+    -fx-padding: 4px 8px;
+    -fx-background-color: rgba(0, 0, 0, 0.05);
+    -fx-background-radius: 4px;
 }
 
 .game-description {
     -fx-font-size: 14px;
     -fx-text-fill: #64748B;
     -fx-wrap-text: true;
-}
-
-.game-stats {
-    -fx-font-size: 13px;
-    -fx-text-fill: #64748B;
-    -fx-padding: 8px 0;
+    -fx-padding: 0 0 10px 0;
 }
 
 .game-card-button {
@@ -177,11 +220,22 @@
     -fx-background-radius: 8px;
     -fx-cursor: hand;
     -fx-transition: -fx-background-color -fx-transition-duration ease-out;
+    -fx-alignment: center;
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+    -fx-margin-top: 10px;
 }
 
 .game-card-button:hover {
     -fx-background-color: derive(-fx-accent-color, -10%);
     -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 8, 0, 0, 0);
+}
+
+/* Game Grid Styling */
+.games-grid {
+    -fx-background-color: transparent;
+    -fx-hgap: 24px;
+    -fx-vgap: 24px;
 }
 
 /* Available Matches Styling */
