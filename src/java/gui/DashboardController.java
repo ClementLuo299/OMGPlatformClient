@@ -53,6 +53,9 @@ public class DashboardController {
         winRate.setText("64%");
         currentRank.setText("#156");
         bestGame.setText("Connect 4");
+        
+        // Set button actions
+        gamesBtn.setOnAction(event -> openGameLibrary());
     }
 
     @FXML
@@ -69,6 +72,26 @@ public class DashboardController {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Could not sign out: " + e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void openGameLibrary() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/GameLibrary.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            
+            // Add the library.css stylesheet directly
+            String cssPath = getClass().getClassLoader().getResource("css/library.css").toExternalForm();
+            scene.getStylesheets().add(cssPath);
+            
+            Stage stage = (Stage) gamesBtn.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not open game library: " + e.getMessage());
         }
     }
 
