@@ -3,25 +3,26 @@ package gui;
 import networking.IO.DatabaseIOHandler;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.scene.Parent;
 
 public class BoardGamePlatformApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Login.fxml"));
-            Parent root = loader.load();
-
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
-
+            // Initialize the ScreenManager with the primary stage
+            ScreenManager screenManager = ScreenManager.getInstance();
+            screenManager.initialize(primaryStage);
+            
+            // Navigate to the login screen (initial screen)
+            screenManager.navigateTo(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS);
+            
+            // Start preloading common screens in background for faster navigation
+            new Thread(() -> {
+                screenManager.preloadCommonScreens();
+            }).start();
+            
             primaryStage.setTitle("OMG Platform");
-            primaryStage.setScene(scene);
             primaryStage.setWidth(1400);
             primaryStage.setHeight(800);
             primaryStage.setMinWidth(800);

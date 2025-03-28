@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="730.0" prefWidth="1280" styleClass="root-container" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DashboardController">
+<HBox prefHeight="800.0" prefWidth="1400" styleClass="root-container" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DashboardController">
     <!-- Left Sidebar Navigation -->
-    <VBox fx:id="sidebar" prefHeight="400.0" prefWidth="250.0" styleClass="sidebar">
+    <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
         <!-- App Title -->
         <HBox styleClass="app-title">
             <ImageView fitHeight="24" fitWidth="24">

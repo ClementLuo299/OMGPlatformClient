@@ -12,9 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="730.0" prefWidth="1280" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GameLibraryController">
+<BorderPane prefHeight="800.0" prefWidth="1400" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GameLibraryController">
     <left>
-        <VBox fx:id="sidebar" styleClass="sidebar">
+        <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
             <!-- App Title with Toggle -->
             <HBox styleClass="app-title">
                 <ImageView fitHeight="24" fitWidth="24">

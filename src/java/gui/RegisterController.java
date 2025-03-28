@@ -43,6 +43,9 @@ public class RegisterController {
     //Database IO Handler
     private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
 
+    // Add ScreenManager instance at the beginning of the class
+    private ScreenManager screenManager = ScreenManager.getInstance();
+
     @FXML
     public void initialize() {
         // Initialize your components here if needed
@@ -96,14 +99,8 @@ public class RegisterController {
 
     private void backToLogin(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Login.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
-            
-            Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            // Use the ScreenManager to navigate to login
+            screenManager.navigateTo(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS);
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Could not return to login screen: " + e.getMessage());

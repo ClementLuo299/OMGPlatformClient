@@ -55,6 +55,9 @@ public class GameLibraryController {
     private String currentUsername;
     private boolean isGuest;
     
+    // Add ScreenManager instance at the beginning of the class
+    private ScreenManager screenManager = ScreenManager.getInstance();
+    
     @FXML
     public void initialize() {
         // Set up button event handlers
@@ -99,17 +102,14 @@ public class GameLibraryController {
     @FXML
     private void backToDashboard() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Dashboard.fxml"));
-            Parent root = loader.load();
-            DashboardController controller = loader.getController();
-            controller.setCurrentUser(currentUsername, isGuest);
+            // Use the ScreenManager to navigate
+            DashboardController controller = (DashboardController)
+                    screenManager.navigateTo(ScreenManager.DASHBOARD_SCREEN, ScreenManager.DASHBOARD_CSS);
             
-            Platform.runLater(() -> {
-                Scene scene = new Scene(root);
-                scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
-                Stage stage = (Stage) dashboardBtn.getScene().getWindow();
-                stage.setScene(scene);
-            });
+            // Set current user in the controller if we got one back
+            if (controller != null) {
+                controller.setCurrentUser(currentUsername, isGuest);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Error", "Could not return to dashboard: " + e.getMessage());
@@ -119,17 +119,14 @@ public class GameLibraryController {
     @FXML
     private void openLeaderboard() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Leaderboard.fxml"));
-            Parent root = loader.load();
-            LeaderboardController controller = loader.getController();
-            controller.setCurrentUser(currentUsername, isGuest);
+            // Use the ScreenManager to navigate
+            LeaderboardController controller = (LeaderboardController)
+                    screenManager.navigateTo(ScreenManager.LEADERBOARD_SCREEN, ScreenManager.LEADERBOARD_CSS);
             
-            Platform.runLater(() -> {
-                Scene scene = new Scene(root);
-                scene.getStylesheets().add(getClass().getClassLoader().getResource("css/leaderboard.css").toExternalForm());
-                Stage stage = (Stage) leaderboardBtn.getScene().getWindow();
-                stage.setScene(scene);
-            });
+            // Set current user in the controller if we got one back
+            if (controller != null) {
+                controller.setCurrentUser(currentUsername, isGuest);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Navigation Error", "Could not open leaderboard: " + e.getMessage());
@@ -139,15 +136,8 @@ public class GameLibraryController {
     @FXML
     private void signOut() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Login.fxml"));
-            Parent root = loader.load();
-            
-            Platform.runLater(() -> {
-                Scene scene = new Scene(root);
-                scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
-                Stage stage = (Stage) signOutBtn.getScene().getWindow();
-                stage.setScene(scene);
-            });
+            // Use the ScreenManager to navigate to login
+            screenManager.navigateTo(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS);
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Error", "Could not sign out: " + e.getMessage());
@@ -163,17 +153,14 @@ public class GameLibraryController {
         }
         
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Setting.fxml"));
-            Parent root = loader.load();
-            SettingController controller = loader.getController();
-            controller.setCurrentUser(currentUsername);
+            // Use the ScreenManager to navigate
+            SettingController controller = (SettingController)
+                    screenManager.navigateTo(ScreenManager.SETTINGS_SCREEN, ScreenManager.SETTINGS_CSS);
             
-            Platform.runLater(() -> {
-                Scene scene = new Scene(root);
-                scene.getStylesheets().add(getClass().getClassLoader().getResource("css/setting.css").toExternalForm());
-                Stage stage = (Stage) settingsBtn.getScene().getWindow();
-                stage.setScene(scene);
-            });
+            // Set current user in the controller if we got one back
+            if (controller != null) {
+                controller.setCurrentUser(currentUsername);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Error", "Could not open settings: " + e.getMessage());

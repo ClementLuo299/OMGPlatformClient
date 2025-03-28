@@ -4,11 +4,7 @@ import networking.IO.DatabaseIOHandler;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 public class LoginController {
 
@@ -38,6 +34,9 @@ public class LoginController {
 
     //Database IO Handler
     private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
+    
+    // Screen manager for navigation
+    private ScreenManager screenManager = ScreenManager.getInstance();
 
     @FXML
     public void initialize() {
@@ -64,7 +63,7 @@ public class LoginController {
 
         if (db.verifyCredentials(username, password)) {
             System.out.println("Login successful!");
-            switchToDashboard(event, username, false);
+            switchToDashboard(username, false);
         } else {
             showAlert("Login Error", "Invalid username or password");
         }
@@ -86,19 +85,13 @@ public class LoginController {
         }
         
         System.out.println("Guest login successful!");
-        switchToDashboard(event, guestUsername, true);
+        switchToDashboard(guestUsername, true);
     }
 
     private void openRegisterScreen(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Register.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/register.css").toExternalForm());
-            
-            Stage stage = (Stage) createAccountButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            // Use ScreenManager to navigate to register screen
+            screenManager.navigateTo(ScreenManager.REGISTER_SCREEN, ScreenManager.REGISTER_CSS);
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Could not open register screen: " + e.getMessage());
@@ -110,20 +103,16 @@ public class LoginController {
         showAlert("Info", "Forgot password functionality not implemented yet");
     }
 
-    private void switchToDashboard(ActionEvent event, String username, boolean isGuest) {
+    private void switchToDashboard(String username, boolean isGuest) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Dashboard.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
+            // Always reload dashboard to ensure it's fresh for the new user
+            DashboardController controller = (DashboardController)
+                    screenManager.reloadAndNavigateTo(ScreenManager.DASHBOARD_SCREEN, ScreenManager.DASHBOARD_CSS);
             
-            // Get the controller and set the current user
-            DashboardController dashboardController = loader.getController();
-            dashboardController.setCurrentUser(username, isGuest);
-            
-            Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            // Set the current user in the controller
+            if (controller != null) {
+                controller.setCurrentUser(username, isGuest);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Could not open dashboard: " + e.getMessage());
@@ -137,5 +126,4 @@ public class LoginController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
 }
