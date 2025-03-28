@@ -97,15 +97,8 @@ public class DashboardController {
             currentRank.setText("--");
             bestGame.setText("--");
         } else {
-            // For registered users, try to get full name
-            String fullName = db.getUserFullName(username);
-            
-            // If we have a full name, display it; otherwise, use the username
-            if (fullName != null && !fullName.isEmpty()) {
-                usernameLabel.setText(fullName);
-            } else {
-                usernameLabel.setText(username);
-            }
+            // For registered users, always display the username in the top corner
+            usernameLabel.setText(username);
         }
     }
 

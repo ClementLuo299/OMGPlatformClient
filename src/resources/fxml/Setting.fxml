@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -112,14 +113,14 @@
                     <!-- Name Field -->
                     <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
                         <Label styleClass="field-label" text="Name" />
-                        <TextField fx:id="nameField" styleClass="password-mask" promptText="Your Name" text="User Name" editable="false" focusTraversable="false" />
+                        <TextField fx:id="nameField" editable="false" focusTraversable="false" promptText="Your Name" styleClass="password-mask" text="User Name" />
                     </VBox>
                     
                     <!-- Username Field -->
                     <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
                         <Label styleClass="field-label" text="Username" />
                         <HBox styleClass="username-field-container">
-                            <TextField fx:id="usernameField" styleClass="password-mask" promptText="Your Username" text="username123" editable="false" focusTraversable="false" HBox.hgrow="ALWAYS" />
+                            <TextField fx:id="usernameField" editable="false" focusTraversable="false" promptText="Your Username" styleClass="password-mask" text="username123" HBox.hgrow="ALWAYS" />
                             <Button styleClass="change-btn" text="Change" />
                         </HBox>
                     </VBox>
@@ -129,11 +130,13 @@
                     <!-- Password Field -->
                     <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
                         <Label styleClass="field-label" text="Password" />
-                        <HBox styleClass="password-field-container">
-                            <Pane styleClass="password-mask" HBox.hgrow="ALWAYS" />
-                            <Button styleClass="change-btn" text="Change Password" />
+                        <HBox prefHeight="36.0" prefWidth="186.0" styleClass="password-field-container">
+                            <PasswordField fx:id="passwordField" editable="false" focusTraversable="false" maxWidth="336.0" prefHeight="36.0" prefWidth="336.0" promptText="••••••••" styleClass="password-mask" HBox.hgrow="ALWAYS" />
+                            <Button fx:id="changePasswordBtn" styleClass="change-btn" text="Change Password" />
                         </HBox>
                     </VBox>
+                    <!-- Add empty space to balance the layout -->
+                    <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS" />
                 </HBox>
             </VBox>
         </VBox>
@@ -169,4 +172,4 @@
             </HBox>
         </VBox>
     </VBox>
-</HBox> 
+</HBox>

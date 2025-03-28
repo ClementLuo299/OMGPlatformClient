@@ -8,7 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -36,6 +38,10 @@ public class SettingController {
     private TextField nameField;
     @FXML
     private TextField usernameField;
+    @FXML
+    private PasswordField passwordField;
+    @FXML
+    private Button changePasswordBtn;
     
     // Toggle Elements
     @FXML
@@ -47,6 +53,7 @@ public class SettingController {
     
     private boolean isDarkTheme = false;
     private boolean isChatEnabled = true;
+    private boolean isEditingPassword = false;
     
     // Current user info
     private String currentUsername;
@@ -60,6 +67,7 @@ public class SettingController {
         dashboardBtn.setOnAction(event -> navigateToDashboard());
         gamesBtn.setOnAction(event -> navigateToGameLibrary());
         signOutBtn.setOnAction(event -> signOut());
+        changePasswordBtn.setOnAction(event -> handlePasswordChange());
         
         // Set up toggle handlers
         setupToggleHandlers();
@@ -79,6 +87,56 @@ public class SettingController {
         String fullName = db.getUserFullName(username);
         if (fullName != null && !fullName.isEmpty()) {
             nameField.setText(fullName);
+        }
+    }
+    
+    /**
+     * Handle password change button click
+     */
+    private void handlePasswordChange() {
+        if (!isEditingPassword) {
+            // Enable password field for editing
+            passwordField.setEditable(true);
+            passwordField.setFocusTraversable(true);
+            passwordField.setPromptText("Enter new password");
+            passwordField.setText("");
+            changePasswordBtn.setText("Save Password");
+            isEditingPassword = true;
+            passwordField.requestFocus();
+        } else {
+            // Save the new password
+            String newPassword = passwordField.getText();
+            
+            // Validate password
+            if (newPassword == null || newPassword.isEmpty()) {
+                showAlert(AlertType.ERROR, "Error", "Password cannot be empty");
+                return;
+            }
+            
+            if (newPassword.length() < 6) {
+                showAlert(AlertType.ERROR, "Error", "Password must be at least 6 characters long");
+                return;
+            }
+            
+            // Update the password in the database
+            boolean success = db.updatePassword(currentUsername, newPassword);
+            
+            if (success) {
+                // Save the changes to the database file
+                db.saveDBData();
+                showAlert(AlertType.INFORMATION, "Success", "Password changed successfully");
+            } else {
+                showAlert(AlertType.ERROR, "Error", "Failed to update password");
+                return;
+            }
+            
+            // Reset password field
+            passwordField.setEditable(false);
+            passwordField.setFocusTraversable(false);
+            passwordField.setPromptText("••••••••");
+            passwordField.setText("");
+            changePasswordBtn.setText("Change Password");
+            isEditingPassword = false;
         }
     }
     
@@ -143,7 +201,7 @@ public class SettingController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Could not navigate to dashboard: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Could not navigate to dashboard: " + e.getMessage());
         }
     }
     
@@ -164,7 +222,7 @@ public class SettingController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Could not navigate to game library: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Could not navigate to game library: " + e.getMessage());
         }
     }
     
@@ -181,12 +239,12 @@ public class SettingController {
             stage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Could not sign out: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Error", "Could not sign out: " + e.getMessage());
         }
     }
     
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+    private void showAlert(AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);

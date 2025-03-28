@@ -67,6 +67,25 @@ public class DatabaseIOHandler {
     }
 
     /**
+     * Update a user's password.
+     *
+     * @param username
+     *            The username of the account.
+     * @param newPassword
+     *            The new password for the account.
+     * @return boolean
+     *            True if the password was updated successfully, false otherwise.
+     */
+    public boolean updatePassword(String username, String newPassword) {
+        String[] accountData = db.getAccountData(username);
+        if (accountData != null) {
+            accountData[1] = newPassword;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Check if an account exists and password matches.
      *
      * @param username
