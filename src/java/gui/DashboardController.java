@@ -56,6 +56,7 @@ public class DashboardController {
         
         // Set button actions
         gamesBtn.setOnAction(event -> openGameLibrary());
+        settingsBtn.setOnAction(event -> openSettings());
     }
 
     @FXML
@@ -63,7 +64,7 @@ public class DashboardController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Login.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 1280, 730);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
             
             Stage stage = (Stage) signOutBtn.getScene().getWindow();
@@ -80,7 +81,7 @@ public class DashboardController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/GameLibrary.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 1280, 730);
             
             // Add the library.css stylesheet directly
             String cssPath = getClass().getClassLoader().getResource("css/library.css").toExternalForm();
@@ -92,6 +93,23 @@ public class DashboardController {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Could not open game library: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void openSettings() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Setting.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 1280, 730);
+            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/setting.css").toExternalForm());
+            
+            Stage stage = (Stage) settingsBtn.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not open settings: " + e.getMessage());
         }
     }
 

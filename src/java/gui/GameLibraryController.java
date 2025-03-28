@@ -42,6 +42,7 @@ public class GameLibraryController {
         // Set up button event handlers
         dashboardBtn.setOnAction(event -> backToDashboard());
         signOutBtn.setOnAction(event -> signOut());
+        settingsBtn.setOnAction(event -> openSettings());
         
         // Populate the games grid
         populateGamesGrid();
@@ -65,7 +66,7 @@ public class GameLibraryController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Dashboard.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 1280, 730);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
             
             Stage stage = (Stage) dashboardBtn.getScene().getWindow();
@@ -82,7 +83,7 @@ public class GameLibraryController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Login.fxml"));
             Parent root = loader.load();
-            Scene scene = new Scene(root);
+            Scene scene = new Scene(root, 1280, 730);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/login.css").toExternalForm());
             
             Stage stage = (Stage) signOutBtn.getScene().getWindow();
@@ -91,6 +92,23 @@ public class GameLibraryController {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Could not sign out: " + e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void openSettings() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Setting.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 1280, 730);
+            scene.getStylesheets().add(getClass().getClassLoader().getResource("css/setting.css").toExternalForm());
+            
+            Stage stage = (Stage) settingsBtn.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not open settings: " + e.getMessage());
         }
     }
     
