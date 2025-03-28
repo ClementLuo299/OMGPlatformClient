@@ -1,0 +1,312 @@
+/* Color Variables */
+* {
+    -fx-primary-color: #FFFFFF;    /* 60% - White */
+    -fx-secondary-color: #F5F6FA;  /* 30% - Grey */
+    -fx-accent-color: #3B82F6;     /* 10% - Light Blue */
+    -fx-text-color: #1a1a1a;
+}
+
+.root-container {
+    -fx-background-color: -fx-primary-color;
+}
+
+/* Sidebar Styling - Exactly matching dashboard.css */
+.sidebar {
+    -fx-background-color: -fx-primary-color;
+    -fx-min-width: 250px;
+    -fx-max-width: 250px;
+    -fx-padding: 16px 12px;
+    -fx-spacing: 24px;
+    -fx-border-width: 0 1px 0 0;
+    -fx-border-color: -fx-secondary-color;
+}
+
+.app-title {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 8px 8px;
+}
+
+.title-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+/* Navigation Buttons */
+.nav-items {
+    -fx-spacing: 4px;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-padding: 12px;
+    -fx-alignment: center-left;
+    -fx-min-width: 226px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+
+.nav-button:hover {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.nav-button.selected {
+    -fx-background-color: -fx-accent-color;
+}
+
+.nav-button.selected .nav-button-content Label {
+    -fx-text-fill: white;
+}
+
+.nav-button-content {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+}
+
+.nav-icon {
+    -fx-fit-width: 20px;
+    -fx-fit-height: 20px;
+}
+
+/* Sign Out Button */
+.sign-out {
+    -fx-border-width: 0;
+}
+
+.sign-out .nav-button-content Label {
+    -fx-text-fill: #EF4444;  /* Red color for sign out */
+}
+
+.sign-out:hover {
+    -fx-background-color: #FEE2E2;  /* Light red background on hover */
+}
+
+/* Content Area */
+.content-area {
+    -fx-background-color: -fx-primary-color;
+    -fx-padding: 16px;  /* Reduced from 24px */
+    -fx-spacing: 16px;  /* Reduced from 20px */
+}
+
+/* Page Header - Original */
+.page-header {
+    -fx-padding: 0 0 16px 0; /* Reduced padding */
+    -fx-border-color: -fx-secondary-color;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Page Header - Compact Version */
+.page-header-compact {
+    -fx-padding: 0 0 10px 0; /* Further reduced padding */
+    -fx-border-color: -fx-secondary-color;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.page-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.page-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+}
+
+/* Settings Section Styling - Original */
+.settings-section {
+    -fx-background-color: -fx-secondary-color;
+    -fx-padding: 18px; /* Reduced padding */
+    -fx-spacing: 16px; /* Reduced spacing */
+    -fx-background-radius: 12px;
+}
+
+/* Settings Section Styling - Compact Version */
+.settings-section-compact {
+    -fx-background-color: -fx-secondary-color;
+    -fx-padding: 12px;
+    -fx-spacing: 12px;
+    -fx-background-radius: 12px;
+}
+
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+/* Section Header - Original */
+.section-header {
+    -fx-alignment: center;
+    -fx-spacing: 10px;
+}
+
+/* Section Header - Compact Version */
+.section-header-compact {
+    -fx-alignment: center;
+    -fx-spacing: 8px;
+    -fx-padding: 0 0 4px 0;
+}
+
+/* Profile Information Styling - Original */
+.avatar-container {
+    -fx-spacing: 8px; /* Reduced spacing */
+    -fx-alignment: center;
+}
+
+/* Profile Information Styling - Compact Version */
+.avatar-container-compact {
+    -fx-spacing: 4px;
+    -fx-alignment: center;
+}
+
+.profile-avatar {
+    -fx-background-radius: 35px; /* Adjusted for smaller avatar */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0, 0, 3);
+}
+
+.change-avatar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-accent-color;
+    -fx-font-size: 11px; /* Smaller font */
+    -fx-cursor: hand;
+    -fx-padding: 4px 8px; /* Reduced padding */
+    -fx-background-radius: 4px;
+}
+
+.change-avatar-btn:hover {
+    -fx-background-color: derive(-fx-accent-color, 90%);
+}
+
+/* Form Styling - Original */
+.profile-fields {
+    -fx-spacing: 14px; /* Reduced spacing */
+    -fx-max-width: 760px; /* Ensure it fits within the window */
+}
+
+/* Form Styling - Compact Version with Two-column Layout */
+.profile-fields-compact {
+    -fx-spacing: 10px;
+    -fx-max-width: 760px;
+}
+
+.form-row {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+}
+
+.form-group {
+    -fx-spacing: 6px; /* Reduced spacing */
+}
+
+.form-group-compact {
+    -fx-spacing: 4px;
+    -fx-padding: 0 0 0 0;
+}
+
+.field-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.input-field {
+    -fx-background-color: -fx-secondary-color;
+    -fx-padding: 9px 12px; /* Reduced padding */
+    -fx-background-radius: 6px;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 6px;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+}
+
+.input-field:focused {
+    -fx-border-color: -fx-accent-color;
+    -fx-border-width: 1.5px;
+}
+
+.username-field-container, .password-field-container {
+    -fx-spacing: 10px; /* Reduced spacing */
+    -fx-alignment: center;
+}
+
+.password-mask {
+    -fx-background-color: #E5E7EB;
+    -fx-min-height: 36px; /* Reduced height */
+    -fx-background-radius: 6px;
+}
+
+.change-btn {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-padding: 7px 14px; /* Reduced padding */
+    -fx-background-radius: 6px;
+    -fx-font-size: 12px; /* Reduced font size */
+    -fx-cursor: hand;
+}
+
+.change-btn:hover {
+    -fx-background-color: derive(-fx-accent-color, -10%);
+}
+
+/* Game Settings Styling - Original */
+.setting-item {
+    -fx-padding: 14px; /* Reduced padding */
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 8px;
+    -fx-alignment: center;
+}
+
+/* Game Settings Styling - Compact Version */
+.setting-item-compact {
+    -fx-padding: 10px;
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 8px;
+    -fx-alignment: center;
+}
+
+.setting-label {
+    -fx-font-size: 15px; /* Reduced font size */
+    -fx-font-weight: bold;
+}
+
+.toggle-container {
+    -fx-spacing: 10px; /* Reduced spacing */
+    -fx-alignment: center;
+}
+
+.toggle-label {
+    -fx-font-size: 13px; /* Reduced font size */
+    -fx-text-fill: #64748B;
+}
+
+/* iPhone Style Toggle Switch */
+.toggle-switch {
+    -fx-background-color: #E5E7EB;
+    -fx-background-radius: 14px;
+    -fx-min-width: 48px;
+    -fx-min-height: 28px;
+    -fx-padding: 2px;
+    -fx-cursor: hand;
+}
+
+.toggle-thumb {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-min-width: 24px;
+    -fx-min-height: 24px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 1);
+    -fx-translate-x: 0;
+}
+
+.toggle-switch:hover .toggle-thumb {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 6, 0, 0, 2);
+}
+
+/* Style for active toggle */
+.toggle-switch.active {
+    -fx-background-color: -fx-accent-color;
+}
+
+.toggle-switch.active .toggle-thumb {
+    -fx-translate-x: 20;
+} 

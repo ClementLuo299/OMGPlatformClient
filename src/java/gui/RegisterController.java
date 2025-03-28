@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class RegisterController {
 
@@ -74,8 +75,11 @@ public class RegisterController {
             return;
         }
 
-        // Register the account
-        db.RegisterAccount(username, password);
+        // Format the date of birth as a string
+        String dobString = dob.format(DateTimeFormatter.ISO_LOCAL_DATE); // Format: YYYY-MM-DD
+
+        // Register the account with full name and date of birth
+        db.RegisterAccount(username, password, fullName, dobString);
         System.out.println("Account created successfully!");
 
         // Navigate back to login screen

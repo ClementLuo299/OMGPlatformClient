@@ -1,0 +1,351 @@
+* {
+    /* Only use these 4 colors */
+    -fx-primary-color: #FFFFFF;    /* 60% - White */
+    -fx-secondary-color: #F5F6FA;  /* 30% - Grey */
+    -fx-accent-color: #3B82F6;     /* 10% - Light Blue */
+    -fx-text-color: #1a1a1a;
+    
+    /* Shadow and transition properties */
+    -fx-card-shadow: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 4);
+    -fx-transition-duration: 0.2s;
+}
+
+.main-container {
+    -fx-background-color: -fx-primary-color;
+}
+
+/* SIDEBAR STYLING - EXACTLY MATCHING DASHBOARD.CSS */
+.sidebar {
+    -fx-background-color: -fx-primary-color;
+    -fx-min-width: 250px;
+    -fx-max-width: 250px;
+    -fx-padding: 16px 12px;
+    -fx-spacing: 24px;
+    -fx-border-width: 0 1px 0 0;
+    -fx-border-color: -fx-secondary-color;
+    -fx-transition: all 0.3s ease;
+}
+
+.app-title {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 8px 8px;
+}
+
+.title-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.toggle-button {
+    -fx-background-color: transparent;
+    -fx-padding: 4px;
+    -fx-cursor: hand;
+}
+
+.toggle-button:hover {
+    -fx-background-color: -fx-secondary-color;
+}
+
+/* Navigation Buttons */
+.nav-items {
+    -fx-spacing: 4px;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-padding: 12px;
+    -fx-alignment: center-left;
+    -fx-min-width: 226px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+
+.nav-button:hover {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.nav-button.selected {
+    -fx-background-color: -fx-accent-color;
+}
+
+.nav-button.selected .nav-button-content Label {
+    -fx-text-fill: white;
+}
+
+.nav-button-content {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+}
+
+.nav-icon {
+    -fx-fit-width: 20px;
+    -fx-fit-height: 20px;
+}
+
+/* Sign Out Button */
+.sign-out {
+    -fx-border-width: 0;
+}
+
+.sign-out .nav-button-content Label {
+    -fx-text-fill: #EF4444;  /* Red color for sign out */
+}
+
+.sign-out:hover {
+    -fx-background-color: #FEE2E2;  /* Light red background on hover */
+}
+
+/* Content Area Styling - Middle with different background */
+.content-area {
+    -fx-background-color: -fx-secondary-color;
+    -fx-padding: 30px;
+    -fx-spacing: 24px;
+}
+
+.game-filters {
+    -fx-spacing: 10px;
+    -fx-padding: 0 0 20px 0;
+}
+
+.filter-button {
+    -fx-background-color: -fx-primary-color;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 16px;
+    -fx-background-radius: 20px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.06), 5, 0, 0, 1);
+    -fx-transition: all -fx-transition-duration ease-out;
+}
+
+.filter-button:hover {
+    -fx-background-color: derive(-fx-primary-color, -5%);
+}
+
+.filter-button:selected {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 8, 0, 0, 2);
+}
+
+/* Game Grid Styling */
+.games-grid {
+    -fx-background-color: transparent;
+    -fx-hgap: 24px;
+    -fx-vgap: 24px;
+}
+
+.game-card {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 16px;
+    -fx-padding: 20px;
+    -fx-effect: -fx-card-shadow;
+    -fx-transition: -fx-effect -fx-transition-duration ease-out, -fx-translate-y -fx-transition-duration ease-out;
+}
+
+.game-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 16, 0, 0, 6);
+    -fx-translate-y: -3px;
+}
+
+.game-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.game-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748B;
+    -fx-wrap-text: true;
+}
+
+.game-stats {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748B;
+    -fx-padding: 8px 0;
+}
+
+.game-card-button {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+    -fx-transition: -fx-background-color -fx-transition-duration ease-out;
+}
+
+.game-card-button:hover {
+    -fx-background-color: derive(-fx-accent-color, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 8, 0, 0, 0);
+}
+
+/* Available Matches Styling */
+.available-matches {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 16px;
+    -fx-pref-width: 320px;
+    -fx-padding: 24px;
+    -fx-spacing: 16px;
+    -fx-effect: -fx-card-shadow;
+}
+
+.matches-header {
+    -fx-spacing: 8px;
+    -fx-padding: 0 0 10px 0;
+    -fx-alignment: center-left;
+}
+
+.matches-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.quick-match-button {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 14px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-transition: -fx-background-color -fx-transition-duration ease-out;
+}
+
+.quick-match-button:hover {
+    -fx-background-color: derive(-fx-accent-color, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 6, 0, 0, 0);
+}
+
+.match-filters {
+    -fx-spacing: 6px;
+    -fx-padding: 0 0 12px 0;
+}
+
+.match-filter-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #64748B;
+    -fx-font-size: 13px;
+    -fx-padding: 6px 10px;
+    -fx-background-radius: 16px;
+    -fx-cursor: hand;
+    -fx-transition: all -fx-transition-duration ease-out;
+}
+
+.match-filter-button:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.04);
+    -fx-text-fill: -fx-text-color;
+}
+
+.match-filter-button:selected {
+    -fx-background-color: rgba(59, 130, 246, 0.1);
+    -fx-text-fill: -fx-accent-color;
+}
+
+.matches-list {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+}
+
+.matches-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 0;
+}
+
+.match-item {
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-radius: 12px;
+    -fx-padding: 16px;
+    -fx-spacing: 8px;
+    -fx-transition: -fx-background-color -fx-transition-duration ease-out;
+}
+
+.match-item:hover {
+    -fx-background-color: derive(-fx-secondary-color, -2%);
+}
+
+.match-game-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.match-host {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748B;
+}
+
+.match-info {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748B;
+}
+
+.match-join-button {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 14px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-transition: -fx-background-color -fx-transition-duration ease-out;
+}
+
+.match-join-button:hover {
+    -fx-background-color: derive(-fx-accent-color, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 6, 0, 0, 0);
+}
+
+/* Waiting Status */
+.status-waiting {
+    -fx-background-color: rgba(245, 158, 11, 0.1);
+    -fx-text-fill: #F59E0B;
+    -fx-background-radius: 4px;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* In Progress Status */
+.status-in-progress {
+    -fx-background-color: rgba(16, 185, 129, 0.1);
+    -fx-text-fill: #10B981;
+    -fx-background-radius: 4px;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Scrollbar styling */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10px;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+}
+
+.scroll-bar:vertical .increment-button,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar:vertical .increment-arrow,
+.scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}

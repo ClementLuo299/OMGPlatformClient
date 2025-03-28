@@ -29,6 +29,12 @@ public class LoginController {
 
     @FXML
     private Button createAccountButton;
+    
+    @FXML
+    private TextField usernameField1; // Guest username field
+    
+    @FXML
+    private Button loginButton1; // Guest login button
 
     //Database IO Handler
     private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
@@ -41,6 +47,9 @@ public class LoginController {
         loginButton.setOnAction(this::handleLogin);
         createAccountButton.setOnAction(this::openRegisterScreen);
         forgotPasswordLink.setOnAction(this::handleForgotPassword);
+        
+        // Set up guest login handler
+        loginButton1.setOnAction(this::handleGuestLogin);
     }
 
     private void handleLogin(ActionEvent event) {
@@ -55,10 +64,29 @@ public class LoginController {
 
         if (db.verifyCredentials(username, password)) {
             System.out.println("Login successful!");
-            switchToDashboard(event);
+            switchToDashboard(event, username, false);
         } else {
             showAlert("Login Error", "Invalid username or password");
         }
+    }
+    
+    private void handleGuestLogin(ActionEvent event) {
+        String guestUsername = usernameField1.getText();
+        
+        // Validate guest username
+        if (guestUsername.isEmpty()) {
+            showAlert("Guest Login Error", "Please enter a guest username");
+            return;
+        }
+        
+        // Check if username already exists in database
+        if (db.isAccountExists(guestUsername)) {
+            showAlert("Guest Login Error", "This username is already taken. Please choose another one.");
+            return;
+        }
+        
+        System.out.println("Guest login successful!");
+        switchToDashboard(event, guestUsername, true);
     }
 
     private void openRegisterScreen(ActionEvent event) {
@@ -82,12 +110,16 @@ public class LoginController {
         showAlert("Info", "Forgot password functionality not implemented yet");
     }
 
-    private void switchToDashboard(ActionEvent event) {
+    private void switchToDashboard(ActionEvent event, String username, boolean isGuest) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/Dashboard.fxml"));
             Parent root = loader.load();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
+            
+            // Get the controller and set the current user
+            DashboardController dashboardController = loader.getController();
+            dashboardController.setCurrentUser(username, isGuest);
             
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(scene);

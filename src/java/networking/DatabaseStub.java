@@ -13,7 +13,6 @@ import java.util.HashMap;
  * Not Null Unique int uid,
  * Not Null Unique String username,
  * Not Null String password,
- * Unique String email,
  * String dob,
  * int privacyLevel,
  * Not Null String dateCreated,
@@ -46,6 +45,18 @@ public class DatabaseStub {
         String[] arr = new String[2];
         arr[0] = username;
         arr[1] = password;
+        users.add(arr);
+    }
+
+    /**
+     * Insert data for a new user with name and date of birth.
+     */
+    public void insertAccountData(String username, String password, String fullName, String dateOfBirth){
+        String[] arr = new String[4];
+        arr[0] = username;
+        arr[1] = password;
+        arr[2] = fullName;
+        arr[3] = dateOfBirth;
         users.add(arr);
     }
 
@@ -90,7 +101,19 @@ public class DatabaseStub {
 
             //Write data by line
             for(String[] i : users){
-                buffer.write(i[0] + delim + i[1]);
+                // Write all available fields
+                StringBuilder line = new StringBuilder();
+                line.append(i[0]).append(delim).append(i[1]); // Username and password
+                
+                // Add name and date of birth if they exist
+                if (i.length > 2) {
+                    line.append(delim).append(i[2]); // Full name
+                    if (i.length > 3) {
+                        line.append(delim).append(i[3]); // Date of birth
+                    }
+                }
+                
+                buffer.write(line.toString());
                 buffer.newLine();
             }
 

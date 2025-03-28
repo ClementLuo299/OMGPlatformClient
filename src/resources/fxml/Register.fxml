@@ -21,9 +21,9 @@
         <Label prefHeight="20.0" prefWidth="334.0" styleClass="input-label" text="Full Name" />
         <TextField fx:id="fullNameField" promptText="Enter your full name" styleClass="input-field" />
 
-        <!-- Email -->
-        <Label prefHeight="20.0" prefWidth="343.0" styleClass="input-label" text="Email" />
-        <TextField fx:id="usernameField" promptText="Enter your email" styleClass="input-field" />
+        <!-- Username -->
+        <Label prefHeight="20.0" prefWidth="343.0" styleClass="input-label" text="Username" />
+        <TextField fx:id="usernameField" promptText="Enter your username" styleClass="input-field" />
 
         <!-- Password -->
         <Label prefHeight="20.0" prefWidth="344.0" styleClass="input-label" text="Password" />
