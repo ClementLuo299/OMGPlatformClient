@@ -89,6 +89,10 @@ public class LoginController {
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getClassLoader().getResource("css/dashboard.css").toExternalForm());
             
+            // Get the controller and set the current user
+            DashboardController dashboardController = loader.getController();
+            dashboardController.setCurrentUser(usernameField.getText());
+            
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(scene);
             stage.show();

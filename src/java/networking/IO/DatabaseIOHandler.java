@@ -51,6 +51,22 @@ public class DatabaseIOHandler {
     }
 
     /**
+     * Register an account with full name and date of birth.
+     *
+     * @param username
+     *            The username of the account.
+     * @param password
+     *            The password of the account.
+     * @param fullName
+     *            The full name of the user.
+     * @param dateOfBirth
+     *            The date of birth of the user.
+     */
+    public void RegisterAccount(String username, String password, String fullName, String dateOfBirth){
+        db.insertAccountData(username, password, fullName, dateOfBirth);
+    }
+
+    /**
      * Check if an account exists and password matches.
      *
      * @param username
@@ -67,6 +83,38 @@ public class DatabaseIOHandler {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Get user's full name.
+     *
+     * @param username
+     *            The username of the account.
+     * @return String
+     *            The full name of the user or null if not found
+     */
+    public String getUserFullName(String username) {
+        String[] accountData = db.getAccountData(username);
+        if (accountData != null && accountData.length > 2) {
+            return accountData[2];
+        }
+        return null;
+    }
+
+    /**
+     * Get user's date of birth.
+     *
+     * @param username
+     *            The username of the account.
+     * @return String
+     *            The date of birth of the user or null if not found
+     */
+    public String getUserDateOfBirth(String username) {
+        String[] accountData = db.getAccountData(username);
+        if (accountData != null && accountData.length > 3) {
+            return accountData[3];
+        }
+        return null;
     }
 
     /**

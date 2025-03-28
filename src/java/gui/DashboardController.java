@@ -1,5 +1,7 @@
 package gui;
 
+import networking.IO.DatabaseIOHandler;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -36,6 +38,12 @@ public class DashboardController {
     private Label currentRank;
     @FXML
     private Label bestGame;
+    
+    // Current logged-in username
+    private String currentUsername;
+    
+    // Database IO Handler
+    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
 
     @FXML
     public void initialize() {
@@ -48,7 +56,6 @@ public class DashboardController {
         );
 
         // Set initial stats
-        usernameLabel.setText("PlayerName");
         totalGames.setText("42");
         winRate.setText("64%");
         currentRank.setText("#156");
@@ -57,6 +64,25 @@ public class DashboardController {
         // Set button actions
         gamesBtn.setOnAction(event -> openGameLibrary());
         settingsBtn.setOnAction(event -> openSettings());
+        signOutBtn.setOnAction(event -> signOut());
+    }
+    
+    /**
+     * Set the currently logged in user
+     * @param username The username of the logged in user
+     */
+    public void setCurrentUser(String username) {
+        this.currentUsername = username;
+        
+        // Get the user's full name from the database
+        String fullName = db.getUserFullName(username);
+        
+        // If we have a full name, display it; otherwise, use the username
+        if (fullName != null && !fullName.isEmpty()) {
+            usernameLabel.setText(fullName);
+        } else {
+            usernameLabel.setText(username);
+        }
     }
 
     @FXML
