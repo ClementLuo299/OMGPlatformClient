@@ -112,14 +112,14 @@
                     <!-- Name Field -->
                     <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
                         <Label styleClass="field-label" text="Name" />
-                        <TextField fx:id="nameField" styleClass="input-field" promptText="Your Name" text="User Name" />
+                        <TextField fx:id="nameField" styleClass="password-mask" promptText="Your Name" text="User Name" editable="false" focusTraversable="false" />
                     </VBox>
                     
                     <!-- Username Field -->
                     <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
                         <Label styleClass="field-label" text="Username" />
                         <HBox styleClass="username-field-container">
-                            <TextField fx:id="usernameField" styleClass="input-field" promptText="Your Username" text="username123" HBox.hgrow="ALWAYS" />
+                            <TextField fx:id="usernameField" styleClass="password-mask" promptText="Your Username" text="username123" editable="false" focusTraversable="false" HBox.hgrow="ALWAYS" />
                             <Button styleClass="change-btn" text="Change" />
                         </HBox>
                     </VBox>
@@ -129,7 +129,7 @@
                     <!-- Email Field -->
                     <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
                         <Label styleClass="field-label" text="Email" />
-                        <TextField fx:id="emailField" styleClass="input-field" promptText="Your Email" text="user.email@example.com" />
+                        <TextField fx:id="emailField" styleClass="password-mask" promptText="Your Email" editable="false" focusTraversable="false" text="user.email@example.com" />
                     </VBox>
                     
                     <!-- Password Field -->
