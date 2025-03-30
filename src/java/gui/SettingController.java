@@ -159,15 +159,26 @@ public class SettingController {
     
     private void updateThemeToggle() {
         HBox toggleSwitch = (HBox) toggleThumb.getParent();
-        if (isDarkTheme) {
-            toggleThumb.setTranslateX(20);
-            toggleSwitch.getStyleClass().add("active");
-        } else {
-            toggleThumb.setTranslateX(0);
-            toggleSwitch.getStyleClass().remove("active");
+        Scene scene = toggleSwitch.getScene(); // Get the current scene
+
+        if (scene != null) {
+            if (isDarkTheme) {
+                toggleThumb.setTranslateX(20);
+                toggleSwitch.getStyleClass().add("active");
+
+                // Apply dark theme
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("/styles/dark-theme.css").toExternalForm());
+            } else {
+                toggleThumb.setTranslateX(0);
+                toggleSwitch.getStyleClass().remove("active");
+
+                // Apply light theme
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("/styles/light-theme.css").toExternalForm());
+            }
         }
     }
-    
     private void updateChatToggle() {
         HBox toggleSwitch = (HBox) chatToggleThumb.getParent();
         if (isChatEnabled) {

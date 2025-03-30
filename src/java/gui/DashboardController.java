@@ -1,5 +1,7 @@
 package gui;
 
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import networking.IO.DatabaseIOHandler;
 import gui.ScreenManager;
 
@@ -54,6 +56,8 @@ public class DashboardController {
 
     // ScreenManager instance
     private ScreenManager screenManager = ScreenManager.getInstance();
+
+
 
     @FXML
     public void initialize() {
