@@ -30,18 +30,26 @@ A multiplayer board game platform built with JavaFX.
 ```
 BoardGamePlatform/
 ├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   ├── core/           # Core game logic
-│   │   │   └── gui/            # JavaFX UI
-│   │   └── resources/
-│   │       ├── fxml/           # FXML files
-│   │       ├── css/            # Stylesheets
-│   │       └── data/           # Game data, user data
-│   └── test/
-│       └── java/               # Test files
-├── docs/                       # Documentation
-└── target/                     # Build output
+│   ├── java/
+│   │   ├── gamelogic/         # Game logic codebase
+│   │   ├── gui/               # JavaFX UI codebase
+│   │   ├── networking/        # Networking and Authentication codebase
+│   │   └── statistics/        # Matchmaking and Statistics codebase
+│   └── resources/
+│       ├── fxml/              # FXML files
+│       ├── css/               # Stylesheets
+│       └── data/              # Game data, user data
+├── tests/
+│   ├── gamelogic/             # Game logic tests
+│   ├── gui/                   # JavaFX UI tests
+│   ├── networking/            # Networking and Authentication tests
+│   └── statistics/            # Matchmaking and Statistics tests              
+├── docs/
+│   ├── critique-bravo-echo/   # Critiques to other teams
+│   ├── critique-received/     # Critiques from other teams
+│   ├── diagrams/              # Diagram Documents
+│   └── planning/              # Planning Documents
+└── target/                    # Build output
 ```
 
 ## Features
