@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="800.0" prefWidth="1400.0" styleClass="main-container" stylesheets="@../css/game_lobby.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GameLobbyController">
+    <top>
+        <HBox alignment="CENTER" spacing="20" styleClass="game-header">
+            <padding>
+                <Insets bottom="15" left="20" right="20" top="15" />
+            </padding>
+            <Button fx:id="backButton" onAction="#onBackButtonClicked" styleClass="back-button" text="Back to Games" />
+            <Text fx:id="gameTitle" styleClass="game-title" text="Game Lobby" />
+            <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
+            <Label fx:id="statusLabel" styleClass="status-label" text="Game Lobby" />
+        </HBox>
+    </top>
+    
+    <center>
+        <HBox alignment="CENTER">
+            <!-- Left Section: Player Info and Queue Options -->
+            <VBox alignment="CENTER" spacing="20" styleClass="player-section" HBox.hgrow="ALWAYS" maxWidth="600" minWidth="400">
+                <padding>
+                    <Insets bottom="30" left="30" right="30" top="30" />
+                </padding>
+                
+                <!-- Player Information -->
+                <VBox alignment="CENTER" spacing="15" styleClass="player-card">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+                    <ImageView fx:id="playerAvatar" fitHeight="120" fitWidth="120" styleClass="player-avatar">
+                        <Image url="@../images/singleplayer.png" />
+                    </ImageView>
+                    <Label fx:id="playerName" styleClass="player-name" text="Player 1" />
+                    <Label styleClass="player-level" text="Level 5" />
+                </VBox>
+                
+                <!-- Game Queue Section -->
+                <VBox alignment="CENTER" spacing="15" styleClass="queue-section">
+                    <padding>
+                        <Insets bottom="20" left="20" right="20" top="20" />
+                    </padding>
+                    <Label styleClass="section-title" text="Quick Play" />
+                    <Button fx:id="quickPlayButton" onAction="#onQuickPlayClicked" styleClass="queue-button" text="Queue for Game">
+                        <padding>
+                            <Insets bottom="12" left="30" right="30" top="12" />
+                        </padding>
+                    </Button>
+                    <Label fx:id="queueStatusLabel" styleClass="queue-status" text="Not in queue" />
+                    <ProgressBar fx:id="queueProgressBar" prefWidth="250" progress="0.0" visible="false" />
+                </VBox>
+            </VBox>
+            
+            <!-- Separator -->
+            <Separator orientation="VERTICAL" styleClass="main-separator" />
+            
+            <!-- Right Section: Find Player, Browse Matches -->
+            <VBox alignment="CENTER" spacing="15" styleClass="search-section" HBox.hgrow="ALWAYS" maxWidth="600" minWidth="400">
+                <padding>
+                    <Insets bottom="30" left="30" right="30" top="30" />
+                </padding>
+                
+                <!-- Find Player Section -->
+                <VBox alignment="CENTER" spacing="10" styleClass="find-player-section">
+                    <padding>
+                        <Insets bottom="15" left="15" right="15" top="15" />
+                    </padding>
+                    <Label styleClass="section-title" text="Find Player" />
+                    <HBox alignment="CENTER" spacing="10">
+                        <TextField fx:id="playerIdField" prefWidth="250" promptText="Enter Player ID" />
+                        <Button fx:id="searchPlayerButton" onAction="#onSearchPlayerClicked" styleClass="search-button" text="Search" />
+                        <Button fx:id="invitePlayerButton" disable="true" onAction="#onInvitePlayerClicked" styleClass="invite-button" text="Invite" />
+                    </HBox>
+                    <Label fx:id="playerSearchResult" styleClass="search-result" text="" />
+                </VBox>
+                
+                <!-- Public Matches Section -->
+                <VBox alignment="CENTER" spacing="10" styleClass="public-matches-section" VBox.vgrow="ALWAYS">
+                    <padding>
+                        <Insets bottom="15" left="15" right="15" top="15" />
+                    </padding>
+                    <Label styleClass="section-title" text="Public Matches" />
+                    <ListView fx:id="publicMatchesList" prefHeight="180" VBox.vgrow="ALWAYS" />
+                    <Button fx:id="refreshMatchesButton" onAction="#onRefreshMatchesClicked" styleClass="refresh-button" text="Refresh Matches" />
+                </VBox>
+                
+                <!-- Find Match Section -->
+                <VBox alignment="CENTER" spacing="10" styleClass="find-match-section">
+                    <padding>
+                        <Insets bottom="15" left="15" right="15" top="15" />
+                    </padding>
+                    <Label styleClass="section-title" text="Find Match" />
+                    <HBox alignment="CENTER" spacing="10">
+                        <TextField fx:id="matchIdField" prefWidth="250" promptText="Enter Match ID" />
+                        <Button fx:id="searchMatchButton" onAction="#onSearchMatchClicked" styleClass="search-button" text="Search" />
+                        <Button fx:id="joinMatchButton" disable="true" onAction="#onJoinMatchClicked" styleClass="join-button" text="Join" />
+                    </HBox>
+                    <Label fx:id="matchSearchResult" styleClass="search-result" text="" />
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+    
+    <bottom>
+        <HBox alignment="CENTER" spacing="20" styleClass="bottom-bar">
+            <padding>
+                <Insets bottom="15" left="20" right="20" top="15" />
+            </padding>
+            <Button fx:id="cancelButton" onAction="#onCancelButtonClicked" styleClass="cancel-button" text="Cancel" />
+            <Button fx:id="viewRulesButton" onAction="#onViewRulesClicked" styleClass="rules-button" text="View Game Rules" />
+        </HBox>
+    </bottom>
+</BorderPane> 

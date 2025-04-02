@@ -30,6 +30,8 @@ public class ScreenManager {
     public static final String LEADERBOARD_SCREEN = "fxml/Leaderboard.fxml";
     public static final String SETTINGS_SCREEN = "fxml/Setting.fxml";
     public static final String REGISTER_SCREEN = "fxml/Register.fxml";
+    public static final String TICTACTOE_SCREEN = "fxml/TicTacToe.fxml";
+    public static final String GAME_LOBBY_SCREEN = "fxml/GameLobby.fxml";
     
     // CSS paths
     public static final String LOGIN_CSS = "css/login.css";
@@ -38,6 +40,8 @@ public class ScreenManager {
     public static final String LEADERBOARD_CSS = "css/leaderboard.css";
     public static final String SETTINGS_CSS = "css/setting.css";
     public static final String REGISTER_CSS = "css/register.css";
+    public static final String TICTACTOE_CSS = "css/tictactoe.css";
+    public static final String GAME_LOBBY_CSS = "css/game_lobby.css";
     
     private ScreenManager() {
         mainContainer = new BorderPane();

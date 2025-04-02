@@ -15,7 +15,7 @@
 <BorderPane prefHeight="800.0" prefWidth="1400" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.GameLibraryController">
     <left>
         <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
-            <!-- App Title with Toggle -->
+            <!-- App Title -->
             <HBox styleClass="app-title">
                 <ImageView fitHeight="24" fitWidth="24">
                     <Image url="@../icons/games.png" />
@@ -28,7 +28,7 @@
                 <Button fx:id="dashboardBtn" styleClass="nav-button">
                     <graphic>
                         <HBox styleClass="nav-button-content">
-                            <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                            <ImageView fitHeight="20" fitWidth="20">
                                 <Image url="@../icons/dashboard.png" />
                             </ImageView>
                             <Label text="Dashboard" />
@@ -39,7 +39,7 @@
                 <Button fx:id="gamesBtn" styleClass="nav-button,selected">
                     <graphic>
                         <HBox styleClass="nav-button-content">
-                            <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                            <ImageView fitHeight="20" fitWidth="20">
                                 <Image url="@../icons/games.png" />
                             </ImageView>
                             <Label text="Games" />
@@ -50,7 +50,7 @@
                 <Button fx:id="leaderboardBtn" styleClass="nav-button">
                     <graphic>
                         <HBox styleClass="nav-button-content">
-                            <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                            <ImageView fitHeight="20" fitWidth="20">
                                 <Image url="@../icons/leaderboard.png" />
                             </ImageView>
                             <Label text="Leaderboard" />
@@ -61,7 +61,7 @@
                 <Button fx:id="settingsBtn" styleClass="nav-button">
                     <graphic>
                         <HBox styleClass="nav-button-content">
-                            <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                            <ImageView fitHeight="20" fitWidth="20">
                                 <Image url="@../icons/settings.png" />
                             </ImageView>
                             <Label text="Settings" />
@@ -74,7 +74,7 @@
             <Button fx:id="signOutBtn" styleClass="nav-button,sign-out">
                 <graphic>
                     <HBox styleClass="nav-button-content">
-                        <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
+                        <ImageView fitHeight="20" fitWidth="20">
                             <Image url="@../icons/sign-out.png" />
                         </ImageView>
                         <Label text="Sign Out" />
@@ -85,7 +85,7 @@
     </left>
     
     <center>
-        <VBox prefHeight="615.0" prefWidth="0.0" styleClass="content-area">
+        <VBox prefHeight="800.0" prefWidth="850.0" styleClass="content-area">
             <!-- Header Section -->
             <HBox styleClass="games-header">
                 <Label styleClass="games-title" text="Game Library" />
@@ -93,17 +93,17 @@
             
             <!-- Filter Buttons -->
             <HBox styleClass="game-filters">
-                <Button styleClass="filter-button" text="All Games" />
-                <Button styleClass="filter-button" text="Card Games" />
-                <Button styleClass="filter-button" text="Strategy Games" />
-                <Button styleClass="filter-button" text="Classic Games" />
+                <Button fx:id="allGamesFilterBtn" styleClass="filter-button" text="All Games" />
+                <Button fx:id="cardGamesFilterBtn" styleClass="filter-button" text="Card Games" />
+                <Button fx:id="strategyGamesFilterBtn" styleClass="filter-button" text="Strategy Games" />
+                <Button fx:id="classicGamesFilterBtn" styleClass="filter-button" text="Classic Games" />
             </HBox>
             
             <!-- Game Cards Container -->
             <HBox styleClass="game-cards-container">
-                <!-- Connect 4 Card -->
-                <VBox styleClass="game-card">
-                    <ImageView fitHeight="120" fitWidth="160" preserveRatio="true" styleClass="game-image">
+                <!-- Connect 4 Card (First) -->
+                <VBox fx:id="connect4Card" styleClass="game-card">
+                    <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
                         <Image url="@../icons/games.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Connect 4" />
@@ -112,12 +112,12 @@
                         <Label styleClass="game-time" text="5-10 min" />
                     </HBox>
                     <Label styleClass="game-description" text="Classic strategy game where players drop colored discs to connect four in a row." />
-                    <Button fx:id="connect4Button" onAction="#playConnect4" styleClass="game-card-button" text="Play Now" />
+               <Button fx:id="checkersButton1" onAction="#playCheckers" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
-                <!-- Checkers Card -->
-                <VBox styleClass="game-card">
-                    <ImageView fitHeight="120" fitWidth="160" preserveRatio="true" styleClass="game-image">
+                <!-- Checkers Card (Second) -->
+                <VBox fx:id="checkersCard" styleClass="game-card">
+                    <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
                         <Image url="@../icons/games.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Checkers" />
@@ -129,9 +129,9 @@
                     <Button fx:id="checkersButton" onAction="#playCheckers" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
-                <!-- Whist Card Game -->
-                <VBox styleClass="game-card">
-                    <ImageView fitHeight="120" fitWidth="160" preserveRatio="true" styleClass="game-image">
+                <!-- Whist Card Game (Third) -->
+                <VBox fx:id="whistCard" styleClass="game-card">
+                    <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
                         <Image url="@../icons/games.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Whist Card Game" />
@@ -142,6 +142,20 @@
                     <Label styleClass="game-description" text="Classic trick-taking card game played with a standard deck of 52 playing cards." />
                     <Button fx:id="whistButton" onAction="#playWhist" styleClass="game-card-button" text="Play Now" />
                 </VBox>
+                
+                <!-- Tic Tac Toe Card (Fourth) -->
+                <VBox fx:id="ticTacToeCard" styleClass="game-card">
+                    <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
+                        <Image url="@../images/singleplayer.png" />
+                    </ImageView>
+                    <Label styleClass="game-title" text="Tic Tac Toe" />
+                    <HBox styleClass="game-info">
+                        <Label styleClass="game-players" text="2 Players" />
+                        <Label styleClass="game-time" text="2-5 min" />
+                    </HBox>
+                    <Label styleClass="game-description" text="Classic game where players take turns marking X and O in a 3x3 grid to get three in a row." />
+                    <Button fx:id="ticTacToeButton" onAction="#playTicTacToe" styleClass="game-card-button" text="Play Now" />
+                </VBox>
             </HBox>
             
             <GridPane fx:id="gamesGrid" styleClass="games-grid">
@@ -151,8 +165,8 @@
     </center>
     
     <right>
-        <VBox prefHeight="615.0" prefWidth="344.0" styleClass="available-matches">
-            <HBox prefHeight="40.0" prefWidth="272.0" styleClass="matches-header">
+        <VBox prefHeight="800.0" prefWidth="300.0" styleClass="available-matches">
+            <HBox prefHeight="40.0" styleClass="matches-header">
                 <Label styleClass="matches-title" text="Active Matches">
                <font>
                   <Font size="10.0" />
