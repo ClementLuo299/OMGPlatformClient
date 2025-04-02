@@ -9,7 +9,9 @@ package gamelogic;
 public class GamePiece {
     // ATTRIBUTES
 
+    // The type of piece this piece is
     private final PieceType type;
+    // The held status of this piece
     private boolean held;
 
 

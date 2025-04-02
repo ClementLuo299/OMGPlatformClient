@@ -1,91 +1,95 @@
 package gamelogic;
 
+import networking.accounts.UserAccount;
+
+/**
+ * Stores all relevant data of a Player within a Game
+ *
+ * @authors Scott Brown, Dylan Shiels
+ * @date April 1, 2025
+ */
 public class Player {
+    // ATTRIBUTES
 
-    private String username;
-    private String password;
-    private double gamesPlayed;
-    private double wins;
-    private double draws;
-    private double losses;
-    private boolean online;
+    // The account UUID of the player
+    private final UserAccount account;
+    // The username of the player
+    private final String username;
+    // The number of plays this player has made
+    private int plays;
+    // The number of points this player has earned within a game
+    private int score;
 
-    public Player(String username, String password){
-        this.username = username;
-        this.password = password;
-        this.gamesPlayed = 0.0;
-        this.wins = 0.0;
-        this.draws = 0.0;
-        this.losses = 0.0;
-        this.online = true;
+    // CONSTRUCTOR
+
+    /**
+     * Instantiate a Player for a Game through their account
+     *
+     * @param account The given Account to create a Player from
+     */
+    public Player(UserAccount account) {
+        this.account = account;
+        this.username = this.account.getUsername();
+        this.plays = 0;
+        this.score = 0;
 
     }
 
-    public void changePasswordTo(String newPassword){
-        this.password = newPassword;
-    }
-    
-    public void changeUsernameTo(String newUsername){
-        this.username = newUsername;
-    }
 
-    public void won(){
-        this.wins+=1;
-        this.gamesPlayed+=1;
-    }
+    // GETTERS
 
-    public void lost(){
-        this.losses+=1;
-        this.gamesPlayed+=1;
+    /**
+     * Gets the Account attached to this Player
+     *
+     * @return The User Account of this Player
+     */
+    public UserAccount getAccount() {
+        return this.account;
     }
 
-    public void drew(){
-        this.draws+=1;
-        this.gamesPlayed+=1;
-    }
-
-    public void loggedIn(){
-        this.online = true;
-    }
-
-    public void loggedOff(){
-        this.online = false;
-    }
-
-    public boolean isOnline(){
-        return this.online;
-    }
-
-    public double getWinRatio(){
-        // return wins over games played as a percent
-        return 100*this.wins/this.gamesPlayed;
-    }
-
-
+    /**
+     * Gets the Username of this Player
+     *
+     * @return The String Username of this Player
+     */
     public String getUsername(){
         return this.username;
     }
 
-    public String getPassword(){
-        return this.password;
+    /**
+     * Gets the Plays of this Player
+     *
+     * @return The integer Plays for this Player
+     */
+    public int getPlays() {
+        return plays;
     }
 
-    public double getWins(){
-        return this.wins;
-    }
-
-    public double getLosses(){
-        return this.losses;
-    }
-
-    public double getDraws(){
-        return this.draws;
-    }
-
-    public double getGamesPlayed(){
-        return this.gamesPlayed;
+    /**
+     * Gets the Points of this Player
+     *
+     * @return The integer Points for this Player
+     */
+    public int getScore() {
+        return score;
     }
 
 
+    // SETTERS
 
+    /**
+     * Adds a Play to this Player
+     */
+    public void addPlay() {
+        this.plays = plays++;
+    }
+
+    /**
+     * Adds a specified number of points to this Player
+     *
+     * @param pointsToAdd The given integer Points to award this Player
+     */
+    public void addPoints(int pointsToAdd) {
+        this.score = score + pointsToAdd;
+    }
 }
