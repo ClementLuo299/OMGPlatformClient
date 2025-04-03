@@ -2,6 +2,8 @@ package gamelogic;
 
 import networking.accounts.UserAccount;
 
+import java.util.List;
+
 /**
  * Stores all relevant data of a Player within a Game
  *
@@ -19,6 +21,11 @@ public class Player {
     private int plays;
     // The number of points this player has earned within a game
     private int score;
+    // The player's game pieces
+    private List<GamePiece> hand;
+    // The player's captured game pieces
+    private List<GamePiece> spoils;
+
 
     // CONSTRUCTOR
 
@@ -32,7 +39,6 @@ public class Player {
         this.username = this.account.getUsername();
         this.plays = 0;
         this.score = 0;
-
     }
 
 
@@ -74,6 +80,24 @@ public class Player {
         return score;
     }
 
+    /**
+     * Gets the Hand of this Player
+     *
+     * @return The List of Game Pieces held by this Player
+     */
+    public List<GamePiece> getHand () {
+        return hand;
+    }
+
+    /**
+     * Gets the Spoils of this Player
+     *
+     * @return The List of Game Pieces captured by this Player
+     */
+    public List<GamePiece> getSpoils () {
+        return spoils;
+    }
+
 
     // SETTERS
 
@@ -91,5 +115,26 @@ public class Player {
      */
     public void addPoints(int pointsToAdd) {
         this.score = score + pointsToAdd;
+    }
+
+
+    // METHODS
+
+    /**
+     * Adds a specified Game Piece to the Player's Hand
+     *
+     * @param pieceToAdd The given Game Piece to add to the Hand of this Player
+     */
+    public void addToHand(GamePiece pieceToAdd) {
+        this.hand.add(pieceToAdd);
+    }
+
+    /**
+     * Adds a specified Game Piece to the Player's Spoils
+     *
+     * @param pieceToAdd The given Game Piece to add to the Spoils of this Player
+     */
+    public void addToSpoils(GamePiece pieceToAdd) {
+        this.spoils.add(pieceToAdd);
     }
 }
