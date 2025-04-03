@@ -57,6 +57,15 @@ public class CheckerBoard {
         }
     }
 
+    public Checker getChecker(int x, int y) {
+        for (Checker checker : board) {
+            if (checker.getXPosition() == x && checker.getYPosition() == y) { //checks to see if checker is at correct coord to return
+                return checker;
+            }
+        }
+        return null;
+    }
+
     /**
      * Override toString method to display the board
      * @return null
