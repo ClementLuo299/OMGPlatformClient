@@ -30,7 +30,7 @@ public class Player {
     // CONSTRUCTOR
 
     /**
-     * Instantiate a Player for a Game through their account
+     * Instantiates a Player for a Game through their account
      *
      * @param account The given Account to create a Player from
      */
