@@ -117,6 +117,14 @@ public class Player {
         this.score = score + pointsToAdd;
     }
 
+    /**
+     * method to set the updated list after modifications
+     * @param hand
+     */
+    public void setHand(List<GamePiece> hand) {
+        this.hand = hand;
+    }
+
 
     // METHODS
 
