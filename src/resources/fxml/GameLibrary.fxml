@@ -103,7 +103,7 @@
             <HBox styleClass="game-cards-container">
                 <!-- Connect 4 Card (First) -->
                 <VBox fx:id="connect4Card" styleClass="game-card">
-                    <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
+                    <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
                         <Image url="@../icons/connect_four_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Connect 4" />
@@ -111,13 +111,14 @@
                         <Label styleClass="game-players" text="2 Players" />
                         <Label styleClass="game-time" text="5-10 min" />
                     </HBox>
-                    <Label styleClass="game-description" text="Classic strategy game where players drop colored discs to connect four in a row." />
-               <Button fx:id="connect4Button" onAction="#playConnect4" styleClass="game-card-button" text="Play Now" />
+                    <Label styleClass="game-description" text="Classic strategy game where players drop colored discs to connect four in a row." wrapText="true" />
+                    <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
+                    <Button fx:id="connect4Button" onAction="#playConnect4" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
                 <!-- Checkers Card (Second) -->
                 <VBox fx:id="checkersCard" styleClass="game-card">
-                    <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
+                    <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
                         <Image url="@../icons/checkers_icon.jpg" />
                     </ImageView>
                     <Label styleClass="game-title" text="Checkers" />
@@ -125,13 +126,14 @@
                         <Label styleClass="game-players" text="2 Players" />
                         <Label styleClass="game-time" text="15-30 min" />
                     </HBox>
-                    <Label styleClass="game-description" text="Traditional board game where players move diagonally and try to capture all opponent's pieces." />
+                    <Label styleClass="game-description" text="Traditional board game where players move diagonally and try to capture all opponent's pieces." wrapText="true" />
+                    <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
                     <Button fx:id="checkersButton" onAction="#playCheckers" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
                 <!-- Whist Card Game (Third) -->
                 <VBox fx:id="whistCard" styleClass="game-card">
-                    <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
+                    <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
                         <Image url="@../icons/whist_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Whist Card Game" />
@@ -139,21 +141,23 @@
                         <Label styleClass="game-players" text="4 Players" />
                         <Label styleClass="game-time" text="20-45 min" />
                     </HBox>
-                    <Label styleClass="game-description" text="Classic trick-taking card game played with a standard deck of 52 playing cards." />
+                    <Label styleClass="game-description" text="Classic trick-taking card game played with a standard deck of 52 playing cards." wrapText="true" />
+                    <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
                     <Button fx:id="whistButton" onAction="#playWhist" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
                 <!-- Tic Tac Toe Card (Fourth) -->
                 <VBox fx:id="ticTacToeCard" styleClass="game-card">
-                    <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../images/singleplayer.png" />
+                    <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
+                        <Image url="@../icons/tic_tac_toe_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Tic Tac Toe" />
                     <HBox styleClass="game-info">
                         <Label styleClass="game-players" text="2 Players" />
                         <Label styleClass="game-time" text="2-5 min" />
                     </HBox>
-                    <Label styleClass="game-description" text="Classic game where players take turns marking X and O in a 3x3 grid to get three in a row." />
+                    <Label styleClass="game-description" text="Classic game where players take turns marking X and O in a 3x3 grid to get three in a row." wrapText="true" />
+                    <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
                     <Button fx:id="ticTacToeButton" onAction="#playTicTacToe" styleClass="game-card-button" text="Play Now" />
                 </VBox>
             </HBox>
@@ -166,21 +170,20 @@
     
     <right>
         <VBox prefHeight="800.0" prefWidth="300.0" styleClass="available-matches">
-            <HBox prefHeight="40.0" styleClass="matches-header">
+            <HBox styleClass="matches-header">
                 <Label styleClass="matches-title" text="Active Matches">
-               <font>
-                  <Font size="10.0" />
-               </font></Label>
-                <Button styleClass="quick-match-button" text="Quick Match" />
+                   <font>
+                      <Font size="16.0" />
+                   </font>
+                </Label>
             </HBox>
             
             <HBox styleClass="match-filters">
-                <Button styleClass="match-filter-button" text="All Games" />
-                <Button styleClass="match-filter-button" text="Waiting" />
-                <Button styleClass="match-filter-button" text="In Progress" />
+                <Button prefHeight="29.0" prefWidth="70.0" styleClass="match-filter-button" text="Waiting" />
+                <Button prefHeight="29.0" prefWidth="91.0" styleClass="match-filter-button" text="In Progress" />
             </HBox>
             
-            <ListView fx:id="availableMatchesList" styleClass="matches-list" />
+            <ListView fx:id="availableMatchesList" styleClass="matches-list" VBox.vgrow="ALWAYS" />
         </VBox>
     </right>
     

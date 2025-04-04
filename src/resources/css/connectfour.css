@@ -122,12 +122,12 @@
 }
 
 .restart-button {
-    -fx-background-color: #4caf50;
+    -fx-background-color: #4c7aaf;
     -fx-text-fill: white;
 }
 
 .restart-button:hover {
-    -fx-background-color: #43a047;
+    -fx-background-color: #436a97;
 }
 
 .forfeit-button {
@@ -136,7 +136,7 @@
 }
 
 .forfeit-button:hover {
-    -fx-background-color: #e53935;
+    -fx-background-color: #da3532;
 }
 
 .exit-button {
