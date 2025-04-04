@@ -31,6 +31,7 @@ public class ScreenManager {
     public static final String SETTINGS_SCREEN = "fxml/Setting.fxml";
     public static final String REGISTER_SCREEN = "fxml/Register.fxml";
     public static final String TICTACTOE_SCREEN = "fxml/TicTacToe.fxml";
+    public static final String CONNECTFOUR_SCREEN = "fxml/ConnectFour.fxml";
     public static final String GAME_LOBBY_SCREEN = "fxml/GameLobby.fxml";
     
     // CSS paths
@@ -41,6 +42,7 @@ public class ScreenManager {
     public static final String SETTINGS_CSS = "css/setting.css";
     public static final String REGISTER_CSS = "css/register.css";
     public static final String TICTACTOE_CSS = "css/tictactoe.css";
+    public static final String CONNECTFOUR_CSS = "css/connectfour.css";
     public static final String GAME_LOBBY_CSS = "css/game_lobby.css";
     
     private ScreenManager() {
@@ -86,6 +88,12 @@ public class ScreenManager {
             Parent root;
             Object controller = null;
             
+            // Special case for the game lobby - always reload it
+            // This fixes the issue with game switching
+            if (fxmlPath.equals(GAME_LOBBY_SCREEN)) {
+                return reloadAndNavigateTo(fxmlPath, cssPath);
+            }
+            
             if (!screenCache.containsKey(fxmlPath)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
                 root = loader.load();
@@ -115,11 +123,20 @@ public class ScreenManager {
      */
     public Object reloadAndNavigateTo(String fxmlPath, String cssPath) {
         try {
+            // Remove from cache
             screenCache.remove(fxmlPath);
+            
+            // Load fresh
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
             Parent root = loader.load();
             Object controller = loader.getController();
-            screenCache.put(fxmlPath, root);
+            
+            // Only cache screens that aren't game-specific
+            if (!fxmlPath.equals(GAME_LOBBY_SCREEN) && 
+                !fxmlPath.equals(TICTACTOE_SCREEN) && 
+                !fxmlPath.equals(CONNECTFOUR_SCREEN)) {
+                screenCache.put(fxmlPath, root);
+            }
             
             setCssStylesheet(cssPath);
             mainContainer.setCenter(root);

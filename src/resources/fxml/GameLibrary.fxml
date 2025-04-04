@@ -104,7 +104,7 @@
                 <!-- Connect 4 Card (First) -->
                 <VBox fx:id="connect4Card" styleClass="game-card">
                     <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/games.png" />
+                        <Image url="@../icons/connect_four_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Connect 4" />
                     <HBox styleClass="game-info">
@@ -112,13 +112,13 @@
                         <Label styleClass="game-time" text="5-10 min" />
                     </HBox>
                     <Label styleClass="game-description" text="Classic strategy game where players drop colored discs to connect four in a row." />
-               <Button fx:id="checkersButton1" onAction="#playCheckers" styleClass="game-card-button" text="Play Now" />
+               <Button fx:id="connect4Button" onAction="#playConnect4" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
                 <!-- Checkers Card (Second) -->
                 <VBox fx:id="checkersCard" styleClass="game-card">
                     <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/games.png" />
+                        <Image url="@../icons/checkers_icon.jpg" />
                     </ImageView>
                     <Label styleClass="game-title" text="Checkers" />
                     <HBox styleClass="game-info">
@@ -132,7 +132,7 @@
                 <!-- Whist Card Game (Third) -->
                 <VBox fx:id="whistCard" styleClass="game-card">
                     <ImageView fitHeight="100" fitWidth="140" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/games.png" />
+                        <Image url="@../icons/whist_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Whist Card Game" />
                     <HBox styleClass="game-info">

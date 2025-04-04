@@ -243,34 +243,14 @@ public class GameLibraryController {
     
     @FXML
     private void playCheckers() {
-        try {
-            GameLobbyController controller = (GameLobbyController)
-                    screenManager.navigateTo(ScreenManager.GAME_LOBBY_SCREEN, ScreenManager.GAME_LOBBY_CSS);
-            
-            if (controller != null) {
-                controller.setGame("Checkers");
-                controller.setCurrentUser(currentUsername, isGuest);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(AlertType.ERROR, "Game Launch Error", "Could not launch Checkers: " + e.getMessage());
-        }
+        showAlert(Alert.AlertType.INFORMATION, "Game Under Development", 
+                 "The Checkers game is currently under development.\nPlease check back later!");
     }
     
     @FXML
     private void playWhist() {
-        try {
-            GameLobbyController controller = (GameLobbyController)
-                    screenManager.navigateTo(ScreenManager.GAME_LOBBY_SCREEN, ScreenManager.GAME_LOBBY_CSS);
-            
-            if (controller != null) {
-                controller.setGame("Whist Card Game");
-                controller.setCurrentUser(currentUsername, isGuest);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(AlertType.ERROR, "Game Launch Error", "Could not launch Whist Card Game: " + e.getMessage());
-        }
+        showAlert(Alert.AlertType.INFORMATION, "Game Under Development", 
+                 "The Whist Card Game is currently under development.\nPlease check back later!");
     }
     
     /**

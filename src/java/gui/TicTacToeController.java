@@ -290,7 +290,14 @@ public class TicTacToeController implements Initializable {
      */
     @FXML
     private void onBackButtonClicked() {
-        ScreenManager.getInstance().navigateTo(ScreenManager.GAME_LIBRARY_SCREEN, ScreenManager.GAME_LIBRARY_CSS);
+        // Stop any active timers
+        if (moveTimer != null) {
+            moveTimer.stop();
+        }
+        
+        // Navigate back to game library with a fresh reload to ensure proper state reset
+        GameLibraryController controller = (GameLibraryController)
+            ScreenManager.getInstance().reloadAndNavigateTo(ScreenManager.GAME_LIBRARY_SCREEN, ScreenManager.GAME_LIBRARY_CSS);
     }
 
     /**

@@ -84,10 +84,37 @@ public class GameLobbyController implements Initializable {
      * @param gameName The name of the currently selected game
      */
     public void setGame(String gameName) {
+        // Store the game name
         this.gameName = gameName;
+        
+        // Update UI elements
         gameTitle.setText(gameName + " - Game Lobby");
         statusLabel.setText(gameName + " Lobby");
+        
+        // Clear any previous game-specific data
+        clearPreviousGameData();
+        
+        // Refresh the matches list with game-specific data
         refreshPublicMatches();
+    }
+    
+    /**
+     * Clear any previous game-specific data to ensure a fresh state
+     */
+    private void clearPreviousGameData() {
+        // Reset UI elements
+        queueStatusLabel.setText("Not in queue");
+        queueProgressBar.setVisible(false);
+        playerSearchResult.setText("");
+        matchSearchResult.setText("");
+        
+        // Reset button states
+        invitePlayerButton.setDisable(true);
+        joinMatchButton.setDisable(true);
+        
+        // Clear search fields
+        playerIdField.clear();
+        matchIdField.clear();
     }
     
     /**
@@ -197,6 +224,18 @@ public class GameLobbyController implements Initializable {
             if (gameName.contains("Tic Tac Toe")) {
                 TicTacToeController controller = (TicTacToeController)
                     screenManager.navigateTo(ScreenManager.TICTACTOE_SCREEN, ScreenManager.TICTACTOE_CSS);
+                
+                // Set the match ID for the game if controller supports it
+                if (controller != null) {
+                    try {
+                        controller.setMatchId("M" + (10000 + random.nextInt(90000)));
+                    } catch (Exception e) {
+                        System.err.println("Warning: Could not set match ID: " + e.getMessage());
+                    }
+                }
+            } else if (gameName.contains("Connect 4")) {
+                ConnectFourController controller = (ConnectFourController)
+                    screenManager.navigateTo(ScreenManager.CONNECTFOUR_SCREEN, ScreenManager.CONNECTFOUR_CSS);
                 
                 // Set the match ID for the game if controller supports it
                 if (controller != null) {
@@ -334,9 +373,12 @@ public class GameLobbyController implements Initializable {
                 stopQueue();
             }
             
+            // Reset game selection (this is important to fix the issue)
+            this.gameName = "Game"; // Reset the game name
+            
             // Navigate back to game library
             GameLibraryController controller = (GameLibraryController)
-                screenManager.navigateTo(ScreenManager.GAME_LIBRARY_SCREEN, ScreenManager.GAME_LIBRARY_CSS);
+                screenManager.reloadAndNavigateTo(ScreenManager.GAME_LIBRARY_SCREEN, ScreenManager.GAME_LIBRARY_CSS);
             
             // Set current user in the controller if we got one back
             if (controller != null && currentUsername != null) {
@@ -371,6 +413,12 @@ public class GameLobbyController implements Initializable {
                      "2. Players take turns placing X or O in empty cells.\n" +
                      "3. The first player to get three of their marks in a row (horizontally, vertically, or diagonally) wins.\n" +
                      "4. If all cells are filled and no player has won, the game is a draw.";
+        } else if (gameName.contains("Connect 4")) {
+            rules += "1. The game is played on a 7×6 grid.\n" +
+                     "2. Players take turns dropping their colored discs from the top into any of the seven columns.\n" +
+                     "3. The disc falls to the lowest available space in the column.\n" +
+                     "4. The first player to connect 4 of their discs horizontally, vertically, or diagonally wins.\n" +
+                     "5. If the board fills up with no four-in-a-row, the game is a draw.";
         } else {
             rules += "Rules for this game will be available soon.";
         }
