@@ -1,5 +1,7 @@
 package gamelogic;
 
+import gamelogic.pieces.Colour;
+
 /**
  * Handles the creation and handling of Game Pieces for Games
  *
@@ -13,6 +15,7 @@ public class GamePiece {
     private final PieceType type;
     // The held status of this piece
     private boolean held;
+    private Colour color;
 
 
     // CONSTRUCTOR
@@ -23,9 +26,10 @@ public class GamePiece {
      * @param type The given Piece Type for this Game Piece
      * @param held The given Held status of this Game Piece
      */
-    public GamePiece(PieceType type, boolean held) {
+    public GamePiece(PieceType type, boolean held, Colour color) {
         this.type = type;
         this.held = held;
+        this.color = color;
     }
 
 
@@ -39,6 +43,16 @@ public class GamePiece {
     public PieceType getType() {
         return this.type;
     }
+
+    /**
+     * Gets the Colour of the piece
+     * @return Colour of piece
+     */
+    public Colour getColor() {
+        return color;
+    }
+
+
 
 
     // METHODS

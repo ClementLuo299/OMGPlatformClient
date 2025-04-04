@@ -35,7 +35,7 @@ public class Checker extends GamePiece {
      * @param xPosition The given X Coordinate for this Checker
      */
     public Checker (PieceType type, boolean held, Colour colour, boolean stacked, int yPosition, int xPosition) {
-        super(type, held);
+        super(type, held, colour);
         this.colour = colour;
         this.stacked = stacked;
         this.yPosition = yPosition;

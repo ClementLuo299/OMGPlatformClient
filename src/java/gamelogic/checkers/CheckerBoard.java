@@ -66,6 +66,12 @@ public class CheckerBoard {
         }
     }
 
+    /**
+     * Finds the checker at the requested coordinates
+     * @param x
+     * @param y
+     * @return checker or null
+     */
     public Checker getChecker(int x, int y) {
         for (Checker checker : board) {
             if (checker.getXPosition() == x && checker.getYPosition() == y) { //checks to see if checker is at correct coord to return
@@ -73,6 +79,21 @@ public class CheckerBoard {
             }
         }
         return null;
+    }
+
+    /**
+     * Removes a checker from the board and from the players piece list
+     * @param checker
+     */
+    public void removeChecker(Checker checker) {
+        board.remove(checker);
+        if (checker.getColor() == Colour.WHITE) {
+            players.get(1).removeFromHand(checker); //removes the piece from the opposing player's hand
+            players.get(0).addToSpoils(checker); //adds it to the spoils of the current player
+        } else { //if a white piece is eaten
+            players.get(0).removeFromHand(checker);
+            players.get(1).addToSpoils(checker);
+        }
     }
 
     /**

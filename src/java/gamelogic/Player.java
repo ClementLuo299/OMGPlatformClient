@@ -137,4 +137,13 @@ public class Player {
     public void addToSpoils(GamePiece pieceToAdd) {
         this.spoils.add(pieceToAdd);
     }
+
+    /**
+     * Removes a piece from the player's list
+     *
+     * @param pieceToRemove
+     */
+    public void removeFromHand(GamePiece pieceToRemove) {
+        this.hand.remove(pieceToRemove);
+    }
 }

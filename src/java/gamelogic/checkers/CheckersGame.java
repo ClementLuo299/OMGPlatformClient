@@ -33,8 +33,21 @@ public class CheckersGame extends Game {
      * @param x
      * @param y
      */
-    public void makeMove(Player player, int x, int y) {
+    public void makeMove(Player player, Checker checker, int x, int y) {
+        //check if move will eat opposing piece
+        int distanceX = checker.getXPosition() - x; //distance must be > 1 in order for a piece to be eaten
+        int distanceY = checker.getYPosition() - y;
+        if (Math.abs(distanceX) > 1) { //means a piece has been eaten (hopped over it)
+            //remove eaten piece
+            Checker eaten = board.getChecker(checker.getXPosition() + distanceX, checker.getYPosition() + distanceY); //will find eaten piece
 
+            //Set new position for checker
+            checker.setXPosition(x);
+            checker.setYPosition(y);
+
+            //remove the eaten piece
+            board.removeChecker(eaten); //calls a method that removes the checker
+        }
     }
 
     /**
