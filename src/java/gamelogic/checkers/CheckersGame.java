@@ -42,12 +42,34 @@ public class CheckersGame extends Game {
             Checker eaten = board.getChecker(checker.getXPosition() + distanceX, checker.getYPosition() + distanceY); //will find eaten piece
 
             //Set new position for checker
-            checker.setXPosition(x);
-            checker.setYPosition(y);
+            board.updatePosition(checker, x, y, player);
 
             //remove the eaten piece
             board.removeChecker(eaten); //calls a method that removes the checker
+        } else {
+            board.updatePosition(checker, x, y, player);
         }
+
+        //if y value for white is 8, 1 for black, then make checker a king
+        Colour colour = checker.getColour();
+        if (colour == Colour.WHITE) {
+            if (y == 8) {
+                checker.stack();
+            }
+        } else if (colour == Colour.BLACK) {
+            if (y == 1) {
+                checker.stack();
+            }
+        }
+    }
+
+    /**
+     * Method checks if a player has won the game
+     * @param player
+     * @return boolean if player has no more pieces
+     */
+    public boolean gameWon(Player player) {
+        return player.getHand().isEmpty();
     }
 
     /**

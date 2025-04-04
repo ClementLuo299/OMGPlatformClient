@@ -32,7 +32,6 @@ public class CheckerBoard {
     /**
      * Method that sets up the pieces in the default positions on the board
      * Adds checkers into list for board as well as player piece lists
-     * Player piece lists will not have updated coordinates and are only used to store pieces
      * @Param none
      * @Return void
      */
@@ -40,13 +39,15 @@ public class CheckerBoard {
         for (int y = 1; y <= 3; y++) { //add white pieces on first 3 rows
             if (y == 2) { //staggers the piece placement to keep them on the correct squares
                 for (int x = 2; x <= size; x+=2) { //add checkers on squares 2,4,6,8
-                    board.add(new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x));
-                    players.get(0).addToHand(new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x));
+                    Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x);
+                    board.add(addCheck);
+                    players.get(0).addToHand(addCheck);
                 }
             } else {
                 for (int x = 1; x <= size; x+=2) { //add checkers on squares 1,3,5,7
-                    board.add(new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x));
-                    players.get(0).addToHand(new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x));
+                    Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x);
+                    board.add(addCheck);
+                    players.get(0).addToHand(addCheck);
                 }
             }
         }
@@ -54,13 +55,15 @@ public class CheckerBoard {
         for (int y = 6; y <= size; y++) { //add black pieces
             if (y == 2) {
                 for (int x = 1; x <= size; x+=2) { //add checkers on squares 1,3,5,7
-                    board.add(new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x));
-                    players.get(1).addToHand(new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x));
+                    Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x);
+                    board.add(addCheck);
+                    players.get(1).addToHand(addCheck);
                 }
             } else {
                 for (int x = 2; x <= size; x+=2) { //add checkers on squares 2,4,6,8
-                    board.add(new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x));
-                    players.get(1).addToHand(new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x));
+                    Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x);
+                    board.add(addCheck);
+                    players.get(1).addToHand(addCheck);
                 }
             }
         }
@@ -97,6 +100,19 @@ public class CheckerBoard {
     }
 
     /**
+     * Method to update the coordinates and position of a checker
+     * @param checker
+     * @param x
+     * @param y
+     * @param player
+     */
+    public void updatePosition(Checker checker, int x, int y, Player player) {
+        board.get(board.indexOf(checker)).setXPosition(x);
+        board.get(board.indexOf(checker)).setYPosition(y);
+
+    }
+
+    /**
      * Override toString method to display the board
      * @return null
      */
@@ -124,4 +140,7 @@ public class CheckerBoard {
         }
         return null;
     }
+
+
+
 }
