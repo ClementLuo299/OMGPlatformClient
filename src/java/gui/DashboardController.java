@@ -97,7 +97,7 @@ public class DashboardController {
             usernameLabel.setText("Guest: " + username);
             
             // Disable settings for guest users
-            settingsBtn.setDisable(true);
+            // settingsBtn.setDisable(true);
             
             // Clear activity list for guest users
             activityList.getItems().clear();
@@ -163,10 +163,10 @@ public class DashboardController {
     @FXML
     private void openSettings() {
         // Don't allow guests to access settings
-        if (isGuest) {
-            showAlert("Not Available", "Settings are not available for guest users");
-            return;
-        }
+        // if (isGuest) {
+        //    showAlert("Not Available", "Settings are not available for guest users");
+        //    return;
+        // }
         
         try {
             // Use ScreenManager to navigate to settings
