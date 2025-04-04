@@ -1,6 +1,7 @@
 package gamelogic.checkers;
 
 import gamelogic.PieceType;
+import gamelogic.Player;
 import gamelogic.pieces.Checker;
 import gamelogic.pieces.Colour;
 
@@ -15,19 +16,23 @@ import java.util.*;
 public class CheckerBoard {
     private List<Checker> board; //holds all the checkers in the board
     private int size; //will be used for methods that involve setup or display of the board (for loops)
+    private List<Player> players;
 
     /**
      * Default constructor that initializes the gameboard
      * @param size
      */
-    public CheckerBoard(int size) {
+    public CheckerBoard(int size, List<Player> players) {
         this.size = size;
         board = new ArrayList<>(); //initialize the board
         setupBoard(); //method that sets up the board and pieces in the correct places
+        this.players = players; //set up players
     }
 
     /**
      * Method that sets up the pieces in the default positions on the board
+     * Adds checkers into list for board as well as player piece lists
+     * Player piece lists will not have updated coordinates and are only used to store pieces
      * @Param none
      * @Return void
      */
@@ -36,10 +41,12 @@ public class CheckerBoard {
             if (y == 2) { //staggers the piece placement to keep them on the correct squares
                 for (int x = 2; x <= size; x+=2) { //add checkers on squares 2,4,6,8
                     board.add(new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x));
+                    players.get(0).addToHand(new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x));
                 }
             } else {
                 for (int x = 1; x <= size; x+=2) { //add checkers on squares 1,3,5,7
                     board.add(new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x));
+                    players.get(0).addToHand(new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x));
                 }
             }
         }
@@ -48,10 +55,12 @@ public class CheckerBoard {
             if (y == 2) {
                 for (int x = 1; x <= size; x+=2) { //add checkers on squares 1,3,5,7
                     board.add(new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x));
+                    players.get(1).addToHand(new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x));
                 }
             } else {
                 for (int x = 2; x <= size; x+=2) { //add checkers on squares 2,4,6,8
                     board.add(new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x));
+                    players.get(1).addToHand(new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x));
                 }
             }
         }

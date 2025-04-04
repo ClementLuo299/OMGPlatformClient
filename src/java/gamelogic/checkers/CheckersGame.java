@@ -23,7 +23,18 @@ public class CheckersGame extends Game {
      */
     public CheckersGame(List<Player> players) {
         super(GameType.CHECKERS, players, 25);
-        board = new CheckerBoard(8);
+        board = new CheckerBoard(8, players);
+    }
+
+    /**
+     * Method to make move
+     * Will be called ONLY AFTER getValidMoves and only clickable squares are the valid moves to avoid bugs and errors
+     * @param player
+     * @param x
+     * @param y
+     */
+    public void makeMove(Player player, int x, int y) {
+
     }
 
     /**
