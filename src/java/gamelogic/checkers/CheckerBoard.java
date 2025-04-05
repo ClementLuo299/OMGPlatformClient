@@ -25,8 +25,8 @@ public class CheckerBoard {
     public CheckerBoard(int size, List<Player> players) {
         this.size = size;
         board = new ArrayList<>(); //initialize the board
-        setupBoard(); //method that sets up the board and pieces in the correct places
         this.players = players; //set up players
+        setupBoard(); //method that sets up the board and pieces in the correct places
     }
 
     /**
@@ -53,7 +53,7 @@ public class CheckerBoard {
         }
 
         for (int y = 6; y <= size; y++) { //add black pieces
-            if (y == 2) {
+            if (y == 7) {
                 for (int x = 1; x <= size; x+=2) { //add checkers on squares 1,3,5,7
                     Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.BLACK, false, y, x);
                     board.add(addCheck);
@@ -157,23 +157,26 @@ public class CheckerBoard {
      */
     @Override
     public String toString() {
-        for (int y = 1; y <= size; y++) { //loops will check every coordinate to see if there is
-            boolean squareTaken = false; //will be used in loop for checking if a square is taken
+        Checker checkerToPrint = null;
+        boolean squareTaken = false; //will be used in loop for checking if a square is taken
+        for (int y = size; y >= 1; y--) { //loops will check every coordinate to see if there is
             for (int x = 1; x <= size; x++) {
                 for (Checker checker : board) {
                     if (checker.getXPosition() == x && checker.getYPosition() == y) {
                         squareTaken = true;
-                    }
-                    if (squareTaken) {
-                        if (checker.getColour() == Colour.WHITE) { //prints the first letter of the colour
-                            System.out.print("W ");
-                        } else {
-                            System.out.print("B ");
-                        }
-                    } else {
-                        System.out.print("O "); //empty square
+                        checkerToPrint = checker;
                     }
                 }
+                if (squareTaken) {
+                    if (checkerToPrint.getColour() == Colour.WHITE) { //prints the first letter of the colour
+                        System.out.print("W ");
+                    } else {
+                        System.out.print("B ");
+                    }
+                } else {
+                    System.out.print("O "); //empty square
+                }
+                squareTaken = false;
             }
             System.out.print("\n"); //line break for new row
         }

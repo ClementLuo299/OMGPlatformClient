@@ -2,6 +2,7 @@ package gamelogic;
 
 import networking.accounts.UserAccount;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,6 +40,8 @@ public class Player {
         this.username = this.account.getUsername();
         this.plays = 0;
         this.score = 0;
+        this.hand = new ArrayList<>();
+        this.spoils = new ArrayList<>();
     }
 
 

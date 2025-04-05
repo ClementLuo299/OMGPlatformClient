@@ -296,4 +296,12 @@ public class CheckersGame extends Game {
             }
         }
     }
+
+    /**
+     * Getter method for board
+     * @return gameboard
+     */
+    public CheckerBoard getBoard () {
+        return board;
+    }
 }
