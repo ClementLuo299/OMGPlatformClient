@@ -32,8 +32,9 @@ public class CheckersGame extends Game {
      * @param player
      * @param x
      * @param y
+     * @return list of coordinates for double jump or null
      */
-    public void makeMove(Player player, Checker checker, int x, int y) {
+    public List<int[]> makeMove(Player player, Checker checker, int x, int y) {
         //check if move will eat opposing piece
         int distanceX = checker.getXPosition() - x; //distance must be > 1 in order for a piece to be eaten
         int distanceY = checker.getYPosition() - y;
@@ -46,20 +47,35 @@ public class CheckersGame extends Game {
 
             //remove the eaten piece
             board.removeChecker(eaten); //calls a method that removes the checker
+
+            //if y value for white is 8, 1 for black, then make checker a king
+            Colour colour = checker.getColour();
+            if (colour == Colour.WHITE) {
+                if (y == 8) {
+                    checker.stack();
+                }
+            } else if (colour == Colour.BLACK) {
+                if (y == 1) {
+                    checker.stack();
+                }
+            }
+
+            //check if double jump is possible
+            return board.checkDouble(checker, player);
         } else {
             board.updatePosition(checker, x, y, player);
-        }
-
-        //if y value for white is 8, 1 for black, then make checker a king
-        Colour colour = checker.getColour();
-        if (colour == Colour.WHITE) {
-            if (y == 8) {
-                checker.stack();
+            //if y value for white is 8, 1 for black, then make checker a king
+            Colour colour = checker.getColour();
+            if (colour == Colour.WHITE) {
+                if (y == 8) {
+                    checker.stack();
+                }
+            } else if (colour == Colour.BLACK) {
+                if (y == 1) {
+                    checker.stack();
+                }
             }
-        } else if (colour == Colour.BLACK) {
-            if (y == 1) {
-                checker.stack();
-            }
+            return null;
         }
     }
 

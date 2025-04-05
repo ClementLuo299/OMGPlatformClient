@@ -112,6 +112,45 @@ public class CheckerBoard {
 
     }
 
+    public List<int[]> checkDouble(Checker checker, Player player) {
+        List<int[]> coords = new ArrayList<>();
+        int x = checker.getXPosition();
+        int y = checker.getYPosition();
+        //get colour
+        Colour color = checker.getColor();
+
+        //check if double is possible and what coordinates
+        if (checker.isStacked()) { //checks forward and back
+            if (getChecker(x + 1, y + 1).getColor() != color && getChecker(x + 2, y + 2) == null) { //checks for opposite colour and empty square after
+                coords.add(new int[]{x + 2, y + 2});
+            }
+            if (getChecker(x + 1, y - 1).getColor() != color && getChecker(x + 2, y - 2) == null) {
+                coords.add(new int[]{x + 2, y - 2});
+            }
+            if (getChecker(x - 1, y + 1).getColor() != color && getChecker(x - 2, y + 2) == null) {
+                coords.add(new int[]{x - 2, y + 2});
+            }
+            if (getChecker(x - 1, y - 1).getColor() != color && getChecker(x - 2, y - 2) == null) {
+                coords.add(new int[]{x - 2, y - 2});
+            }
+        } else if (color == Colour.BLACK) { //check going down the board
+            if (getChecker(x + 1, y - 1).getColor() != color && getChecker(x + 2, y - 2) == null) {
+                coords.add(new int[]{x + 2, y - 2});
+            }
+            if (getChecker(x - 1, y - 1).getColor() != color && getChecker(x - 2, y - 2) == null) {
+                coords.add(new int[]{x - 2, y - 2});
+            }
+        } else { //check going up for white
+            if (getChecker(x + 1, y + 1).getColor() != color && getChecker(x + 2, y + 2) == null) { //checks for opposite colour and empty square after
+                coords.add(new int[]{x + 2, y + 2});
+            }
+            if (getChecker(x - 1, y + 1).getColor() != color && getChecker(x - 2, y + 2) == null) {
+                coords.add(new int[]{x - 2, y + 2});
+            }
+        }
+        return coords; //returns the list of coordinates
+    }
+
     /**
      * Override toString method to display the board
      * @return null
