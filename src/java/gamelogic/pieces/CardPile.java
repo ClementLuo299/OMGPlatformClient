@@ -31,7 +31,7 @@ public class CardPile {
     }
 
     /**
-     * Instantiates a Card Pile with a "New Deck Order" List of Cards
+     * Instantiates a face-down Card Pile with a "New Deck Order" List of Cards
      */
     public CardPile() {
         // The temporary list of cards to add to this pile

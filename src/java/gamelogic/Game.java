@@ -42,12 +42,21 @@ public class Game {
     // GETTERS
 
     /**
-     * Gets the Player whose turn it is
+     * Gets the Player whose turn it is in this Game
      *
      * @return The turn holding Player
      */
     public Player getTurnHolder() {
         return turnHolder;
+    }
+
+    /**
+     * Gets the List of Players in this Game
+     *
+     * @return The List of Players
+     */
+    public List<Player> getPlayers() {
+        return players;
     }
 
 
