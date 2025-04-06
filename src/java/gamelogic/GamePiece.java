@@ -25,7 +25,7 @@ public class GamePiece {
      * @param type The given Piece Type for this Game Piece
      * @param held The given Held status of this Game Piece
      */
-    public GamePiece(PieceType type, boolean held, Colour color) {
+    public GamePiece(PieceType type, boolean held) {
         this.type = type;
         this.held = held;
     }

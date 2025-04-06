@@ -1,5 +1,7 @@
 package gamelogic.pieces;
 
+import gamelogic.PieceType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,15 +19,63 @@ public class CardPile {
     private List<Card> cards;
 
 
-    // CONSTRUCTOR
+    // CONSTRUCTORS
 
     /**
-     * Instantiates a Card Pile with a List of Cards
+     * Instantiates a Card Pile from a specified List of Cards
      *
      * @param cardList The given List of Cards to store in this Card Pile
      */
     public CardPile(List<Card> cardList) {
         this.cards = cardList;
+    }
+
+    /**
+     * Instantiates a Card Pile with a "New Deck Order" List of Cards
+     */
+    public CardPile() {
+        // The temporary list of cards to add to this pile
+        List<Card> generatedList = new ArrayList<>();
+        // The numerical representation of what suit to apply to the card
+        int suitCount = 1;
+
+        // Loops to add new cards to the temporary list until 52 cards are reached
+        while (suitCount < 5) {
+            // Loops through each suit to add 13 cards to the deck
+            for (int i = 1; i < 14; i++) {
+                // Initiates the card to be added to the temporary list
+                Card cardToAdd;
+
+                // Checks what suit to apply to the card and applies it
+                // Clubs and Hearts are in reverse rank order
+                switch (suitCount) {
+                    case 1:
+                        cardToAdd = new Card(PieceType.CARD, false, SuitType.SPADES, i, true);
+                        break;
+                    case 2:
+                        cardToAdd = new Card(PieceType.CARD, false, SuitType.DIAMONDS, i, true);
+                        break;
+                    case 3:
+                        cardToAdd = new Card(PieceType.CARD, false, SuitType.CLUBS, Math.abs(i - 14), true);
+                        break;
+                    case 4:
+                        cardToAdd = new Card(PieceType.CARD, false, SuitType.HEARTS, Math.abs(i - 14), true);
+                        break;
+                    default:
+                        cardToAdd = null;
+                        break;
+                }
+
+                // Adds the card to the temporary deck
+                generatedList.add(cardToAdd);
+
+            }
+            // Increments the count to move onto the next suit
+            suitCount++;
+        }
+
+        // Sets the pile's cards as the generated list
+        this.cards = generatedList;
     }
 
 
@@ -68,6 +118,15 @@ public class CardPile {
         return cards.get(index);
     }
 
+    /**
+     * Gets the size of this Card Pile
+     *
+     * @return The integer Size of this Card Pile
+     */
+    public int getSize() {
+        return cards.size();
+    }
+
 
     // SETTERS
 
@@ -105,17 +164,6 @@ public class CardPile {
 
         // Sets the current Card Pile to the new Card Pile
         this.cards = newCards;
-    }
-
-    /**
-     * Get size of deck
-     *
-     * @Param none
-     *
-     * @Return size of deck
-     */
-    public int getSize() {
-        return cards.size();
     }
 
 

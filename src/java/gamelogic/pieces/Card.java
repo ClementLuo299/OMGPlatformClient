@@ -81,6 +81,7 @@ public class Card extends GamePiece {
      *
      * @return The String of information for this Card
      */
+    @Override
     public String toString() {
         // Initialized String to return
         String cardTitle;
