@@ -6,8 +6,8 @@ import gamelogic.Player;
 import gamelogic.pieces.Checker;
 import gamelogic.pieces.Colour;
 
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Checkers game class
@@ -40,14 +40,20 @@ public class CheckersGame extends Game {
         int distanceX = x - checker.getXPosition(); //distance must be > 1 in order for a piece to be eaten
         int distanceY = y - checker.getYPosition();
         if (Math.abs(distanceX) > 1) { //means a piece has been eaten (hopped over it)
-            //remove eaten piece
-            Checker eaten = board.getChecker(checker.getXPosition() + distanceX/2, checker.getYPosition() + distanceY/2); //will find eaten piece
 
+            Checker eaten = board.getChecker(checker.getXPosition() + distanceX/2, checker.getYPosition() + distanceY/2); //will find eaten piece
             //Set new position for checker
             board.updatePosition(checker, x, y, player);
 
             //remove the eaten piece
             board.removeChecker(eaten); //calls a method that removes the checker
+            //remove for player
+            if (eaten.getColor() == Colour.RED) {
+                getPlayers().get(0).removeFromHand(eaten);
+            } else {
+                getPlayers().get(1).removeFromHand(eaten);
+            }
+
 
             //if y value for RED(white) is 8, 1 for black, then make checker a king
             Colour colour = checker.getColour();
@@ -82,11 +88,26 @@ public class CheckersGame extends Game {
 
     /**
      * Method checks if a player has won the game
+     * Checks to see if all pieces have been eaten or if there is no more legal moves
      * @param player
      * @return boolean if player has no more pieces
      */
     public boolean gameWon(Player player) {
-        return player.getHand().isEmpty();
+        List<int[]> moves = new ArrayList<>();
+        if (player == getPlayers().get(1)) {
+            for (Checker checker : board.getCheckers()) {
+                if (checker.getColour() == Colour.BLACK) {
+                    moves.addAll(getValidMoves(checker.getXPosition(), checker.getYPosition()));
+                }
+            }
+        } else {
+            for (Checker checker : board.getCheckers()) {
+                if (checker.getColour() == Colour.RED) {
+                    moves.addAll(getValidMoves(checker.getXPosition(), checker.getYPosition()));
+                }
+            }
+        }
+        return player.getHand().isEmpty() || moves.isEmpty();
     }
 
     /**

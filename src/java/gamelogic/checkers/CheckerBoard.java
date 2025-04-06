@@ -193,7 +193,7 @@ public class CheckerBoard {
                 }
                 if (squareTaken) {
                     if (checkerToPrint.getColour() == Colour.RED) { //prints the first letter of the colour
-                        System.out.print("W "); // W for White (RED in code)
+                        System.out.print("R "); // W for White (RED in code)
                     } else {
                         System.out.print("B "); // B for Black
                     }

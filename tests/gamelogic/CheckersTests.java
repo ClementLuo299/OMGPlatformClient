@@ -1,13 +1,15 @@
 package gamelogic;
 
-import gamelogic.pieces.*;
-import gamelogic.checkers.*;
+import gamelogic.checkers.CheckersGame;
 import networking.accounts.UserAccount;
-import gamelogic.Player;
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class CheckersTests {
     CheckersGame game;
@@ -58,6 +60,9 @@ public class CheckersTests {
         game.makeMove(players.get(0), game.getBoard().getChecker(6, 4), 4, 6);
         game.makeMove(players.get(1), game.getBoard().getChecker(5, 7), 3, 5);
         game.getBoard().toString();
+        System.out.println(players.get(0).getHand().size());
+        System.out.println(players.get(1).getHand().size());
         System.out.println();
     }
+
 }
