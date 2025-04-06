@@ -245,19 +245,29 @@ public class GameLobbyController implements Initializable {
                         System.err.println("Warning: Could not set match ID: " + e.getMessage());
                     }
                 }
+            } else if (gameName.contains("Checkers")) {
+                CheckersGameController controller = (CheckersGameController)
+                    screenManager.navigateTo(ScreenManager.CHECKERS_SCREEN, ScreenManager.CHECKERS_CSS);
+                
+                // Set the match ID for the game if controller supports it
+                if (controller != null) {
+                    try {
+                        controller.setMatchId("M" + (10000 + random.nextInt(90000)));
+                    } catch (Exception e) {
+                        System.err.println("Warning: Could not set match ID: " + e.getMessage());
+                    }
+                }
             } else {
                 // For other games that are not yet implemented
                 stopQueue(); // Make sure to stop the queue animation
-                
-                // Show a clearer message that the game is in development
-                showAlert(Alert.AlertType.INFORMATION, 
-                    gameName + " - In Development", 
-                    "The " + gameName + " game screen is currently under development.\nPlease check back later!");
+                showAlert(Alert.AlertType.INFORMATION, "Game Not Available", 
+                    "The " + gameName + " game is not yet available in this version. Please try another game.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Game Launch Error", 
-                "Could not launch " + gameName + ": " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Game Start Error", 
+                "There was an error starting the game: " + e.getMessage());
+            stopQueue(); // Make sure to stop the queue animation in case of error
         }
     }
     

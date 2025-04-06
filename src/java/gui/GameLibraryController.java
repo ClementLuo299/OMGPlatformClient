@@ -243,8 +243,18 @@ public class GameLibraryController {
     
     @FXML
     private void playCheckers() {
-        showAlert(Alert.AlertType.INFORMATION, "Game Under Development", 
-                 "The Checkers game is currently under development.\nPlease check back later!");
+        try {
+            GameLobbyController controller = (GameLobbyController)
+                    screenManager.navigateTo(ScreenManager.GAME_LOBBY_SCREEN, ScreenManager.GAME_LOBBY_CSS);
+            
+            if (controller != null) {
+                controller.setGame("Checkers");
+                controller.setCurrentUser(currentUsername, isGuest);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Game Launch Error", "Could not launch Checkers: " + e.getMessage());
+        }
     }
     
     @FXML

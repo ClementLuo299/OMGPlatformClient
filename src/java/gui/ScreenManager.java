@@ -32,6 +32,7 @@ public class ScreenManager {
     public static final String REGISTER_SCREEN = "fxml/Register.fxml";
     public static final String TICTACTOE_SCREEN = "fxml/TicTacToe.fxml";
     public static final String CONNECTFOUR_SCREEN = "fxml/ConnectFour.fxml";
+    public static final String CHECKERS_SCREEN = "fxml/Checkers.fxml";
     public static final String GAME_LOBBY_SCREEN = "fxml/GameLobby.fxml";
     
     // CSS paths
@@ -43,6 +44,7 @@ public class ScreenManager {
     public static final String REGISTER_CSS = "css/register.css";
     public static final String TICTACTOE_CSS = "css/tictactoe.css";
     public static final String CONNECTFOUR_CSS = "css/connectfour.css";
+    public static final String CHECKERS_CSS = "css/checkers.css";
     public static final String GAME_LOBBY_CSS = "css/game_lobby.css";
     
     private ScreenManager() {
@@ -134,7 +136,8 @@ public class ScreenManager {
             // Only cache screens that aren't game-specific
             if (!fxmlPath.equals(GAME_LOBBY_SCREEN) && 
                 !fxmlPath.equals(TICTACTOE_SCREEN) && 
-                !fxmlPath.equals(CONNECTFOUR_SCREEN)) {
+                !fxmlPath.equals(CONNECTFOUR_SCREEN) &&
+                !fxmlPath.equals(CHECKERS_SCREEN)) {
                 screenCache.put(fxmlPath, root);
             }
             

@@ -30,6 +30,7 @@ public class CheckersGame extends Game {
      * Method to make move
      * Will be called ONLY AFTER getValidMoves and only clickable squares are the valid moves to avoid bugs and errors
      * @param player
+     * @param checker
      * @param x
      * @param y
      * @return list of coordinates for double jump or null
@@ -48,9 +49,9 @@ public class CheckersGame extends Game {
             //remove the eaten piece
             board.removeChecker(eaten); //calls a method that removes the checker
 
-            //if y value for white is 8, 1 for black, then make checker a king
+            //if y value for RED(white) is 8, 1 for black, then make checker a king
             Colour colour = checker.getColour();
-            if (colour == Colour.WHITE) {
+            if (colour == Colour.RED) { // WHITE pieces (RED in code)
                 if (y == 8) {
                     checker.stack();
                 }
@@ -64,9 +65,9 @@ public class CheckersGame extends Game {
             return board.checkDouble(checker, player);
         } else {
             board.updatePosition(checker, x, y, player);
-            //if y value for white is 8, 1 for black, then make checker a king
+            //if y value for RED(white) is 8, 1 for black, then make checker a king
             Colour colour = checker.getColour();
-            if (colour == Colour.WHITE) {
+            if (colour == Colour.RED) { // WHITE pieces (RED in code)
                 if (y == 8) {
                     checker.stack();
                 }
@@ -101,11 +102,11 @@ public class CheckersGame extends Game {
         if (currentChecker == null) {
             return null; //returns null if no checker is on the square
         }
-        if (currentChecker.getColour() == Colour.WHITE) { //checks if checker is white or black
+        if (currentChecker.getColour() == Colour.RED) { //checks if checker is RED (white) or black
             if (currentChecker.isStacked()) {
-                getWhiteMoves(coords, x, y, true);
+                getRedMoves(coords, x, y, true);
             } else {
-                getWhiteMoves(coords, x, y, false);
+                getRedMoves(coords, x, y, false);
             }
         } else { //colour is black
             if (currentChecker.isStacked()) {
@@ -118,121 +119,28 @@ public class CheckersGame extends Game {
     }
 
     /**
-     * method finds the valid white moves
+     * Method finds the valid moves for RED (white) pieces
      * @param moves
      * @param x
      * @param y
      * @param stacked
      */
-    public void getWhiteMoves(List<int[]> moves, int x, int y, boolean stacked) {
+    public void getRedMoves(List<int[]> moves, int x, int y, boolean stacked) {
         if (stacked) { //check forward and backward
-            //check up right
-            int tempx = x + 1;
-            int tempy = y + 1;
-            Checker checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx < 8 && tempy < 8) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
-                if (checkEaten == null) {
-                    if (tempx < 8 && tempy < 8) {
-                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
-                    }
-                }
-            } //no need to check for white piece since move is invalid if that is the case
-
-            //check up left
-            tempx = x - 1;
-            tempy = y + 1;
-            checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx > 0 && tempy < 8) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
-                if (checkEaten == null) {
-                    if (tempx > 0 && tempy < 8) {
-                        moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
-                    }
-                }
-            }
-
-            //check down left
-            tempx = x - 1;
-            tempy = y - 1;
-            checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx > 0 && tempy > 0) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx - 1, tempy - 1);
-                if (checkEaten == null) {
-                    if (tempx > 0 && tempy > 0) {
-                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
-                    }
-                }
-            }
-
-            //check down right
-            tempx = x + 1;
-            tempy = y - 1;
-            checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx < 8 && tempy > 0) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy - 1);
-                if (checkEaten == null) {
-                    if (tempx < 8 && tempy > 0) {
-                        moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
-                    }
-                }
-            }
-
-        } else { //regular checker (prince)
-            //check up right
-            int tempx = x + 1;
-            int tempy = y + 1;
-            Checker checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx < 8 && tempy < 8) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
-                if (checkEaten == null) {
-                    if (tempx < 8 && tempy < 8) {
-                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
-                    }
-                }
-            } //no need to check for white piece since move is invalid if that is the case
-
-            //check up left
-            tempx = x - 1;
-            tempy = y + 1;
-            checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx > 0 && tempy < 8) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
-                if (checkEaten == null) {
-                    if (tempx > 0 && tempy < 8) {
-                        moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
-                    }
-                }
-            }
+            // Check all four directions for king pieces
+            checkMoveDirection(moves, x, y, Colour.RED, 1, 1);   // Up-right
+            checkMoveDirection(moves, x, y, Colour.RED, -1, 1);  // Up-left
+            checkMoveDirection(moves, x, y, Colour.RED, 1, -1);  // Down-right
+            checkMoveDirection(moves, x, y, Colour.RED, -1, -1); // Down-left
+        } else { //regular checker (can only move up)
+            // Regular RED (white) pieces can only move upward
+            checkMoveDirection(moves, x, y, Colour.RED, 1, 1);   // Up-right
+            checkMoveDirection(moves, x, y, Colour.RED, -1, 1);  // Up-left
         }
     }
 
     /**
-     * finds the valid moves for black
+     * Method finds the valid moves for black pieces
      * @param moves
      * @param x
      * @param y
@@ -240,105 +148,45 @@ public class CheckersGame extends Game {
      */
     public void getBlackMoves(List<int[]> moves, int x, int y, boolean stacked) {
         if (stacked) { //check forward and backward
-            //check up right
-            int tempx = x + 1;
-            int tempy = y + 1;
-            Checker checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx < 8 && tempy < 8) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
-                if (checkEaten == null) {
-                    if (tempx < 8 && tempy < 8) {
-                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
-                    }
-                }
-            } //no need to check for white piece since move is invalid if that is the case
+            // Check all four directions for king pieces
+            checkMoveDirection(moves, x, y, Colour.BLACK, 1, 1);   // Up-right
+            checkMoveDirection(moves, x, y, Colour.BLACK, -1, 1);  // Up-left
+            checkMoveDirection(moves, x, y, Colour.BLACK, 1, -1);  // Down-right
+            checkMoveDirection(moves, x, y, Colour.BLACK, -1, -1); // Down-left
+        } else { //regular checker (can only move down)
+            // Regular black pieces can only move downward
+            checkMoveDirection(moves, x, y, Colour.BLACK, 1, -1);  // Down-right
+            checkMoveDirection(moves, x, y, Colour.BLACK, -1, -1); // Down-left
+        }
+    }
 
-            //check up left
-            tempx = x - 1;
-            tempy = y + 1;
-            checkSquare = board.getChecker(tempx, tempy);
+    /**
+     * Helper method to check for valid moves in a specific direction
+     * @param moves List to add valid move coordinates to
+     * @param x Starting x position
+     * @param y Starting y position
+     * @param color Checker color
+     * @param dx X direction (1 or -1)
+     * @param dy Y direction (1 or -1)
+     */
+    private void checkMoveDirection(List<int[]> moves, int x, int y, Colour color, int dx, int dy) {
+        // Check regular move (one square)
+        int moveX = x + dx;
+        int moveY = y + dy;
+        if (moveX >= 1 && moveX <= 8 && moveY >= 1 && moveY <= 8) {
+            Checker checkSquare = board.getChecker(moveX, moveY);
             if (checkSquare == null) {
-                if (tempx > 0 && tempy < 8) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
-                if (checkEaten == null) {
-                    if (tempx > 0 && tempy < 8) {
-                        moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
-                    }
-                }
-            }
-
-            //check down left
-            tempx = x - 1;
-            tempy = y - 1;
-            checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx > 0 && tempy > 0) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx - 1, tempy - 1);
-                if (checkEaten == null) {
-                    if (tempx > 0 && tempy > 0) {
-                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
-                    }
-                }
-            }
-
-            //check down right
-            tempx = x + 1;
-            tempy = y - 1;
-            checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx < 8 && tempy > 0) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy - 1);
-                if (checkEaten == null) {
-                    if (tempx < 8 && tempy > 0) {
-                        moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
-                    }
-                }
-            }
-
-        } else { //regular checker (prince)
-            //check down right
-            int tempx = x + 1;
-            int tempy = y - 1;
-            Checker checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx < 8 && tempy > 0) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx + 1, tempy - 1);
-                if (checkEaten == null) {
-                    if (tempx < 8 && tempy > 0) {
-                        moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
-                    }
-                }
-            }
-
-            //check down left
-            tempx = x - 1;
-            tempy = y - 1;
-            checkSquare = board.getChecker(tempx, tempy);
-            if (checkSquare == null) {
-                if (tempx > 0 && tempy > 0) {
-                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
-                }
-            } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
-                Checker checkEaten = board.getChecker(tempx - 1, tempy - 1);
-                if (checkEaten == null) {
-                    if (tempx > 0 && tempy > 0) {
-                        moves.add(new int[]{tempx - 1, tempy - 1}); //can be eaten so jump over black piece
+                // Empty square - can move here
+                moves.add(new int[]{moveX, moveY});
+            } else if (checkSquare.getColour() != color) {
+                // Check jump move (capture)
+                int jumpX = x + 2 * dx;
+                int jumpY = y + 2 * dy;
+                if (jumpX >= 1 && jumpX <= 8 && jumpY >= 1 && jumpY <= 8) {
+                    Checker jumpSquare = board.getChecker(jumpX, jumpY);
+                    if (jumpSquare == null) {
+                        // Can jump to this empty square
+                        moves.add(new int[]{jumpX, jumpY});
                     }
                 }
             }
@@ -346,8 +194,8 @@ public class CheckersGame extends Game {
     }
 
     /**
-     * Getter method for board
-     * @return gameboard
+     * Get the checker board
+     * @return CheckerBoard instance
      */
     public CheckerBoard getBoard () {
         return board;
