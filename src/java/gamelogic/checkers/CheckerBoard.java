@@ -90,7 +90,7 @@ public class CheckerBoard {
      */
     public void removeChecker(Checker checker) {
         board.remove(checker);
-        if (checker.getColor() == Colour.WHITE) {
+        if (checker.getColour() == Colour.WHITE) {
             players.get(1).removeFromHand(checker); //removes the piece from the opposing player's hand
             players.get(0).addToSpoils(checker); //adds it to the spoils of the current player
         } else { //if a white piece is eaten
@@ -117,34 +117,34 @@ public class CheckerBoard {
         int x = checker.getXPosition();
         int y = checker.getYPosition();
         //get colour
-        Colour color = checker.getColor();
+        Colour color = checker.getColour();
 
         //check if double is possible and what coordinates
         if (checker.isStacked()) { //checks forward and back
-            if (getChecker(x + 1, y + 1).getColor() != color && getChecker(x + 2, y + 2) == null) { //checks for opposite colour and empty square after
+            if (getChecker(x + 1, y + 1).getColour() != color && getChecker(x + 2, y + 2) == null) { //checks for opposite colour and empty square after
                 coords.add(new int[]{x + 2, y + 2});
             }
-            if (getChecker(x + 1, y - 1).getColor() != color && getChecker(x + 2, y - 2) == null) {
+            if (getChecker(x + 1, y - 1).getColour() != color && getChecker(x + 2, y - 2) == null) {
                 coords.add(new int[]{x + 2, y - 2});
             }
-            if (getChecker(x - 1, y + 1).getColor() != color && getChecker(x - 2, y + 2) == null) {
+            if (getChecker(x - 1, y + 1).getColour() != color && getChecker(x - 2, y + 2) == null) {
                 coords.add(new int[]{x - 2, y + 2});
             }
-            if (getChecker(x - 1, y - 1).getColor() != color && getChecker(x - 2, y - 2) == null) {
+            if (getChecker(x - 1, y - 1).getColour() != color && getChecker(x - 2, y - 2) == null) {
                 coords.add(new int[]{x - 2, y - 2});
             }
         } else if (color == Colour.BLACK) { //check going down the board
-            if (getChecker(x + 1, y - 1).getColor() != color && getChecker(x + 2, y - 2) == null) {
+            if (getChecker(x + 1, y - 1).getColour() != color && getChecker(x + 2, y - 2) == null) {
                 coords.add(new int[]{x + 2, y - 2});
             }
-            if (getChecker(x - 1, y - 1).getColor() != color && getChecker(x - 2, y - 2) == null) {
+            if (getChecker(x - 1, y - 1).getColour() != color && getChecker(x - 2, y - 2) == null) {
                 coords.add(new int[]{x - 2, y - 2});
             }
         } else { //check going up for white
-            if (getChecker(x + 1, y + 1).getColor() != color && getChecker(x + 2, y + 2) == null) { //checks for opposite colour and empty square after
+            if (getChecker(x + 1, y + 1).getColour() != color && getChecker(x + 2, y + 2) == null) { //checks for opposite colour and empty square after
                 coords.add(new int[]{x + 2, y + 2});
             }
-            if (getChecker(x - 1, y + 1).getColor() != color && getChecker(x - 2, y + 2) == null) {
+            if (getChecker(x - 1, y + 1).getColour() != color && getChecker(x - 2, y + 2) == null) {
                 coords.add(new int[]{x - 2, y + 2});
             }
         }

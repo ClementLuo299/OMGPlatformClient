@@ -15,7 +15,6 @@ public class GamePiece {
     private final PieceType type;
     // The held status of this piece
     private boolean held;
-    private Colour color;
 
 
     // CONSTRUCTOR
@@ -29,7 +28,6 @@ public class GamePiece {
     public GamePiece(PieceType type, boolean held, Colour color) {
         this.type = type;
         this.held = held;
-        this.color = color;
     }
 
 
@@ -48,9 +46,6 @@ public class GamePiece {
      * Gets the Colour of the piece
      * @return Colour of piece
      */
-    public Colour getColor() {
-        return color;
-    }
 
 
 
