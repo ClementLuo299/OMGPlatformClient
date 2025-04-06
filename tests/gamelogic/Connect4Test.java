@@ -1,5 +1,5 @@
-package gameLogicTests;
-/*
+package gameLogic;
+
 import gamelogic.connectfour.ConnectFour;
 import gamelogic.Player;
 import org.junit.Before;
