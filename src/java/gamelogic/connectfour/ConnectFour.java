@@ -1,14 +1,18 @@
 package gamelogic.connectfour;
 
 import gamelogic.*;
+import java.util.List;
 
-public class ConnectFour extends AbstractGame {
+/**
+ * Connect Four game implementation
+ * Extends the base Game class with Connect Four specific logic
+ */
+public class ConnectFour extends Game {
 
     private static final int ROWS = 6;
     private static final int COLS = 7;
-    private static final int PLAYER_ONE_CHAR = '1';
-    private static final int PLAYER_TWO_CHAR = '2';
-
+    private static final char PLAYER_ONE_CHAR = '1';
+    private static final char PLAYER_TWO_CHAR = '2';
 
     // the board will be stored in a string in the following format:
     // "oooooooooooooooooooooooooooooooooooooooooo"
@@ -24,12 +28,21 @@ public class ConnectFour extends AbstractGame {
     // would be stored as
     // "ooooooooooo1oooo222oooo122oooo1121oo121121"
 
+    // Board state
+    private String board;
 
-    // default constructor
-    public ConnectFour (Player player1, Player player2) {
+    /**
+     * Default constructor for Connect Four game
+     * @param players List of players, should contain exactly 2 players
+     */
+    public ConnectFour(List<Player> players) {
+        super(GameType.CONNECT_FOUR, players, 21); // Average moves is about 21 for Connect Four
+        if (players.size() != 2) {
+            throw new IllegalArgumentException("Connect Four requires exactly 2 players");
+        }
         this.board = "oooooooooooooooooooooooooooooooooooooooooo";
-        this.player1 = player1;
-        this.player2 = player2;
+        // Setting initial turn holder
+        setTurnHolder(players.get(0));
     }
 
     /**
@@ -40,16 +53,21 @@ public class ConnectFour extends AbstractGame {
         return this.board;
     }
 
-    // for dropping a checker
-    // column will be a number 0-6 respectively corresponding to columns 1-7 on the gameboard
+    /**
+     * Drop a piece in the specified column
+     * @param player The player making the move
+     * @param column The column to drop the piece (0-6)
+     */
     public void drop(Player player, int column) {
+        List<Player> players = getPlayers();
+        
         // Check if the column exists and is not full
         if (column < 0 || column >= COLS || this.board.charAt(column) != 'o') {
             // Column is full or invalid, can't drop here
             return;
         }
         
-        if (player != player1 && player != player2) {
+        if (player != players.get(0) && player != players.get(1)) {
             // Invalid player
             return;
         }
@@ -67,13 +85,28 @@ public class ConnectFour extends AbstractGame {
         if (lowestEmptyRow >= 0) {
             // Place the piece at the lowest empty position
             int index = lowestEmptyRow * COLS + column;
-            char playerChar = (player == player1) ? (char)PLAYER_ONE_CHAR : (char)PLAYER_TWO_CHAR;
+            char playerChar = (player == players.get(0)) ? PLAYER_ONE_CHAR : PLAYER_TWO_CHAR;
             
             this.board = this.board.substring(0, index) + playerChar + this.board.substring(index + 1);
+            
+            // Check if game is over
+            Player winner = checkWinner();
+            if (winner != null) {
+                setWinner(winner);
+            }
+            
+            // Switch turn to next player
+            setTurnHolder(player == players.get(0) ? players.get(1) : players.get(0));
         }
     }
 
-    public Player getWinner(){
+    /**
+     * Check if a player has won
+     * @return The winning player, or null if no winner
+     */
+    private Player checkWinner() {
+        List<Player> players = getPlayers();
+        
         // looking for horizontal 4 in a row
         for(int row = 0; row < ROWS; row++){
             for(int col = 0; col < COLS-3; col++){
@@ -85,9 +118,9 @@ public class ConnectFour extends AbstractGame {
                     current == this.board.charAt(index + 3)) {
                     
                     if(current == PLAYER_ONE_CHAR){
-                        return player1;
+                        return players.get(0);
                     } else if(current == PLAYER_TWO_CHAR){
-                        return player2;
+                        return players.get(1);
                     }
                 }
             }
@@ -104,9 +137,9 @@ public class ConnectFour extends AbstractGame {
                     current == this.board.charAt(index + (3 * COLS))) {
                     
                     if(current == PLAYER_ONE_CHAR){
-                        return player1;
+                        return players.get(0);
                     } else if(current == PLAYER_TWO_CHAR){
-                        return player2;
+                        return players.get(1);
                     }
                 }
             }
@@ -123,9 +156,9 @@ public class ConnectFour extends AbstractGame {
                     current == this.board.charAt(index + (3 * COLS) + 3)) {
                     
                     if(current == PLAYER_ONE_CHAR){
-                        return player1;
+                        return players.get(0);
                     } else if(current == PLAYER_TWO_CHAR){
-                        return player2;
+                        return players.get(1);
                     }
                 }
             }
@@ -142,9 +175,9 @@ public class ConnectFour extends AbstractGame {
                     current == this.board.charAt(index + (3 * COLS) - 3)) {
                     
                     if(current == PLAYER_ONE_CHAR){
-                        return player1;
+                        return players.get(0);
                     } else if(current == PLAYER_TWO_CHAR){
-                        return player2;
+                        return players.get(1);
                     }
                 }
             }
@@ -154,10 +187,13 @@ public class ConnectFour extends AbstractGame {
         return null;
     }
 
-
-    public boolean drew() {
+    /**
+     * Check if the game is a draw
+     * @return True if the game is a draw, false otherwise
+     */
+    public boolean isDrawn() {
         // If there was a winner, it's not a draw
-        if (this.getWinner() != null) {
+        if (checkWinner() != null) {
             return false;
         }
         
@@ -175,6 +211,13 @@ public class ConnectFour extends AbstractGame {
         // If no winner and the board is full, it's a draw
         return true;
     }
-
-
+    
+    /**
+     * Get the players in this game
+     * @return List of players
+     */
+    public List<Player> getPlayers() {
+        // Now we can use the getter from the Game class
+        return super.getPlayers();
+    }
 }

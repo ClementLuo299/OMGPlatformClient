@@ -3,6 +3,7 @@ package gamelogic;
 public enum GameType {
     ALL,
     CHECKERS,
-    CONNECT4,
-    WHIST
+    CONNECT_FOUR,
+    WHIST,
+    TICTACTOE
 }

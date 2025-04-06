@@ -2,6 +2,7 @@ package gamelogic.pieces;
 
 import gamelogic.GamePiece;
 import gamelogic.PieceType;
+import gamelogic.pieces.Colour;
 
 /**
  * Handles the creation and handling of Cards for Playing Card Games
@@ -30,7 +31,7 @@ public class Card extends GamePiece {
      * @param faceDown The given boolean Face visibility of this Card
      */
     public Card(PieceType type, boolean held, SuitType suit, int rank, boolean faceDown) {
-        super(type, held);
+        super(type, held, Colour.NONE);
         this.suit = suit;
         this.rank = rank;
         this.faceDown = faceDown;

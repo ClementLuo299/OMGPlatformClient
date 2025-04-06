@@ -50,6 +50,24 @@ public class Game {
         return turnHolder;
     }
 
+    /**
+     * Gets the list of players in this game
+     * 
+     * @return The list of players
+     */
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    /**
+     * Gets the winner of the game
+     * 
+     * @return The winning Player, or null if no winner yet
+     */
+    public Player getWinner() {
+        return winner;
+    }
+
 
     // SETTERS
 

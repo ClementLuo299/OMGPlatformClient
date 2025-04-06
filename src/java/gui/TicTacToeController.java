@@ -2,6 +2,7 @@ package gui;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.time.LocalTime;
@@ -106,7 +107,7 @@ public class TicTacToeController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialize board buttons list
+        // Store all the board buttons in a list for easier access
         boardButtons = new ArrayList<>();
         boardButtons.add(btn00);
         boardButtons.add(btn01);
@@ -117,14 +118,18 @@ public class TicTacToeController implements Initializable {
         boardButtons.add(btn20);
         boardButtons.add(btn21);
         boardButtons.add(btn22);
-
+        
         // Initialize players with proper error handling
         try {
-            player1 = new Player("Player 1", "temp_pass1");
-            player2 = new Player("Player 2", "temp_pass2");
+            // Create UserAccount objects for the players
+            networking.accounts.UserAccount account1 = new networking.accounts.UserAccount("Player 1", "temp_pass1");
+            networking.accounts.UserAccount account2 = new networking.accounts.UserAccount("Player 2", "temp_pass2");
             
-            // No need to set avatar images programmatically since they're already in FXML
-            // Just add the color effects
+            // Create Player objects with the UserAccount objects
+            player1 = new Player(account1);
+            player2 = new Player(account2);
+            
+            // Apply color effects to avatar images
             if (player1Avatar != null) {
                 player1Avatar.setEffect(new javafx.scene.effect.ColorAdjust(0, 0.5, 0, -0.2)); // Blue tint
             }
@@ -321,7 +326,7 @@ public class TicTacToeController implements Initializable {
         }
 
         // Initialize game with players
-        game = new TicTacToe(player1, player2);
+        game = new TicTacToe(Arrays.asList(player1, player2));
         
         // Set player1 as the starting player
         currentPlayer = player1;
@@ -369,10 +374,13 @@ public class TicTacToeController implements Initializable {
             button.getStyleClass().add("o");
         }
         
+        // Get the winner from the game using reflection
+        Player winner = getWinnerFromGame();
+        
         // Check for game end
-        if (game.getWinner() != null) {
+        if (winner != null) {
             handleGameWon();
-        } else if (game.drew()) {
+        } else if (game.isDrawn()) {
             handleGameDraw();
         } else {
             // Switch players
@@ -409,7 +417,7 @@ public class TicTacToeController implements Initializable {
      * Handle game won event.
      */
     private void handleGameWon() {
-        Player winner = game.getWinner();
+        Player winner = getWinnerFromGame();
         
         // Pause the timer
         pauseTimer();
@@ -479,7 +487,9 @@ public class TicTacToeController implements Initializable {
      * @return List of positions (0-8) that form the winning line, or null if no winning line
      */
     private List<Integer> getWinningPositions() {
-        if (game.getWinner() == null) {
+        Player winner = getWinnerFromGame();
+        
+        if (winner == null) {
             return null;
         }
         
@@ -638,5 +648,14 @@ public class TicTacToeController implements Initializable {
         if (moveCountLabel != null) {
             moveCountLabel.setText("Moves: " + moveHistory.size());
         }
+    }
+
+    /**
+     * Helper method to get the winner from the game using reflection
+     * @return The winner Player, or null if no winner
+     */
+    private Player getWinnerFromGame() {
+        // Now we can use the getter from the Game class
+        return game.getWinner();
     }
 } 
