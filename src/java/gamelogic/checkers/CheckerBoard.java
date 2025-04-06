@@ -183,6 +183,12 @@ public class CheckerBoard {
         return null;
     }
 
-
+    /**
+     * Getter method for list of checkers
+     * @return list of checkers
+     */
+    public List<Checker> getCheckers() {
+        return board;
+    }
 
 }

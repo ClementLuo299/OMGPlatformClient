@@ -36,11 +36,11 @@ public class CheckersGame extends Game {
      */
     public List<int[]> makeMove(Player player, Checker checker, int x, int y) {
         //check if move will eat opposing piece
-        int distanceX = checker.getXPosition() - x; //distance must be > 1 in order for a piece to be eaten
-        int distanceY = checker.getYPosition() - y;
+        int distanceX = x - checker.getXPosition(); //distance must be > 1 in order for a piece to be eaten
+        int distanceY = y - checker.getYPosition();
         if (Math.abs(distanceX) > 1) { //means a piece has been eaten (hopped over it)
             //remove eaten piece
-            Checker eaten = board.getChecker(checker.getXPosition() + distanceX, checker.getYPosition() + distanceY); //will find eaten piece
+            Checker eaten = board.getChecker(checker.getXPosition() + distanceX/2, checker.getYPosition() + distanceY/2); //will find eaten piece
 
             //Set new position for checker
             board.updatePosition(checker, x, y, player);
@@ -131,11 +131,15 @@ public class CheckersGame extends Game {
             int tempy = y + 1;
             Checker checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx < 8 && tempy < 8) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    if (tempx < 8 && tempy < 8) {
+                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    }
                 }
             } //no need to check for white piece since move is invalid if that is the case
 
@@ -144,11 +148,15 @@ public class CheckersGame extends Game {
             tempy = y + 1;
             checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx > 0 && tempy < 8) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
+                    if (tempx > 0 && tempy < 8) {
+                        moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
 
@@ -157,11 +165,15 @@ public class CheckersGame extends Game {
             tempy = y - 1;
             checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx > 0 && tempy > 0) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx - 1, tempy - 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    if (tempx > 0 && tempy > 0) {
+                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
 
@@ -170,11 +182,15 @@ public class CheckersGame extends Game {
             tempy = y - 1;
             checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx < 8 && tempy > 0) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy - 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
+                    if (tempx < 8 && tempy > 0) {
+                        moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
 
@@ -184,11 +200,15 @@ public class CheckersGame extends Game {
             int tempy = y + 1;
             Checker checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx < 8 && tempy < 8) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    if (tempx < 8 && tempy < 8) {
+                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    }
                 }
             } //no need to check for white piece since move is invalid if that is the case
 
@@ -197,11 +217,15 @@ public class CheckersGame extends Game {
             tempy = y + 1;
             checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx > 0 && tempy < 8) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.BLACK) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
+                    if (tempx > 0 && tempy < 8) {
+                        moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
         }
@@ -221,11 +245,15 @@ public class CheckersGame extends Game {
             int tempy = y + 1;
             Checker checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx < 8 && tempy < 8) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    if (tempx < 8 && tempy < 8) {
+                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    }
                 }
             } //no need to check for white piece since move is invalid if that is the case
 
@@ -234,11 +262,15 @@ public class CheckersGame extends Game {
             tempy = y + 1;
             checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx > 0 && tempy < 8) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy + 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
+                    if (tempx > 0 && tempy < 8) {
+                        moves.add(new int[]{tempx - 1, tempy + 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
 
@@ -247,11 +279,15 @@ public class CheckersGame extends Game {
             tempy = y - 1;
             checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx > 0 && tempy > 0) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx - 1, tempy - 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    if (tempx > 0 && tempy > 0) {
+                        moves.add(new int[]{tempx + 1, tempy + 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
 
@@ -260,11 +296,15 @@ public class CheckersGame extends Game {
             tempy = y - 1;
             checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx < 8 && tempy > 0) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy - 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
+                    if (tempx < 8 && tempy > 0) {
+                        moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
 
@@ -274,11 +314,15 @@ public class CheckersGame extends Game {
             int tempy = y - 1;
             Checker checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx < 8 && tempy > 0) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx + 1, tempy - 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
+                    if (tempx < 8 && tempy > 0) {
+                        moves.add(new int[]{tempx + 1, tempy - 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
 
@@ -287,11 +331,15 @@ public class CheckersGame extends Game {
             tempy = y - 1;
             checkSquare = board.getChecker(tempx, tempy);
             if (checkSquare == null) {
-                moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                if (tempx > 0 && tempy > 0) {
+                    moves.add(new int[]{tempx, tempy}); //square is empty and can be moved to
+                }
             } else if (checkSquare.getColour() == Colour.WHITE) { //check if black piece can be eaten
                 Checker checkEaten = board.getChecker(tempx - 1, tempy - 1);
                 if (checkEaten == null) {
-                    moves.add(new int[]{tempx - 1, tempy - 1}); //can be eaten so jump over black piece
+                    if (tempx > 0 && tempy > 0) {
+                        moves.add(new int[]{tempx - 1, tempy - 1}); //can be eaten so jump over black piece
+                    }
                 }
             }
         }
