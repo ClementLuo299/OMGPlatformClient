@@ -39,7 +39,11 @@ public class ConnectGrid {
         this.board = new Checker[COLS][ROWS]; //initialize the board
 
         // set every pointer to null
-        // for
+        for(int i=0; i<ROWS; i++){
+            for(int j=0; j<COLS; j++) {
+                this.board[j][i] = null;
+            }
+        }
     }
 
     // GETTERS
@@ -59,32 +63,42 @@ public class ConnectGrid {
      *
      * Override toString method to display the board
      * @return null
-
+    */
     @Override
     public String toString() {
-        for (int y = 1; y <= size; y++) { //loops will check every coordinate to see if there is
-            boolean squareTaken = false; //will be used in loop for checking if a square is taken
-            for (int x = 1; x <= size; x++) {
-                for (Checker checker : board) {
-                    if (checker.getXPosition() == x && checker.getYPosition() == y) {
-                        squareTaken = true;
-                    }
-                    if (squareTaken) {
-                        if (checker.getColour() == Colour.WHITE) { //prints the first letter of the colour
-                            System.out.print("W ");
-                        } else {
-                            System.out.print("B ");
-                        }
-                    } else {
-                        System.out.print("O "); //empty square
-                    }
+
+        String board_str = "   0 1 2 3 4 5 6\n";
+        for(int i=0; i<ROWS; i++){
+            board_str+=i+"| ";
+            for(int j=0; j<COLS; j++) {
+                if(this.board[j][i].getColour()==Colour.YELLOW){
+                    board_str+="Y ";
+                } else if(this.board[j][i].getColour()==Colour.RED){
+                    board_str+="R ";
+                } else {
+                    board_str+="n ";
                 }
             }
-            System.out.print("\n"); //line break for new row
+            board_str+="\n";
         }
-        return null;
+        board_str+="\n";
+
+        // the string will be set to and print as:
+        //    0 1 2 3 4 5 6
+        // 0| n n n n n n n
+        // 1| n n n n n n n
+        // 2| n n n n n n n
+        // 3| n n n n n n n
+        // 4| n n n n n n n
+        // 5| n n n n n n n
+
+        // n for "null" or unoccupied positions
+        // Y for player1 or yellow
+        // R rod player2 or red
+
+        System.out.print(board_str);
+        return board_str;
     }
-    */
 
 
 
