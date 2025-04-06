@@ -1,0 +1,63 @@
+package gamelogic;
+
+import gamelogic.pieces.*;
+import gamelogic.checkers.*;
+import networking.accounts.UserAccount;
+import gamelogic.Player;
+import org.junit.*;
+import static org.junit.Assert.*;
+
+import java.util.*;
+
+public class CheckersTests {
+    CheckersGame game;
+    List<Player> players;
+
+    @Before
+    public void setUp() {
+        players = new ArrayList<>();
+        players.add(new Player(new UserAccount("guest1", true)));
+        players.add(new Player(new UserAccount("guest2", true)));
+        game = new CheckersGame(players);
+    }
+
+    @Test
+    public void testStartingBoard() { //tests the toString method and ensures the board is set up properly
+        game.getBoard().toString();
+    }
+
+    @Test
+    public void testGetChecker() { //checks that checkers can be found at their correct coordinates
+        assertEquals(1, game.getBoard().getChecker(1, 1).getXPosition());
+        assertEquals(1, game.getBoard().getChecker(1, 1).getYPosition());
+        assertEquals(2, game.getBoard().getChecker(2, 8).getXPosition());
+        assertEquals(8, game.getBoard().getChecker(2, 8).getYPosition());
+    }
+
+    @Test
+    public void testValidMoves() {
+        for (int[] arr : game.getValidMoves(1, 3)) {
+            System.out.print(Arrays.toString(arr) + " ");
+        }
+        System.out.println();
+        for (int[] arr : game.getValidMoves(6, 6)) {
+            System.out.print(Arrays.toString(arr) + " ");
+        }
+        System.out.println();
+        for (int[] arr : game.getValidMoves(5, 3)) {
+            System.out.print(Arrays.toString(arr) + " ");
+        }
+        System.out.println();
+    }
+
+    @Test
+    public void testMovePiece() { //tests the moving of a piece
+        System.out.println();
+        game.makeMove(players.get(0), game.getBoard().getChecker(5, 3), 6, 4);
+        game.makeMove(players.get(1), game.getBoard().getChecker(4, 6), 5, 5);
+        game.makeMove(players.get(0), game.getBoard().getChecker(6, 4), 4, 6);
+        game.makeMove(players.get(1), game.getBoard().getChecker(5, 7), 3, 5);
+        game.getBoard().toString();
+        System.out.println();
+    }
+}
