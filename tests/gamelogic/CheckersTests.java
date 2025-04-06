@@ -58,11 +58,19 @@ public class CheckersTests {
         game.makeMove(players.get(0), game.getBoard().getChecker(5, 3), 6, 4);
         game.makeMove(players.get(1), game.getBoard().getChecker(4, 6), 5, 5);
         game.makeMove(players.get(0), game.getBoard().getChecker(6, 4), 4, 6);
-        game.makeMove(players.get(1), game.getBoard().getChecker(5, 7), 3, 5);
+        game.makeMove(players.get(1), game.getBoard().getChecker(6, 6), 5, 5);
+        game.makeMove(players.get(1), game.getBoard().getChecker(7, 7), 6, 6);
+        game.makeMove(players.get(1), game.getBoard().getChecker(6, 8), 7, 7);
+        game.makeMove(players.get(0), game.getBoard().getChecker(4, 6), 6, 8);
         game.getBoard().toString();
-        System.out.println(players.get(0).getHand().size());
-        System.out.println(players.get(1).getHand().size());
+        System.out.println();
+        System.out.println(game.getBoard().getChecker(6, 8).isStacked());
+        for (int[] arr : game.getValidMoves(6, 8)) {
+            System.out.print(Arrays.toString(arr) + " ");
+        }
+
         System.out.println();
     }
+
 
 }
