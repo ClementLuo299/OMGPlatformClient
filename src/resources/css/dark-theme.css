@@ -4,3 +4,18 @@
     -fx-accent-color: #3B82F6;     /* Accent remains the same (light blue) */
     -fx-text-color: #FFFFFF;       /* White text for contrast */
 }
+
+.root-container {
+    -fx-background-color: -fx-primary-color;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    -fx-background-color: -fx-primary-color;
+    -fx-min-width: 250px;
+    -fx-max-width: 250px;
+    -fx-padding: 16px 12px;
+    -fx-spacing: 24px;
+    -fx-border-width: 0 1px 0 0;
+    -fx-border-color: -fx-secondary-color;
+}
