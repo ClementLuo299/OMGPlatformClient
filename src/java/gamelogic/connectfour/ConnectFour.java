@@ -148,6 +148,18 @@ public class ConnectFour extends AbstractGame {
         }
         return true;
     }
+    @Override
+    public String toString() {
+        StringBuilder grid = new StringBuilder();
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                char c = board.charAt(i * COLS + j);
+                grid.append(c == 'o' ? "." : c).append(" ");
+            }
+            grid.append("\n");
+        }
+        return grid.toString();
+    }
 
 
 }
