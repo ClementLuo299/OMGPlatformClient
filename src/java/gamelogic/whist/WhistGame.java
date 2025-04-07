@@ -7,7 +7,6 @@ import gamelogic.Player;
 import gamelogic.pieces.Card;
 import gamelogic.pieces.CardPile;
 import gamelogic.pieces.SuitType;
-import networking.accounts.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,19 +169,55 @@ public class WhistGame extends Game {
 
     // METHODS
 
+    /**
+     * Deals a card from a Card Pile to the Hand of a Player
+     *
+     * @param deck The given Card Pile to deal from
+     * @param cardToDeal The given Card to deal from the Pile
+     * @param cardHolder The given Player who receives the Card
+     */
+    public void dealCard(CardPile deck, Card cardToDeal, Player cardHolder) {
+        // Adds the dealt Card to the Player's hand
+        cardHolder.addToHand(cardToDeal);
 
-    public void dealCard(Card cardToDeal, Player cardHolder) {
-
+        // Removes the dealt Card from the Deck
+        deck.removeCard(cardToDeal);
     }
 
+    /**
+     * Plays a Card from a Player's hand into the current Trick
+     *
+     * @param cardToPlay The given Card to play
+     */
+    public void playCard(Card cardToPlay) {
+        // Makes the card visible to all players by making its held status false
+        cardToPlay.release();
 
-    public void playCard(Card cardToPlay, Player cardPlayer) {
-
+        // Adds the played Card to the Trick list
+        trick.add(cardToPlay);
     }
 
+    /**
+     * Takes a Card from a Card Pile and places it into a Player's Hand
+     *
+     * @param source The given Card Pile the Player is drawing from
+     * @param cardToTake The given Card the Player is drawing
+     * @param cardTaker The given Player who is drawing a Card
+     */
+    public void takeCard(CardPile source, Card cardToTake, Player cardTaker) {
+        // Makes the card not visible to all players by making its held status true
+        cardToTake.take();
 
-    public void takeCard(Card cardToTake, Player cardTaker) {
+        // Adds the Card to the Player's hand
+        cardTaker.addToHand(cardToTake);
 
+        // Makes the card face up so the Player can view it
+        if (cardToTake.isFaceDown()) {
+            cardToTake.flip();
+        }
+
+        // Removes the Card from the Card Pile it was drawn from
+        source.removeCard(cardToTake);
     }
 
     /**
@@ -250,6 +285,60 @@ public class WhistGame extends Game {
         return null;
     }
 
+    /**
+     * Discards the Cards played in the current Trick, removing them from the Trick and each Players' Hand
+     */
+    public void completeTrick() {
+        // The participating Players
+        Player player1 = this.getPlayers().getFirst();
+        Player player2 = this.getPlayers().getLast();
+
+        // Makes all Cards in the Trick face-down and Discards them
+        for (Card currentCard : trick) {
+            // Flips face-up cards down
+            if (!currentCard.isFaceDown()) {
+                currentCard.flip();
+            }
+
+            // Discards cards
+            discard.addCards(currentCard);
+        }
+
+        // Removes all Cards in the Trick from Players' hands
+        // Player 1
+        for (int i = 0; i < player1.getHand().size(); i++) {
+            // The current Piece being looked at
+            GamePiece currentPiece = player1.getHand().get(i);
+
+            for (GamePiece removalCandidate : trick) {
+                if (removalCandidate == currentPiece) {
+                    // Removes Card from Player's Hand
+                    player1.removeFromHand(currentPiece);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+                }
+            }
+        }
+        // Player 2
+        for (int i = 0; i < player2.getHand().size(); i++) {
+            // The current Piece being looked at
+            GamePiece currentPiece = player2.getHand().get(i);
+
+            for (GamePiece removalCandidate : trick) {
+                if (removalCandidate == currentPiece) {
+                    // Removes Card from Player's Hand
+                    player2.removeFromHand(currentPiece);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+                }
+            }
+        }
+
+        // Empties the Trick for the next Trick
+        trick.clear();
+    }
 
     /**
      * Gets the list of Playable Cards in a Player's hand who is leading in a Trick
@@ -280,10 +369,10 @@ public class WhistGame extends Game {
      * Gets the list of Playable Cards in a Player's hand who is following in a Trick
      *
      * @param holder The given Player whose Hand is to be checked
-     * @param leader The given Leading Card of the Trick
+     * @param leadCard The given Leading Card of the Trick
      * @return The List of Playable Cards for the specified Player
      */
-    public List<Card> getPlayableCards(Player holder, Card leader) {
+    public List<Card> getPlayableCards(Player holder, Card leadCard) {
         // The temporary list to add valid cards to
         List<Card> validCards = new ArrayList<>();
         // The temporary list to add hand cards to
@@ -291,7 +380,7 @@ public class WhistGame extends Game {
         // The hand of the cardholder
         List<GamePiece> cardholderHand = holder.getHand();
         // The suit of the leading card
-        SuitType suitToFollow = leader.getSuit();
+        SuitType suitToFollow = leadCard.getSuit();
 
 
         // Goes through the Hand of the Cardholder to determine their valid cards

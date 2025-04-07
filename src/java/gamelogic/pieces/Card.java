@@ -72,7 +72,7 @@ public class Card extends GamePiece {
     /**
      * Flips this Card to change its Face visibility
      */
-    protected void flip() {
+    public void flip() {
         this.faceDown = !faceDown;
     }
 

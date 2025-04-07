@@ -42,27 +42,20 @@ public class GamePiece {
         return this.type;
     }
 
-    /**
-     * Gets the Colour of the piece
-     * @return Colour of piece
-     */
-
-
-
 
     // METHODS
 
     /**
      * Sets the Held status to True for this Game Piece
      */
-    protected void take() {
+    public void take() {
         this.held = true;
     }
 
     /**
      * Sets the Held status to False for this Game Piece
      */
-    protected void release() {
+    public void release() {
         this.held = false;
     }
 }

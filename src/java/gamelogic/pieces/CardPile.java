@@ -166,6 +166,15 @@ public class CardPile {
         this.cards = newCards;
     }
 
+    /**
+     * Removes a Card from this Card Pile
+     *
+     * @param cardToRemove The given Card to remove from the Card Pile
+     */
+    public void removeCard(Card cardToRemove) {
+        this.cards.remove(cardToRemove);
+    }
+
 
     // METHODS
 

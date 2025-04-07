@@ -1,5 +1,7 @@
 package gamelogic;
 
+import gamelogic.pieces.Card;
+import gamelogic.pieces.SuitType;
 import networking.accounts.UserAccount;
 
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class Player {
      *
      * @return The String Username of this Player
      */
-    public String getUsername(){
+    public String getUsername() {
         return this.username;
     }
 
@@ -88,7 +90,7 @@ public class Player {
      *
      * @return The List of Game Pieces held by this Player
      */
-    public List<GamePiece> getHand () {
+    public List<GamePiece> getHand() {
         return hand;
     }
 
@@ -97,7 +99,7 @@ public class Player {
      *
      * @return The List of Game Pieces captured by this Player
      */
-    public List<GamePiece> getSpoils () {
+    public List<GamePiece> getSpoils() {
         return spoils;
     }
 
@@ -122,6 +124,7 @@ public class Player {
 
     /**
      * method to set the updated list after modifications
+     *
      * @param hand
      */
     public void setHand(List<GamePiece> hand) {
@@ -150,11 +153,131 @@ public class Player {
     }
 
     /**
-     * Removes a piece from the player's list
+     * Removes a specified Game Piece from the Player's Hand
      *
-     * @param pieceToRemove
+     * @param pieceToRemove The given Game Piece to be removed from the Player's Hand
      */
     public void removeFromHand(GamePiece pieceToRemove) {
         this.hand.remove(pieceToRemove);
+    }
+
+    /**
+     * Sorts any Cards that are in a Player's Hand by Rank
+     */
+    public void sortHand() {
+        // The lists of Cards of each Suit Type
+        List<Card> spades = new ArrayList<>();
+        List<Card> diamonds = new ArrayList<>();
+        List<Card> clubs = new ArrayList<>();
+        List<Card> hearts = new ArrayList<>();
+
+
+        // Goes through the Player's Hand to sort Cards into Suits
+        for (GamePiece currentPiece : hand) {
+            // Checks if the Piece is a Card
+            if (currentPiece.getType() == PieceType.CARD) {
+                // Casts the Piece to a Card for ease of use
+                Card currentCard = (Card) currentPiece;
+                // Obtains the Suit of the Card
+                SuitType currentSuit = currentCard.getSuit();
+
+                // Puts the Card into designated Suit list and removes it from the Player's Hand
+                switch (currentSuit) {
+                    case SPADES:
+                        spades.add(currentCard);
+                        removeFromHand(currentCard);
+                        break;
+                    case DIAMONDS:
+                        diamonds.add(currentCard);
+                        removeFromHand(currentCard);
+                        break;
+                    case CLUBS:
+                        clubs.add(currentCard);
+                        removeFromHand(currentCard);
+                        break;
+                    case HEARTS:
+                        hearts.add(currentCard);
+                        removeFromHand(currentCard);
+                        break;
+                }
+            }
+        }
+
+        // Sorts each Suit by Rank
+        // This is done by iterating from highest to lowest Rank, moving any cards of that Rank to the top of the list
+
+        // Sort Spades
+        for (int rank = 13; rank > 0; rank--) {
+            for (int i = 0; i < spades.size(); i++) {
+                // Gets the current card from the list
+                Card currentCard = spades.get(i);
+
+                // Moves the current card to the front of the list if it matches the Rank value
+                if (currentCard.getRank() == rank) {
+                    // Moves the matching card to the top of the list
+                    spades.remove(currentCard);
+                    spades.add(currentCard);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+               }
+            }
+        }
+
+        // Sort Diamonds
+        for (int rank = 13; rank > 0; rank--) {
+            for (int i = 0; i < diamonds.size(); i++) {
+                // Gets the current card from the list
+                Card currentCard = diamonds.get(i);
+
+                // Moves the current card to the front of the list if it matches the Rank value
+                if (currentCard.getRank() == rank) {
+                    // Moves the matching card to the top of the list
+                    diamonds.remove(currentCard);
+                    diamonds.add(currentCard);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+                }
+            }
+        }
+
+        // Sort Clubs
+        for (int rank = 13; rank > 0; rank--) {
+            for (int i = 0; i < clubs.size(); i++) {
+                // Gets the current card from the list
+                Card currentCard = clubs.get(i);
+
+                // Moves the current card to the front of the list if it matches the Rank value
+                if (currentCard.getRank() == rank) {
+                    // Moves the matching card to the top of the list
+                    clubs.remove(currentCard);
+                    clubs.add(currentCard);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+                }
+            }
+        }
+
+        // Sort Hearts
+        for (int rank = 13; rank > 0; rank--) {
+            for (int i = 0; i < hearts.size(); i++) {
+                // Gets the current card from the list
+                Card currentCard = hearts.get(i);
+
+                // Moves the current card to the front of the list if it matches the Rank value
+                if (currentCard.getRank() == rank) {
+                    // Moves the matching card to the top of the list
+                    hearts.remove(currentCard);
+                    hearts.add(currentCard);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+                }
+            }
+        }
+
+
     }
 }
