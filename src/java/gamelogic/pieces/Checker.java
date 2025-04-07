@@ -3,6 +3,8 @@ package gamelogic.pieces;
 import gamelogic.GamePiece;
 import gamelogic.PieceType;
 
+import java.util.Objects;
+
 /**
  * Handles the creation and handling of Checkers for Checker Games
  *
@@ -35,7 +37,7 @@ public class Checker extends GamePiece {
      * @param xPosition The given X Coordinate for this Checker
      */
     public Checker (PieceType type, boolean held, Colour colour, boolean stacked, int yPosition, int xPosition) {
-        super(type, held);
+        super(type, held, colour);
         this.colour = colour;
         this.stacked = stacked;
         this.yPosition = yPosition;
@@ -118,4 +120,23 @@ public class Checker extends GamePiece {
     public void unstack() {
         this.stacked = false;
     }
+
+    //Override equals and hashCode methods so .contains() can be used
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Checker)) return false;
+
+        Checker other = (Checker) obj;
+
+        return this.getXPosition() == other.getXPosition() &&
+                this.getYPosition() == other.getYPosition() &&
+                this.getColour() == other.getColour();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getXPosition(), getYPosition(), getColour());
+    }
+
 }

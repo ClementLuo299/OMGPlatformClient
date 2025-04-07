@@ -1,91 +1,300 @@
 package gamelogic;
 
+import gamelogic.pieces.Card;
+import gamelogic.pieces.SuitType;
+import networking.accounts.UserAccount;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Stores all relevant data of a Player within a Game
+ *
+ * @authors Scott Brown, Dylan Shiels
+ * @date April 1, 2025
+ */
 public class Player {
+    // ATTRIBUTES
 
-    private String username;
-    private String password;
-    private double gamesPlayed;
-    private double wins;
-    private double draws;
-    private double losses;
-    private boolean online;
+    // The account UUID of the player
+    private final UserAccount account;
+    // The username of the player
+    private final String username;
+    // The number of plays this player has made
+    private int plays;
+    // The number of points this player has earned within a game
+    private int score;
+    // The player's game pieces
+    private List<GamePiece> hand;
+    // The player's captured game pieces
+    private List<GamePiece> spoils;
 
-    public Player(String username, String password){
-        this.username = username;
-        this.password = password;
-        this.gamesPlayed = 0.0;
-        this.wins = 0.0;
-        this.draws = 0.0;
-        this.losses = 0.0;
-        this.online = true;
 
-    }
+    // CONSTRUCTOR
 
-    public void changePasswordTo(String newPassword){
-        this.password = newPassword;
-    }
-    
-    public void changeUsernameTo(String newUsername){
-        this.username = newUsername;
-    }
-
-    public void won(){
-        this.wins+=1;
-        this.gamesPlayed+=1;
-    }
-
-    public void lost(){
-        this.losses+=1;
-        this.gamesPlayed+=1;
-    }
-
-    public void drew(){
-        this.draws+=1;
-        this.gamesPlayed+=1;
-    }
-
-    public void loggedIn(){
-        this.online = true;
-    }
-
-    public void loggedOff(){
-        this.online = false;
-    }
-
-    public boolean isOnline(){
-        return this.online;
-    }
-
-    public double getWinRatio(){
-        // return wins over games played as a percent
-        return 100*this.wins/this.gamesPlayed;
+    /**
+     * Instantiates a Player for a Game through their account
+     *
+     * @param account The given Account to create a Player from
+     */
+    public Player(UserAccount account) {
+        this.account = account;
+        this.username = this.account.getUsername();
+        this.plays = 0;
+        this.score = 0;
+        this.hand = new ArrayList<>();
+        this.spoils = new ArrayList<>();
     }
 
 
-    public String getUsername(){
+    // GETTERS
+
+    /**
+     * Gets the Account attached to this Player
+     *
+     * @return The User Account of this Player
+     */
+    public UserAccount getAccount() {
+        return this.account;
+    }
+
+    /**
+     * Gets the Username of this Player
+     *
+     * @return The String Username of this Player
+     */
+    public String getUsername() {
         return this.username;
     }
 
-    public String getPassword(){
-        return this.password;
+    /**
+     * Gets the Plays of this Player
+     *
+     * @return The integer Plays for this Player
+     */
+    public int getPlays() {
+        return plays;
     }
 
-    public double getWins(){
-        return this.wins;
+    /**
+     * Gets the Points of this Player
+     *
+     * @return The integer Points for this Player
+     */
+    public int getScore() {
+        return score;
     }
 
-    public double getLosses(){
-        return this.losses;
+    /**
+     * Gets the Hand of this Player
+     *
+     * @return The List of Game Pieces held by this Player
+     */
+    public List<GamePiece> getHand() {
+        return hand;
     }
 
-    public double getDraws(){
-        return this.draws;
+    /**
+     * Gets the Spoils of this Player
+     *
+     * @return The List of Game Pieces captured by this Player
+     */
+    public List<GamePiece> getSpoils() {
+        return spoils;
     }
 
-    public double getGamesPlayed(){
-        return this.gamesPlayed;
+
+    // SETTERS
+
+    /**
+     * Adds a Play to this Player
+     */
+    public void addPlay() {
+        this.plays = plays++;
+    }
+
+    /**
+     * Adds a specified number of points to this Player
+     *
+     * @param pointsToAdd The given integer Points to award this Player
+     */
+    public void addPoints(int pointsToAdd) {
+        this.score = score + pointsToAdd;
+    }
+
+    /**
+     * Sets the contents of this Player's Hand to a List of Game Pieces
+     *
+     * @param hand The given List of Game Pieces to put into this Player's Hand
+     */
+    public void setHand(List<GamePiece> hand) {
+        this.hand = hand;
     }
 
 
+    // METHODS
 
+    /**
+     * Adds a specified Game Piece to the Player's Hand
+     *
+     * @param pieceToAdd The given Game Piece to add to the Hand of this Player
+     */
+    public void addToHand(GamePiece pieceToAdd) {
+        this.hand.add(pieceToAdd);
+    }
+
+    /**
+     * Adds a specified Game Piece to the Player's Spoils
+     *
+     * @param pieceToAdd The given Game Piece to add to the Spoils of this Player
+     */
+    public void addToSpoils(GamePiece pieceToAdd) {
+        this.spoils.add(pieceToAdd);
+    }
+
+    /**
+     * Removes a specified Game Piece from the Player's Hand
+     *
+     * @param pieceToRemove The given Game Piece to be removed from the Player's Hand
+     */
+    public void removeFromHand(GamePiece pieceToRemove) {
+        this.hand.remove(pieceToRemove);
+    }
+
+    /**
+     * Checks if a Game Piece is in a Player's Hand
+     *
+     * @param pieceToCheck The given Game Piece to check a Player's Hand for
+     * @return The boolean Presence of the given Piece in a Player's Hand
+     */
+    public boolean checkHand(GamePiece pieceToCheck) {
+        // Loops through the Player's Hand to check for the given Game Piece
+        for (GamePiece currentPiece : hand) {
+            if (pieceToCheck == currentPiece) {
+                // Returns true if the Player holds the given Piece
+                return true;
+            }
+        }
+
+        // Returns false if the Player doesn't hold the given Piece
+        return false;
+    }
+
+    /**
+     * Sorts any Cards that are in a Player's Hand by Rank
+     */
+    public void sortHand() {
+        // The lists of Cards of each Suit Type
+        List<Card> spades = new ArrayList<>();
+        List<Card> diamonds = new ArrayList<>();
+        List<Card> clubs = new ArrayList<>();
+        List<Card> hearts = new ArrayList<>();
+
+
+        // Goes through the Player's Hand to sort Cards into Suits
+        for (GamePiece currentPiece : hand) {
+            // Checks if the Piece is a Card
+            if (currentPiece.getType() == PieceType.CARD) {
+                // Casts the Piece to a Card for ease of use
+                Card currentCard = (Card) currentPiece;
+                // Obtains the Suit of the Card
+                SuitType currentSuit = currentCard.getSuit();
+
+                // Puts the Card into designated Suit list and removes it from the Player's Hand
+                switch (currentSuit) {
+                    case SPADES:
+                        spades.add(currentCard);
+                        removeFromHand(currentCard);
+                        break;
+                    case DIAMONDS:
+                        diamonds.add(currentCard);
+                        removeFromHand(currentCard);
+                        break;
+                    case CLUBS:
+                        clubs.add(currentCard);
+                        removeFromHand(currentCard);
+                        break;
+                    case HEARTS:
+                        hearts.add(currentCard);
+                        removeFromHand(currentCard);
+                        break;
+                }
+            }
+        }
+
+        // Sorts each Suit by Rank
+        // This is done by iterating from highest to lowest Rank, moving any cards of that Rank to the top of the list
+
+        // Sort Spades
+        for (int rank = 13; rank > 0; rank--) {
+            for (int i = 0; i < spades.size(); i++) {
+                // Gets the current card from the list
+                Card currentCard = spades.get(i);
+
+                // Moves the current card to the front of the list if it matches the Rank value
+                if (currentCard.getRank() == rank) {
+                    // Moves the matching card to the top of the list
+                    spades.remove(currentCard);
+                    spades.add(currentCard);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+               }
+            }
+        }
+
+        // Sort Diamonds
+        for (int rank = 13; rank > 0; rank--) {
+            for (int i = 0; i < diamonds.size(); i++) {
+                // Gets the current card from the list
+                Card currentCard = diamonds.get(i);
+
+                // Moves the current card to the front of the list if it matches the Rank value
+                if (currentCard.getRank() == rank) {
+                    // Moves the matching card to the top of the list
+                    diamonds.remove(currentCard);
+                    diamonds.add(currentCard);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+                }
+            }
+        }
+
+        // Sort Clubs
+        for (int rank = 13; rank > 0; rank--) {
+            for (int i = 0; i < clubs.size(); i++) {
+                // Gets the current card from the list
+                Card currentCard = clubs.get(i);
+
+                // Moves the current card to the front of the list if it matches the Rank value
+                if (currentCard.getRank() == rank) {
+                    // Moves the matching card to the top of the list
+                    clubs.remove(currentCard);
+                    clubs.add(currentCard);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+                }
+            }
+        }
+
+        // Sort Hearts
+        for (int rank = 13; rank > 0; rank--) {
+            for (int i = 0; i < hearts.size(); i++) {
+                // Gets the current card from the list
+                Card currentCard = hearts.get(i);
+
+                // Moves the current card to the front of the list if it matches the Rank value
+                if (currentCard.getRank() == rank) {
+                    // Moves the matching card to the top of the list
+                    hearts.remove(currentCard);
+                    hearts.add(currentCard);
+
+                    // Moves i back by one to keep place in the list
+                    i--;
+                }
+            }
+        }
+    }
 }

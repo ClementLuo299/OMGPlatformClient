@@ -1,6 +1,6 @@
-package gameLogicTests;
-import java.gamelogic.PieceType;
-import java.gamelogic.Pieces.*;
+package gamelogic;
+
+import gamelogic.pieces.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
