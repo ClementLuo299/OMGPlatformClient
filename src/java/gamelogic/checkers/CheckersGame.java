@@ -48,7 +48,7 @@ public class CheckersGame extends Game {
             //remove the eaten piece
             board.removeChecker(eaten); //calls a method that removes the checker
             //remove for player
-            if (eaten.getColor() == Colour.RED) {
+            if (eaten.getColour() == Colour.RED) {
                 getPlayers().get(0).removeFromHand(eaten);
             } else {
                 getPlayers().get(1).removeFromHand(eaten);

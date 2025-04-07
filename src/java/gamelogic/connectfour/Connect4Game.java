@@ -27,7 +27,7 @@ public class Connect4Game extends Game {
     public Connect4Game (List<Player> players) {
         // by default player1 is the player in the list at index 0
         // and player2 is the player in the list at index 1
-        super(GameType.CONNECT4, players, 24);
+        super(GameType.CONNECT_FOUR, players, 24);
         this.board = new ConnectGrid();
         this.player1 = players.get(0);
         this.player2 = players.get(2);

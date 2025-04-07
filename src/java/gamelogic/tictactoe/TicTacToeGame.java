@@ -7,7 +7,7 @@ import java.util.List;
  * TicTacToe game implementation
  * Extends the base Game class with TicTacToe specific logic
  */
-public class TicTacToe extends Game {
+public class TicTacToeGame extends Game {
     
     private static final char PLAYER_ONE_CHAR = 'X';
     private static final char PLAYER_TWO_CHAR = 'O';
@@ -28,7 +28,7 @@ public class TicTacToe extends Game {
      * Default constructor for TicTacToe game
      * @param players List of players, should contain exactly 2 players
      */
-    public TicTacToe(List<Player> players) {
+    public TicTacToeGame(List<Player> players) {
         super(GameType.TICTACTOE, players, 5); // Average moves is about 5 for TicTacToe
         if (players.size() != 2) {
             throw new IllegalArgumentException("TicTacToe requires exactly 2 players");

@@ -9,9 +9,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import gamelogic.Player;
-import gamelogic.tictactoe.TicTacToe;
-import gui.utils.ImageUtils;
-import javafx.application.Platform;
+import gamelogic.tictactoe.TicTacToeGame;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,12 +20,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 /**
@@ -87,7 +83,7 @@ public class TicTacToeController implements Initializable {
 
     // Game state variables
     private List<Button> boardButtons;
-    private TicTacToe game;
+    private TicTacToeGame game;
     private Player player1;
     private Player player2;
     private Player currentPlayer;
@@ -326,7 +322,7 @@ public class TicTacToeController implements Initializable {
         }
 
         // Initialize game with players
-        game = new TicTacToe(Arrays.asList(player1, player2));
+        game = new TicTacToeGame(Arrays.asList(player1, player2));
         
         // Set player1 as the starting player
         currentPlayer = player1;

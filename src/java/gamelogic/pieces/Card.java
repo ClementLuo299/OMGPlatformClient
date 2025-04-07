@@ -31,7 +31,7 @@ public class Card extends GamePiece {
      * @param faceDown The given boolean Face visibility of this Card
      */
     public Card(PieceType type, boolean held, SuitType suit, int rank, boolean faceDown) {
-        super(type, held, Colour.NONE);
+        super(type, held);
         this.suit = suit;
         this.rank = rank;
         this.faceDown = faceDown;
