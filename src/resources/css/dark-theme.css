@@ -19,3 +19,48 @@
     -fx-border-width: 0 1px 0 0;
     -fx-border-color: -fx-secondary-color;
 }
+
+/* App Title */
+.app-title {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+    -fx-padding: 0 0 8px 8px;
+}
+
+/* Title Text */
+.title-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+/* Navigation Buttons */
+.nav-items {
+    -fx-spacing: 4px;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-padding: 12px;
+    -fx-alignment: center-left;
+    -fx-min-width: 226px;
+    -fx-cursor: hand;
+    -fx-background-radius: 6px;
+}
+
+.nav-button:hover {
+    -fx-background-color: -fx-secondary-color;
+}
+
+.nav-button.selected {
+    -fx-background-color: -fx-accent-color;
+}
+
+.nav-button.selected .nav-button-content Label {
+    -fx-text-fill: -fx-text-color;
+}
+
+.nav-button-content {
+    -fx-spacing: 12px;
+    -fx-alignment: center-left;
+}
