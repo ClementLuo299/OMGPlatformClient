@@ -50,3 +50,24 @@ public class Player {
         Player other = (Player) obj;
         return this.playerId == other.playerId; // Compare by ID
     }
+    /**
+     * Generates a hash code for the player object.
+     * Important for using Player as a key in data structures like HashMaps.
+     *
+     * @return A hash code based on the player's ID.
+     */
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(playerId);
+    }
+
+    /**
+     * Returns a user-friendly string representation of the player.
+     *
+     * @return A string like "Alice (Player 1)" or "Player 2 (Player 2)"
+     */
+    @Override
+    public String toString() {
+        return name + " (Player " + playerId + ")";
+    }
+}
