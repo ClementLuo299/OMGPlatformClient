@@ -1,0 +1,312 @@
+/* Base styles */
+* {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Color variables */
+.root {
+    -fx-background-color: #fafafa;
+    -fx-text-color: #333333;
+    -fx-accent-color: #3f51b5;
+    -fx-secondary-color: #ff9800;
+    
+    /* Card colors */
+    -fx-card-back-color: #1565c0;
+    -fx-card-front-color: #ffffff;
+    -fx-hearts-color: #e53935;
+    -fx-diamonds-color: #e53935;
+    -fx-spades-color: #263238;
+    -fx-clubs-color: #263238;
+    
+    /* Game colors */
+    -fx-table-background: #0f743c;
+    -fx-table-border: #006330;
+    
+    /* Status colors */
+    -fx-status-info: #2196f3;
+    -fx-status-success: #4caf50;
+    -fx-status-warning: #ff9800;
+    -fx-status-error: #f44336;
+}
+
+/* Main container */
+.main-container {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Game header */
+.game-header {
+    -fx-background-color: #3f51b5;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+.game-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: white;
+}
+
+.back-button {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 4px;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Game indicators */
+.stage-indicator, .trump-indicator, .stage-display {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 20px;
+}
+
+.stage-label, .trump-label {
+    -fx-text-fill: rgba(255, 255, 255, 0.8);
+    -fx-font-size: 13px;
+}
+
+.round-number, .stage-value {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.trump-icon-container {
+    -fx-min-height: 40px;
+}
+
+/* Left sidebar */
+.left-sidebar {
+    -fx-background-color: white;
+    -fx-min-width: 240px;
+    -fx-max-width: 240px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 0);
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 5px 0;
+}
+
+.control-panel {
+    -fx-spacing: 10px;
+}
+
+.game-button {
+    -fx-background-color: #3f51b5;
+    -fx-text-fill: white;
+    -fx-padding: 10px;
+    -fx-font-size: 13px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.game-button:hover {
+    -fx-background-color: #303f9f;
+}
+
+.game-button:disabled {
+    -fx-background-color: #9e9e9e;
+    -fx-opacity: 0.7;
+}
+
+.danger-button {
+    -fx-background-color: #f44336;
+}
+
+.danger-button:hover {
+    -fx-background-color: #d32f2f;
+}
+
+.info-button {
+    -fx-background-color: #2196f3;
+}
+
+.info-button:hover {
+    -fx-background-color: #1976d2;
+}
+
+/* Player info section */
+.player-info {
+    -fx-spacing: 10px;
+}
+
+.player-card {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 10px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #e0e0e0;
+}
+
+.active-player {
+    -fx-background-color: #e8f5e9;
+    -fx-border-color: #4caf50;
+}
+
+.player-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.player-status {
+    -fx-font-size: 12px;
+    -fx-padding: 3px 8px;
+    -fx-background-color: #757575;
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+}
+
+.active-player .player-status {
+    -fx-background-color: #4caf50;
+}
+
+.points-display {
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Game board */
+.game-board {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 20px;
+}
+
+.table-center {
+    -fx-min-height: 250px;
+}
+
+/* Card piles */
+.card-pile {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-min-width: 120px;
+    -fx-min-height: 160px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);
+}
+
+.pile-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 10px;
+}
+
+.trick-area {
+    -fx-min-height: 160px;
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Game status */
+.game-status-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center;
+    -fx-text-alignment: center;
+}
+
+/* Cards */
+.opponent-cards, .player-cards {
+    -fx-min-height: 120px;
+}
+
+/* Card styling will be added dynamically in the controller */
+.card {
+    -fx-background-radius: 8px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 0);
+    -fx-min-width: 75px;
+    -fx-min-height: 110px;
+    -fx-cursor: hand;
+}
+
+.card-back {
+    -fx-background-color: -fx-card-back-color;
+    -fx-background-image: url('../icons/card_back_pattern.png');
+    -fx-background-size: cover;
+}
+
+.card.selected {
+    -fx-effect: dropshadow(three-pass-box, gold, 10, 0, 0, 0);
+    -fx-translate-y: -10;
+}
+
+.card.disabled {
+    -fx-opacity: 0.6;
+    -fx-cursor: default;
+}
+
+.card.hearts, .card.diamonds {
+    -fx-text-fill: -fx-hearts-color;
+}
+
+.card.spades, .card.clubs {
+    -fx-text-fill: -fx-spades-color;
+}
+
+/* Right sidebar */
+.right-sidebar {
+    -fx-background-color: white;
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 0);
+}
+
+.move-history, .chat-section {
+    -fx-spacing: 10px;
+}
+
+/* Move history entries */
+.move-entry {
+    -fx-padding: 8px;
+    -fx-background-color: #f5f5f5;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.move-entry-player {
+    -fx-font-weight: bold;
+}
+
+/* Chat styling */
+.chat-message {
+    -fx-padding: 8px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.chat-message.sent {
+    -fx-background-color: #e3f2fd;
+    -fx-alignment: center-right;
+}
+
+.chat-message.received {
+    -fx-background-color: #f5f5f5;
+    -fx-alignment: center-left;
+}
+
+.chat-input {
+    -fx-padding: 10px 0 0 0;
+}
+
+.chat-input .button {
+    -fx-background-color: #3f51b5;
+    -fx-text-fill: white;
+} 

@@ -33,6 +33,7 @@ public class ScreenManager {
     public static final String TICTACTOE_SCREEN = "fxml/TicTacToe.fxml";
     public static final String CONNECTFOUR_SCREEN = "fxml/ConnectFour.fxml";
     public static final String CHECKERS_SCREEN = "fxml/Checkers.fxml";
+    public static final String WHIST_SCREEN = "fxml/Whist.fxml";
     public static final String GAME_LOBBY_SCREEN = "fxml/GameLobby.fxml";
     
     // CSS paths
@@ -45,6 +46,7 @@ public class ScreenManager {
     public static final String TICTACTOE_CSS = "css/tictactoe.css";
     public static final String CONNECTFOUR_CSS = "css/connectfour.css";
     public static final String CHECKERS_CSS = "css/checkers.css";
+    public static final String WHIST_CSS = "css/whist.css";
     public static final String GAME_LOBBY_CSS = "css/game_lobby.css";
     
     private ScreenManager() {
@@ -137,7 +139,8 @@ public class ScreenManager {
             if (!fxmlPath.equals(GAME_LOBBY_SCREEN) && 
                 !fxmlPath.equals(TICTACTOE_SCREEN) && 
                 !fxmlPath.equals(CONNECTFOUR_SCREEN) &&
-                !fxmlPath.equals(CHECKERS_SCREEN)) {
+                !fxmlPath.equals(CHECKERS_SCREEN) &&
+                !fxmlPath.equals(WHIST_SCREEN)) {
                 screenCache.put(fxmlPath, root);
             }
             
@@ -172,12 +175,14 @@ public class ScreenManager {
      */
     public void preloadCommonScreens() {
         try {
+            // Preload dashboard
             if (!screenCache.containsKey(DASHBOARD_SCREEN)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(DASHBOARD_SCREEN));
                 Parent root = loader.load();
                 screenCache.put(DASHBOARD_SCREEN, root);
             }
             
+            // Preload game library
             if (!screenCache.containsKey(GAME_LIBRARY_SCREEN)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(GAME_LIBRARY_SCREEN));
                 Parent root = loader.load();
@@ -185,7 +190,7 @@ public class ScreenManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            // Non-fatal, just log the error
+            System.err.println("Failed to preload screens: " + e.getMessage());
         }
     }
 } 

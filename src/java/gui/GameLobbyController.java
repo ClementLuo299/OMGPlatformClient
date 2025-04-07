@@ -257,6 +257,19 @@ public class GameLobbyController implements Initializable {
                         System.err.println("Warning: Could not set match ID: " + e.getMessage());
                     }
                 }
+            } else if (gameName.contains("Whist")) {
+                WhistController controller = (WhistController)
+                    screenManager.navigateTo(ScreenManager.WHIST_SCREEN, ScreenManager.WHIST_CSS);
+                
+                // Set the match ID and current user for the game
+                if (controller != null) {
+                    try {
+                        controller.setMatchId("M" + (10000 + random.nextInt(90000)));
+                        controller.setCurrentUser(currentUsername, isGuest);
+                    } catch (Exception e) {
+                        System.err.println("Warning: Could not set match ID or user info: " + e.getMessage());
+                    }
+                }
             } else {
                 // For other games that are not yet implemented
                 stopQueue(); // Make sure to stop the queue animation
@@ -430,17 +443,36 @@ public class GameLobbyController implements Initializable {
                     "4. The first player to connect 4 of their discs horizontally, vertically, or diagonally wins.\n" +
                     "5. If the board fills up with no four-in-a-row, the game is a draw.";
         } else if (gameName.contains("Checkers")) {
-            rules += "1. The game is played on an 8x8 board using only the dark squares.\n" +
-                    "2. Each player starts with 12 pieces placed on the dark squares of the three rows closest to them.\n" +
-                    "3. Pieces move diagonally forward to an adjacent empty square.\n" +
-                    "4. If an opponent's piece is diagonally adjacent and the square immediately beyond it is empty, that piece can be captured by jumping over it.\n" +
-                    "5. When a piece reaches the farthest row from its starting position, it becomes a king and can move both forward and backward.\n" +
-                    "6. The game ends when a player cannot make any legal moves, at which point the opponent is declared the winner.";
+            rules += "1. The game is played on an 8×8 grid with alternating colored squares.\n" +
+                    "2. Each player starts with 12 pieces (traditionally black and white).\n" +
+                    "3. Pieces move diagonally forward one square at a time.\n" +
+                    "4. Pieces capture by jumping over an opponent's piece to an empty square beyond.\n" +
+                    "5. Multiple jumps are allowed in a single turn if possible.\n" +
+                    "6. When a piece reaches the opposite side of the board, it becomes a king.\n" +
+                    "7. Kings can move and capture diagonally in any direction.\n" +
+                    "8. The player who captures all opponent's pieces or blocks them from making a move wins.";
+        } else if (gameName.contains("Whist")) {
+            rules += "1. The game is played over multiple rounds with the goal of reaching 6 points.\n" +
+                    "2. Each round consists of three stages: DEAL, DRAFT, and DUEL.\n" +
+                    "3. During DEAL, cards are shuffled and dealt (13 to each player).\n" +
+                    "4. A trump suit is revealed that has special power during the round.\n" +
+                    "5. During DRAFT, players take turns drawing cards from the deck.\n" +
+                    "6. During DUEL, players play cards to win tricks.\n" +
+                    "7. The player who plays the highest card of the led suit wins the trick.\n" +
+                    "8. Trump cards beat all other suits regardless of rank.\n" +
+                    "9. Players must follow the suit led if possible.\n" +
+                    "10. Points are awarded based on tricks won minus 6.\n" +
+                    "11. First player to reach 6 points wins the game.";
         } else {
-            rules += "Rules for this game will be available soon.";
+            rules += "Rules will be displayed when the game starts.";
         }
-        
-        showAlert(Alert.AlertType.INFORMATION, gameName + " Rules", rules);
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Rules");
+        alert.setHeaderText("Game Rules for " + gameName);
+        alert.setContentText(rules);
+        alert.getDialogPane().setPrefWidth(500); // Make the dialog wider for better readability
+        alert.showAndWait();
     }
     
     /**

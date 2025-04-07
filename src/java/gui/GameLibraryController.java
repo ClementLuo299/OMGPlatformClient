@@ -259,8 +259,18 @@ public class GameLibraryController {
     
     @FXML
     private void playWhist() {
-        showAlert(Alert.AlertType.INFORMATION, "Game Under Development", 
-                 "The Whist Card Game is currently under development.\nPlease check back later!");
+        try {
+            GameLobbyController controller = (GameLobbyController)
+                    screenManager.navigateTo(ScreenManager.GAME_LOBBY_SCREEN, ScreenManager.GAME_LOBBY_CSS);
+            
+            if (controller != null) {
+                controller.setGame("Whist");
+                controller.setCurrentUser(currentUsername, isGuest);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Game Launch Error", "Could not launch Whist: " + e.getMessage());
+        }
     }
     
     /**
