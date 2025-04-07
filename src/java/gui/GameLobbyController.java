@@ -417,18 +417,26 @@ public class GameLobbyController implements Initializable {
     private void onViewRulesClicked() {
         // Show game rules (would be replaced with actual game-specific rules)
         String rules = "Game Rules for " + gameName + ":\n\n";
-        
+
         if (gameName.contains("Tic Tac Toe")) {
             rules += "1. The game is played on a 3x3 grid.\n" +
-                     "2. Players take turns placing X or O in empty cells.\n" +
-                     "3. The first player to get three of their marks in a row (horizontally, vertically, or diagonally) wins.\n" +
-                     "4. If all cells are filled and no player has won, the game is a draw.";
+                    "2. Players take turns placing X or O in empty cells.\n" +
+                    "3. The first player to get three of their marks in a row (horizontally, vertically, or diagonally) wins.\n" +
+                    "4. If all cells are filled and no player has won, the game is a draw.";
         } else if (gameName.contains("Connect 4")) {
             rules += "1. The game is played on a 7×6 grid.\n" +
-                     "2. Players take turns dropping their colored discs from the top into any of the seven columns.\n" +
-                     "3. The disc falls to the lowest available space in the column.\n" +
-                     "4. The first player to connect 4 of their discs horizontally, vertically, or diagonally wins.\n" +
-                     "5. If the board fills up with no four-in-a-row, the game is a draw.";
+                    "2. Players take turns dropping their colored discs from the top into any of the seven columns.\n" +
+                    "3. The disc falls to the lowest available space in the column.\n" +
+                    "4. The first player to connect 4 of their discs horizontally, vertically, or diagonally wins.\n" +
+                    "5. If the board fills up with no four-in-a-row, the game is a draw.";
+        } else if (gameName.contains("Checkers")) {
+            rules += "1. Checkers is played on an 8x8 board using only the dark squares.\n" +
+                    "2. Each player starts with 12 pieces placed on the dark squares of the three rows closest to them.\n" +
+                    "3. Pieces move diagonally forward to an adjacent empty square.\n" +
+                    "4. If an opponent's piece is diagonally adjacent and the square immediately beyond it is empty, that piece can be captured by jumping over it.\n" +
+                    "5. Multiple captures in a single turn are allowed if available.\n" +
+                    "6. When a piece reaches the farthest row from its starting position, it becomes a king and can move both forward and backward.\n" +
+                    "7. The game ends when a player cannot make any legal moves, at which point the opponent is declared the winner.";
         } else {
             rules += "Rules for this game will be available soon.";
         }
