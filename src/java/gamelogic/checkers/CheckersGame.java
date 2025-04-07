@@ -24,6 +24,8 @@ public class CheckersGame extends Game {
     public CheckersGame(List<Player> players) {
         super(GameType.CHECKERS, players, 25);
         board = new CheckerBoard(8, players);
+        // Player 1 starts the game (white pieces)
+        setTurnHolder(players.get(0));
     }
 
     /**
@@ -48,16 +50,18 @@ public class CheckersGame extends Game {
             //remove the eaten piece
             board.removeChecker(eaten); //calls a method that removes the checker
             //remove for player
-            if (eaten.getColour() == Colour.RED) {
+            if (eaten.getColour() == Colour.WHITE) {
                 getPlayers().get(0).removeFromHand(eaten);
+                getPlayers().get(1).addToSpoils(eaten);
             } else {
                 getPlayers().get(1).removeFromHand(eaten);
+                getPlayers().get(0).addToSpoils(eaten);
             }
 
 
-            //if y value for RED(white) is 8, 1 for black, then make checker a king
+            //if y value for WHITE is 8, 1 for black, then make checker a king
             Colour colour = checker.getColour();
-            if (colour == Colour.RED) { // WHITE pieces (RED in code)
+            if (colour == Colour.WHITE) {
                 if (y == 8) {
                     checker.stack();
                 }
@@ -71,9 +75,9 @@ public class CheckersGame extends Game {
             return board.checkDouble(checker, player);
         } else {
             board.updatePosition(checker, x, y, player);
-            //if y value for RED(white) is 8, 1 for black, then make checker a king
+            //if y value for WHITE is 8, 1 for black, then make checker a king
             Colour colour = checker.getColour();
-            if (colour == Colour.RED) { // WHITE pieces (RED in code)
+            if (colour == Colour.WHITE) {
                 if (y == 8) {
                     checker.stack();
                 }
@@ -88,26 +92,38 @@ public class CheckersGame extends Game {
 
     /**
      * Method checks if a player has won the game
-     * Checks to see if all pieces have been eaten or if there is no more legal moves
-     * @param player
-     * @return boolean if player has no more pieces
+     * Player wins if either:
+     * 1. The opponent has no more pieces
+     * 2. The opponent has no valid moves left
+     * 
+     * @param player The player to check if they've won
+     * @return boolean true if player has won, false otherwise
      */
     public boolean gameWon(Player player) {
-        List<int[]> moves = new ArrayList<>();
-        if (player == getPlayers().get(1)) {
-            for (Checker checker : board.getCheckers()) {
-                if (checker.getColour() == Colour.BLACK) {
-                    moves.addAll(getValidMoves(checker.getXPosition(), checker.getYPosition()));
-                }
-            }
-        } else {
-            for (Checker checker : board.getCheckers()) {
-                if (checker.getColour() == Colour.RED) {
-                    moves.addAll(getValidMoves(checker.getXPosition(), checker.getYPosition()));
+        Player opponent = (player == getPlayers().get(0)) ? getPlayers().get(1) : getPlayers().get(0);
+        
+        // Check if opponent has no pieces left
+        if (opponent.getHand().isEmpty()) {
+            return true;
+        }
+        
+        // Check if opponent has no valid moves left
+        List<int[]> allPossibleMoves = new ArrayList<>();
+        
+        // For each of opponent's pieces, check if they have any valid moves
+        for (Checker checker : board.getCheckers()) {
+            if ((checker.getColour() == Colour.BLACK && opponent == getPlayers().get(1)) ||
+                (checker.getColour() == Colour.WHITE && opponent == getPlayers().get(0))) {
+                
+                List<int[]> pieceMoves = getValidMoves(checker.getXPosition(), checker.getYPosition());
+                if (pieceMoves != null && !pieceMoves.isEmpty()) {
+                    allPossibleMoves.addAll(pieceMoves);
                 }
             }
         }
-        return player.getHand().isEmpty() || moves.isEmpty();
+        
+        // If the opponent has no valid moves, the current player wins
+        return allPossibleMoves.isEmpty();
     }
 
     /**
@@ -123,11 +139,11 @@ public class CheckersGame extends Game {
         if (currentChecker == null) {
             return null; //returns null if no checker is on the square
         }
-        if (currentChecker.getColour() == Colour.RED) { //checks if checker is RED (white) or black
+        if (currentChecker.getColour() == Colour.WHITE) { //checks if checker is WHITE or BLACK
             if (currentChecker.isStacked()) {
-                getRedMoves(coords, x, y, true);
+                getWhiteMoves(coords, x, y, true);
             } else {
-                getRedMoves(coords, x, y, false);
+                getWhiteMoves(coords, x, y, false);
             }
         } else { //colour is black
             if (currentChecker.isStacked()) {
@@ -140,23 +156,23 @@ public class CheckersGame extends Game {
     }
 
     /**
-     * Method finds the valid moves for RED (white) pieces
+     * Method finds the valid moves for WHITE pieces
      * @param moves
      * @param x
      * @param y
      * @param stacked
      */
-    public void getRedMoves(List<int[]> moves, int x, int y, boolean stacked) {
+    public void getWhiteMoves(List<int[]> moves, int x, int y, boolean stacked) {
         if (stacked) { //check forward and backward
             // Check all four directions for king pieces
-            checkMoveDirection(moves, x, y, Colour.RED, 1, 1);   // Up-right
-            checkMoveDirection(moves, x, y, Colour.RED, -1, 1);  // Up-left
-            checkMoveDirection(moves, x, y, Colour.RED, 1, -1);  // Down-right
-            checkMoveDirection(moves, x, y, Colour.RED, -1, -1); // Down-left
+            checkMoveDirection(moves, x, y, Colour.WHITE, 1, 1);   // Up-right
+            checkMoveDirection(moves, x, y, Colour.WHITE, -1, 1);  // Up-left
+            checkMoveDirection(moves, x, y, Colour.WHITE, 1, -1);  // Down-right
+            checkMoveDirection(moves, x, y, Colour.WHITE, -1, -1); // Down-left
         } else { //regular checker (can only move up)
-            // Regular RED (white) pieces can only move upward
-            checkMoveDirection(moves, x, y, Colour.RED, 1, 1);   // Up-right
-            checkMoveDirection(moves, x, y, Colour.RED, -1, 1);  // Up-left
+            // Regular WHITE pieces can only move upward
+            checkMoveDirection(moves, x, y, Colour.WHITE, 1, 1);   // Up-right
+            checkMoveDirection(moves, x, y, Colour.WHITE, -1, 1);  // Up-left
         }
     }
 

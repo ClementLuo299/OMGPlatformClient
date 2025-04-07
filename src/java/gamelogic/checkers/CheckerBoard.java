@@ -90,7 +90,7 @@ public class CheckerBoard {
      */
     public void removeChecker(Checker checker) {
         board.remove(checker);
-        if (checker.getColour() == Colour.RED) {
+        if (checker.getColour() == Colour.WHITE) {
             players.get(1).removeFromHand(checker); //removes the piece from the opposing player's hand
             players.get(0).addToSpoils(checker); //adds it to the spoils of the current player
         } else { //if a black piece is eaten
@@ -133,7 +133,7 @@ public class CheckerBoard {
         } else if (color == Colour.BLACK) { //check going down the board
             checkDoubleJumpDirection(coords, x, y, color, 1, -1); // Down-right
             checkDoubleJumpDirection(coords, x, y, color, -1, -1); // Down-left
-        } else { //check going up for RED (displayed as WHITE)
+        } else { //check going up for WHITE
             checkDoubleJumpDirection(coords, x, y, color, 1, 1);  // Up-right
             checkDoubleJumpDirection(coords, x, y, color, -1, 1); // Up-left
         }
@@ -192,8 +192,8 @@ public class CheckerBoard {
                     }
                 }
                 if (squareTaken) {
-                    if (checkerToPrint.getColour() == Colour.RED) { //prints the first letter of the colour
-                        System.out.print("R "); // W for White (RED in code)
+                    if (checkerToPrint.getColour() == Colour.WHITE) { //prints the first letter of the colour
+                        System.out.print("W "); // W for White
                     } else {
                         System.out.print("B "); // B for Black
                     }

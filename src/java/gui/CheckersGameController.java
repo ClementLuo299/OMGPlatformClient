@@ -128,48 +128,60 @@ public class CheckersGameController implements Initializable {
      * Sets up a new game with fresh state
      */
     private void setupNewGame() {
-        // Create players with UserAccount
+        // Create a new CheckersGame instance
         players = new ArrayList<>();
-        UserAccount player1Account = new UserAccount("Player 1", true); // Guest account
-        UserAccount player2Account = new UserAccount("Player 2", true); // Guest account
-        Player player1 = new Player(player1Account);
-        Player player2 = new Player(player2Account);
-        players.add(player1);
-        players.add(player2);
         
-        // Initialize the game
-        checkersGame = new CheckersGame(players);
-        
-        // Set the first player
-        currentPlayer = players.get(0); // White starts first
-        checkersGame.setTurnHolder(currentPlayer);
-        
-        // Update the UI
-        updatePlayerInfo();
-        updateGameStatus("Game started! White's turn to select a piece.");
-        updateTurnDisplay();
-        
-        // Generate a default match ID if none was provided
-        if (matchId == null || matchId.isEmpty()) {
-            setMatchId("M" + (10000 + random.nextInt(90000)));
+        try {
+            // Create player accounts
+            networking.accounts.UserAccount account1 = new networking.accounts.UserAccount("Player 1", "pass", false);
+            networking.accounts.UserAccount account2 = new networking.accounts.UserAccount("Player 2", "pass", false);
+            
+            // Create Player objects with the accounts
+            Player player1 = new Player(account1);
+            Player player2 = new Player(account2);
+            
+            // Add players to the game
+            players.add(player1); // Player 1 is WHITE
+            players.add(player2); // Player 2 is BLACK
+            
+            // Create the game with these players
+            checkersGame = new CheckersGame(players);
+            
+            // Player 1 (WHITE) plays first
+            currentPlayer = players.get(0);
+            
+            // Initialize player displays
+            player1Name.setText(player1.getUsername());
+            player2Name.setText(player2.getUsername());
+            
+            // Update turn display
+            updateTurnDisplay();
+            
+            // Set game status
+            gameInProgress = true;
+            
+            // Draw the board
+            drawBoard();
+            
+            // Start the timer
+            startTimer();
+            
+            // Update player info display (colors, etc.)
+            updatePlayerInfo();
+            
+            // Update game status message
+            updateGameStatus("Game started. " + player1.getUsername() + " (White) goes first.");
+            
+            // Initialize move count
+            moveCount = 0;
+            updateMoveCount();
+            
+            // Clear and initialize move history
+            initializeMoveHistory();
+        } catch (Exception e) {
+            System.err.println("Error setting up game: " + e.getMessage());
+            e.printStackTrace();
         }
-        
-        // Reset move history
-        moveCount = 0;
-        moveHistory.clear();
-        updateMoveCount();
-        
-        // Set default chat message
-        chatMessages.setText("System: Game started. Good luck!\n");
-        
-        // Start the game
-        gameInProgress = true;
-        
-        // Start the turn timer
-        startTimer();
-        
-        // Draw the initial board state
-        drawBoard();
     }
     
     /**
@@ -235,32 +247,44 @@ public class CheckersGameController implements Initializable {
             int col = checker.getXPosition() - 1; // Convert from 1-indexed to 0-indexed
             int row = checker.getYPosition() - 1; // Convert from 1-indexed to 0-indexed
             
-            // Create the checker piece visual
-            Circle piece = new Circle(25);
-            piece.getStyleClass().add("checker-piece");
-            
-            // Set color based on the checker's color
-            // Note: RED pieces will be displayed with white styling in the UI
-            if (checker.getColour() == Colour.WHITE) {
-                piece.getStyleClass().add("white-piece"); // White styling for RED checkers
-            } else if (checker.getColour() == Colour.BLACK) {
-                piece.getStyleClass().add("black-piece");
-            }
-            
-            // Add king styling if it's a stacked/king checker
-            if (checker.isStacked()) {
-                piece.getStyleClass().add("king-piece");
-            }
-            
-            // Store reference to the piece
-            checkerPieces[row][col] = piece;
-            
-            // Add to the board
-            boardSquares[row][col].getChildren().add(piece);
+            // Draw a checker piece on the board
+            drawChecker(row, col, checker.getColour(), checker.isStacked());
         }
         
         // Update the score labels with captured pieces count
         updateCapturedPiecesCount();
+    }
+    
+    /**
+     * Draw a checker piece on the board
+     * @param row Row index (0-7)
+     * @param col Column index (0-7)
+     * @param color The color of the checker
+     * @param isKing Whether the checker is a king
+     */
+    private void drawChecker(int row, int col, Colour color, boolean isKing) {
+        // Create a new piece (circle)
+        Circle piece = new Circle(25);
+        piece.getStyleClass().add("checker-piece");
+        
+        // Set the color of the piece
+        // Note: WHITE pieces will be displayed with white styling in the UI
+        if (color == Colour.WHITE) {
+            piece.getStyleClass().add("white-piece"); // White styling for WHITE checkers
+        } else if (color == Colour.BLACK) {
+            piece.getStyleClass().add("black-piece");
+        }
+        
+        // Add king crown effect if the piece is a king
+        if (isKing) {
+            piece.getStyleClass().add("king-piece");
+        }
+        
+        // Add the piece to the board
+        boardSquares[row][col].getChildren().add(piece);
+        
+        // Store the reference to the piece for later use
+        checkerPieces[row][col] = piece;
     }
     
     /**
@@ -269,31 +293,28 @@ public class CheckersGameController implements Initializable {
      * @param col The column of the clicked square (0-7)
      */
     private void handleSquareClick(int row, int col) {
-        if (!gameInProgress) return;
-        
-        // Convert from 0-indexed to 1-indexed for game logic
-        int gameRow = row + 1;
+        // Convert to 1-indexed for game logic
         int gameCol = col + 1;
+        int gameRow = row + 1;
         
-        // If there's a selected checker, try to move it
         if (selectedChecker != null) {
-            // Check if this square is in the valid moves
-            boolean isValidMove = false;
+            // A checker is already selected, check if clicked on a valid move square
+            boolean isValidMoveSquare = false;
             for (int[] move : validMoves) {
                 if (move[0] == gameCol && move[1] == gameRow) {
-                    isValidMove = true;
+                    isValidMoveSquare = true;
                     break;
                 }
             }
             
-            if (isValidMove) {
+            if (isValidMoveSquare) {
                 // Move the checker
                 moveChecker(row, col);
             } else {
                 // Check if player clicked on another one of their pieces
                 Checker clickedChecker = checkersGame.getBoard().getChecker(gameCol, gameRow);
                 if (clickedChecker != null && 
-                    ((clickedChecker.getColour() == Colour.RED && currentPlayer == players.get(0)) ||
+                    ((clickedChecker.getColour() == Colour.WHITE && currentPlayer == players.get(0)) ||
                      (clickedChecker.getColour() == Colour.BLACK && currentPlayer == players.get(1)))) {
                     // Clear previous selection and select the new checker
                     clearSelection();
@@ -310,7 +331,7 @@ public class CheckersGameController implements Initializable {
             if (clickedChecker != null) {
                 // Check if the clicked checker belongs to the current player
                 boolean isCurrentPlayerChecker = 
-                    (clickedChecker.getColour() == Colour.RED && currentPlayer == players.get(0)) ||
+                    (clickedChecker.getColour() == Colour.WHITE && currentPlayer == players.get(0)) ||
                     (clickedChecker.getColour() == Colour.BLACK && currentPlayer == players.get(1));
                 
                 if (isCurrentPlayerChecker) {
@@ -342,7 +363,7 @@ public class CheckersGameController implements Initializable {
         
         // Check if the checker belongs to the current player
         boolean isCurrentPlayerChecker = 
-            (checker.getColour() == Colour.RED && currentPlayer == players.get(0)) ||
+            (checker.getColour() == Colour.WHITE && currentPlayer == players.get(0)) ||
             (checker.getColour() == Colour.BLACK && currentPlayer == players.get(1));
         
         if (!isCurrentPlayerChecker) {

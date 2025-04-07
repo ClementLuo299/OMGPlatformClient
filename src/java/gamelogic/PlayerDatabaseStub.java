@@ -28,7 +28,7 @@ public class PlayerDatabaseStub {
     public boolean authenticateWithRetry(String username, String password, int retries) {
         for (int attempt = 1; attempt <= retries; attempt++) {
             System.out.println("Attempt #" + attempt + ": Authenticating user '" + username + "'...");
-            boolean result = stub.authenticate(username, password);
+            boolean result = this.authenticate(username, password);
 
             if (result) {
                 System.out.println(" Success on attempt #" + attempt);
