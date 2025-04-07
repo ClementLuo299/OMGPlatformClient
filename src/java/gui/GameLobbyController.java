@@ -430,13 +430,12 @@ public class GameLobbyController implements Initializable {
                     "4. The first player to connect 4 of their discs horizontally, vertically, or diagonally wins.\n" +
                     "5. If the board fills up with no four-in-a-row, the game is a draw.";
         } else if (gameName.contains("Checkers")) {
-            rules += "1. Checkers is played on an 8x8 board using only the dark squares.\n" +
+            rules += "1. The game is played on an 8x8 board using only the dark squares.\n" +
                     "2. Each player starts with 12 pieces placed on the dark squares of the three rows closest to them.\n" +
                     "3. Pieces move diagonally forward to an adjacent empty square.\n" +
                     "4. If an opponent's piece is diagonally adjacent and the square immediately beyond it is empty, that piece can be captured by jumping over it.\n" +
-                    "5. Multiple captures in a single turn are allowed if available.\n" +
-                    "6. When a piece reaches the farthest row from its starting position, it becomes a king and can move both forward and backward.\n" +
-                    "7. The game ends when a player cannot make any legal moves, at which point the opponent is declared the winner.";
+                    "5. When a piece reaches the farthest row from its starting position, it becomes a king and can move both forward and backward.\n" +
+                    "6. The game ends when a player cannot make any legal moves, at which point the opponent is declared the winner.";
         } else {
             rules += "Rules for this game will be available soon.";
         }
