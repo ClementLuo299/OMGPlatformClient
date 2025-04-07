@@ -3,6 +3,8 @@ package gamelogic;
 import java.util.Random;
 
 public class PlayerDatabaseStub {
+    //The map stores usernames and their corresponding values
+    private static final int DEFAULT_RETRIES = 3;
 
     private static final Random random = new Random(0);
     private static final double PROBABILITY_OF_USERNAME_TAKEN = 0.5;
@@ -22,5 +24,8 @@ public class PlayerDatabaseStub {
             return false;
         }
         return true;
+    }
+    public boolean authenticateWithRetry(String username, String password, int retries) {
+        
     }
 }
