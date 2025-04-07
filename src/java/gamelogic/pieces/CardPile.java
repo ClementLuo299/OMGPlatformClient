@@ -1,5 +1,7 @@
 package gamelogic.pieces;
 
+import gamelogic.PieceType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -17,15 +19,63 @@ public class CardPile {
     private List<Card> cards;
 
 
-    // CONSTRUCTOR
+    // CONSTRUCTORS
 
     /**
-     * Instantiates a Card Pile with a List of Cards
+     * Instantiates a Card Pile from a specified List of Cards
      *
      * @param cardList The given List of Cards to store in this Card Pile
      */
     public CardPile(List<Card> cardList) {
         this.cards = cardList;
+    }
+
+    /**
+     * Instantiates a face-down Card Pile with a "New Deck Order" List of Cards
+     */
+    public CardPile() {
+        // The temporary list of cards to add to this pile
+        List<Card> generatedList = new ArrayList<>();
+        // The numerical representation of what suit to apply to the card
+        int suitCount = 1;
+
+        // Loops to add new cards to the temporary list until 52 cards are reached
+        while (suitCount < 5) {
+            // Loops through each suit to add 13 cards to the deck
+            for (int i = 1; i < 14; i++) {
+                // Initiates the card to be added to the temporary list
+                Card cardToAdd;
+
+                // Checks what suit to apply to the card and applies it
+                // Clubs and Hearts are in reverse rank order
+                switch (suitCount) {
+                    case 1:
+                        cardToAdd = new Card(PieceType.CARD, false, SuitType.SPADES, i, true);
+                        break;
+                    case 2:
+                        cardToAdd = new Card(PieceType.CARD, false, SuitType.DIAMONDS, i, true);
+                        break;
+                    case 3:
+                        cardToAdd = new Card(PieceType.CARD, false, SuitType.CLUBS, Math.abs(i - 14), true);
+                        break;
+                    case 4:
+                        cardToAdd = new Card(PieceType.CARD, false, SuitType.HEARTS, Math.abs(i - 14), true);
+                        break;
+                    default:
+                        cardToAdd = null;
+                        break;
+                }
+
+                // Adds the card to the temporary deck
+                generatedList.add(cardToAdd);
+
+            }
+            // Increments the count to move onto the next suit
+            suitCount++;
+        }
+
+        // Sets the pile's cards as the generated list
+        this.cards = generatedList;
     }
 
 
@@ -68,6 +118,15 @@ public class CardPile {
         return cards.get(index);
     }
 
+    /**
+     * Gets the size of this Card Pile
+     *
+     * @return The integer Size of this Card Pile
+     */
+    public int getSize() {
+        return cards.size();
+    }
+
 
     // SETTERS
 
@@ -108,14 +167,12 @@ public class CardPile {
     }
 
     /**
-     * Get size of deck
+     * Removes a Card from this Card Pile
      *
-     * @Param none
-     *
-     * @Return size of deck
+     * @param cardToRemove The given Card to remove from the Card Pile
      */
-    public int getSize() {
-        return cards.size();
+    public void removeCard(Card cardToRemove) {
+        this.cards.remove(cardToRemove);
     }
 
 
@@ -248,44 +305,44 @@ public class CardPile {
     }
 
     /**
-     * Overhead shuffle algorithm
-     * Simulates when the deck is cut and cards are dispersed randomly throughout the deck
+     * Overhead Shuffle Algorithm
+     * Simulates an Overhead Shuffle on this Card Pile where the Pile is cut at a random point and then randomly recombined over several iterations
      */
     public void overheadShuffle() {
-        List<Card> shuffledCards = new ArrayList<>(); //list for shuffled deck
-        int overheadRepetition = randomNum(10+1); //will allow for up to 10 repetitions of the overhead shuffle
-        while (overheadRepetition == 0) { //ensures the number cannot be 0
-            overheadRepetition = randomNum(10+1);
-        }
+        // List which will store the Overhead Shuffle Result
+        List<Card> shuffledCards = new ArrayList<>();
+        // The number of times the deck will be cut (Between 10 and 20)
+        int overheadRepetition = randomNum(10 + 1) + 10;
+
+        // Overheads the deck as many times as was randomly selected
         for (int i = 0; i < overheadRepetition; i++) {
-            int randomCut = randomNum(cards.size()); //cuts the deck at a random point while avoiding cutting at 0
-            while (randomCut == 0) {
-                randomCut = randomNum(cards.size());
-            }
+            // Used to choose how many cards are cut from the top
+            int randomCut = randomNum(10 + 1) + 5;
+
+            // Lists that store the top and bottom half of the deck
             List<Card> topCards = new ArrayList<>(cards.subList(0, randomCut));
             List<Card> bottomCards = new ArrayList<>(cards.subList(randomCut, cards.size()));
 
+            // Loops until each half of the deck has been added to the shuffled deck
             while (!topCards.isEmpty() || !bottomCards.isEmpty()) {
-                int randomNum = randomNum(2); //chooses whether to add top or bottom deck card
-                if (randomNum == 0) { //add from top deck
-                    if (topCards.isEmpty()) { //checks to make sure that there is still cards in the deck and just adds from other deck if not
-                        shuffledCards.add(bottomCards.remove(0)); //pop the top card
-                    } else { //if both decks still have cards add from top
-                        shuffledCards.add(topCards.remove(0)); //pop top card into shuffled deck
-                    }
-                } else if (randomNum == 1) {
-                    if (bottomCards.isEmpty()) { //makes sure bottom deck has cards and add from top if not
-                        shuffledCards.add(topCards.remove(0)); //pop from top deck
-                    } else {
-                        shuffledCards.add(bottomCards.remove(0)); //pop from bottom deck
-                    }
+                // Checks that there are still cards to pull from the bottom, switching to the other half after
+                if (!bottomCards.isEmpty()) {
+                    // Puts the bottom half on the top of the deck
+                    shuffledCards.add(bottomCards.removeFirst());
+                } else {
+                    // Puts the top half on the bottom of the deck
+                    shuffledCards.add(topCards.removeFirst());
                 }
             }
-            this.cards = shuffledCards; //resets the main deck to the new shuffled deck for next iteration
-            if (i != overheadRepetition - 1) { //reset shuffledCards if it is not the last iteration
+
+            // Sets the main deck to the result of this iteration of overhand shuffling
+            this.cards = shuffledCards;
+            // Empties the temporary deck for reuse if there is another iteration
+            if (i != overheadRepetition - 1) {
                 shuffledCards = new ArrayList<>();
             }
         }
+        // Sets the current Card Pile to the shuffled Card Pile
         this.cards = shuffledCards;
     }
 

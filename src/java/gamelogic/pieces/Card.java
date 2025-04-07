@@ -73,7 +73,7 @@ public class Card extends GamePiece {
     /**
      * Flips this Card to change its Face visibility
      */
-    protected void flip() {
+    public void flip() {
         this.faceDown = !faceDown;
     }
 
@@ -82,6 +82,7 @@ public class Card extends GamePiece {
      *
      * @return The String of information for this Card
      */
+    @Override
     public String toString() {
         // Initialized String to return
         String cardTitle;

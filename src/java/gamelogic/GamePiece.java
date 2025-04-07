@@ -15,7 +15,6 @@ public class GamePiece {
     private final PieceType type;
     // The held status of this piece
     private boolean held;
-    private Colour color;
 
 
     // CONSTRUCTOR
@@ -26,10 +25,9 @@ public class GamePiece {
      * @param type The given Piece Type for this Game Piece
      * @param held The given Held status of this Game Piece
      */
-    public GamePiece(PieceType type, boolean held, Colour color) {
+    public GamePiece(PieceType type, boolean held) {
         this.type = type;
         this.held = held;
-        this.color = color;
     }
 
 
@@ -44,30 +42,20 @@ public class GamePiece {
         return this.type;
     }
 
-    /**
-     * Gets the Colour of the piece
-     * @return Colour of piece
-     */
-    public Colour getColor() {
-        return color;
-    }
-
-
-
 
     // METHODS
 
     /**
      * Sets the Held status to True for this Game Piece
      */
-    protected void take() {
+    public void take() {
         this.held = true;
     }
 
     /**
      * Sets the Held status to False for this Game Piece
      */
-    protected void release() {
+    public void release() {
         this.held = false;
     }
 }
