@@ -123,9 +123,9 @@ public class Player {
     }
 
     /**
-     * method to set the updated list after modifications
+     * Sets the contents of this Player's Hand to a List of Game Pieces
      *
-     * @param hand
+     * @param hand The given List of Game Pieces to put into this Player's Hand
      */
     public void setHand(List<GamePiece> hand) {
         this.hand = hand;
@@ -159,6 +159,25 @@ public class Player {
      */
     public void removeFromHand(GamePiece pieceToRemove) {
         this.hand.remove(pieceToRemove);
+    }
+
+    /**
+     * Checks if a Game Piece is in a Player's Hand
+     *
+     * @param pieceToCheck The given Game Piece to check a Player's Hand for
+     * @return The boolean Presence of the given Piece in a Player's Hand
+     */
+    public boolean checkHand(GamePiece pieceToCheck) {
+        // Loops through the Player's Hand to check for the given Game Piece
+        for (GamePiece currentPiece : hand) {
+            if (pieceToCheck == currentPiece) {
+                // Returns true if the Player holds the given Piece
+                return true;
+            }
+        }
+
+        // Returns false if the Player doesn't hold the given Piece
+        return false;
     }
 
     /**
@@ -277,7 +296,5 @@ public class Player {
                 }
             }
         }
-
-
     }
 }

@@ -49,6 +49,7 @@ public class WhistGame extends Game {
         super(gameType, players, 8);
         this.round = 0;
         this.stage = StageType.DEAL;
+        this.trump = null;
         this.deck = new CardPile();
     }
 
@@ -221,6 +222,43 @@ public class WhistGame extends Game {
     }
 
     /**
+     * Compares two Cards to see which Card has the highest Rank
+     *
+     * @param card1 The first given Card to compare
+     * @param card2 The second given Card to compare
+     * @return The highest Ranking Card
+     */
+    public Card compareCards(Card card1, Card card2) {
+        // The Rank of each card
+        int card1Rank = card1.getRank();
+        int card2Rank = card2.getRank();
+        // The Card that has the highest Rank
+        Card winningCard = null;
+
+        // Checks if Trump cards are in play to account for them
+        if (trump != null) {
+            // Adds 14 to the rank of trump suited cards to give trump advantage in comparison
+            if (card1.getSuit() == trump) {
+                card1Rank = card1Rank + 14;
+            }
+            if (card2.getSuit() == trump) {
+                card2Rank = card2Rank + 14;
+            }
+        }
+
+        // Awards the comparison to the highest ranking card
+        if (card1Rank > card2Rank) {
+            winningCard = card1;
+        }
+        if (card2Rank > card1Rank) {
+            winningCard = card2;
+        }
+
+        // Returns null if the Cards are tied
+        return winningCard;
+    }
+
+    /**
      * Checks which Player wins a Trick based on the Rank of the Cards
      *
      * @return The Player who won the Trick
@@ -229,28 +267,16 @@ public class WhistGame extends Game {
         // The cards in the Trick
         Card leadCard = trick.getFirst();
         Card followingCard = trick.getLast();
-        // The rank of the cards
-        int leadRank = leadCard.getRank();
-        int followingRank = followingCard.getRank();
         // The winning card
-        Card winningCard = null;
+        Card winningCard;
+
+        // The Players in this Game
+        Player player1 = this.getPlayers().getFirst();
+        Player player2 = this.getPlayers().getLast();
 
 
-        // Adds 14 to the rank of trump suited cards to give trump advantage in comparison
-        if (leadCard.getSuit() == trump) {
-            leadRank = leadRank + 14;
-        }
-        if (followingCard.getSuit() == trump) {
-            followingRank = followingRank + 14;
-        }
-
-        // Awards the trick to whoever had the highest ranking card
-        if (leadRank > followingRank) {
-            winningCard = leadCard;
-        }
-        if (followingRank > leadRank) {
-            winningCard = followingCard;
-        }
+        // Compares the leading and following card to see which is highest ranked
+        winningCard = compareCards(leadCard, followingCard);
 
         // Awards the trick to the leading card if the following card doesn't follow suit and isn't a trump card
         if (followingCard.getSuit() != leadCard.getSuit() && followingCard.getSuit() != trump) {
@@ -258,27 +284,12 @@ public class WhistGame extends Game {
         }
 
 
-        // Loops through each Player's hand to determine who is associated with the winning card
-        // Player 1's Hand
-        for (GamePiece currentPiece : this.getPlayers().getFirst().getHand()) {
-            // Casts the current piece to a card to check suit
-            Card currentCard = (Card) currentPiece;
-
-            // Checks if the winning card is in their hand to declare them winner
-            if (currentCard == winningCard) {
-                return this.getPlayers().getFirst();
-            }
+        // Checks each Player's hand for the winning Card to determine which Player won the Trick
+        if (player1.checkHand(winningCard)) {
+            return player1;
         }
-
-        // Player 2's Hand
-        for (GamePiece currentPiece : this.getPlayers().getLast().getHand()) {
-            // Casts the current piece to a card to check suit
-            Card currentCard = (Card) currentPiece;
-
-            // Checks if the winning card is in their hand to declare them winner
-            if (currentCard == winningCard) {
-                return this.getPlayers().getLast();
-            }
+        if (player2.checkHand(winningCard)) {
+            return player2;
         }
 
         // Returns null if no one wins
@@ -304,35 +315,15 @@ public class WhistGame extends Game {
             discard.addCards(currentCard);
         }
 
-        // Removes all Cards in the Trick from Players' hands
-        // Player 1
-        for (int i = 0; i < player1.getHand().size(); i++) {
-            // The current Piece being looked at
-            GamePiece currentPiece = player1.getHand().get(i);
-
-            for (GamePiece removalCandidate : trick) {
-                if (removalCandidate == currentPiece) {
-                    // Removes Card from Player's Hand
-                    player1.removeFromHand(currentPiece);
-
-                    // Moves i back by one to keep place in the list
-                    i--;
-                }
+        // Removes all Cards in the Trick from Players' Hands
+        for (GamePiece cardToRemove : trick) {
+            // Player 1's Hand
+            if (player1.checkHand(cardToRemove)) {
+                player1.removeFromHand(cardToRemove);
             }
-        }
-        // Player 2
-        for (int i = 0; i < player2.getHand().size(); i++) {
-            // The current Piece being looked at
-            GamePiece currentPiece = player2.getHand().get(i);
-
-            for (GamePiece removalCandidate : trick) {
-                if (removalCandidate == currentPiece) {
-                    // Removes Card from Player's Hand
-                    player2.removeFromHand(currentPiece);
-
-                    // Moves i back by one to keep place in the list
-                    i--;
-                }
+            // Player 2's Hand
+            if (player2.checkHand(cardToRemove)) {
+                player2.removeFromHand(cardToRemove);
             }
         }
 
@@ -405,6 +396,4 @@ public class WhistGame extends Game {
         // Returns the valid cards
         return validCards;
     }
-
-
 }
