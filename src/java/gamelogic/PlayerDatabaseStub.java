@@ -3,6 +3,8 @@ package gamelogic;
 import java.util.Random;
 
 public class PlayerDatabaseStub {
+    //The map stores usernames and their corresponding values
+    private static final int DEFAULT_RETRIES = 3;
 
     private static final Random random = new Random(0);
     private static final double PROBABILITY_OF_USERNAME_TAKEN = 0.5;
@@ -22,5 +24,20 @@ public class PlayerDatabaseStub {
             return false;
         }
         return true;
+    }
+    public boolean authenticateWithRetry(String username, String password, int retries) {
+        for (int attempt = 1; attempt <= retries; attempt++) {
+            System.out.println("Attempt #" + attempt + ": Authenticating user '" + username + "'...");
+            boolean result = stub.authenticate(username, password);
+
+            if (result) {
+                System.out.println(" Success on attempt #" + attempt);
+                return true;
+            } else {
+                System.out.println(" Failed attempt #" + attempt);
+            }
+        }
+        System.out.println("Authentication failed after " + retries + " attempts.");
+        return false;
     }
 }
