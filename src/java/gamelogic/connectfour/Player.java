@@ -1,4 +1,13 @@
 package gamelogic;
+/**
+ * Author: Susmita Chakrabarty
+ * The Player class represents a player in the Connect Four game.
+ * Each player has a name and a unique identifier (ID) that can be used
+ * to distinguish between players (e.g., Player 1 or Player 2).
+ *
+ * This class is kept simple to allow easy integration and comparison in
+ * game logic (such as checking whose turn it is or who the winner is).
+ */
 public class Player {
 
     // The name of the player (e.g., "Alice" or "Player 1")
