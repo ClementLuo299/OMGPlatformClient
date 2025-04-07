@@ -36,3 +36,17 @@ public class Player {
         return playerId;
     }
 
+    /**
+     * Compares this player with another object for equality.
+     * Two players are considered equal if their player IDs are the same.
+     *
+     * @param obj The object to compare with.
+     * @return true if the object is a Player and has the same ID, false otherwise.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;  // Same object
+        if (!(obj instanceof Player)) return false; // Different type
+        Player other = (Player) obj;
+        return this.playerId == other.playerId; // Compare by ID
+    }
