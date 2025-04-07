@@ -311,49 +311,30 @@ public class CardPile {
     public void overheadShuffle() {
         // List which will store the Overhead Shuffle Result
         List<Card> shuffledCards = new ArrayList<>();
-        // The number of times the deck will be cut (Between 5 - 10)
-        int overheadRepetition = randomNum(5 + 1) + 5;
+        // The number of times the deck will be cut (Between 10 and 20)
+        int overheadRepetition = randomNum(10 + 1) + 10;
 
-        // Cuts the deck as many times as was randomly selected
+        // Overheads the deck as many times as was randomly selected
         for (int i = 0; i < overheadRepetition; i++) {
-            // Used to choose a random point in the deck to make the cut from
-            int randomCut = randomNum(cards.size());
-            // Ensures the cut will not happen at the start
-            while (randomCut == 0) {
-                randomCut = randomNum(cards.size());
-            }
+            // Used to choose how many cards are cut from the top
+            int randomCut = randomNum(10 + 1) + 5;
 
-            // Lists to store the cut portions of the deck
+            // Lists that store the top and bottom half of the deck
             List<Card> topCards = new ArrayList<>(cards.subList(0, randomCut));
             List<Card> bottomCards = new ArrayList<>(cards.subList(randomCut, cards.size()));
 
-            // Loops until the top or bottom half of the deck has been added
+            // Loops until each half of the deck has been added to the shuffled deck
             while (!topCards.isEmpty() || !bottomCards.isEmpty()) {
-                // Used to choose if the top or bottom is added from the top or bottom half
-                int randomNum = randomNum(2);
-
-                // Adds from the bottom half
-                if (randomNum == 0) {
-                    // Checks that there are still cards to pull from, switching to the other half if needed
-                    if (topCards.isEmpty()) {
-                        // Moves the first card from the bottom half to the shuffled deck
-                        shuffledCards.add(bottomCards.remove(0));
-                    } else {
-                        // Moves first card from the top half into the shuffled deck
-                        shuffledCards.add(topCards.remove(0));
-                    }
-                // Adds from the top half
-                } else if (randomNum == 1) {
-                    // Checks that there are still cards to pull from, switching to the other half if needed
-                    if (bottomCards.isEmpty()) {
-                        // Moves first card from the top half into the shuffled deck
-                        shuffledCards.add(topCards.remove(0));
-                    } else {
-                        // Moves the first card from the bottom half to the shuffled deck
-                        shuffledCards.add(bottomCards.remove(0));
-                    }
+                // Checks that there are still cards to pull from the bottom, switching to the other half after
+                if (!bottomCards.isEmpty()) {
+                    // Puts the bottom half on the top of the deck
+                    shuffledCards.add(bottomCards.removeFirst());
+                } else {
+                    // Puts the top half on the bottom of the deck
+                    shuffledCards.add(topCards.removeFirst());
                 }
             }
+
             // Sets the main deck to the result of this iteration of overhand shuffling
             this.cards = shuffledCards;
             // Empties the temporary deck for reuse if there is another iteration
