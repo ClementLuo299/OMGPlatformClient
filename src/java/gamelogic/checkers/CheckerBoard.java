@@ -39,13 +39,13 @@ public class CheckerBoard {
         for (int y = 1; y <= 3; y++) { //add white pieces on first 3 rows
             if (y == 2) { //staggers the piece placement to keep them on the correct squares
                 for (int x = 2; x <= size; x+=2) { //add checkers on squares 2,4,6,8
-                    Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.RED, false, y, x);
+                    Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x);
                     board.add(addCheck);
                     players.get(0).addToHand(addCheck);
                 }
             } else {
                 for (int x = 1; x <= size; x+=2) { //add checkers on squares 1,3,5,7
-                    Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.RED, false, y, x);
+                    Checker addCheck = new Checker(PieceType.CHECKER, false, Colour.WHITE, false, y, x);
                     board.add(addCheck);
                     players.get(0).addToHand(addCheck);
                 }

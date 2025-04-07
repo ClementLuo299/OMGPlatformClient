@@ -241,7 +241,7 @@ public class CheckersGameController implements Initializable {
             
             // Set color based on the checker's color
             // Note: RED pieces will be displayed with white styling in the UI
-            if (checker.getColour() == Colour.RED) {
+            if (checker.getColour() == Colour.WHITE) {
                 piece.getStyleClass().add("white-piece"); // White styling for RED checkers
             } else if (checker.getColour() == Colour.BLACK) {
                 piece.getStyleClass().add("black-piece");
@@ -753,7 +753,7 @@ public class CheckersGameController implements Initializable {
         // Create a readable notation for the move
         String moveText = String.format("%d. %s moves %c%d to %c%d", 
             moveCount,
-            checker.getColour() == Colour.RED ? "White" : "Black",
+            checker.getColour() == Colour.WHITE ? "White" : "Black",
             (char)('a' + fromCol - 1), // Convert column to letter (a-h)
             fromRow,
             (char)('a' + toCol - 1), // Convert column to letter (a-h)

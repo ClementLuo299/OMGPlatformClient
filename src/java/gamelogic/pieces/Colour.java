@@ -8,6 +8,5 @@ public enum Colour {
     RED,    // Used for "White" pieces in Checkers
     YELLOW, // Used for Connect 4
     BLACK,
-    WHITE,
-    NONE
+    WHITE
 }
