@@ -576,17 +576,22 @@ public class WhistController implements Initializable {
     private void onRulesClicked() {
         // Display game rules
         StringBuilder rules = new StringBuilder("Whist Card Game Rules:\n\n");
-        rules.append("1. The game is played over multiple rounds with the goal of reaching 6 points.\n");
-        rules.append("2. Each round consists of three stages: DEAL, DRAFT, and DUEL.\n");
-        rules.append("3. During DEAL, cards are shuffled and dealt (13 to each player).\n");
-        rules.append("4. A trump suit is revealed that has special power during the round.\n");
-        rules.append("5. During DRAFT, players take turns drawing cards from the deck.\n");
-        rules.append("6. During DUEL, players play cards to win tricks.\n");
-        rules.append("7. The player who plays the highest card of the led suit wins the trick.\n");
-        rules.append("8. Trump cards beat all other suits regardless of rank.\n");
-        rules.append("9. Players must follow the suit led if possible.\n");
-        rules.append("10. Points are awarded based on tricks won minus 6.\n");
-        rules.append("11. First player to reach 6 points wins the game.");
+        rules.append("1. The game is played over multiple rounds, concluding once one player earns 6 points\n");
+        rules.append("2. Each round consists of 3 stages: The Deal, the Draft, and the Duel.\n");
+        rules.append("3. The Deal: The deck is shuffled, each player is dealt 13 cards, and the Trump Suit is revealed.\n");
+        rules.append("4. The Draft: Players compete in 13 Tricks to improve their hands with prize cards from the draw pile.\n");
+        rules.append("5. The Duel: Players compete in 13 Tricks to tally up points and win the round.\n");
+        rules.append("6. The Trump Suit is the suit of the first revealed prize card and is prioritized in tricks.\n");
+        rules.append("7. The winner of a trick in the Draft gets the prize card, and the loser must take the next card.\n");
+        rules.append("8. The winner of a trick in the Duel sets aside the cards played in the trick to keep score.\n");
+        rules.append("9. The first trick is lead by the non-dealer, then each trick is lead by the winner of the last.\n");
+        rules.append("10. The leader of a Trick can play any card, and the follower must follow suit if possible.\n");
+        rules.append("11. If the follower cannot follow suit, they can play any card in their hand.\n");
+        rules.append("12. The highest ranked lead-suited card wins the trick.\n");
+        rules.append("13. Trump-suited cards usurp the lead suit, and any other suit loses.\n");
+        rules.append("14. Aces are higher ranked than Kings.\n");
+        rules.append("15. The score is calculated by taking the number of tricks won in the Duel and subtracting 6.\n");
+        rules.append("16. The first player to reach 6 points across all rounds wins.\n");
         
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Game Rules");
