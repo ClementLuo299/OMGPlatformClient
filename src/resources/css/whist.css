@@ -739,7 +739,192 @@
 }
 
 .deal-button {
-    -fx-background-color: #9e9e9e;
+    -fx-background-color: #6A75CB;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 25px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.deal-button:hover:disabled {
+    -fx-background-color: #6A75CB;
+    -fx-cursor: default;
+}
+
+.deal-button:hover {
+    -fx-background-color: derive(#6A75CB, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.deal-button:disabled {
+    -fx-opacity: 0.6;
+    -fx-background-color: #6A75CB;
+}
+
+/* Add new style for when the deal button is enabled */
+.deal-button-enabled {
+    -fx-background-color: #4caf50 !important;
+    -fx-opacity: 1.0 !important;
+}
+
+.deal-button-enabled:hover {
+    -fx-background-color: derive(#4caf50, -10%) !important;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Card Hand Areas */
+.hand-area {
+    -fx-min-height: 150px;
+    -fx-padding: 10px;
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 3);
+}
+
+/* Hide hand areas during dealing stage */
+.hand-area-hidden {
+    visibility: hidden;
+}
+
+.opponent-hand-area {
+    -fx-min-width: 700px;
+}
+
+.player-hand-area {
+    -fx-min-width: 700px;
+}
+
+/* Trump Card Display */
+.trump-card-container {
+    -fx-background-color: rgba(0, 0, 0, 0.25);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-padding: 10px;
+}
+
+.trump-display {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: rgba(255, 255, 255, 0.2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 2);
+}
+
+/* Trick Area */
+.trick-area {
+    -fx-min-width: 200px;
+    -fx-min-height: 130px;
+    -fx-background-color: rgba(0, 0, 0, 0.25);
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: rgba(255, 255, 255, 0.15);
+    -fx-padding: 10px;
+}
+
+/* Labels for game areas */
+.area-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-background-radius: 15px;
+    -fx-padding: 5px 15px;
+}
+
+.player-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-background-radius: 15px;
+    -fx-padding: 3px 15px;
+}
+
+/* Card styling */
+.card-view {
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 8, 0, 0, 2);
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease;
+}
+
+.card-view:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255,215,0,0.8), 12, 0, 0, 3);
+    -fx-translate-y: -10;
+}
+
+.card-view.disabled {
+    -fx-opacity: 0.7;
+    -fx-cursor: default;
+}
+
+.card-view.selected {
+    -fx-effect: dropshadow(gaussian, gold, 15, 0, 0, 3);
+    -fx-translate-y: -15;
+}
+
+/* Timer progress indicator */
+.timer-progress-bar {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-min-width: 100px;
+    -fx-max-width: 100px;
+}
+
+.timer-progress-bar .bar {
+    -fx-background-color: #4caf50;
+    -fx-background-radius: 4px;
+}
+
+.timer-progress-bar .track {
+    -fx-background-color: transparent;
+}
+
+/* Animation container */
+#animationContainer {
+    -fx-background-color: transparent;
+}
+
+/* Result overlays */
+.result-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.75);
+    -fx-background-radius: 15px;
+    -fx-padding: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 15, 0, 0, 5);
+}
+
+.result-content {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+}
+
+.result-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 3, 0, 0, 1);
+}
+
+.result-message {
+    -fx-font-size: 18px;
+    -fx-text-fill: white;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.result-button {
+    -fx-background-color: #4caf50;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 16px;
@@ -749,18 +934,28 @@
     -fx-min-width: 120px;
 }
 
-.deal-button:hover:disabled {
-    -fx-background-color: #9e9e9e;
-    -fx-opacity: 0.8;
-}
-
-.deal-button:hover {
-    -fx-background-color: #4caf50;
+.result-button:hover {
+    -fx-background-color: derive(#4caf50, -10%);
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;
 }
 
-.deal-button:disabled {
-    -fx-opacity: 0.6;
+/* Reveal Trump Button */
+.reveal-trump-button {
+    -fx-background-color: #8e44ad;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 10px 25px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-min-width: 200px;
+}
+
+.reveal-trump-button:hover {
+    -fx-background-color: derive(#8e44ad, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
 } 

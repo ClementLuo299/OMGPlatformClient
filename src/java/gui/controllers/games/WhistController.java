@@ -74,6 +74,21 @@ public class WhistController implements Initializable {
     @FXML private TextField chatInputField;
     @FXML private Button sendChatButton;
 
+    // FXML elements from the updated UI
+    @FXML private HBox playerHandArea;
+    @FXML private HBox opponentHandArea;
+    @FXML private HBox trickArea;
+    @FXML private StackPane trumpCardDisplay;
+    @FXML private StackPane dealerOverlay;
+    @FXML private Label dealerTitle;
+    @FXML private Label shuffleInstructionLabel;
+    @FXML private Label shuffleCounterLabel;
+    @FXML private Label statusLabel;
+    @FXML private Label currentPlayerLabel;
+    @FXML private Label timerLabel;
+    @FXML private ProgressBar timerProgressBar;
+    @FXML private StackPane animationContainer;
+    @FXML private ListView<String> moveHistoryList;
 
     // GAME ATTRIBUTES
 
@@ -86,6 +101,8 @@ public class WhistController implements Initializable {
     private String matchId;
     private String currentUsername = "Player";
     private boolean isGuest = false;
+    private int shuffleCount = 0;
+    private final int REQUIRED_SHUFFLES = 3;
     
     // Card management
     private final List<Node> playerCards = new ArrayList<>();
@@ -97,17 +114,52 @@ public class WhistController implements Initializable {
     private final Random random = new Random();
     private ScreenManager screenManager = ScreenManager.getInstance();
 
-
-    // CONSTRUCTOR
+    // Game state variables and objects
+    private gamelogic.whist.WhistGame game;
+    private int timeRemaining = 15;
+    private Timeline gameTimer;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initial setup
-        updateGameStage(StageType.DEAL);
-        updateControls();
-        setupCardPiles();
+        setupGame();
+        updateUI();
+        
+        // Hide hand areas during dealing stage
+        hideHandAreas();
+        
+        // Set initial button states
+        shuffleButton.setDisable(false);
+        dealButton.setDisable(true);
+        
+        // Setup button handlers
+        setupButtonHandlers();
+        
+        // Create reveal trump button (initially not visible)
+        createRevealTrumpButton();
+        
+        // Fix button positioning
+        fixButtonPositioning();
     }
 
+    /**
+     * Fix the positioning of buttons in the dealer overlay
+     */
+    private void fixButtonPositioning() {
+        // Set proper width for both buttons
+        shuffleButton.setPrefWidth(120);
+        dealButton.setPrefWidth(120);
+        
+        // Make sure the deal button text is showing correctly
+        dealButton.setText("Deal");
+        
+        // Find the HBox containing buttons and adjust its alignment
+        HBox buttonBox = (HBox) dealerOverlay.lookup(".dealer-content > HBox");
+        if (buttonBox != null) {
+            buttonBox.setAlignment(javafx.geometry.Pos.CENTER);
+            buttonBox.setSpacing(20);
+        }
+    }
 
     // SETUP METHODS
 
@@ -158,6 +210,71 @@ public class WhistController implements Initializable {
         drawPile.getChildren().add(drawLabel);
     }
 
+    /**
+     * Sets up the Whist game with players
+     */
+    private void setupGame() {
+        // Create players (for now with dummy accounts)
+        List<gamelogic.Player> players = new ArrayList<>();
+        
+        // Create dummy accounts for testing
+        networking.accounts.UserAccount player1Account = new networking.accounts.UserAccount("Player 1", "password");
+        networking.accounts.UserAccount player2Account = new networking.accounts.UserAccount("Player 2", "password");
+        
+        // Create players with the accounts
+        gamelogic.Player player1 = new gamelogic.Player(player1Account);
+        gamelogic.Player player2 = new gamelogic.Player(player2Account);
+        
+        // Add players to the list
+        players.add(player1);
+        players.add(player2);
+        
+        // Create the game with the players
+        game = new gamelogic.whist.WhistGame(gamelogic.GameType.WHIST, players, 13);
+    }
+    
+    /**
+     * Setup button event handlers
+     */
+    private void setupButtonHandlers() {
+        // Shuffle button handler
+        shuffleButton.setOnAction(event -> onShuffleClicked());
+        
+        // Deal button handler
+        dealButton.setOnAction(event -> onDealClicked());
+    }
+    
+    /**
+     * Update all UI elements based on the current game state
+     */
+    private void updateUI() {
+        // Update stage label
+        gameStageLabel.setText(game.getGameStage().getDisplayName());
+        
+        // Update round counter
+        roundCounter.setText(String.valueOf(game.getRound() + 1));
+        
+        // Update shuffle counter
+        shuffleCounterLabel.setText("Shuffles: " + game.getShuffleCount() + "/3");
+        
+        // Update player information
+        updatePlayerInfo();
+    }
+    
+    /**
+     * Update player information in the UI
+     */
+    private void updatePlayerInfo() {
+        // Get players
+        gamelogic.Player player1 = game.getPlayers().getFirst();
+        gamelogic.Player player2 = game.getPlayers().getLast();
+        
+        // Update player names and scores
+        player1Name.setText(player1.getUsername());
+        player2Name.setText(player2.getUsername());
+        player1Score.setText("Score: " + player1.getScore());
+        player2Score.setText("Score: " + player2.getScore());
+    }
 
     // GENERAL INTERACTION METHODS
 
@@ -300,30 +417,22 @@ public class WhistController implements Initializable {
      * @param isSentByPlayer Whether the current player sent the message
      */
     private void addChatMessage(String message, boolean isSentByPlayer) {
-        Label messageLabel = new Label(message);
-        messageLabel.setWrapText(true);
-        messageLabel.getStyleClass().add("chat-message");
-
-        if (isSentByPlayer) {
-            messageLabel.getStyleClass().add("sent");
-            messageLabel.setText("You: " + message);
-        } else {
-            messageLabel.getStyleClass().add("received");
-            messageLabel.setText("Opponent: " + message);
-        }
-
-        chatMessagesContainer.getChildren().add(messageLabel);
+        // No chat functionality implemented yet
+        // This will be implemented in future updates
     }
 
     /**
-     * Add a message to the move history panel
-     * @param message The message to add
+     * Add a message to the move history list
+     * 
+     * @param message The message to add to the history
      */
     private void addMoveHistoryEntry(String message) {
-        Label entryLabel = new Label(message);
-        entryLabel.getStyleClass().add("move-entry");
-        entryLabel.setWrapText(true);
-        moveHistoryContainer.getChildren().add(0, entryLabel); // Add at the top
+        // Add the move to the history list
+        if (moveHistoryList != null) {
+            moveHistoryList.getItems().add(message);
+            // Scroll to bottom
+            moveHistoryList.scrollTo(moveHistoryList.getItems().size() - 1);
+        }
     }
 
     /**
@@ -345,51 +454,59 @@ public class WhistController implements Initializable {
         }
     }
 
-
     // CORE LOOP METHODS
 
-    // TODO: Replace with actual deck handling and multiple options
     /**
      * Handle the Shuffle button click
      */
     @FXML
     private void onShuffleClicked() {
-        if (!isPlayerTurn) return;
-
-        // Animate the shuffle
-        animateShuffle();
-
-        // Log the shuffle
-        addMoveHistoryEntry("You shuffled the deck.");
-
-        // Enable dealing after shuffling
-        dealButton.setDisable(false);
-        shuffleButton.setDisable(true);
-
-        // Update status
-        gameStatusLabel.setText("Deck shuffled. Ready to deal cards.");
+        if (game.getShuffleCount() < 3) {
+            // Update game state
+            game.incrementShuffleCount();
+            
+            // Play shuffle animation
+            animateShuffle();
+            
+            // Add to move history
+            addMoveHistoryEntry("Deck shuffled (" + game.getShuffleCount() + "/3)");
+            
+            // Update UI
+            updateUI();
+            
+            // Enable deal button when 3 shuffles completed
+            if (game.getShuffleCount() >= 3) {
+                dealButton.setDisable(false);
+                dealButton.getStyleClass().add("deal-button-enabled");
+                shuffleInstructionLabel.setText("Deck has been shuffled. Ready to deal!");
+            }
+        }
     }
 
-    // TODO: Make this more interactive and one at a time
     /**
-     * Handle the Deal Cards button click
+     * Handle the Deal button click
      */
     @FXML
     private void onDealClicked() {
-        if (!isPlayerTurn) return;
-
-        // Animate dealing
-        animateDealing();
-
-        // Log the deal
-        addMoveHistoryEntry("You dealt the cards.");
-
-        // Enable revealing trump after dealing
-        dealButton.setDisable(true);
-        revealTrumpButton.setDisable(false);
-
-        // Update status
-        gameStatusLabel.setText("Cards dealt. Ready to reveal trump suit.");
+        if (game.getGameStage() == gamelogic.whist.StageType.DEAL && game.getShuffleCount() >= 3) {
+            // Deal cards in the game logic
+            game.dealAllCards();
+            
+            // Hide dealer overlay during animation
+            dealerOverlay.setVisible(false);
+            
+            // Start dealing animation
+            animateDealing();
+            
+            // Add to move history
+            addMoveHistoryEntry("Cards dealt to players.");
+            
+            // Update game stage
+            game.setGameStage(StageType.DRAFT);
+            
+            // Update UI
+            updateUI();
+        }
     }
 
     /**
@@ -413,112 +530,448 @@ public class WhistController implements Initializable {
         }
     }
 
-    // TODO: Trumps aren't random, fix this to work with the deal pile
     /**
      * Handle the Reveal Trump button click
      */
     @FXML
     private void onRevealTrumpClicked() {
-        if (!isPlayerTurn) return;
-
-        // Choose random trump suit
-        String[] suits = {"Hearts", "Diamonds", "Spades", "Clubs"};
-        String[] suitSymbols = {"♥", "♦", "♠", "♣"};
-        int suitIndex = random.nextInt(suits.length);
-        trumpSuit = suits[suitIndex];
-
-        // Update the trump suit display
-        try {
-            // Create a colored label for the trump suit
-            Label trumpLabel = new Label(suitSymbols[suitIndex]);
-            trumpLabel.setStyle("-fx-font-size: 32px; -fx-text-fill: " +
-                    (suitIndex < 2 ? "red" : "black") + ";");
-
-            // Update the image container
-            trumpSuitImage.setImage(null);
-            StackPane trumpContainer = (StackPane) trumpSuitImage.getParent();
-            trumpContainer.getChildren().clear();
-            trumpContainer.getChildren().add(trumpLabel);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Log the trump reveal
-        addMoveHistoryEntry("Trump suit revealed: " + trumpSuit);
-
+        // Reveal trump in game logic
+        gamelogic.pieces.SuitType trumpSuit = game.revealTrump();
+        
+        // Add to move history
+        addMoveHistoryEntry("Trump suit revealed: " + trumpSuit.toString());
+        
+        // Hide dealer overlay
+        dealerOverlay.setVisible(false);
+        
+        // Show hand areas
+        showHandAreas();
+        
         // Update UI
-        revealTrumpButton.setDisable(true);
-        updateGameStage(StageType.DRAFT);
-
-        // Update status
-        gameStatusLabel.setText("Trump suit is " + trumpSuit + ". Drafting phase begins.");
-
-        // Pass turn to opponent
-        isPlayerTurn = false;
-        updatePlayerStatusIndicators();
-
-        // Simulate opponent's turn
-        simulateOpponentTurn();
+        updateUI();
+        
+        // Animate trump card reveal
+        animateTrumpCardReveal(trumpSuit);
     }
 
-    // TODO: Make this utilize the features from the game logic code
     /**
-     * Add a card to a player's hand
-     * @param container The container to add the card to
-     * @param isPlayer Whether it's the player's hand or opponent's
-     * @param cardIndex Index for positioning
+     * Animate the reveal of the trump card
+     * @param suit The trump suit to reveal
      */
-    private void addCardToHand(HBox container, boolean isPlayer, int cardIndex) {
+    private void animateTrumpCardReveal(gamelogic.pieces.SuitType suit) {
+        // Create a card to represent the trump suit
+        ImageView cardImage = new ImageView();
+        // Increase size by 1.5x for more dramatic effect
+        cardImage.setFitHeight(180); // 120 * 1.5 = 180
+        cardImage.setFitWidth(120); // 80 * 1.5 = 120
+        cardImage.setPreserveRatio(true);
+        
+        // Set image based on suit
+        String imagePath = "/images/whist images/";
+        switch (suit) {
+            case HEARTS:
+                imagePath += "heart_queen.png";
+                break;
+            case DIAMONDS:
+                imagePath += "diamond_queen.png";
+                break;
+            case SPADES:
+                imagePath += "spade_queen.png";
+                break;
+            case CLUBS:
+                imagePath += "club_queen.png";
+                break;
+            default:
+                imagePath += "CardBackside1.png";
+                break;
+        }
+        
+        // Store the final imagePath to ensure we use the face-up card
+        final String finalImagePath = imagePath;
+        
         try {
-            StackPane cardPane = new StackPane();
-            cardPane.getStyleClass().add("card");
-
-            if (!isPlayer) {
-                cardPane.getStyleClass().add("card-back");
-            } else {
-                // For player cards, show the face
-                Label cardLabel = new Label(getRandomCardLabel());
-                cardLabel.getStyleClass().add("card-label");
-
-                // Assign a random suit class for styling
-                String[] suits = {"hearts", "diamonds", "spades", "clubs"};
-                cardPane.getStyleClass().add(suits[random.nextInt(suits.length)]);
-
-                cardPane.getChildren().add(cardLabel);
-
-                // Make player cards clickable
-                cardPane.setOnMouseClicked(e -> onCardClicked(cardPane));
+            cardImage.setImage(new Image(getClass().getResourceAsStream(imagePath)));
+        } catch (Exception e) {
+            // Fallback to backside if image not found
+            try {
+                cardImage.setImage(new Image(getClass().getResourceAsStream("/images/whist images/CardBackside1.png")));
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
+        }
+        
+        // Position the card in the center of the screen
+        StackPane centerCard = new StackPane(cardImage);
+        centerCard.setAlignment(javafx.geometry.Pos.CENTER);
+        
+        // Add to animation container
+        animationContainer.getChildren().add(centerCard);
+        
+        // Center the card in the animation container
+        double screenWidth = animationContainer.getScene().getWindow().getWidth();
+        double screenHeight = animationContainer.getScene().getWindow().getHeight();
+        centerCard.setLayoutX((screenWidth / 2) - 60); // Adjusted for larger card width
+        centerCard.setLayoutY((screenHeight / 2) - 90); // Adjusted for larger card height
+        
+        // Create the first animation - card rotation (face reveal)
+        javafx.animation.RotateTransition rotateCard = new javafx.animation.RotateTransition(Duration.seconds(1), cardImage);
+        rotateCard.setAxis(javafx.scene.transform.Rotate.Y_AXIS);
+        rotateCard.setFromAngle(0);
+        rotateCard.setToAngle(720); // Two full rotations for dramatic effect
+        rotateCard.setCycleCount(1);
+        rotateCard.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+        
+        // Get the exact center position of the trump display area
+        final double trumpX = trumpCardDisplay.localToScene(trumpCardDisplay.getBoundsInLocal()).getMinX() + 
+                           (trumpCardDisplay.getBoundsInLocal().getWidth() / 2) - 40;
+        final double trumpY = trumpCardDisplay.localToScene(trumpCardDisplay.getBoundsInLocal()).getMinY() + 
+                           (trumpCardDisplay.getBoundsInLocal().getHeight() / 2) - 60;
+        
+        // Add a slight pause after rotation
+        javafx.animation.PauseTransition pause = new javafx.animation.PauseTransition(Duration.millis(200));
+        
+        // Second animation - move card to trump area with scaling down
+        javafx.animation.ParallelTransition moveAndScale = new javafx.animation.ParallelTransition();
+        
+        // Move animation
+        javafx.animation.TranslateTransition moveCard = new javafx.animation.TranslateTransition(Duration.seconds(0.5), centerCard);
+        moveCard.setToX(trumpX - centerCard.getLayoutX());
+        moveCard.setToY(trumpY - centerCard.getLayoutY());
+        moveCard.setInterpolator(javafx.animation.Interpolator.EASE_IN);
+        
+        // Scale down animation (from 1.5x to normal size)
+        javafx.animation.ScaleTransition scaleDown = new javafx.animation.ScaleTransition(Duration.seconds(0.5), cardImage);
+        scaleDown.setFromX(1.0);
+        scaleDown.setFromY(1.0);
+        scaleDown.setToX(0.67); // Scale down to original size (1/1.5 = ~0.67)
+        scaleDown.setToY(0.67);
+        
+        // Add both animations to the parallel transition
+        moveAndScale.getChildren().addAll(moveCard, scaleDown);
+        
+        // Sequence all the animations
+        javafx.animation.SequentialTransition sequence = new javafx.animation.SequentialTransition(
+            rotateCard, pause, moveAndScale);
+        
+        sequence.setOnFinished(event -> {
+            // Remove the animation card
+            animationContainer.getChildren().clear();
+            
+            // Display the permanent trump card (ensuring it's face up)
+            displayTrumpCard(suit, finalImagePath);
+        });
+        
+        // Play the animation sequence
+        sequence.play();
+    }
 
-            // Add to container and store reference
-            container.getChildren().add(cardPane);
+    /**
+     * Display the trump card in the trump display area
+     * 
+     * @param suit The trump suit to display
+     *
+     */
+    private void displayTrumpCard(gamelogic.pieces.SuitType suit) {
+        displayTrumpCard(suit, null);
+    }
 
-            if (isPlayer) {
-                playerCards.add(cardPane);
-            } else {
-                opponentCards.add(cardPane);
+    /**
+     * Display the trump card in the trump display area
+     * 
+     * @param suit The trump suit to display
+     * @param providedImagePath Optional image path to use (to ensure face-up card is used)
+     */
+    private void displayTrumpCard(gamelogic.pieces.SuitType suit, String providedImagePath) {
+        // Clear trump display
+        trumpCardDisplay.getChildren().clear();
+        
+        // Create a card to represent the trump suit
+        ImageView cardImage = new ImageView();
+        cardImage.setFitHeight(120);
+        cardImage.setFitWidth(80);
+        cardImage.setPreserveRatio(true);
+        
+        // Set image based on suit or use provided image path
+        String imagePath = providedImagePath;
+        
+        // If no image path provided, determine it based on suit
+        if (imagePath == null) {
+            imagePath = "/images/whist images/";
+            switch (suit) {
+                case HEARTS:
+                    imagePath += "heart_queen.png";
+                    break;
+                case DIAMONDS:
+                    imagePath += "diamond_queen.png";
+                    break;
+                case SPADES:
+                    imagePath += "spade_queen.png";
+                    break;
+                case CLUBS:
+                    imagePath += "club_queen.png";
+                    break;
+                default:
+                    imagePath += "CardBackside1.png";
+                    break;
             }
+        }
+        
+        try {
+            cardImage.setImage(new Image(getClass().getResourceAsStream(imagePath)));
+        } catch (Exception e) {
+            // Fallback to backside if image not found
+            try {
+                cardImage.setImage(new Image(getClass().getResourceAsStream("/images/whist images/CardBackside1.png")));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        // Add the image to the trump display
+        trumpCardDisplay.getChildren().add(cardImage);
+        
+        // Add label to show suit name
+        Label suitLabel = new Label("Trump: " + suit.toString());
+        suitLabel.getStyleClass().add("area-label");
+        trumpCardDisplay.getChildren().add(suitLabel);
+    }
+
+    /**
+     * Animate the dealing of cards
+     */
+    private void animateDealing() {
+        // Create animation container for dealing
+        StackPane deckPosition = new StackPane();
+        
+        // Use the dealer overlay for positioning of the deck
+        final double deckX = dealerOverlay.localToScene(dealerOverlay.getBoundsInLocal()).getMinX() + 
+                        dealerOverlay.getWidth()/2 - 40;
+        final double deckY = dealerOverlay.localToScene(dealerOverlay.getBoundsInLocal()).getMinY() + 
+                        dealerOverlay.getHeight()/2 - 60;
+        
+        deckPosition.setLayoutX(deckX);
+        deckPosition.setLayoutY(deckY);
+        animationContainer.getChildren().add(deckPosition);
+        
+        // Clear any existing cards
+        playerHandArea.getChildren().clear();
+        opponentHandArea.getChildren().clear();
+        
+        // Get card back image
+        final Image cardBackImage;
+        try {
+            cardBackImage = new Image(getClass().getResourceAsStream("/images/whist images/CardBackside1.png"));
         } catch (Exception e) {
             e.printStackTrace();
+            showAlert(AlertType.ERROR, "Error Loading Image", 
+                     "Could not load card backside image. Please check the image path.");
+            return;
+        }
+        
+        // Create animation timeline
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        
+        // Number of cards to deal to each player
+        final int CARDS_PER_PLAYER = 13;
+        
+        // Get positions for hand areas in scene coordinates
+        final double playerAreaMinX = playerHandArea.localToScene(playerHandArea.getBoundsInLocal()).getMinX();
+        final double playerAreaMinY = playerHandArea.localToScene(playerHandArea.getBoundsInLocal()).getMinY();
+        final double opponentAreaMinX = opponentHandArea.localToScene(opponentHandArea.getBoundsInLocal()).getMinX();
+        final double opponentAreaMinY = opponentHandArea.localToScene(opponentHandArea.getBoundsInLocal()).getMinY();
+        
+        // Create and animate 13 cards for each player
+        for (int i = 0; i < CARDS_PER_PLAYER; i++) {
+            final int cardIndex = i;
+            
+            // Create player card
+            final ImageView playerCard = createCardImageView(cardBackImage);
+            
+            // Create opponent card
+            final ImageView opponentCard = createCardImageView(cardBackImage);
+            
+            // Add cards to container for animation
+            animationContainer.getChildren().addAll(playerCard, opponentCard);
+            
+            // Set initial position (at the deck)
+            playerCard.setLayoutX(deckX);
+            playerCard.setLayoutY(deckY);
+            opponentCard.setLayoutX(deckX);
+            opponentCard.setLayoutY(deckY);
+            
+            // Calculate final positions
+            final double playerAreaX = playerAreaMinX + 40 + (cardIndex * 30); 
+            final double playerAreaY = playerAreaMinY + playerHandArea.getHeight()/2 - 60;
+            final double opponentAreaX = opponentAreaMinX + 40 + (cardIndex * 30);
+            final double opponentAreaY = opponentAreaMinY + opponentHandArea.getHeight()/2 - 60;
+            
+            // Modified animation timing for 1.5s total duration
+            // Create animations for player card
+            javafx.animation.KeyFrame playerStart = new javafx.animation.KeyFrame(
+                javafx.util.Duration.millis(i * 115), // Adjusted timing for 1.5s total
+                new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+                    @Override
+                    public void handle(javafx.event.ActionEvent event) {
+                        // Make card visible at start of animation
+                        playerCard.setVisible(true);
+                    }
+                }
+            );
+            
+            javafx.animation.KeyFrame playerEnd = new javafx.animation.KeyFrame(
+                javafx.util.Duration.millis(i * 115 + 400), // Adjusted timing
+                new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+                    @Override
+                    public void handle(javafx.event.ActionEvent event) {
+                        // Animate to final position
+                        javafx.animation.TranslateTransition tt = new javafx.animation.TranslateTransition(
+                            javafx.util.Duration.millis(250), playerCard); // Adjusted timing
+                        tt.setToX(playerAreaX - playerCard.getLayoutX());
+                        tt.setToY(playerAreaY - playerCard.getLayoutY());
+                        tt.play();
+                        
+                        // After animation completes, add card to player hand
+                        tt.setOnFinished(e -> {
+                            // Add a copy of the card to the player hand area
+                            ImageView handCard = createCardImageView(cardBackImage);
+                            handCard.setVisible(true); // Make visible
+                            playerHandArea.getChildren().add(handCard);
+                            
+                            // Remove animation card
+                            animationContainer.getChildren().remove(playerCard);
+                        });
+                    }
+                }
+            );
+            
+            // Create animations for opponent card
+            javafx.animation.KeyFrame opponentStart = new javafx.animation.KeyFrame(
+                javafx.util.Duration.millis((i * 115) + 57), // Adjusted timing
+                new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+                    @Override
+                    public void handle(javafx.event.ActionEvent event) {
+                        // Make card visible at start of animation
+                        opponentCard.setVisible(true);
+                    }
+                }
+            );
+            
+            javafx.animation.KeyFrame opponentEnd = new javafx.animation.KeyFrame(
+                javafx.util.Duration.millis((i * 115) + 57 + 400), // Adjusted timing
+                new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+                    @Override
+                    public void handle(javafx.event.ActionEvent event) {
+                        // Animate to final position
+                        javafx.animation.TranslateTransition tt = new javafx.animation.TranslateTransition(
+                            javafx.util.Duration.millis(250), opponentCard); // Adjusted timing
+                        tt.setToX(opponentAreaX - opponentCard.getLayoutX());
+                        tt.setToY(opponentAreaY - opponentCard.getLayoutY());
+                        tt.play();
+                        
+                        // After animation completes, add card to opponent hand
+                        tt.setOnFinished(e -> {
+                            // Add a copy of the card to the opponent hand area
+                            ImageView handCard = createCardImageView(cardBackImage);
+                            handCard.setVisible(true); // Make visible
+                            opponentHandArea.getChildren().add(handCard);
+                            
+                            // Remove animation card
+                            animationContainer.getChildren().remove(opponentCard);
+                            
+                            // If this is the last card, show the hand areas
+                            if (cardIndex == CARDS_PER_PLAYER - 1) {
+                                // After all cards are dealt, show hand areas and update overlay
+                                showHandAreas();
+                                // Show the updated overlay after all cards are dealt
+                                updateDealerOverlayForTrumpReveal();
+                                dealerOverlay.setVisible(true);
+                            }
+                        });
+                    }
+                }
+            );
+            
+            // Add all key frames to timeline
+            timeline.getKeyFrames().addAll(playerStart, playerEnd, opponentStart, opponentEnd);
+        }
+        
+        // Add final key frame to update UI after all animations
+        javafx.animation.KeyFrame finalFrame = new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(1500), // Exactly 1.5 seconds
+            new javafx.event.EventHandler<javafx.event.ActionEvent>() {
+                @Override
+                public void handle(javafx.event.ActionEvent event) {
+                    // Clean up animation container
+                    animationContainer.getChildren().clear();
+                }
+            }
+        );
+        
+        timeline.getKeyFrames().add(finalFrame);
+        
+        // Play the animation
+        timeline.play();
+    }
+    
+    /**
+     * Creates a card ImageView with the given image
+     * 
+     * @param cardImage The image to use for the card
+     * @return The created ImageView
+     */
+    private ImageView createCardImageView(Image cardImage) {
+        ImageView cardView = new ImageView(cardImage);
+        cardView.setFitHeight(120);
+        cardView.setFitWidth(80);
+        cardView.setPreserveRatio(true);
+        cardView.getStyleClass().add("card-view");
+        cardView.setVisible(false); // Start invisible for animation
+        return cardView;
+    }
+
+    /**
+     * Hide hand areas during dealing stage
+     */
+    private void hideHandAreas() {
+        if (playerHandArea != null && opponentHandArea != null) {
+            playerHandArea.getStyleClass().add("hand-area-hidden");
+            opponentHandArea.getStyleClass().add("hand-area-hidden");
+        }
+    }
+    
+    /**
+     * Show hand areas after dealing is complete
+     */
+    private void showHandAreas() {
+        if (playerHandArea != null && opponentHandArea != null) {
+            playerHandArea.getStyleClass().remove("hand-area-hidden");
+            opponentHandArea.getStyleClass().remove("hand-area-hidden");
         }
     }
 
-    // TODO: Remove this once card piles are implemented properly
     /**
-     * Generate a random card label (e.g. "A♥", "10♠")
-     * @return A string representation of a card
+     * Update dealer overlay to show the reveal trump button
      */
-    private String getRandomCardLabel() {
-        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
-        String[] suits = {"♥", "♦", "♠", "♣"};
-
-        return ranks[random.nextInt(ranks.length)] + suits[random.nextInt(suits.length)];
+    private void updateDealerOverlayForTrumpReveal() {
+        // Update instruction text
+        shuffleInstructionLabel.setText("Cards have been dealt. Now reveal the trump suit.");
+        
+        // Hide shuffle and deal buttons
+        shuffleButton.setVisible(false);
+        dealButton.setVisible(false);
+        
+        // Hide shuffle counter as requested
+        shuffleCounterLabel.setVisible(false);
+        
+        // Show reveal trump button
+        revealTrumpButton.setVisible(true);
+        
+        // Update dealer title
+        dealerTitle.setText("DRAFT STAGE");
     }
-
 
     // STATUS METHODS
 
-    // TODO: Modify accuracy of stages
     /**
      * Update the game stage and UI elements
      * @param stage The new game stage
@@ -533,7 +986,7 @@ public class WhistController implements Initializable {
                 gameStatusLabel.setText("Cards need to be shuffled and dealt");
                 break;
             case DRAFT:
-                gameStatusLabel.setText("Select cards from the draw pile");
+                gameStatusLabel.setText("Trump suit needs to be revealed");
                 break;
             case DUEL:
                 gameStatusLabel.setText("Play your cards to win tricks");
@@ -565,13 +1018,13 @@ public class WhistController implements Initializable {
         switch (currentStage) {
             case DEAL:
                 shuffleButton.setDisable(false);
-                dealButton.setDisable(true);
+                dealButton.setDisable(shuffleCount < REQUIRED_SHUFFLES);
                 revealTrumpButton.setDisable(true);
                 break;
             case DRAFT:
                 shuffleButton.setDisable(true);
                 dealButton.setDisable(true);
-                revealTrumpButton.setDisable(true);
+                revealTrumpButton.setDisable(false);
                 break;
             case DUEL:
                 shuffleButton.setDisable(true);
@@ -615,58 +1068,33 @@ public class WhistController implements Initializable {
         alert.showAndWait();
     }
 
-
     // ANIMATION METHODS
 
     /**
      * Animate the shuffling of cards
      */
     private void animateShuffle() {
-        // Simple visual feedback for shuffling
-        drawPile.setRotate(5);
-        Timeline shakeTimeline = new Timeline(
-            new KeyFrame(Duration.millis(100), e -> drawPile.setRotate(-5)),
-            new KeyFrame(Duration.millis(200), e -> drawPile.setRotate(5)),
-            new KeyFrame(Duration.millis(300), e -> drawPile.setRotate(-5)),
-            new KeyFrame(Duration.millis(400), e -> drawPile.setRotate(5)),
-            new KeyFrame(Duration.millis(500), e -> drawPile.setRotate(0))
-        );
-        shakeTimeline.play();
-    }
-
-    /**
-     * Animate the dealing of cards
-     */
-    private void animateDealing() {
-        // Clear any existing cards
-        playerCardContainer.getChildren().clear();
-        opponentCardContainer.getChildren().clear();
+        // Find the card image in the dealer overlay
+        StackPane cardContainer = (StackPane) dealerOverlay.lookup(".card-image-container");
+        if (cardContainer == null || cardContainer.getChildren().isEmpty()) return;
         
-        // Deal 13 cards to each player with animation
-        Timeline dealTimeline = new Timeline();
-        for (int i = 0; i < 13; i++) {
-            final int index = i;
-            
-            // Deal to player
-            KeyFrame playerFrame = new KeyFrame(Duration.millis(100 * (i * 2)), e -> {
-                addCardToHand(playerCardContainer, true, index);
-            });
-            
-            // Deal to opponent
-            KeyFrame opponentFrame = new KeyFrame(Duration.millis(100 * (i * 2 + 1)), e -> {
-                addCardToHand(opponentCardContainer, false, index);
-            });
-            
-            dealTimeline.getKeyFrames().addAll(playerFrame, opponentFrame);
-        }
+        // Get the card image
+        ImageView cardImage = (ImageView) cardContainer.getChildren().get(0);
         
-        dealTimeline.play();
+        // Create a rotation animation
+        javafx.animation.RotateTransition rotate = new javafx.animation.RotateTransition(Duration.seconds(1), cardImage);
+        rotate.setAxis(javafx.scene.transform.Rotate.Y_AXIS);
+        rotate.setFromAngle(0);
+        rotate.setToAngle(360);
+        rotate.setCycleCount(1);
+        rotate.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+        
+        // Play the animation
+        rotate.play();
     }
-
 
     // SIMULATION METHODS
 
-    // TODO: Completely revamp opponent simulation
     /**
      * Simulate the opponent's turn
      */
@@ -752,20 +1180,99 @@ public class WhistController implements Initializable {
      * Simulate an opponent chat response
      */
     private void simulateOpponentChatResponse() {
-        String[] responses = {
-            "Good move!",
-            "Let me think...",
-            "Interesting strategy.",
-            "I need to be careful here.",
-            "That's not what I expected.",
-            "Nice trick!"
-        };
-        
-        // Add a delay to make it feel natural
+        // Simulate opponent typing delay
         Timeline timeline = new Timeline(new KeyFrame(
-            Duration.seconds(1 + random.nextDouble() * 2),
-            e -> addChatMessage(responses[random.nextInt(responses.length)], false)
-        ));
+                Duration.seconds(2),
+                event -> {
+                    String[] responses = {
+                            "Good move!", "I'll get you next time!", "Interesting play...",
+                            "Nice one!", "I've got a strategy", "Let me think here..."
+                    };
+                    String response = responses[random.nextInt(responses.length)];
+                    addChatMessage(response, false);
+                }));
         timeline.play();
+    }
+
+    // The following methods will be implemented later:
+    
+    // private void createCardViews() {}
+    // private void revealPlayerCards() {}
+    // private void handleRevealTrump() {}
+    // private void handleCardClick() {}
+    // private void playCardToTrickAnimation() {}
+    // private void handleTrickCompletion() {}
+    // private void handleRoundEnd() {}
+    // private void prepareNextRound() {}
+    
+    /**
+     * Start the game timer (will be used in DUEL stage)
+     */
+    private void startGameTimer() {
+        // Only start timer in DUEL stage
+        if (game.getGameStage() != gamelogic.whist.StageType.DUEL) {
+            return;
+        }
+        
+        // Reset timer
+        timeRemaining = 15;
+        updateTimerDisplay();
+        
+        // Stop existing timer if running
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        
+        // Create new timer
+        gameTimer = new Timeline(
+            new KeyFrame(Duration.seconds(1), event -> {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    // Time's up, handle automatic move
+                    // This will be implemented later
+                    gameTimer.stop();
+                }
+            })
+        );
+        
+        gameTimer.setCycleCount(15);
+        gameTimer.play();
+    }
+    
+    /**
+     * Update the timer display
+     */
+    private void updateTimerDisplay() {
+        timerLabel.setText("00:" + (timeRemaining < 10 ? "0" : "") + timeRemaining);
+        timerProgressBar.setProgress(timeRemaining / 15.0);
+    }
+
+    /**
+     * Creates the reveal trump button and adds it to the dealer overlay
+     */
+    private void createRevealTrumpButton() {
+        revealTrumpButton = new Button("Reveal Trump Suit");
+        revealTrumpButton.getStyleClass().add("reveal-trump-button");
+        revealTrumpButton.setVisible(false);
+        
+        // Set action for reveal trump button
+        revealTrumpButton.setOnAction(event -> onRevealTrumpClicked());
+        
+        // Add to dealer overlay in a centered position
+        VBox dealerContent = (VBox) dealerOverlay.lookup(".dealer-content");
+        if (dealerContent != null) {
+            // Remove existing button from old container if any
+            HBox buttonBox = (HBox) dealerOverlay.lookup(".dealer-content > HBox");
+            if (buttonBox != null && buttonBox.getChildren().contains(revealTrumpButton)) {
+                buttonBox.getChildren().remove(revealTrumpButton);
+            }
+            
+            // Add directly to dealer content VBox for center alignment
+            dealerContent.getChildren().add(revealTrumpButton);
+            // Set VBox alignment to ensure proper centering
+            VBox.setMargin(revealTrumpButton, new javafx.geometry.Insets(10, 0, 0, 0));
+        }
     }
 } 

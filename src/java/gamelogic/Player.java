@@ -184,117 +184,61 @@ public class Player {
      * Sorts any Cards that are in a Player's Hand by Rank
      */
     public void sortHand() {
-        // The lists of Cards of each Suit Type
+        // Lists to temporarily store cards by suit
         List<Card> spades = new ArrayList<>();
         List<Card> diamonds = new ArrayList<>();
         List<Card> clubs = new ArrayList<>();
         List<Card> hearts = new ArrayList<>();
+        
+        // Temporary list to hold all cards for sorting
+        List<GamePiece> tempHand = new ArrayList<>(hand);
+        
+        // Clear the hand to rebuild it sorted
+        hand.clear();
 
-
-        // Goes through the Player's Hand to sort Cards into Suits
-        for (GamePiece currentPiece : hand) {
-            // Checks if the Piece is a Card
-            if (currentPiece.getType() == PieceType.CARD) {
-                // Casts the Piece to a Card for ease of use
-                Card currentCard = (Card) currentPiece;
-                // Obtains the Suit of the Card
-                SuitType currentSuit = currentCard.getSuit();
-
-                // Puts the Card into designated Suit list and removes it from the Player's Hand
-                switch (currentSuit) {
+        // Categorize cards by suit
+        for (GamePiece piece : tempHand) {
+            if (piece.getType() == PieceType.CARD) {
+                Card card = (Card) piece;
+                switch (card.getSuit()) {
                     case SPADES:
-                        spades.add(currentCard);
-                        removeFromHand(currentCard);
+                        spades.add(card);
                         break;
                     case DIAMONDS:
-                        diamonds.add(currentCard);
-                        removeFromHand(currentCard);
+                        diamonds.add(card);
                         break;
                     case CLUBS:
-                        clubs.add(currentCard);
-                        removeFromHand(currentCard);
+                        clubs.add(card);
                         break;
                     case HEARTS:
-                        hearts.add(currentCard);
-                        removeFromHand(currentCard);
+                        hearts.add(card);
                         break;
                 }
+            } else {
+                // If not a card, add it back immediately
+                hand.add(piece);
             }
         }
 
-        // Sorts each Suit by Rank
-        // This is done by iterating from highest to lowest Rank, moving any cards of that Rank to the top of the list
-
-        // Sort Spades
-        for (int rank = 13; rank > 0; rank--) {
-            for (int i = 0; i < spades.size(); i++) {
-                // Gets the current card from the list
-                Card currentCard = spades.get(i);
-
-                // Moves the current card to the front of the list if it matches the Rank value
-                if (currentCard.getRank() == rank) {
-                    // Moves the matching card to the top of the list
-                    spades.remove(currentCard);
-                    spades.add(currentCard);
-
-                    // Moves i back by one to keep place in the list
-                    i--;
-               }
-            }
-        }
-
-        // Sort Diamonds
-        for (int rank = 13; rank > 0; rank--) {
-            for (int i = 0; i < diamonds.size(); i++) {
-                // Gets the current card from the list
-                Card currentCard = diamonds.get(i);
-
-                // Moves the current card to the front of the list if it matches the Rank value
-                if (currentCard.getRank() == rank) {
-                    // Moves the matching card to the top of the list
-                    diamonds.remove(currentCard);
-                    diamonds.add(currentCard);
-
-                    // Moves i back by one to keep place in the list
-                    i--;
-                }
-            }
-        }
-
-        // Sort Clubs
-        for (int rank = 13; rank > 0; rank--) {
-            for (int i = 0; i < clubs.size(); i++) {
-                // Gets the current card from the list
-                Card currentCard = clubs.get(i);
-
-                // Moves the current card to the front of the list if it matches the Rank value
-                if (currentCard.getRank() == rank) {
-                    // Moves the matching card to the top of the list
-                    clubs.remove(currentCard);
-                    clubs.add(currentCard);
-
-                    // Moves i back by one to keep place in the list
-                    i--;
-                }
-            }
-        }
-
-        // Sort Hearts
-        for (int rank = 13; rank > 0; rank--) {
-            for (int i = 0; i < hearts.size(); i++) {
-                // Gets the current card from the list
-                Card currentCard = hearts.get(i);
-
-                // Moves the current card to the front of the list if it matches the Rank value
-                if (currentCard.getRank() == rank) {
-                    // Moves the matching card to the top of the list
-                    hearts.remove(currentCard);
-                    hearts.add(currentCard);
-
-                    // Moves i back by one to keep place in the list
-                    i--;
-                }
-            }
-        }
+        // Sort each suit list by rank (highest to lowest)
+        sortCardsByRank(spades);
+        sortCardsByRank(diamonds);
+        sortCardsByRank(clubs);
+        sortCardsByRank(hearts);
+        
+        // Add sorted cards back to hand in order by suit
+        hand.addAll(spades);
+        hand.addAll(hearts);
+        hand.addAll(diamonds);
+        hand.addAll(clubs);
+    }
+    
+    /**
+     * Helper method to sort a list of cards by rank (highest to lowest)
+     * 
+     * @param cards The list of cards to sort
+     */
+    private void sortCardsByRank(List<Card> cards) {
+        cards.sort((card1, card2) -> Integer.compare(card2.getRank(), card1.getRank()));
     }
 }

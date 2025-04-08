@@ -8,7 +8,7 @@ package gamelogic.whist;
  */
 public enum StageType {
     DEAL("Dealing"),
-    DRAFT("Drafting"),
+    DRAFT("Revealing Trump"),
     DUEL("Dueling");
 
     private final String displayName;

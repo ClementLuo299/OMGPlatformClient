@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
@@ -17,7 +18,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="800.0" prefWidth="1400.0" styleClass="main-container" stylesheets="@../css/whist.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.games.WhistController">
+<BorderPane prefHeight="800.0" prefWidth="1400.0" styleClass="main-container" stylesheets="@../css/whist.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.games.WhistController">
     <!-- Top section with game info -->
     <top>
         <HBox alignment="CENTER" spacing="10" styleClass="game-header">
@@ -40,10 +41,11 @@
                 <Label fx:id="currentPlayerLabel" styleClass="current-player-label" text="Player 1" />
             </HBox>
             
-            <!-- Move Timer -->
+            <!-- Move Timer with Progress Bar -->
             <HBox alignment="CENTER" spacing="5" styleClass="timer-container">
                 <Label styleClass="timer-label" text="Move Timer:" />
-                <Label fx:id="timerLabel" styleClass="timer-value" text="00:30" />
+                <Label fx:id="timerLabel" styleClass="timer-value" text="00:15" />
+                <ProgressBar fx:id="timerProgressBar" progress="1.0" styleClass="timer-progress-bar" />
             </HBox>
             
             <!-- Game Stage - Single Line -->
@@ -63,6 +65,36 @@
             <!-- Table background -->
             <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#0f743c" height="680.0" stroke="#006330" strokeType="INSIDE" strokeWidth="5.0" width="900.0" />
             
+            <!-- Game Layout -->
+            <VBox alignment="CENTER" spacing="20" StackPane.alignment="CENTER">
+                <!-- Opponent (Player 2) Hand Area - Top -->
+                <VBox alignment="CENTER" spacing="10">
+                    <Label styleClass="player-label" text="Opponent's Hand" />
+                    <HBox fx:id="opponentHandArea" alignment="CENTER" spacing="-20" styleClass="hand-area, opponent-hand-area" />
+                </VBox>
+                
+                <!-- Center Game Area -->
+                <HBox alignment="CENTER" spacing="20" styleClass="center-game-area">
+                    <!-- Trump Card Display Area -->
+                    <VBox alignment="CENTER" spacing="5" styleClass="trump-card-container">
+                        <Label styleClass="area-label" text="Trump" />
+                        <StackPane fx:id="trumpCardDisplay" maxHeight="120" maxWidth="80" minHeight="120" minWidth="80" styleClass="trump-display" />
+                    </VBox>
+                    
+                    <!-- Trick Area -->
+                    <VBox alignment="CENTER" spacing="5">
+                        <Label styleClass="area-label" text="Current Trick" />
+                        <HBox fx:id="trickArea" alignment="CENTER" minHeight="120" minWidth="200" spacing="20" styleClass="trick-area" />
+                    </VBox>
+                </HBox>
+                
+                <!-- Current Player (Player 1) Hand Area - Bottom -->
+                <VBox alignment="CENTER" spacing="10">
+                    <Label styleClass="player-label" text="Your Hand" />
+                    <HBox fx:id="playerHandArea" alignment="CENTER" spacing="-20" styleClass="hand-area, player-hand-area" />
+                </VBox>
+            </VBox>
+            
             <!-- Dealer Overlay -->
             <StackPane fx:id="dealerOverlay" maxHeight="500" maxWidth="400" styleClass="dealer-overlay">
                 <effect>
@@ -81,8 +113,8 @@
                         <effect>
                             <DropShadow color="#00000048" height="10" radius="4.5" width="10" />
                         </effect>
-                        <ImageView fitHeight="280" fitWidth="200" preserveRatio="true">
-                            <Image url="@../images/whist images/CardBackside1.png" />
+                        <ImageView fitHeight="280.0" fitWidth="200" preserveRatio="true">
+                            <Image url="@../images/whist%20images/CardBackside1.png" />
                         </ImageView>
                     </StackPane>
                     
@@ -95,8 +127,28 @@
                     <!-- Action Buttons -->
                     <HBox alignment="CENTER" spacing="15">
                         <Button fx:id="shuffleButton" styleClass="shuffle-button" text="Shuffle" />
-                        <Button fx:id="dealButton" disable="true" styleClass="deal-button" text="Deal" />
+                        <Button fx:id="dealButton" disable="true" prefHeight="35.0" prefWidth="114.0" styleClass="deal-button" text="Deal" />
                     </HBox>
+                </VBox>
+            </StackPane>
+            
+            <!-- Animation Container -->
+            <StackPane fx:id="animationContainer" mouseTransparent="true" />
+            
+            <!-- Round Result Overlay (initially hidden) -->
+            <StackPane fx:id="roundResultOverlay" styleClass="result-overlay" visible="false">
+                <VBox alignment="CENTER" spacing="20" styleClass="result-content">
+                    <Label fx:id="roundResultTitle" styleClass="result-title" text="Round Complete" />
+                    <Label fx:id="roundResultMessage" styleClass="result-message" text="Round result details" />
+                </VBox>
+            </StackPane>
+            
+            <!-- Game Over Overlay (initially hidden) -->
+            <StackPane fx:id="gameOverOverlay" styleClass="result-overlay" visible="false">
+                <VBox alignment="CENTER" spacing="20" styleClass="result-content">
+                    <Label fx:id="gameOverTitle" styleClass="result-title" text="Game Over" />
+                    <Label fx:id="gameOverMessage" styleClass="result-message" text="Game result details" />
+                    <Button fx:id="returnToLobbyButton" styleClass="result-button" text="Return to Lobby" />
                 </VBox>
             </StackPane>
         </StackPane>
@@ -109,7 +161,7 @@
              </padding>
              
                 <!-- Game Controls Section -->
-             <VBox alignment="CENTER" spacing="10" styleClass="game-controls-section">
+             <VBox alignment="CENTER" prefHeight="285.0" prefWidth="220.0" spacing="10" styleClass="game-controls-section">
                  <padding>
                      <Insets bottom="15" left="15" right="15" top="15" />
                  </padding>
@@ -117,10 +169,11 @@
                  <Button fx:id="restartGameButton" styleClass="control-button, restart-button" text="Restart Game" />
                  <Button fx:id="forfeitGameButton" styleClass="control-button, forfeit-button" text="Forfeit Game" />
                  <Button fx:id="exitGameButton" styleClass="control-button, exit-button" text="Exit Game" />
+            <Button fx:id="restartGameButton1" onAction="#onRulesClicked" styleClass="control-button, restart-button" text="Game Rules" />
              </VBox>
              
                 <!-- Players Section -->
-             <VBox alignment="CENTER" spacing="10" styleClass="players-section" VBox.vgrow="ALWAYS">
+             <VBox alignment="CENTER" prefHeight="460.0" prefWidth="220.0" spacing="10" styleClass="players-section" VBox.vgrow="ALWAYS">
                  <padding>
                      <Insets bottom="15" left="15" right="15" top="15" />
                  </padding>

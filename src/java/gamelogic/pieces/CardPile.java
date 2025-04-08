@@ -175,6 +175,20 @@ public class CardPile {
         this.cards.remove(cardToRemove);
     }
 
+    /**
+     * Removes all cards from this Card Pile
+     */
+    public void clear() {
+        this.cards.clear();
+    }
+
+    /**
+     * Shuffles the cards in this Card Pile using riffleShuffle
+     */
+    public void shuffle() {
+        riffleShuffle();
+    }
+
 
     // METHODS
 

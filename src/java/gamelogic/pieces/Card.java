@@ -37,6 +37,19 @@ public class Card extends GamePiece {
         this.faceDown = faceDown;
     }
 
+    /**
+     * Instantiates a Card Game Piece with default values and specified rank and suit
+     *
+     * @param rank The given integer Rank of this Card
+     * @param suit The given Suit Type of this Card
+     */
+    public Card(int rank, SuitType suit) {
+        super(PieceType.CARD, false);
+        this.suit = suit;
+        this.rank = rank;
+        this.faceDown = true;
+    }
+
 
     // GETTERS
 
