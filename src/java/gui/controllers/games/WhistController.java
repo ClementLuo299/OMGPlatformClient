@@ -144,7 +144,7 @@ public class WhistController implements Initializable {
         discardPile.getChildren().clear();
 
         // Add visual card backs to draw pile
-        ImageView cardBackImage = new ImageView(new Image(getClass().getResourceAsStream("/icons/whist_icon.png")));
+        ImageView cardBackImage = new ImageView(new Image(getClass().getResourceAsStream("/icons/game/whist_icon.png")));
         cardBackImage.setFitHeight(80);
         cardBackImage.setFitWidth(60);
         cardBackImage.setPreserveRatio(true);

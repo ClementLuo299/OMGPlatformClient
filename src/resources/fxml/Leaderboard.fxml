@@ -19,7 +19,7 @@
             <!-- App Title with Toggle -->
             <HBox styleClass="app-title">
                 <ImageView fitHeight="24" fitWidth="24">
-                    <Image url="@../icons/games.png" />
+                    <Image url="@../icons/navigation/games.png" />
                 </ImageView>
                 <Label styleClass="title-text" text="Board Game Hub" />
             </HBox>
@@ -30,7 +30,7 @@
                     <graphic>
                         <HBox styleClass="nav-button-content">
                             <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
-                                <Image url="@../icons/dashboard.png" />
+                                <Image url="@../icons/navigation/dashboard.png" />
                             </ImageView>
                             <Label text="Dashboard" />
                         </HBox>
@@ -41,7 +41,7 @@
                     <graphic>
                         <HBox styleClass="nav-button-content">
                             <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
-                                <Image url="@../icons/games.png" />
+                                <Image url="@../icons/navigation/games.png" />
                             </ImageView>
                             <Label text="Games" />
                         </HBox>
@@ -63,7 +63,7 @@
                     <graphic>
                         <HBox styleClass="nav-button-content">
                             <ImageView fitHeight="20" fitWidth="20" styleClass="nav-icon">
-                                <Image url="@../icons/settings.png" />
+                                <Image url="@../icons/navigation/settings.png" />
                             </ImageView>
                             <Label text="Settings" />
                         </HBox>
@@ -150,7 +150,7 @@
                         <!-- Connect 4 Rankings Header -->
                         <HBox styleClass="ranking-header">
                             <ImageView styleClass="game-icon" fitHeight="32" fitWidth="32">
-                                <Image url="@../icons/games.png" />
+                                <Image url="@../icons/navigation/games.png" />
                             </ImageView>
                             <Label styleClass="ranking-title" text="Connect 4 Rankings" />
                         </HBox>
@@ -218,7 +218,7 @@
                         <!-- Checkers Rankings Header -->
                         <HBox styleClass="ranking-header">
                             <ImageView styleClass="game-icon" fitHeight="32" fitWidth="32">
-                                <Image url="@../icons/games.png" />
+                                <Image url="@../icons/navigation/games.png" />
                             </ImageView>
                             <Label styleClass="ranking-title" text="Checkers Rankings" />
                         </HBox>
@@ -286,7 +286,7 @@
                         <!-- Whist Rankings Header -->
                         <HBox styleClass="ranking-header">
                             <ImageView styleClass="game-icon" fitHeight="32" fitWidth="32">
-                                <Image url="@../icons/games.png" />
+                                <Image url="@../icons/navigation/games.png" />
                             </ImageView>
                             <Label styleClass="ranking-title" text="Whist Rankings" />
                         </HBox>

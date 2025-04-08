@@ -16,7 +16,7 @@
         <!-- App Title -->
         <HBox styleClass="app-title">
             <ImageView fitHeight="24" fitWidth="24">
-                <Image url="@../icons/games.png" />
+                <Image url="@../icons/navigation/games.png" />
             </ImageView>
             <Label styleClass="title-text" text="Board Game Hub" />
         </HBox>
@@ -27,7 +27,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/dashboard.png" />
+                            <Image url="@../icons/navigation/dashboard.png" />
                         </ImageView>
                         <Label text="Dashboard" />
                     </HBox>
@@ -38,7 +38,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@../icons/navigation/games.png" />
                         </ImageView>
                         <Label text="Games" />
                     </HBox>
@@ -60,7 +60,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/settings.png" />
+                            <Image url="@../icons/navigation/settings.png" />
                         </ImageView>
                         <Label text="Settings" />
                     </HBox>
@@ -100,7 +100,7 @@
                 <!-- Profile Picture -->
                 <VBox styleClass="avatar-container-compact">
                     <ImageView fx:id="profileAvatar" fitHeight="60" fitWidth="60" styleClass="profile-avatar">
-                        <Image url="@../icons/games.png" />
+                        <Image url="@../icons/navigation/games.png" />
                     </ImageView>
                     <Button styleClass="change-avatar-btn" text="Change Avatar" />
                 </VBox>

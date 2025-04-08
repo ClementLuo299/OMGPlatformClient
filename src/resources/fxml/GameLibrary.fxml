@@ -18,7 +18,7 @@
             <!-- App Title -->
             <HBox styleClass="app-title">
                 <ImageView fitHeight="24" fitWidth="24">
-                    <Image url="@../icons/games.png" />
+                    <Image url="@../icons/navigation/games.png" />
                 </ImageView>
                 <Label styleClass="title-text" text="Board Game Hub" />
             </HBox>
@@ -29,7 +29,7 @@
                     <graphic>
                         <HBox styleClass="nav-button-content">
                             <ImageView fitHeight="20" fitWidth="20">
-                                <Image url="@../icons/dashboard.png" />
+                                <Image url="@../icons/navigation/dashboard.png" />
                             </ImageView>
                             <Label text="Dashboard" />
                         </HBox>
@@ -40,7 +40,7 @@
                     <graphic>
                         <HBox styleClass="nav-button-content">
                             <ImageView fitHeight="20" fitWidth="20">
-                                <Image url="@../icons/games.png" />
+                                <Image url="@../icons/navigation/games.png" />
                             </ImageView>
                             <Label text="Games" />
                         </HBox>
@@ -62,7 +62,7 @@
                     <graphic>
                         <HBox styleClass="nav-button-content">
                             <ImageView fitHeight="20" fitWidth="20">
-                                <Image url="@../icons/settings.png" />
+                                <Image url="@../icons/navigation/settings.png" />
                             </ImageView>
                             <Label text="Settings" />
                         </HBox>
@@ -104,7 +104,7 @@
                 <!-- Connect 4 Card (First) -->
                 <VBox fx:id="connect4Card" styleClass="game-card">
                     <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/connect_four_icon.png" />
+                        <Image url="@../icons/game/connect_four_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Connect 4" />
                     <HBox styleClass="game-info">
@@ -119,7 +119,7 @@
                 <!-- Checkers Card (Second) -->
                 <VBox fx:id="checkersCard" styleClass="game-card">
                     <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/checkers_icon.jpg" />
+                        <Image url="@../icons/game/checkers_icon.jpg" />
                     </ImageView>
                     <Label styleClass="game-title" text="Checkers" />
                     <HBox styleClass="game-info">
@@ -134,7 +134,7 @@
                 <!-- Whist Card Game (Third) -->
                 <VBox fx:id="whistCard" styleClass="game-card">
                     <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/whist_icon.png" />
+                        <Image url="@../icons/game/whist_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Whist Card Game" />
                     <HBox styleClass="game-info">
@@ -149,7 +149,7 @@
                 <!-- Tic Tac Toe Card (Fourth) -->
                 <VBox fx:id="ticTacToeCard" styleClass="game-card">
                     <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/tic_tac_toe_icon.png" />
+                        <Image url="@../icons/game/tic_tac_toe_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Tic Tac Toe" />
                     <HBox styleClass="game-info">

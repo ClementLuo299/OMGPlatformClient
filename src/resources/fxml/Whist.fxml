@@ -79,7 +79,7 @@
                 <VBox styleClass="player-card active-player">
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <ImageView fx:id="player1Avatar" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@../icons/navigation/games.png" />
                         </ImageView>
                         <VBox>
                             <Label fx:id="player1Name" styleClass="player-name" text="You" />
@@ -97,7 +97,7 @@
                 <VBox styleClass="player-card">
                     <HBox alignment="CENTER_LEFT" spacing="10">
                         <ImageView fx:id="player2Avatar" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@../icons/navigation/games.png" />
                         </ImageView>
                         <VBox>
                             <Label fx:id="player2Name" styleClass="player-name" text="Opponent" />
