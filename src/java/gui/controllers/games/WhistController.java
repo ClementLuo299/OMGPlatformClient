@@ -512,8 +512,11 @@ public class WhistController implements Initializable {
     /**
      * Handle card click in player's hand
      * @param cardPane The card that was clicked
+     * @deprecated Use the click handler in createPlayableCard instead
      */
     private void onCardClicked(StackPane cardPane) {
+        // This method is deprecated in favor of the more advanced click handler in createPlayableCard
+        // which includes animation and proper card data handling
         if (!isPlayerTurn || currentStage != StageType.DUEL) return;
 
         // Toggle selection state
@@ -570,16 +573,16 @@ public class WhistController implements Initializable {
         String imagePath = "/images/whist images/";
         switch (suit) {
             case HEARTS:
-                imagePath += "heart_queen.png";
+                imagePath += "Hearts/ace_of_hearts.png";
                 break;
             case DIAMONDS:
-                imagePath += "diamond_queen.png";
+                imagePath += "Diamonds/ace_of_diamonds.png";
                 break;
             case SPADES:
-                imagePath += "spade_queen.png";
+                imagePath += "Spades/ace_of_spades.png";
                 break;
             case CLUBS:
-                imagePath += "club_queen.png";
+                imagePath += "Clubs/ace_of_clubs.png";
                 break;
             default:
                 imagePath += "CardBackside1.png";
@@ -659,6 +662,9 @@ public class WhistController implements Initializable {
             
             // Display the permanent trump card (ensuring it's face up)
             displayTrumpCard(suit, finalImagePath);
+            
+            // Add an entry to the move history
+            addMoveHistoryEntry("Trump suit is: " + suit.toString());
         });
         
         // Play the animation sequence
@@ -669,7 +675,6 @@ public class WhistController implements Initializable {
      * Display the trump card in the trump display area
      * 
      * @param suit The trump suit to display
-     *
      */
     private void displayTrumpCard(gamelogic.pieces.SuitType suit) {
         displayTrumpCard(suit, null);
@@ -696,19 +701,20 @@ public class WhistController implements Initializable {
         
         // If no image path provided, determine it based on suit
         if (imagePath == null) {
+            // Use an actual card image for each suit instead of just queen
             imagePath = "/images/whist images/";
             switch (suit) {
                 case HEARTS:
-                    imagePath += "heart_queen.png";
+                    imagePath += "Hearts/ace_of_hearts.png";
                     break;
                 case DIAMONDS:
-                    imagePath += "diamond_queen.png";
+                    imagePath += "Diamonds/ace_of_diamonds.png";
                     break;
                 case SPADES:
-                    imagePath += "spade_queen.png";
+                    imagePath += "Spades/ace_of_spades.png";
                     break;
                 case CLUBS:
-                    imagePath += "club_queen.png";
+                    imagePath += "Clubs/ace_of_clubs.png";
                     break;
                 default:
                     imagePath += "CardBackside1.png";
@@ -730,9 +736,11 @@ public class WhistController implements Initializable {
         // Add the image to the trump display
         trumpCardDisplay.getChildren().add(cardImage);
         
-        // Add label to show suit name
+        // Create a styled label with larger, bolder text for better visibility
         Label suitLabel = new Label("Trump: " + suit.toString());
-        suitLabel.getStyleClass().add("area-label");
+        suitLabel.getStyleClass().addAll("area-label", "trump-label");
+        // Move label to a better position so it doesn't overlap the card
+        suitLabel.setTranslateY(60);
         trumpCardDisplay.getChildren().add(suitLabel);
     }
 
@@ -780,9 +788,17 @@ public class WhistController implements Initializable {
         final double opponentAreaMinX = opponentHandArea.localToScene(opponentHandArea.getBoundsInLocal()).getMinX();
         final double opponentAreaMinY = opponentHandArea.localToScene(opponentHandArea.getBoundsInLocal()).getMinY();
         
+        // Get player hands from game logic
+        gamelogic.Player player1 = game.getPlayers().getFirst();
+        gamelogic.Player player2 = game.getPlayers().getLast();
+        
         // Create and animate 13 cards for each player
-        for (int i = 0; i < CARDS_PER_PLAYER; i++) {
+        for (int i = 0; i < CARDS_PER_PLAYER && i < player1.getHand().size() && i < player2.getHand().size(); i++) {
             final int cardIndex = i;
+            
+            // Get actual card data from game logic
+            gamelogic.pieces.Card player1Card = (gamelogic.pieces.Card) player1.getHand().get(i);
+            gamelogic.pieces.Card player2Card = (gamelogic.pieces.Card) player2.getHand().get(i);
             
             // Create player card
             final ImageView playerCard = createCardImageView(cardBackImage);
@@ -804,6 +820,12 @@ public class WhistController implements Initializable {
             final double playerAreaY = playerAreaMinY + playerHandArea.getHeight()/2 - 60;
             final double opponentAreaX = opponentAreaMinX + 40 + (cardIndex * 30);
             final double opponentAreaY = opponentAreaMinY + opponentHandArea.getHeight()/2 - 60;
+            
+            // Store the card data for later use when creating actual hand cards
+            final int player1CardRank = player1Card.getRank();
+            final gamelogic.pieces.SuitType player1CardSuit = player1Card.getSuit();
+            final int player2CardRank = player2Card.getRank();
+            final gamelogic.pieces.SuitType player2CardSuit = player2Card.getSuit();
             
             // Modified animation timing for 1.5s total duration
             // Create animations for player card
@@ -832,10 +854,13 @@ public class WhistController implements Initializable {
                         
                         // After animation completes, add card to player hand
                         tt.setOnFinished(e -> {
-                            // Add a copy of the card to the player hand area
-                            ImageView handCard = createCardImageView(cardBackImage);
-                            handCard.setVisible(true); // Make visible
-                            playerHandArea.getChildren().add(handCard);
+                            // Add a playable card to the player hand area with the actual card data
+                            StackPane playableCard = createPlayableCard(cardBackImage, player1CardRank, player1CardSuit, false);
+                            playableCard.setVisible(true); // Make visible
+                            playerHandArea.getChildren().add(playableCard);
+                            
+                            // Add to player cards list for reference
+                            playerCards.add(playableCard);
                             
                             // Remove animation card
                             animationContainer.getChildren().remove(playerCard);
@@ -870,10 +895,13 @@ public class WhistController implements Initializable {
                         
                         // After animation completes, add card to opponent hand
                         tt.setOnFinished(e -> {
-                            // Add a copy of the card to the opponent hand area
-                            ImageView handCard = createCardImageView(cardBackImage);
-                            handCard.setVisible(true); // Make visible
-                            opponentHandArea.getChildren().add(handCard);
+                            // Add a basic card to the opponent hand area (no click handling needed)
+                            StackPane opponentPlayableCard = createPlayableCard(cardBackImage, player2CardRank, player2CardSuit, false);
+                            opponentPlayableCard.setVisible(true); // Make visible
+                            opponentHandArea.getChildren().add(opponentPlayableCard);
+                            
+                            // Add to opponent cards list for reference
+                            opponentCards.add(opponentPlayableCard);
                             
                             // Remove animation card
                             animationContainer.getChildren().remove(opponentCard);
@@ -927,6 +955,262 @@ public class WhistController implements Initializable {
         cardView.getStyleClass().add("card-view");
         cardView.setVisible(false); // Start invisible for animation
         return cardView;
+    }
+
+    /**
+     * Creates a card StackPane with the given image and card data
+     * Includes click functionality with animation
+     * 
+     * @param cardImage The image to use for the card
+     * @param cardRank The rank of the card (1-13)
+     * @param cardSuit The suit of the card
+     * @param isFaceUp Whether the card should be displayed face up initially
+     * @return The created card StackPane
+     */
+    private StackPane createPlayableCard(Image cardImage, int cardRank, gamelogic.pieces.SuitType cardSuit, boolean isFaceUp) {
+        // Create the image view for the card
+        ImageView cardImageView = new ImageView(cardImage);
+        cardImageView.setFitHeight(120);
+        cardImageView.setFitWidth(80);
+        cardImageView.setPreserveRatio(true);
+        
+        // Create a StackPane to hold the card
+        StackPane cardPane = new StackPane(cardImageView);
+        cardPane.getStyleClass().add("card-view");
+        
+        // Store card data as properties for later access
+        cardPane.getProperties().put("rank", cardRank);
+        cardPane.getProperties().put("suit", cardSuit);
+        cardPane.getProperties().put("faceUp", isFaceUp);
+        
+        // Create click handler for card selection and animation
+        cardPane.setOnMouseClicked(event -> {
+            // Skip if not player's turn or wrong game stage
+            if (!isPlayerTurn || currentStage != StageType.DUEL) return;
+            
+            boolean isCurrentlyFaceUp = (boolean) cardPane.getProperties().getOrDefault("faceUp", false);
+            
+            // If card is already selected (face up)
+            if (isCurrentlyFaceUp) {
+                // Play the card to the trick area
+                playCardToTrick(cardPane);
+                return;
+            }
+            
+            // Check if any other card is already face up
+            for (Node node : playerHandArea.getChildren()) {
+                if (node instanceof StackPane && node != cardPane) {
+                    StackPane otherCard = (StackPane) node;
+                    if ((boolean) otherCard.getProperties().getOrDefault("faceUp", false)) {
+                        // Flip the other card back face down
+                        flipCardFaceDown(otherCard);
+                    }
+                }
+            }
+            
+            // Show card animation
+            animateCardSelection(cardPane);
+        });
+        
+        return cardPane;
+    }
+    
+    /**
+     * Animate a card being selected (moves up, scales up, and flips face up)
+     * 
+     * @param cardPane The card to animate
+     */
+    private void animateCardSelection(StackPane cardPane) {
+        // Store initial position for later
+        double initialY = cardPane.getTranslateY();
+        
+        // Create a sequential animation
+        javafx.animation.SequentialTransition sequence = new javafx.animation.SequentialTransition();
+        
+        // Move up animation
+        javafx.animation.TranslateTransition moveUp = new javafx.animation.TranslateTransition(Duration.millis(150), cardPane);
+        moveUp.setByY(-30); // Move up by 30 pixels
+        
+        // Rotation animation
+        javafx.animation.RotateTransition rotate = new javafx.animation.RotateTransition(Duration.millis(300), cardPane);
+        rotate.setAxis(javafx.scene.transform.Rotate.Y_AXIS);
+        rotate.setFromAngle(0);
+        rotate.setToAngle(360);
+        rotate.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
+        
+        // Scale animation
+        javafx.animation.ScaleTransition scale = new javafx.animation.ScaleTransition(Duration.millis(200), cardPane);
+        scale.setToX(1.5);
+        scale.setToY(1.5);
+        
+        // Add all animations to sequence
+        sequence.getChildren().addAll(moveUp, new javafx.animation.ParallelTransition(rotate, scale));
+        
+        // When animation finishes, flip the card face up
+        sequence.setOnFinished(event -> {
+            // Flip card face up
+            flipCardFaceUp(cardPane);
+        });
+        
+        // Play the animation
+        sequence.play();
+    }
+    
+    /**
+     * Flip a card to face up, showing the actual card image
+     * 
+     * @param cardPane The card to flip face up
+     */
+    private void flipCardFaceUp(StackPane cardPane) {
+        // Get card data
+        int cardRank = (int) cardPane.getProperties().get("rank");
+        gamelogic.pieces.SuitType cardSuit = (gamelogic.pieces.SuitType) cardPane.getProperties().get("suit");
+        
+        // Build image path based on card data
+        String imagePath = "/images/whist images/";
+        
+        // Add suit folder
+        switch (cardSuit) {
+            case HEARTS:
+                imagePath += "Hearts/";
+                break;
+            case DIAMONDS:
+                imagePath += "Diamonds/";
+                break;
+            case SPADES:
+                imagePath += "Spades/";
+                break;
+            case CLUBS:
+                imagePath += "Clubs/";
+                break;
+        }
+        
+        // Add rank specific file name
+        if (cardRank == 1) {
+            imagePath += "ace_of_" + cardSuit.toString().toLowerCase() + ".png";
+        } else if (cardRank == 11) {
+            imagePath += "jack_of_" + cardSuit.toString().toLowerCase() + ".png";
+        } else if (cardRank == 12) {
+            imagePath += "queen_of_" + cardSuit.toString().toLowerCase() + ".png";
+        } else if (cardRank == 13) {
+            imagePath += "king_of_" + cardSuit.toString().toLowerCase() + ".png";
+        } else {
+            imagePath += cardRank + "_of_" + cardSuit.toString().toLowerCase() + ".png";
+        }
+        
+        // Load the card face image
+        try {
+            Image faceImage = new Image(getClass().getResourceAsStream(imagePath));
+            // Replace the card image
+            ImageView cardImageView = (ImageView) cardPane.getChildren().get(0);
+            cardImageView.setImage(faceImage);
+            
+            // Mark card as face up
+            cardPane.getProperties().put("faceUp", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Error Loading Card Image", 
+                     "Could not load card image: " + imagePath);
+        }
+    }
+    
+    /**
+     * Flip a card to face down, showing the card back
+     * 
+     * @param cardPane The card to flip face down
+     */
+    private void flipCardFaceDown(StackPane cardPane) {
+        try {
+            // Load the card back image
+            Image backImage = new Image(getClass().getResourceAsStream("/images/whist images/CardBackside1.png"));
+            
+            // Scale back to normal size
+            cardPane.setScaleX(1.0);
+            cardPane.setScaleY(1.0);
+            
+            // Move back to original position
+            cardPane.setTranslateY(0);
+            
+            // Reset rotation
+            cardPane.setRotate(0);
+            
+            // Replace the image
+            ImageView cardImageView = (ImageView) cardPane.getChildren().get(0);
+            cardImageView.setImage(backImage);
+            
+            // Mark card as face down
+            cardPane.getProperties().put("faceUp", false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Play the selected card to the trick area
+     * 
+     * @param cardPane The card to play
+     */
+    private void playCardToTrick(StackPane cardPane) {
+        // Animation to move card to the trick area
+        javafx.animation.TranslateTransition moveToTrick = new javafx.animation.TranslateTransition(Duration.millis(300), cardPane);
+        
+        // Calculate move to center
+        double cardX = cardPane.localToScene(cardPane.getBoundsInLocal()).getMinX();
+        double cardY = cardPane.localToScene(cardPane.getBoundsInLocal()).getMinY();
+        
+        double trickAreaX = trickArea.localToScene(trickArea.getBoundsInLocal()).getMinX() + 
+                          trickArea.getWidth()/2 - 40;
+        double trickAreaY = trickArea.localToScene(trickArea.getBoundsInLocal()).getMinY() + 
+                          trickArea.getHeight()/2 - 60;
+        
+        moveToTrick.setByX(trickAreaX - cardX);
+        moveToTrick.setByY(trickAreaY - cardY);
+        
+        // Scale back to normal size during move
+        javafx.animation.ScaleTransition scaleBack = new javafx.animation.ScaleTransition(Duration.millis(300), cardPane);
+        scaleBack.setToX(1.0);
+        scaleBack.setToY(1.0);
+        
+        // Play parallel animations
+        javafx.animation.ParallelTransition playCardAnimation = new javafx.animation.ParallelTransition(moveToTrick, scaleBack);
+        
+        // When animation completes
+        playCardAnimation.setOnFinished(event -> {
+            // Remove from hand
+            playerHandArea.getChildren().remove(cardPane);
+            
+            // Add to trick area
+            trickArea.getChildren().add(cardPane);
+            
+            // Reset position in new parent
+            cardPane.setTranslateX(0);
+            cardPane.setTranslateY(0);
+            
+            // Record move in history
+            int cardRank = (int) cardPane.getProperties().get("rank");
+            gamelogic.pieces.SuitType cardSuit = (gamelogic.pieces.SuitType) cardPane.getProperties().get("suit");
+            
+            String rankName;
+            switch (cardRank) {
+                case 1: rankName = "Ace"; break;
+                case 11: rankName = "Jack"; break;
+                case 12: rankName = "Queen"; break;
+                case 13: rankName = "King"; break;
+                default: rankName = String.valueOf(cardRank); break;
+            }
+            
+            addMoveHistoryEntry("You played: " + rankName + " of " + cardSuit.toString());
+            
+            // End player's turn
+            isPlayerTurn = false;
+            updatePlayerStatusIndicators();
+            
+            // Simulate opponent's turn after a delay
+            simulateOpponentTurn();
+        });
+        
+        // Play the animation
+        playCardAnimation.play();
     }
 
     /**
