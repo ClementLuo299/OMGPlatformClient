@@ -30,7 +30,7 @@ public class SettingController {
     private Button settingsBtn;
     @FXML
     private Button signOutBtn;
-    
+
     // Profile Information Fields
     @FXML
     private ImageView profileAvatar;
@@ -42,7 +42,7 @@ public class SettingController {
     private PasswordField passwordField;
     @FXML
     private Button changePasswordBtn;
-    
+
     // Toggle Elements
     @FXML
     private HBox toggleSwitch;
@@ -50,17 +50,17 @@ public class SettingController {
     private Pane toggleThumb;
     @FXML
     private Pane chatToggleThumb;
-    
+
     private boolean isDarkTheme = false;
     private boolean isChatEnabled = true;
     private boolean isEditingPassword = false;
-    
+
     // Current user info
     private String currentUsername;
-    
+
     // Database IO Handler
     private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
-    
+
     // ScreenManager instance
     private ScreenManager screenManager = ScreenManager.getInstance();
 
@@ -73,28 +73,28 @@ public class SettingController {
         settingsBtn.getStyleClass().add("selected"); // Mark current button as selected
         signOutBtn.setOnAction(event -> signOut());
         changePasswordBtn.setOnAction(event -> handlePasswordChange());
-        
+
         // Set up toggle handlers
         setupToggleHandlers();
     }
-    
+
     /**
      * Set the current user for this controller
      * @param username The username of the current user
      */
     public void setCurrentUser(String username) {
         this.currentUsername = username;
-        
+
         // Set the username field
         usernameField.setText(username);
-        
+
         // Try to get and set the full name from database
         String fullName = db.getUserFullName(username);
         if (fullName != null && !fullName.isEmpty()) {
             nameField.setText(fullName);
         }
     }
-    
+
     /**
      * Handle password change button click
      */
@@ -112,14 +112,14 @@ public class SettingController {
                 showAlert(AlertType.WARNING, "Warning", "Password cannot be empty");
                 return;
             }
-            
+
             // In a real implementation, validate password complexity
-            
+
             // Update password in database
             boolean success = db.updatePassword(currentUsername, newPassword);
             if (success) {
                 showAlert(AlertType.INFORMATION, "Success", "Password updated successfully");
-                
+
                 // Reset UI
                 passwordField.clear();
                 passwordField.setDisable(true);
@@ -131,7 +131,7 @@ public class SettingController {
             }
         }
     }
-    
+
     private void setupToggleHandlers() {
         // Theme toggle
         HBox themeToggle = (HBox) toggleThumb.getParent();
@@ -140,7 +140,7 @@ public class SettingController {
             updateThemeToggle();
             // In a real implementation, this would apply theme changes
         });
-        
+
         // Chat toggle
         HBox chatToggle = (HBox) chatToggleThumb.getParent();
         chatToggle.setOnMouseClicked(event -> {
@@ -148,12 +148,12 @@ public class SettingController {
             updateChatToggle();
             // In a real implementation, this would update chat settings
         });
-        
+
         // Initialize toggle positions
         updateThemeToggle();
         updateChatToggle();
     }
-    
+
     private void updateThemeToggle() {
         HBox toggleSwitch = (HBox) toggleThumb.getParent();
         Scene scene = toggleSwitch.getScene(); // Get the current scene
@@ -165,14 +165,14 @@ public class SettingController {
 
                 // Apply dark theme
                 scene.getStylesheets().clear();
-                scene.getStylesheets().add(getClass().getResource("/styles/dark-theme.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource("/css/dark-theme.css").toExternalForm());
             } else {
                 toggleThumb.setTranslateX(0);
                 toggleSwitch.getStyleClass().remove("active");
 
                 // Apply light theme
                 scene.getStylesheets().clear();
-                scene.getStylesheets().add(getClass().getResource("/styles/light-theme.css").toExternalForm());
+                scene.getStylesheets().add(getClass().getResource("/css/setting.css").toExternalForm());
             }
         }
     }
@@ -186,14 +186,14 @@ public class SettingController {
             toggleSwitch.getStyleClass().remove("active");
         }
     }
-    
+
     @FXML
     private void navigateToDashboard() {
         try {
             // Use the ScreenManager to navigate
             DashboardController controller = (DashboardController)
                     screenManager.navigateTo(ScreenManager.DASHBOARD_SCREEN, ScreenManager.DASHBOARD_CSS);
-            
+
             // Set current user in the controller if we got one back
             if (controller != null) {
                 controller.setCurrentUser(currentUsername, false); // Not a guest since settings are for registered users
@@ -203,14 +203,14 @@ public class SettingController {
             showAlert(AlertType.ERROR, "Error", "Could not navigate to dashboard: " + e.getMessage());
         }
     }
-    
+
     @FXML
     private void navigateToGameLibrary() {
         try {
             // Use the ScreenManager to navigate
             GameLibraryController controller = (GameLibraryController)
                     screenManager.navigateTo(ScreenManager.GAME_LIBRARY_SCREEN, ScreenManager.GAME_LIBRARY_CSS);
-            
+
             // Set current user in the controller if we got one back
             if (controller != null) {
                 controller.setCurrentUser(currentUsername, false); // Not a guest since settings are for registered users
@@ -220,14 +220,14 @@ public class SettingController {
             showAlert(AlertType.ERROR, "Error", "Could not navigate to game library: " + e.getMessage());
         }
     }
-    
+
     @FXML
     private void navigateToLeaderboard() {
         try {
             // Use the ScreenManager to navigate
             LeaderboardController controller = (LeaderboardController)
                     screenManager.navigateTo(ScreenManager.LEADERBOARD_SCREEN, ScreenManager.LEADERBOARD_CSS);
-            
+
             // Set current user in the controller if we got one back
             if (controller != null) {
                 controller.setCurrentUser(currentUsername, false); // Not a guest since settings are for registered users
@@ -237,7 +237,7 @@ public class SettingController {
             showAlert(AlertType.ERROR, "Error", "Could not navigate to leaderboard: " + e.getMessage());
         }
     }
-    
+
     @FXML
     private void signOut() {
         try {
@@ -248,7 +248,7 @@ public class SettingController {
             showAlert(AlertType.ERROR, "Error", "Could not sign out: " + e.getMessage());
         }
     }
-    
+
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -256,4 +256,4 @@ public class SettingController {
         alert.setContentText(content);
         alert.showAndWait();
     }
-} 
+}

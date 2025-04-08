@@ -211,9 +211,3 @@
     -fx-background-color: derive(-fx-accent-color, 10%);
 }
 
-/* Bottom Bar */
-.bottom-bar {
-    -fx-background-color: -fx-secondary-color;
-    -fx-border-color: -fx-secondary-color;
-    -fx-border-width: 1 0 0 0;
-}
