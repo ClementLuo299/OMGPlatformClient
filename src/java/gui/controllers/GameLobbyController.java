@@ -455,17 +455,22 @@ public class GameLobbyController implements Initializable {
                     "7. Kings can move and capture diagonally in any direction.\n" +
                     "8. The player who captures all opponent's pieces or blocks them from making a move wins.";
         } else if (gameName.contains("Whist")) {
-            rules += "1. The game is played over multiple rounds with the goal of reaching 6 points.\n" +
-                    "2. Each round consists of three stages: DEAL, DRAFT, and DUEL.\n" +
-                    "3. During DEAL, cards are shuffled and dealt (13 to each player).\n" +
-                    "4. A trump suit is revealed that has special power during the round.\n" +
-                    "5. During DRAFT, players take turns drawing cards from the deck.\n" +
-                    "6. During DUEL, players play cards to win tricks.\n" +
-                    "7. The player who plays the highest card of the led suit wins the trick.\n" +
-                    "8. Trump cards beat all other suits regardless of rank.\n" +
-                    "9. Players must follow the suit led if possible.\n" +
-                    "10. Points are awarded based on tricks won minus 6.\n" +
-                    "11. First player to reach 6 points wins the game.";
+            rules += "1. The game is played over multiple rounds, concluding once one player earns 6 points\n" +
+                    "2. Each round consists of 3 stages: The Deal, the Draft, and the Duel.\n" +
+                    "3. The Deal: The deck is shuffled, each player is dealt 13 cards, and the Trump Suit is revealed.\n" +
+                    "4. The Draft: Players compete in 13 Tricks to improve their hands with prize cards from the draw pile.\n" +
+                    "5. The Duel: Players compete in 13 Tricks to tally up points and win the round.\n" +
+                    "6. The Trump Suit is the suit of the first revealed prize card and is prioritized in tricks.\n" +
+                    "7. The winner of a trick in the Draft gets the prize card, and the loser must take the next card.\n" +
+                    "8. The winner of a trick in the Duel sets aside the cards played in the trick to keep score.\n" +
+                    "9. The first trick is lead by the non-dealer, then each trick is lead by the winner of the last.\n" +
+                    "10. The leader of a Trick can play any card, and the follower must follow suit if possible.\n" +
+                    "11. If the follower cannot follow suit, they can play any card in their hand.\n" +
+                    "12. The highest ranked lead-suited card wins the trick.\n" +
+                    "13. Trump-suited cards usurp the lead suit, and any other suit loses.\n" +
+                    "14. Aces are higher ranked than Kings.\n" +
+                    "15. The score is calculated by taking the number of tricks won in the Duel and subtracting 6.\n" +
+                    "16. The first player to reach 6 points across all rounds wins.\n";
         } else {
             rules += "Rules will be displayed when the game starts.";
         }
