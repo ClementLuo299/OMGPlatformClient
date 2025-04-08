@@ -1,4 +1,4 @@
-package gui;
+package gui.controllers.games;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import gamelogic.checkers.CheckersGame;
 import gamelogic.pieces.Checker;
 import gamelogic.pieces.Colour;
 
+import gui.ScreenManager;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.ParallelTransition;

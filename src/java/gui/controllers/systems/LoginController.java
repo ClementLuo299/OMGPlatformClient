@@ -1,5 +1,7 @@
-package gui;
+package gui.controllers.systems;
 
+import gui.ScreenManager;
+import gui.controllers.systems.DashboardController;
 import networking.IO.DatabaseIOHandler;
 
 import javafx.event.ActionEvent;

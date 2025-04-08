@@ -1,5 +1,7 @@
-package gui;
+package gui.controllers.games;
 
+import gui.ScreenManager;
+import gui.controllers.GameLobbyController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -14,9 +16,6 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 import gamelogic.whist.StageType;
 import javafx.scene.Node;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.layout.Border;
-import javafx.scene.paint.Color;
 import javafx.scene.control.Alert.AlertType;
 
 import java.net.URL;

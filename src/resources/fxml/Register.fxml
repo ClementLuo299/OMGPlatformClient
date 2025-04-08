@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="800" prefWidth="1400" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegisterController">
+<AnchorPane prefHeight="800" prefWidth="1400" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.systems.RegisterController">
 
     <!-- Title -->
     <Label layoutX="483.0" layoutY="80.0" prefHeight="32.0" prefWidth="435.0" styleClass="title" text="Online Multiplayer Board Game Platform" />

@@ -1,7 +1,7 @@
-package gui;
+package gui.controllers.systems;
 
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import gui.controllers.games.GameLibraryController;
+import gui.controllers.statistics.LeaderboardController;
 import networking.IO.DatabaseIOHandler;
 import gui.ScreenManager;
 
@@ -10,14 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.control.Alert;
-import javafx.application.Platform;
-
-import java.io.IOException;
 
 public class DashboardController {
     @FXML

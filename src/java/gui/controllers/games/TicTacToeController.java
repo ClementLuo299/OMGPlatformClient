@@ -1,4 +1,4 @@
-package gui;
+package gui.controllers.games;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 
 import gamelogic.Player;
 import gamelogic.tictactoe.TicTacToeGame;
+import gui.ScreenManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

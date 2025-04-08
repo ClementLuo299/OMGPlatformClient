@@ -1,8 +1,11 @@
-package gui;
+package gui.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Random;
+
+import gui.*;
+import gui.controllers.games.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;

@@ -1,19 +1,15 @@
-package gui;
+package gui.controllers.statistics;
 
+import gui.ScreenManager;
+import gui.controllers.games.GameLibraryController;
+import gui.controllers.systems.DashboardController;
+import gui.controllers.systems.SettingController;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-import networking.accounts.UserAccount;
-import javafx.application.Platform;
-
-import java.io.IOException;
 
 /**
  * Controller for the Leaderboard screen.
