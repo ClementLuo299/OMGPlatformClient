@@ -29,7 +29,7 @@ public class BoardGamePlatformApp extends Application {
             primaryStage.setMinHeight(600);
             primaryStage.show();
         } catch (Exception e) {
-            System.err.println("Error starting application: " + e.getMessage());
+            System.err.println("Error starting Application: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
