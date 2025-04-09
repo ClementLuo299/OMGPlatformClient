@@ -182,13 +182,6 @@ public class CardPile {
         this.cards.clear();
     }
 
-    /**
-     * Shuffles the cards in this Card Pile using riffleShuffle
-     */
-    public void shuffle() {
-        riffleShuffle();
-    }
-
 
     // METHODS
 
@@ -320,37 +313,46 @@ public class CardPile {
 
     /**
      * Overhead Shuffle Algorithm
-     * Simulates an Overhead Shuffle on this Card Pile where the Pile is cut at a random point and then randomly recombined over several iterations
+     * Simulates an Overhead Shuffle on this Card Pile where the top of the Pile is cut and then piled onto by subsequent cuts
      */
     public void overheadShuffle() {
         // List which will store the Overhead Shuffle Result
         List<Card> shuffledCards = new ArrayList<>();
-        // The number of times the deck will be cut (Between 10 and 20)
-        int overheadRepetition = randomNum(10 + 1) + 10;
+        // The number of times the deck will be run through (Between 5 and 10)
+        int overheadRepetition = randomNum(5 + 1) + 5;
 
-        // Overheads the deck as many times as was randomly selected
+        // Runs through as many overheads as were selected
         for (int i = 0; i < overheadRepetition; i++) {
-            // Used to choose how many cards are cut from the top
-            int randomCut = randomNum(10 + 1) + 5;
+            // The body of cards that is cut
+            List<Card> bodyCards = cards;
+            // The cards cut from the body
+            List<Card> topCards;
 
-            // Lists that store the top and bottom half of the deck
-            List<Card> topCards = new ArrayList<>(cards.subList(0, randomCut));
-            List<Card> bottomCards = new ArrayList<>(cards.subList(randomCut, cards.size()));
+            // Cuts the top from the deck repeatedly until it is depleted, putting the cuts into a reordered pile
+            while (!bodyCards.isEmpty()) {
+                // Used to choose how many cards are cut from the top (Between 5 and 15)
+                int randomCut = randomNum(10 + 1) + 5;
 
-            // Loops until each half of the deck has been added to the shuffled deck
-            while (!topCards.isEmpty() || !bottomCards.isEmpty()) {
-                // Checks that there are still cards to pull from the bottom, switching to the other half after
-                if (!bottomCards.isEmpty()) {
-                    // Puts the bottom half on the top of the deck
-                    shuffledCards.add(bottomCards.removeFirst());
+                // Checks that there are enough cards to make a cut, moving the rest of the bottom into the pile if not
+                if (bodyCards.size() >= randomCut) {
+                    // Stores the cut into the top half and the rest into the bottom half
+                    topCards = new ArrayList<>(bodyCards.subList(0, randomCut));
+                    bodyCards = new ArrayList<>(bodyCards.subList(randomCut, bodyCards.size()));
+
                 } else {
-                    // Puts the top half on the bottom of the deck
-                    shuffledCards.add(topCards.removeFirst());
+                    // Stores the remaining cards in the top half
+                    topCards = bodyCards;
+                }
+
+                // Places the cut cards on top of the shuffled pile
+                while (!topCards.isEmpty()) {
+                    shuffledCards.addFirst(topCards.removeLast());
                 }
             }
 
             // Sets the main deck to the result of this iteration of overhand shuffling
             this.cards = shuffledCards;
+
             // Empties the temporary deck for reuse if there is another iteration
             if (i != overheadRepetition - 1) {
                 shuffledCards = new ArrayList<>();
