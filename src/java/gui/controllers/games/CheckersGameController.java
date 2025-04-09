@@ -927,10 +927,10 @@ public class CheckersGameController implements Initializable {
         // Determine the winner
         Player winner;
         if (checkersGame.gameWon(players.get(0))) {
-            winner = players.get(1); // Player 1 has no pieces left, so Player 2 wins
+            winner = players.get(0); // Player 1 (White) wins because their opponent has no moves
             checkersGame.setWinner(winner);
         } else {
-            winner = players.get(0); // Player 2 has no pieces left, so Player 1 wins
+            winner = players.get(1); // Player 2 (Black) wins because their opponent has no moves
             checkersGame.setWinner(winner);
         }
         
