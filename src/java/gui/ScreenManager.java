@@ -24,6 +24,7 @@ public class ScreenManager {
     private Map<String, Parent> screenCache = new HashMap<>();
     
     // Screen paths
+    public static final String OPENING_SCREEN = "fxml/Opening.fxml";
     public static final String LOGIN_SCREEN = "fxml/Login.fxml";
     public static final String DASHBOARD_SCREEN = "fxml/Dashboard.fxml";
     public static final String GAME_LIBRARY_SCREEN = "fxml/GameLibrary.fxml";
@@ -37,6 +38,7 @@ public class ScreenManager {
     public static final String GAME_LOBBY_SCREEN = "fxml/GameLobby.fxml";
     
     // CSS paths
+    public static final String OPENING_CSS = "css/opening.css";
     public static final String LOGIN_CSS = "css/login.css";
     public static final String DASHBOARD_CSS = "css/dashboard.css";
     public static final String GAME_LIBRARY_CSS = "css/library.css";
@@ -77,8 +79,10 @@ public class ScreenManager {
      */
     private void setCssStylesheet(String cssPath) {
         mainScene.getStylesheets().clear();
-        String cssUrl = getClass().getClassLoader().getResource(cssPath).toExternalForm();
-        mainScene.getStylesheets().add(cssUrl);
+        if (cssPath != null) {
+            String cssUrl = getClass().getClassLoader().getResource(cssPath).toExternalForm();
+            mainScene.getStylesheets().add(cssUrl);
+        }
     }
     
     /**
