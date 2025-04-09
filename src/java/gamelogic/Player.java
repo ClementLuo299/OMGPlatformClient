@@ -197,26 +197,26 @@ public class Player {
         hand.clear();
 
         // Categorize cards by suit
-        for (GamePiece piece : tempHand) {
-            if (piece.getType() == PieceType.CARD) {
-                Card card = (Card) piece;
-                switch (card.getSuit()) {
+        for (GamePiece currentPiece : tempHand) {
+            if (currentPiece.getType() == PieceType.CARD) {
+                Card currentCard = (Card) currentPiece;
+                switch (currentCard.getSuit()) {
                     case SPADES:
-                        spades.add(card);
+                        spades.add(currentCard);
                         break;
                     case DIAMONDS:
-                        diamonds.add(card);
+                        diamonds.add(currentCard);
                         break;
                     case CLUBS:
-                        clubs.add(card);
+                        clubs.add(currentCard);
                         break;
                     case HEARTS:
-                        hearts.add(card);
+                        hearts.add(currentCard);
                         break;
                 }
             } else {
                 // If not a card, add it back immediately
-                hand.add(piece);
+                hand.add(currentPiece);
             }
         }
 

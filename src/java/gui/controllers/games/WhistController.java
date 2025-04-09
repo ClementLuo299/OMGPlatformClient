@@ -1,5 +1,12 @@
 package gui.controllers.games;
 
+import gamelogic.GamePiece;
+import gamelogic.GameType;
+import gamelogic.Player;
+import gamelogic.pieces.Card;
+import gamelogic.pieces.CardPile;
+import gamelogic.pieces.SuitType;
+import gamelogic.whist.WhistGame;
 import gui.ScreenManager;
 import gui.controllers.GameLobbyController;
 import javafx.fxml.FXML;
@@ -17,12 +24,10 @@ import javafx.util.Duration;
 import gamelogic.whist.StageType;
 import javafx.scene.Node;
 import javafx.scene.control.Alert.AlertType;
+import networking.accounts.UserAccount;
 
 import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Random;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Controller for the Whist card game UI
@@ -90,6 +95,7 @@ public class WhistController implements Initializable {
     @FXML private StackPane animationContainer;
     @FXML private ListView<String> moveHistoryList;
 
+
     // GAME ATTRIBUTES
 
     // Game state variables
@@ -119,11 +125,23 @@ public class WhistController implements Initializable {
     private int timeRemaining = 15;
     private Timeline gameTimer;
 
+
+    // CONSTRUCTOR
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Initial setup
         setupGame();
+
+            // DEBUG: Shows the deck in the console to prove shuffling occurred
+            System.out.println("[Game Started]");
+
+        startWhistGameLoop();
+
+
+
         updateUI();
+
         
         // Hide hand areas during dealing stage
         hideHandAreas();
@@ -133,33 +151,182 @@ public class WhistController implements Initializable {
         dealButton.setDisable(true);
         
         // Setup button handlers
-        setupButtonHandlers();
+        //setupButtonHandlers();
         
         // Create reveal trump button (initially not visible)
-        createRevealTrumpButton();
+        //createRevealTrumpButton();
         
         // Fix button positioning
         fixButtonPositioning();
     }
 
+
+    // GAME LOOP
+
     /**
-     * Fix the positioning of buttons in the dealer overlay
+     * Loops through each stage of a Game of Whist, calling
      */
-    private void fixButtonPositioning() {
-        // Set proper width for both buttons
-        shuffleButton.setPrefWidth(120);
-        dealButton.setPrefWidth(120);
-        
-        // Make sure the deal button text is showing correctly
-        dealButton.setText("Deal");
-        
-        // Find the HBox containing buttons and adjust its alignment
-        HBox buttonBox = (HBox) dealerOverlay.lookup(".dealer-content > HBox");
-        if (buttonBox != null) {
-            buttonBox.setAlignment(javafx.geometry.Pos.CENTER);
-            buttonBox.setSpacing(20);
+    public void startWhistGameLoop() {
+        // Loops until the Game is Complete
+        while (gameInProgress) {
+            // Performs different tasks depending on the Game Stage
+            switch (game.getGameStage()) {
+                // Handles the selection of the dealer, deck shuffling, and card dealing
+                case DEAL:
+                    // DEBUG: Shows stage
+                    System.out.println("-=Dealing Stage=-\n");
+
+                    // The Dealer is the Player who draws the lowest rank card
+
+                    // Shuffles the deck a bit so players' selections are random
+                    game.getDeck().overheadShuffle();
+
+                    // Renders the whole deck so that Players can select a card from it
+                    List<Node> cardPile = renderWholePile(game.getDeck());
+                    // TODO: Play animation of cards starting in centre then splaying out
+
+                    // Makes every Card StackPane drawable
+                    for (Node currentNode : cardPile) {
+                        // Ensures only valid values get through
+                        try {
+                            // Makes the Card able to be drawn by a Player into their Hand
+                            makeIntoPrize((StackPane) currentNode);
+                            // Indicates that the Card is Clickable to Players with a visible glow
+                            makeGlow((StackPane) currentNode);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+
+                    // Players are prompted to pick cards to compare them, looping until a successful comparison
+
+                    // Declares if the comparison was successful
+                    boolean goodCompare = false;
+
+                    // Loops until a good comparison is made
+                    while (!goodCompare) {
+                        // Cards that were clicked by the Players
+                        Card player1Card = null;
+                        Card player2Card = null;
+                        Card winningCard;
+
+                        // TODO: Prompts each Player to select a Card
+                        // TODO: Play animation of selected cards moving from the deck to the bottom middle of screen
+
+                        // TODO: Flip both cards simultaneously
+                        //Compares selected Cards to select Dealer. Lowest Rank gets Dealer
+                        winningCard = game.compareCards(player1Card, player2Card);
+
+                        // Checks if the comparison is valid
+                        if (winningCard != null) {
+                            // Ends the loop because the comparison was successful
+                            goodCompare = true;
+
+                            // TODO: Place drawn cards onto bottom of deck
+
+                            // TODO: Play animation of all cards consolidating into one pile
+
+                            // Checks each Players' hands for the Card
+                            // First Player
+                            if (game.getPlayers().getFirst().checkHand(winningCard)) {
+                                // Sets the turn holder to the first Player
+                                game.setTurnHolder(game.getPlayers().getFirst());
+                            }
+                            // Second Player
+                            if (game.getPlayers().getFirst().checkHand(winningCard)) {
+                                // Sets the turn holder to the second Player
+                                game.setTurnHolder(game.getPlayers().getLast());
+
+                            }
+                        } else {
+                            // TODO: Prompts each Player to try again
+                        }
+                    }
+
+
+                    // The Dealer is prompted to finish setting up the game by shuffling, dealing, and showing Trump
+
+                    // Shuffling
+                    // TODO: Prompts the Dealer to shuffle at least 5 times
+
+
+                    // Dealing
+                    // Loops until both Players have 15 Cards in their Hands
+                    while (game.getDeck().getSize() > 26) {
+                        // TODO: Prompts the dealer to deal 13 cards to each Player
+
+
+
+                    }
+
+
+                    // Moves the game to the next stage
+                    game.nextStage();
+                    break;
+
+                // Handles the trick taking logic while Players are drafting their hand
+                case DRAFT:
+                    // DEBUG: Shows stage
+                    System.out.println("-=Drafting Stage=-\n");
+
+
+                    // Moves the game to the next stage
+                    game.nextStage();
+                    break;
+
+                // Handles the trick taking logic while Players are tallying points
+                case DUEL:
+                    // DEBUG: Shows stage
+                    System.out.println("-=Dueling Stage=-\n");
+
+
+                    // Moves the game to the next stage
+                    game.nextStage();
+                    break;
+            }
+
+            // Ends the Game Loop
+            gameInProgress = false;
         }
     }
+
+
+
+    //TODO: Will render a pile with the top card pane visible, and the other cards as a single image pane of a card pile
+    private List<Node> renderPile(CardPile pile) {
+        // The List of Card StackPanes
+        List<Node> pileToRender = new ArrayList<>();
+
+        // Gets the first card of the given pile to render it
+        Card cardToRender = pile.getTopCard();
+
+        // TODO: Render a StackPane that is a stack of cards in a single image
+
+        // Renders the top Card
+        StackPane topCard = renderCard(cardToRender);
+
+
+        return pileToRender;
+    }
+
+    // TODO: Will create card panes for all cards in a pile
+    private List<Node> renderWholePile(CardPile pile) {
+        // The List of Card StackPanes
+        List<Node> cardsToRender = new ArrayList<>();
+
+        // Iterates through the card pile to create a StackPane for each of its cards
+        for (Card cardToRender : pile.getCards()) {
+            // Renders the Card
+            StackPane topCard = renderCard(cardToRender);
+        }
+
+
+        return cardsToRender;
+    }
+
+
+
 
     // SETUP METHODS
 
@@ -211,31 +378,36 @@ public class WhistController implements Initializable {
     }
 
     /**
-     * Sets up the Whist game with players
+     * Sets up the Whist Game with Players
      */
     private void setupGame() {
         // Create players (for now with dummy accounts)
-        List<gamelogic.Player> players = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
         
         // Create dummy accounts for testing
-        networking.accounts.UserAccount player1Account = new networking.accounts.UserAccount("Player 1", "password");
-        networking.accounts.UserAccount player2Account = new networking.accounts.UserAccount("Player 2", "password");
+        UserAccount player1Account = new UserAccount("Player 1", "password");
+        UserAccount player2Account = new UserAccount("Player 2", "password");
         
         // Create players with the accounts
-        gamelogic.Player player1 = new gamelogic.Player(player1Account);
-        gamelogic.Player player2 = new gamelogic.Player(player2Account);
+        Player player1 = new Player(player1Account);
+        Player player2 = new Player(player2Account);
         
         // Add players to the list
         players.add(player1);
         players.add(player2);
         
         // Create the game with the players
-        game = new gamelogic.whist.WhistGame(gamelogic.GameType.WHIST, players, 13);
+        this.game = new WhistGame(GameType.WHIST, players, 8);
+
+        // Declares the game as started
+        this.gameInProgress = true;
     }
-    
+
+    // TODO: Figure out where this should apply
     /**
      * Setup button event handlers
      */
+    /*
     private void setupButtonHandlers() {
         // Shuffle button handler
         shuffleButton.setOnAction(event -> onShuffleClicked());
@@ -243,7 +415,9 @@ public class WhistController implements Initializable {
         // Deal button handler
         dealButton.setOnAction(event -> onDealClicked());
     }
-    
+    */
+
+    // TODO: Figure out where this should apply
     /**
      * Update all UI elements based on the current game state
      */
@@ -255,7 +429,7 @@ public class WhistController implements Initializable {
         roundCounter.setText(String.valueOf(game.getRound() + 1));
         
         // Update shuffle counter
-        shuffleCounterLabel.setText("Shuffles: " + game.getShuffleCount() + "/3");
+        //shuffleCounterLabel.setText("Shuffles: " + game.getShuffleCount() + "/3");
         
         // Update player information
         updatePlayerInfo();
@@ -266,14 +440,33 @@ public class WhistController implements Initializable {
      */
     private void updatePlayerInfo() {
         // Get players
-        gamelogic.Player player1 = game.getPlayers().getFirst();
-        gamelogic.Player player2 = game.getPlayers().getLast();
+        Player player1 = game.getPlayers().getFirst();
+        Player player2 = game.getPlayers().getLast();
         
         // Update player names and scores
         player1Name.setText(player1.getUsername());
         player2Name.setText(player2.getUsername());
         player1Score.setText("Score: " + player1.getScore());
         player2Score.setText("Score: " + player2.getScore());
+    }
+
+    /**
+     * Fix the positioning of buttons in the dealer overlay
+     */
+    private void fixButtonPositioning() {
+        // Set proper width for both buttons
+        shuffleButton.setPrefWidth(120);
+        dealButton.setPrefWidth(120);
+
+        // Make sure the deal button text is showing correctly
+        dealButton.setText("Deal");
+
+        // Find the HBox containing buttons and adjust its alignment
+        HBox buttonBox = (HBox) dealerOverlay.lookup(".dealer-content > HBox");
+        if (buttonBox != null) {
+            buttonBox.setAlignment(javafx.geometry.Pos.CENTER);
+            buttonBox.setSpacing(20);
+        }
     }
 
     // GENERAL INTERACTION METHODS
@@ -454,11 +647,14 @@ public class WhistController implements Initializable {
         }
     }
 
-    // CORE LOOP METHODS
 
+    // CORE INTERACTION METHODS
+
+    // TODO: Update dealer selection first
     /**
      * Handle the Shuffle button click
      */
+    /*
     @FXML
     private void onShuffleClicked() {
         if (game.getShuffleCount() < 3) {
@@ -482,10 +678,13 @@ public class WhistController implements Initializable {
             }
         }
     }
+    */
 
+    // TODO: Update dealing logic to use gamelogic code
     /**
      * Handle the Deal button click
      */
+    /*
     @FXML
     private void onDealClicked() {
         if (game.getGameStage() == gamelogic.whist.StageType.DEAL && game.getShuffleCount() >= 3) {
@@ -508,6 +707,7 @@ public class WhistController implements Initializable {
             updateUI();
         }
     }
+    */
 
     /**
      * Handle card click in player's hand
@@ -533,9 +733,11 @@ public class WhistController implements Initializable {
         }
     }
 
+    // TODO: Modify trump card revealing logic
     /**
      * Handle the Reveal Trump button click
      */
+    /*
     @FXML
     private void onRevealTrumpClicked() {
         // Reveal trump in game logic
@@ -556,6 +758,7 @@ public class WhistController implements Initializable {
         // Animate trump card reveal
         animateTrumpCardReveal(trumpSuit);
     }
+    */
 
     /**
      * Animate the reveal of the trump card
@@ -686,7 +889,7 @@ public class WhistController implements Initializable {
      * @param suit The trump suit to display
      * @param providedImagePath Optional image path to use (to ensure face-up card is used)
      */
-    private void displayTrumpCard(gamelogic.pieces.SuitType suit, String providedImagePath) {
+    private void displayTrumpCard(SuitType suit, String providedImagePath) {
         // Clear trump display
         trumpCardDisplay.getChildren().clear();
         
@@ -1014,6 +1217,103 @@ public class WhistController implements Initializable {
         
         return cardPane;
     }
+
+    // TODO: Render a StackPane based on a card
+    private StackPane renderCard(Card card) {
+        // Gets the information of the Card
+        SuitType suit = card.getSuit();
+        int rank = card.getRank();
+        boolean faceDown = card.isFaceDown();
+
+        // Create the image view for the Card StackPane
+        ImageView cardImage = new ImageView();
+        cardImage.setFitHeight(120);
+        cardImage.setFitWidth(80);
+        cardImage.setPreserveRatio(true);
+
+        // Create a Card StackPane
+        StackPane cardPane = new StackPane(cardImage);
+        cardPane.getStyleClass().add("card-view");
+
+        // Renders the relevant image for the Card based on which way its facing
+        // Initializes a String Filepath to the relevant image for this Card
+        String imagePath = "/images/whist images/";
+
+        // Gets the back image for the Card StackPane when it is face down
+        if (faceDown) {
+            imagePath += "CardBackside1.png";
+        }
+        // Gets the face image for the Card StackPane when it is face up
+        else {
+            // Adds the Suit folders to the Filepath
+            switch (suit) {
+                case HEARTS:
+                    imagePath += "Hearts/";
+                    break;
+                case DIAMONDS:
+                    imagePath += "Diamonds/";
+                    break;
+                case SPADES:
+                    imagePath += "Spades/";
+                    break;
+                case CLUBS:
+                    imagePath += "Clubs/";
+                    break;
+            }
+
+            // Adds the Rank of the card to the Filepath image name
+            switch (rank) {
+                case 1 -> imagePath += "ace_of_" + suit.toString().toLowerCase() + ".png";
+                case 13 -> imagePath += "king_of_" + suit.toString().toLowerCase() + ".png";
+                case 12 -> imagePath += "queen_of_" + suit.toString().toLowerCase() + ".png";
+                case 11 -> imagePath += "jack_of_" + suit.toString().toLowerCase() + ".png";
+                default -> imagePath += rank + "_of_" + suit.toString().toLowerCase() + ".png";
+            }
+        }
+
+        // Applies the image to the Card StackPane. Displays placeholder image if the path is unreachable
+        try {
+            cardImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        } catch (Exception e) {
+            // Falls back to placeholder image if desired image is not found
+            try {
+                cardImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/unknown.png"))));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // Adds the Image to the Card StackPane
+        trumpCardDisplay.getChildren().add(cardImage);
+
+        // Returns the Card StackPane
+        return cardPane;
+    }
+
+    // TODO: Makes a rendered Card clickable for Playing
+    private void makeIntoPlayable(StackPane card) {
+
+    }
+
+    // TODO: Makes a rendered Card clickable for Revealing the Trump Suit
+    private void makeIntoTrump(StackPane card) {
+
+    }
+
+    // TODO: Makes a rendered Card clickable for Drawing Prize Cards
+    private void makeIntoPrize(StackPane card) {
+
+    }
+
+    // TODO: Makes a clickable rendered Card unclickable
+    private void makeIntoInert(StackPane card) {
+
+    }
+
+    // TODO: Makes a card have a faint glow around the edge to indicate interactiveness
+    private void makeGlow(StackPane card) {
+
+    }
     
     /**
      * Animate a card being selected (moves up, scales up, and flips face up)
@@ -1064,7 +1364,7 @@ public class WhistController implements Initializable {
     private void flipCardFaceUp(StackPane cardPane) {
         // Get card data
         int cardRank = (int) cardPane.getProperties().get("rank");
-        gamelogic.pieces.SuitType cardSuit = (gamelogic.pieces.SuitType) cardPane.getProperties().get("suit");
+        SuitType cardSuit = (SuitType) cardPane.getProperties().get("suit");
         
         // Build image path based on card data
         String imagePath = "/images/whist images/";
@@ -1533,9 +1833,13 @@ public class WhistController implements Initializable {
         timerProgressBar.setProgress(timeRemaining / 15.0);
     }
 
+
+
+
     /**
      * Creates the reveal trump button and adds it to the dealer overlay
      */
+    /*
     private void createRevealTrumpButton() {
         revealTrumpButton = new Button("Reveal Trump Suit");
         revealTrumpButton.getStyleClass().add("reveal-trump-button");
@@ -1559,4 +1863,5 @@ public class WhistController implements Initializable {
             VBox.setMargin(revealTrumpButton, new javafx.geometry.Insets(10, 0, 0, 0));
         }
     }
-} 
+    */
+}

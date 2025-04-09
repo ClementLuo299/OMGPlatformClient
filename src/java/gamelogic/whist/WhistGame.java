@@ -1,9 +1,6 @@
 package gamelogic.whist;
 
-import gamelogic.Game;
-import gamelogic.GamePiece;
-import gamelogic.GameType;
-import gamelogic.Player;
+import gamelogic.*;
 import gamelogic.pieces.Card;
 import gamelogic.pieces.CardPile;
 import gamelogic.pieces.SuitType;
@@ -34,10 +31,6 @@ public class WhistGame extends Game {
     private CardPile discard;
     // The list which holds the current trick
     private List<Card> trick;
-    // The number of shuffles performed
-    private int shuffleCount;
-    // The player who leads the current trick
-    private Player trickLeader;
 
 
     // CONSTRUCTOR
@@ -55,30 +48,6 @@ public class WhistGame extends Game {
         this.stage = StageType.DEAL;
         this.trump = null;
         this.deck = new CardPile();
-        this.draw = new CardPile();
-        this.discard = new CardPile();
-        this.trick = new ArrayList<>();
-        this.shuffleCount = 0;
-        this.trickLeader = null;
-        
-        // Initialize the deck with 52 cards
-        initializeDeck();
-    }
-    
-    /**
-     * Initializes the deck with a standard 52-card deck
-     * Creates 13 cards of each suit (Ace through King)
-     */
-    public void initializeDeck() {
-        // Clear any existing cards
-        deck.clear();
-        
-        // Add all 52 cards, 13 from each suit
-        for (SuitType suit : SuitType.values()) {
-            for (int rank = 1; rank <= 13; rank++) {
-                deck.addCards(new Card(rank, suit));
-            }
-        }
     }
 
 
@@ -146,15 +115,6 @@ public class WhistGame extends Game {
     public CardPile getDiscard() {
         return discard;
     }
-    
-    /**
-     * Gets the current shuffle count
-     *
-     * @return The number of times the deck has been shuffled
-     */
-    public int getShuffleCount() {
-        return shuffleCount;
-    }
 
 
     // SETTERS
@@ -203,32 +163,6 @@ public class WhistGame extends Game {
     public void setDiscard(CardPile discardPile) {
         this.discard = discardPile;
     }
-    
-    /**
-     * Sets the shuffle count
-     *
-     * @param count The number of times the deck has been shuffled
-     */
-    public void setShuffleCount(int count) {
-        this.shuffleCount = count;
-    }
-    
-    /**
-     * Increment the shuffle count by 1 and shuffles the deck
-     */
-    public void incrementShuffleCount() {
-        this.shuffleCount++;
-        shuffleDeck();
-    }
-    
-    /**
-     * Shuffles the deck randomly
-     */
-    public void shuffleDeck() {
-        if (deck != null) {
-            deck.shuffle();
-        }
-    }
 
 
     // METHODS
@@ -241,150 +175,29 @@ public class WhistGame extends Game {
      * @param cardHolder The given Player who receives the Card
      */
     public void dealCard(CardPile deck, Card cardToDeal, Player cardHolder) {
+        // Makes the card not visible to all players by making its held status true
+        cardToDeal.take();
+
         // Adds the dealt Card to the Player's hand
         cardHolder.addToHand(cardToDeal);
 
         // Removes the dealt Card from the Deck
         deck.removeCard(cardToDeal);
     }
-    
-    /**
-     * Deals all cards to players automatically
-     * Each player receives 13 cards from the deck
-     */
-    public void dealAllCards() {
-        if (stage != StageType.DEAL || shuffleCount < 3) {
-            return; // Can only deal in DEAL stage after 3 shuffles
-        }
-        
-        Player player1 = this.getPlayers().getFirst();
-        Player player2 = this.getPlayers().getLast();
-        
-        // Deal 13 cards to each player alternately
-        for (int i = 0; i < 13; i++) {
-            // Deal to player 1
-            if (deck.getCards().size() > 0) {
-                Card p1Card = (Card) deck.getCards().getFirst();
-                dealCard(deck, p1Card, player1);
-            }
-            
-            // Deal to player 2
-            if (deck.getCards().size() > 0) {
-                Card p2Card = (Card) deck.getCards().getFirst();
-                dealCard(deck, p2Card, player2);
-            }
-        }
-        
-        // After dealing, move to DRAFT stage
-        setGameStage(StageType.DRAFT);
-    }
-    
-    /**
-     * Reveals the trump suit for the round
-     * Selects the first card from the remaining deck as trump
-     * 
-     * @return The revealed trump suit
-     */
-    public SuitType revealTrump() {
-        if (stage != StageType.DRAFT || deck.getCards().isEmpty()) {
-            return null; // Can only reveal trump in DRAFT stage with cards in deck
-        }
-        
-        // Get the first card from remaining deck as trump
-        Card trumpCard = (Card) deck.getCards().getFirst();
-        SuitType trumpSuit = trumpCard.getSuit();
-        
-        // Set the trump
-        setTrump(trumpSuit);
-        
-        // After revealing trump, move to DUEL stage
-        setGameStage(StageType.DUEL);
-        
-        return trumpSuit;
-    }
 
     /**
      * Plays a Card from a Player's hand into the current Trick
      *
      * @param cardToPlay The given Card to play
-     * @param player The player who is playing the card
      */
-    public void playCard(Card cardToPlay, Player player) {
+    public void playCard(Card cardToPlay) {
         // Makes the card visible to all players by making its held status false
         cardToPlay.release();
 
         // Adds the played Card to the Trick list
         trick.add(cardToPlay);
-        
-        // Remove from player's hand
-        player.removeFromHand(cardToPlay);
-        
-        // Set trickLeader if this is the first card of the trick
-        if (trick.size() == 1) {
-            trickLeader = player;
-        }
-        
-        // If this completes a trick (2 cards), determine winner and process
-        if (trick.size() == 2) {
-            processTrick();
-        }
     }
-    
-    /**
-     * Process the current trick to determine the winner and update the game state
-     */
-    private void processTrick() {
-        if (trick.size() < 2) {
-            return; // Can't determine winner with fewer than 2 cards
-        }
-        
-        // Start with the first card as current winner
-        Card winningCard = trick.get(0);
-        Player winningPlayer = trickLeader;
-        
-        // Compare each subsequent card against the current winner
-        for (int i = 1; i < trick.size(); i++) {
-            Card nextCard = trick.get(i);
-            Card result = compareCards(winningCard, nextCard);
-            
-            // If the result is the next card, update winning card and player
-            if (result == nextCard) {
-                winningCard = nextCard;
-                winningPlayer = getOtherPlayer(trickLeader);
-            }
-        }
-        
-        // Winner takes all cards from this trick
-        for (Card card : trick) {
-            winningPlayer.addToSpoils(card);
-        }
-        
-        // Set the winner as the next player to lead
-        trickLeader = winningPlayer;
-        
-        // Clear trick data for next trick
-        trick.clear();
-        
-        // If we've played all cards in hand, the round is over
-        if (getPlayers().getFirst().getHand().isEmpty() && getPlayers().getLast().getHand().isEmpty()) {
-            // Calculate scores for this round
-            calculateScores();
-            setGameStage(StageType.DEAL);
-            round++;
-        }
-    }
-    
-    /**
-     * Helper method to get the other player
-     * 
-     * @param currentPlayer The current player
-     * @return The other player in the game
-     */
-    private Player getOtherPlayer(Player currentPlayer) {
-        List<Player> players = getPlayers();
-        return players.getFirst() == currentPlayer ? players.getLast() : players.getFirst();
-    }
-    
+
     /**
      * Takes a Card from a Card Pile and places it into a Player's Hand
      *
@@ -404,67 +217,48 @@ public class WhistGame extends Game {
             cardToTake.flip();
         }
 
+        // Sorts the Hand of the Player
+        cardTaker.sortHand();
+
         // Removes the Card from the Card Pile it was drawn from
         source.removeCard(cardToTake);
     }
 
     /**
-     * Compares two cards and returns the winning card based on Whist rules:
-     * - If second card is same suit as first, higher rank wins
-     * - If second card is not same suit as first, first card wins unless second card is trump
-     * - If both cards are trump, higher rank wins
+     * Compares two Cards to see which Card has the highest Rank
      *
-     * @param firstCard The first card played (led)
-     * @param secondCard The second card played
-     * @return The winning card
+     * @param card1 The first given Card to compare
+     * @param card2 The second given Card to compare
+     * @return The highest Ranking Card
      */
-    private Card compareCards(Card firstCard, Card secondCard) {
-        // Get led suit (suit of first card)
-        SuitType ledSuit = firstCard.getSuit();
-        
-        // Check if either card is trump
-        boolean firstIsTrump = firstCard.getSuit() == trump;
-        boolean secondIsTrump = secondCard.getSuit() == trump;
-        
-        // If both cards are trump, higher rank wins
-        if (firstIsTrump && secondIsTrump) {
-            return firstCard.getRank() > secondCard.getRank() ? firstCard : secondCard;
+    public Card compareCards(Card card1, Card card2) {
+        // The Rank of each card
+        int card1Rank = card1.getRank();
+        int card2Rank = card2.getRank();
+        // The Card that has the highest Rank
+        Card winningCard = null;
+
+        // Checks if Trump cards are in play to account for them
+        if (trump != null) {
+            // Adds 14 to the rank of trump suited cards to give trump advantage in comparison
+            if (card1.getSuit() == trump) {
+                card1Rank = card1Rank + 14;
+            }
+            if (card2.getSuit() == trump) {
+                card2Rank = card2Rank + 14;
+            }
         }
-        
-        // If only second card is trump, second card wins
-        if (!firstIsTrump && secondIsTrump) {
-            return secondCard;
+
+        // Awards the comparison to the highest ranking card
+        if (card1Rank > card2Rank) {
+            winningCard = card1;
         }
-        
-        // If only first card is trump, first card wins
-        if (firstIsTrump && !secondIsTrump) {
-            return firstCard;
+        if (card2Rank > card1Rank) {
+            winningCard = card2;
         }
-        
-        // If second card follows suit (same as led suit)
-        if (secondCard.getSuit() == ledSuit) {
-            // Higher rank wins
-            return firstCard.getRank() > secondCard.getRank() ? firstCard : secondCard;
-        }
-        
-        // If second card doesn't follow suit and isn't trump, first card wins
-        return firstCard;
-    }
-    
-    /**
-     * Helper method to assign comparison values to suits
-     * 
-     * @param suit The suit to get a value for
-     * @return The numerical value of the suit for comparison
-     */
-    private int getSuitValue(SuitType suit) {
-        switch (suit) {
-            case SPADES: return 4;
-            case HEARTS: return 3;
-            case DIAMONDS: return 2;
-            case CLUBS: return 1;
-            default: return 0;
-        }
+
+        // Returns null if the Cards are tied
+        return winningCard;
     }
 
     /**
@@ -541,6 +335,48 @@ public class WhistGame extends Game {
     }
 
     /**
+     * Sots a Player's Hand and reveals their Cards to them
+     *
+     * @param holder The given Player to reveal their Hand to
+     */
+    public void showHand(Player holder) {
+        // The hand of the Player
+        List<GamePiece> hand = holder.getHand();
+
+        // Sorts the Player's Hand
+        holder.sortHand();
+
+        // Goes through the list of cards in the Player's hand to flip them
+        for (GamePiece currentPiece : hand) {
+            // Ensures the piece is flippable
+            if (currentPiece.getType() == PieceType.CARD) {
+                Card currentCard = (Card) currentPiece;
+                // Makes the card face up so the Player can view it
+                if (currentCard.isFaceDown()) {
+                    currentCard.flip();
+                }
+            }
+        }
+    }
+
+    /**
+     * Moves this Whist Game to the next Stage of gameplay
+     */
+    public void nextStage() {
+        switch (stage) {
+            case DEAL:
+                this.stage = StageType.DRAFT;
+                break;
+            case DRAFT:
+                this.stage = StageType.DUEL;
+                break;
+            case DUEL:
+                this.stage = null;
+                break;
+        }
+    }
+
+    /**
      * Gets the list of Playable Cards in a Player's hand who is leading in a Trick
      *
      * @param holder The given Player whose Hand is to be checked
@@ -604,89 +440,5 @@ public class WhistGame extends Game {
 
         // Returns the valid cards
         return validCards;
-    }
-    
-    /**
-     * Calculate and update scores after a round has completed
-     */
-    public void calculateScores() {
-        Player player1 = this.getPlayers().getFirst();
-        Player player2 = this.getPlayers().getLast();
-        
-        // Calculate points based on tricks won
-        int player1Tricks = countTricksWon(player1);
-        int player2Tricks = countTricksWon(player2);
-        
-        // Calculate points (tricks - 6)
-        int player1Points = player1Tricks - 6;
-        int player2Points = player2Tricks - 6;
-        
-        // Add points to players
-        player1.addPoints(player1Points);
-        player2.addPoints(player2Points);
-    }
-    
-    /**
-     * Count the number of tricks won by a player
-     * 
-     * @param player The player to count tricks for
-     * @return The number of tricks won
-     */
-    private int countTricksWon(Player player) {
-        // Each trick has 2 cards
-        return player.getSpoils().size() / 2;
-    }
-    
-    /**
-     * Clear all players' spoils to prepare for a new round
-     */
-    public void clearSpoils() {
-        for (Player player : getPlayers()) {
-            player.getSpoils().clear();
-        }
-    }
-    
-    /**
-     * Checks if the game has ended (a player has reached 6 points)
-     * 
-     * @return true if game has ended, false otherwise
-     */
-    public boolean isGameOver() {
-        Player player1 = this.getPlayers().getFirst();
-        Player player2 = this.getPlayers().getLast();
-        
-        return player1.getScore() >= 6 || player2.getScore() >= 6;
-    }
-    
-    /**
-     * Prepare for a new round by resetting state
-     */
-    public void prepareNewRound() {
-        // Increment round
-        this.round++;
-        
-        // Reset stage
-        this.stage = StageType.DEAL;
-        
-        // Reset trump
-        this.trump = null;
-        
-        // Reset shuffle count
-        this.shuffleCount = 0;
-        
-        // Clear trick
-        this.trick.clear();
-        
-        // Reset deck, draw, discard
-        this.deck = new CardPile();
-        this.draw = new CardPile();
-        this.discard = new CardPile();
-        
-        // Clear player hands and spoils
-        Player player1 = this.getPlayers().getFirst();
-        Player player2 = this.getPlayers().getLast();
-        
-        player1.setHand(new ArrayList<>());
-        player2.setHand(new ArrayList<>());
     }
 }
