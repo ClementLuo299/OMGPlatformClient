@@ -226,7 +226,7 @@ public class WhistGame extends Game {
      */
     public void shuffleDeck() {
         if (deck != null) {
-            deck.shuffle();
+            deck.riffleShuffle();
         }
     }
 
