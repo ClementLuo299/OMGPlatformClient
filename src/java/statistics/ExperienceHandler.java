@@ -20,7 +20,7 @@ public class ExperienceHandler {
     // The average plays for this Game
     int avgPlays;
     // The total number of moves, from both players, in each game
-    int totalPlays
+    int totalPlays;
 
 
     // CONSTRUCTOR
