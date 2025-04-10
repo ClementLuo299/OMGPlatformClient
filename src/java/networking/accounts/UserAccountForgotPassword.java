@@ -1,4 +1,5 @@
 package networking.accounts;
+import networking.Backend;
 import networking.DatabaseStub;
 import java.util.Random;
 
@@ -25,7 +26,7 @@ public class UserAccountForgotPassword {
     }
 
     public boolean processForgottenPassword(String identifier) {
-        for (UserAccount user : database.getUsers()) {
+        for (UserAccount user : Backend.db().getUsers()) {
             if (identifier.equals(user.getUsername()) || identifier.equals(user.getEmail())) {
                 String tempPassword = generateTempPassword();
                 displayTempPassword(tempPassword);
