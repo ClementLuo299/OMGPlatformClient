@@ -15,10 +15,10 @@ public class Backend {
     // ATTRIBUTES
 
     //IO handlers
-    GUIIOHandler guiHandler;
-    DatabaseIOHandler dbHandler;
-    DatabaseIOHandlerHTTP dbHandlerHTTP;
-    GameIOHandler gameHandler;
+    public static GUIIOHandler guiHandler;
+    public static DatabaseIOHandler dbHandler;
+    public static DatabaseIOHandlerHTTP dbHandlerHTTP;
+    public static GameIOHandler gameHandler;
 
     //Universal backend instance
     private static Backend instance;
@@ -31,7 +31,7 @@ public class Backend {
     private Backend() {
         //Activate IO handlers
         guiHandler = new GUIIOHandler();
-        dbHandler = DatabaseIOHandler.getInstance();
+        dbHandler = new DatabaseIOHandler();
         dbHandlerHTTP = new DatabaseIOHandlerHTTP();
         gameHandler = new GameIOHandler();
     }
@@ -47,6 +47,21 @@ public class Backend {
     }
 
     // GETTERS
+    public static GUIIOHandler gui(){
+        return guiHandler;
+    }
+
+    public static DatabaseIOHandler db(){
+        return dbHandler;
+    }
+
+    public static DatabaseIOHandlerHTTP dbHTTP(){
+        return dbHandlerHTTP;
+    }
+
+    public static GameIOHandler game(){
+        return gameHandler;
+    }
 
     // SETTERS
 

@@ -1,7 +1,7 @@
 package gui.controllers.systems;
 
 import gui.ScreenManager;
-import networking.IO.DatabaseIOHandler;
+import networking.Backend;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -41,9 +41,6 @@ public class RegisterController {
     @FXML
     private Button loginButton;
 
-    //Database IO Handler
-    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
-
     // Add ScreenManager instance at the beginning of the class
     private ScreenManager screenManager = ScreenManager.getInstance();
 
@@ -74,7 +71,7 @@ public class RegisterController {
             return;
         }
 
-        if (db.isAccountExists(username)) {
+        if (Backend.db().isAccountExists(username)) {
             showAlert("Registration Error", "Username already exists");
             return;
         }
@@ -83,7 +80,7 @@ public class RegisterController {
         String dobString = dob.format(DateTimeFormatter.ISO_LOCAL_DATE); // Format: YYYY-MM-DD
 
         // Register the account with full name and date of birth
-        db.RegisterAccount(username, password, fullName, dobString);
+        Backend.db().RegisterAccount(username, password, fullName, dobString);
         System.out.println("Account created successfully!");
 
         // Navigate back to login screen

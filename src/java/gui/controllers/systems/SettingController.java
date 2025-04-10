@@ -3,7 +3,6 @@ package gui.controllers.systems;
 import gui.ScreenManager;
 import gui.controllers.games.GameLibraryController;
 import gui.controllers.statistics.LeaderboardController;
-import networking.IO.DatabaseIOHandler;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -16,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import networking.Backend;
 
 public class SettingController {
     @FXML
@@ -58,9 +58,6 @@ public class SettingController {
     // Current user info
     private String currentUsername;
 
-    // Database IO Handler
-    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
-
     // ScreenManager instance
     private ScreenManager screenManager = ScreenManager.getInstance();
 
@@ -89,7 +86,7 @@ public class SettingController {
         usernameField.setText(username);
 
         // Try to get and set the full name from database
-        String fullName = db.getUserFullName(username);
+        String fullName = Backend.db().getUserFullName(username);
         if (fullName != null && !fullName.isEmpty()) {
             nameField.setText(fullName);
         }
@@ -116,7 +113,7 @@ public class SettingController {
             // In a real implementation, validate password complexity
 
             // Update password in database
-            boolean success = db.updatePassword(currentUsername, "current_password", newPassword);
+            boolean success = Backend.db().updatePassword(currentUsername, "current_password", newPassword);
             if (success) {
                 showAlert(AlertType.INFORMATION, "Success", "Password updated successfully");
 

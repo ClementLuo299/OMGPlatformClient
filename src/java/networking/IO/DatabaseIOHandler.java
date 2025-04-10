@@ -1,7 +1,14 @@
 package networking.IO;
 
 import networking.DatabaseStub;
+import networking.accounts.UserAccount;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.time.LocalDate;
 
 /**
  * Handles communication between the backend and the program.
@@ -13,26 +20,12 @@ import java.util.Map;
 public class DatabaseIOHandler {
     //Database stub
     private DatabaseStub db;
-    
-    // Singleton instance
-    private static DatabaseIOHandler instance;
 
     //Constructor
-    private DatabaseIOHandler(){
+    public DatabaseIOHandler(){
         //Create and populate database
         db = new DatabaseStub();
         db.populateDB();
-    }
-    
-    /**
-     * Get singleton instance
-     * @return DatabaseIOHandler instance
-     */
-    public static DatabaseIOHandler getInstance() {
-        if (instance == null) {
-            instance = new DatabaseIOHandler();
-        }
-        return instance;
     }
 
     /**
@@ -42,30 +35,70 @@ public class DatabaseIOHandler {
         db.saveDBState();
     }
 
+    //USER ACCOUNT METHODS
+    
     /**
      * Register an account.
      *
-     * @param username
-     *            The username of the account.
-     * @param password
-     *            The password of the account.
+     * @param username The username of the account.
+     * @param password The password of the account.
+     * @param firstName The first name of the user.
+     * @param dob The date of birth of the user.
      */
-    public void RegisterAccount(String username, String password){
-        db.insertAccountData(username, password);
+    public void RegisterAccount(String username, String password, String firstName, String dob) {
+        // For now, we'll just use the basic registration
+        Map<String,String> record = new HashMap<>();
+        record.put("username",username);
+        record.put("password",password);
+        record.put("firstName",firstName);
+        record.put("dob",dob);
+
+        //Increment was not implemented, so uid = 1
+        record.put("uid","1");
+
+        //Other fields (Set to default)
+        record.put("privacyLevel","1");
+        LocalDate currentDate = LocalDate.now();
+        String dateAsString = currentDate.format(DateTimeFormatter.ISO_DATE);
+        record.put("dateCreated",dateAsString);
+        record.put("bio",null);
+        record.put("email",null);
+        record.put("middleName",null);
+        record.put("lastName",null);
+
+        //Insert record
+        db.insert("users",record);
     }
-    
+
     /**
-     * Register an account with additional information.
+     * Register an account with minimal information.
      *
      * @param username The username of the account.
      * @param password The password of the account.
-     * @param email The email of the account.
-     * @param fullName The full name of the user.
      */
-    public void RegisterAccount(String username, String password, String email, String fullName) {
+    public void RegisterAccount(String username, String password) {
         // For now, we'll just use the basic registration
-        db.insertAccountData(username, password);
-        // In a real implementation, we would store the additional info
+        Map<String,String> record = new HashMap<>();
+        record.put("username",username);
+        record.put("password",password);
+
+        //Increment was not implemented, so uid = 1
+        record.put("uid","1");
+
+        //Other fields (Set to default)
+        record.put("privacyLevel","1");
+        LocalDate currentDate = LocalDate.now();
+        String dateAsString = currentDate.format(DateTimeFormatter.ISO_DATE);
+        record.put("dateCreated",dateAsString);
+        record.put("bio",null);
+        record.put("email",null);
+        record.put("middleName",null);
+        record.put("lastName",null);
+        record.put("firstName",null);
+        record.put("dob",null);
+
+        //Insert record
+        db.insert("users",record);
     }
 
     /**
@@ -88,7 +121,7 @@ public class DatabaseIOHandler {
             return true;
         }
         
-        Map<String, String> accountData = db.getAccountData(username);
+        Map<String, String> accountData = db.retrieve("users","username",username);
         if (accountData != null) {
             System.out.println("Account found for: " + username);
             String storedPassword = accountData.get("password");
@@ -106,19 +139,6 @@ public class DatabaseIOHandler {
     }
 
     /**
-     * Check if an account exists.
-     *
-     * @param username
-     *            The username of the account.
-     * @return boolean
-     *             true if the account exists,
-     *             false otherwise
-     */
-    private boolean CheckAccountExists(String username) {
-        return db.checkAccountExists(username);
-    }
-
-    /**
      * Check if a password is valid.
      *
      * @param username The username of the account.
@@ -133,9 +153,9 @@ public class DatabaseIOHandler {
         }
         
         // Update password
-        Map<String, String> data = db.getAccountData(username);
+        Map<String, String> data = db.retrieve("users","username",username);
         if (data != null) {
-            db.update("accounts", "username", username, "password", new_password);
+            db.update("users", "username", username, "password", new_password);
             return true;
         }
         return false;
@@ -148,9 +168,9 @@ public class DatabaseIOHandler {
      * @return The full name or null if not found
      */
     public String getUserFullName(String username) {
-        Map<String, String> data = db.getAccountData(username);
-        if (data != null && data.containsKey("fullName")) {
-            return data.get("fullName");
+        Map<String, String> data = db.retrieve("users","username",username);
+        if (data != null && data.containsKey("firstName") && data.containsKey("middleName") && data.containsKey("lastName")) {
+            return data.get("firstName");
         }
         return null;
     }
@@ -178,7 +198,7 @@ public class DatabaseIOHandler {
     }
 
     /**
-     * Check if an account exists (for registration).
+     * Check if an account exists.
      *
      * @param username
      *            The username of the account.
@@ -187,6 +207,35 @@ public class DatabaseIOHandler {
      *             false otherwise
      */
     public boolean isAccountExists(String username) {
-        return db.checkAccountExists(username);
+        if(db.retrieve("users","username",username) != null){
+            return db.retrieve("users", "username", username).get("username") != null;
+        }
+        return false;
+    }
+
+    /**
+     * Get list of all user accounts
+     * @return List of UserAccount objects
+     */
+    public List<UserAccount> getUsers() {
+        List<UserAccount> users = new ArrayList<>();
+        List<Map<String, String>> accounts = db.retrieveAll("users");
+
+        if (accounts != null) {
+            for (Map<String, String> account : accounts) {
+                String username = account.get("username");
+                String password = account.get("password");
+                String email = account.get("email");
+
+                UserAccount user = new UserAccount(username, password);
+                // Add email if it exists
+                if (email != null) {
+                    user.setEmail(email);
+                }
+                users.add(user);
+            }
+        }
+
+        return users;
     }
 }

@@ -2,7 +2,6 @@ package gui.controllers.systems;
 
 import gui.controllers.games.GameLibraryController;
 import gui.controllers.statistics.LeaderboardController;
-import networking.IO.DatabaseIOHandler;
 import gui.ScreenManager;
 
 import javafx.fxml.FXML;
@@ -43,9 +42,6 @@ public class DashboardController {
     
     // Guest status flag
     private boolean isGuest;
-    
-    // Database IO Handler
-    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
 
     // ScreenManager instance
     private ScreenManager screenManager = ScreenManager.getInstance();

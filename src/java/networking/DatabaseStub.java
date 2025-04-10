@@ -70,12 +70,28 @@ public class DatabaseStub {
             //retrieve
             List<Map<String,String>> tableData = data.get(table);
 
-            for (Map<String, String> row : tableData) {
-                if (row.get(column).equals(value)) {
-                    return row;
+            if(tableData != null){
+                for (Map<String, String> row : tableData) {
+                    if (row.get(column).equals(value)) {
+                        return row;
+                    }
                 }
             }
         }
+        return null;
+    }
+
+    /**
+     * Get list of all entries
+     * @return List of records
+     */
+    public List<Map<String,String>> retrieveAll(String table) {
+        List<Map<String,String>> tableData = data.get(table);
+
+        if (tableData != null) {
+            return tableData;
+        }
+
         return null;
     }
 
@@ -249,61 +265,5 @@ public class DatabaseStub {
         } else {
             System.out.println("No accounts table found in data");
         }
-    }
-    
-    /**
-     * Get list of all user accounts
-     * @return List of UserAccount objects
-     */
-    public List<UserAccount> getUsers() {
-        List<UserAccount> users = new ArrayList<>();
-        List<Map<String, String>> accounts = data.get("accounts");
-        
-        if (accounts != null) {
-            for (Map<String, String> account : accounts) {
-                String username = account.get("username");
-                String password = account.get("password");
-                String email = account.get("email");
-                
-                UserAccount user = new UserAccount(username, password);
-                // Add email if it exists
-                if (email != null) {
-                    user.setEmail(email);
-                }
-                users.add(user);
-            }
-        }
-        
-        return users;
-    }
-    
-    /**
-     * Check if an account exists with the given username
-     * @param username Username to check
-     * @return true if account exists, false otherwise
-     */
-    public boolean checkAccountExists(String username) {
-        return retrieve("accounts", "username", username) != null;
-    }
-    
-    /**
-     * Get account data for a username
-     * @param username Username to look up
-     * @return Map of account data or null if not found
-     */
-    public Map<String, String> getAccountData(String username) {
-        return retrieve("accounts", "username", username);
-    }
-    
-    /**
-     * Insert new account data
-     * @param username Username for the new account
-     * @param password Password for the new account
-     */
-    public void insertAccountData(String username, String password) {
-        Map<String, String> record = new HashMap<>();
-        record.put("username", username);
-        record.put("password", password);
-        insert("accounts", record);
     }
 }
