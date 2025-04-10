@@ -1,6 +1,8 @@
 package gamelogic;
 
 import gamelogic.pieces.Card;
+import gamelogic.pieces.CardPile;
+import gamelogic.pieces.Checker;
 import gamelogic.pieces.SuitType;
 import networking.accounts.UserAccount;
 
@@ -159,6 +161,30 @@ public class Player {
      */
     public void removeFromHand(GamePiece pieceToRemove) {
         this.hand.remove(pieceToRemove);
+    }
+
+    /**
+     * Moves a specified Card from the Player's Hand to a specified Card Pile
+     *
+     * @param cardToMove The given Card to be moved from the Player's Hand
+     * @param whereToMove The given Card Pile where the Card will be moved
+     */
+    public void moveFromHand(Card cardToMove, CardPile whereToMove) {
+        this.hand.remove(cardToMove);
+
+        whereToMove.addCards(cardToMove);
+    }
+
+    /**
+     * Moves a specified Checker from the Player's Hand to a specified List
+     *
+     * @param checkerToMove The given Checker to be moved from the Player's Hand
+     * @param whereToMove The given List of Checkers where the Checker will be moved
+     */
+    public void moveFromHand(Checker checkerToMove, List<Checker> whereToMove) {
+        this.hand.remove(checkerToMove);
+
+        whereToMove.add(checkerToMove);
     }
 
     /**
