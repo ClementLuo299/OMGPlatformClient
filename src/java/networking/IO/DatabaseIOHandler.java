@@ -52,12 +52,12 @@ public class DatabaseIOHandler {
      * @param email The email of the account.
      * @param dob The date of birth of the user.
      */
-    public void RegisterAccount(String username, String password, String email, String dob) {
+    public void RegisterAccount(String username, String password, String fullName, String dob) {
         // For now, we'll just use the basic registration
         Map<String,String> record = new HashMap<>();
         record.put("username",username);
         record.put("password",password);
-        record.put("email",email);
+        record.put("firstName",fullName);
         record.put("dob",dob);
 
         //Increment was not implemented, so uid = 1
@@ -69,7 +69,7 @@ public class DatabaseIOHandler {
         String dateAsString = currentDate.format(DateTimeFormatter.ISO_DATE);
         record.put("dateCreated",dateAsString);
         record.put("bio",null);
-        record.put("firstName",null);
+        record.put("email",null);
         record.put("middleName",null);
         record.put("lastName",null);
 
@@ -158,9 +158,9 @@ public class DatabaseIOHandler {
      * @return The full name or null if not found
      */
     public String getUserFullName(String username) {
-        Map<String, String> data = db.getAccountData(username);
-        if (data != null && data.containsKey("fullName")) {
-            return data.get("fullName");
+        Map<String, String> data = db.retrieve("users","username",username);
+        if (data != null && data.containsKey("firstName") && data.containsKey("middleName") && data.containsKey("lastName")) {
+            return data.get("firstName");
         }
         return null;
     }
