@@ -2,10 +2,12 @@ package gui.controllers.games;
 
 import gamelogic.GameType;
 import gamelogic.Player;
+import gamelogic.GamePiece;
 import gamelogic.pieces.Card;
 import gamelogic.pieces.CardPile;
 import gamelogic.pieces.SuitType;
 import gamelogic.whist.WhistGame;
+import gamelogic.whist.StageType;
 import gui.ScreenManager;
 import gui.controllers.GameLobbyController;
 import javafx.fxml.FXML;
@@ -13,19 +15,32 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.control.Alert.AlertType;
+import javafx.animation.*;
+import javafx.scene.shape.*;
+import javafx.util.Duration;
+import javafx.geometry.Bounds;
+import javafx.animation.Interpolator;
+import javafx.geometry.Insets;
+import javafx.scene.transform.Rotate;
 import networking.accounts.UserAccount;
+
 
 import java.net.URL;
 import java.util.*;
+import java.util.ResourceBundle;
 
 /**
  * Controller for the Whist card game UI
@@ -41,8 +56,8 @@ public class WhistController implements Initializable {
     @FXML private Button backButton;
     @FXML private Text gameTitle;
     @FXML private Label roundCounter;
-    @FXML private ImageView trumpSuitImage;
     @FXML private Label gameStageLabel;
+    @FXML private Label getCurrentPlayerLabel;
     
     // Player info
     @FXML private ImageView player1Avatar;
@@ -58,7 +73,11 @@ public class WhistController implements Initializable {
     // Game controls
     @FXML private Button startGameButton;
     @FXML private Button shuffleButton;
-    @FXML private Button dealButton;
+    @FXML private Button shuffleButton1; // Overhand
+    @FXML private Button shuffleButton2; // Riffle
+    @FXML private Button shuffleButton11; // Pile
+    @FXML private Button dealButton1;
+    @FXML private VBox shuffleVBox;
     @FXML private Button revealTrumpButton;
     @FXML private Button forfeitButton;
     @FXML private Button rulesButton;
@@ -93,6 +112,18 @@ public class WhistController implements Initializable {
     @FXML private StackPane animationContainer;
     @FXML private ListView<String> moveHistoryList;
 
+    // Round result and game over overlays
+    @FXML private StackPane roundResultOverlay;
+    @FXML private Label roundResultTitle;
+    @FXML private Label roundResultMessage;
+    @FXML private StackPane gameOverOverlay;
+    @FXML private Label gameOverTitle;
+    @FXML private Label gameOverMessage;
+    @FXML private Button returnToLobbyButton;
+
+    // Add FXML field for matchIdLabel
+    @FXML private Label matchIdLabel;
+
 
     // GAME ATTRIBUTES
 
@@ -125,385 +156,277 @@ public class WhistController implements Initializable {
     private final Random random = new Random();
     private ScreenManager screenManager = ScreenManager.getInstance();
 
+    // Add instance variables to track tricks
+    private int currentTrickNumber = 0;
+    private int player1TricksWon = 0;
+    private int player2TricksWon = 0;
+
 
     // CONSTRUCTOR
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initial setup
-        setupGame();
-
-            // DEBUG: Shows the deck in the console to prove shuffling occurred
-            System.out.println("[Game Started]");
-
-        // TODO: It is likely better to put this into a onStartGameClicked() method of some sort to give players time
-        //  to load into the game. That would make it so they aren't under time pressure from the timers before they
-        //  are prepared to play.
-        startWhistGameLoop();
-
-
-        updateUI();
-
-        // Hide hand areas during dealing stage
+        // Create a new WhistGame instance with two players
+        List<Player> players = new ArrayList<>();
+        players.add(new Player(new UserAccount("Player 1", "Player 1")));
+        players.add(new Player(new UserAccount("Player 2", "Player 2")));
+        
+        // Create the Whist game
+        whistGame = new WhistGame(GameType.WHIST, players, 26);
+        
+        // Set initial game state
+        gameInProgress = false;
+        
+        // Set up the initial round number
+        whistGame.setRound(1);
+        roundCounter.setText("1");
+        
+        // Hide hand areas initially
         hideHandAreas();
         
-        // Set initial button states
-        shuffleButton.setDisable(false);
-        dealButton.setDisable(true);
+        // Hide result overlays initially
+        if (roundResultOverlay != null) {
+            roundResultOverlay.setVisible(false);
+        }
+        if (gameOverOverlay != null) {
+            gameOverOverlay.setVisible(false);
+        }
         
-        // Setup button handlers
-        //setupButtonHandlers();
-        
-        // Create reveal trump button (initially not visible)
-        //createRevealTrumpButton();
-        
-        // Fix button positioning
+        // Set up the game and UI
+        setupGame();
+        setupButtonHandlers();
         fixButtonPositioning();
+        
+        // Ensure UI is in the correct state
+        updateUI();
+        
+        // Initialize dealer overlay instead of showing the start game overlay
+        setupDealerOverlay();
+    }
+
+    private void setupDealerOverlay() {
+        // Initially hide the shuffle controls VBox
+        shuffleVBox.setVisible(false);
+        
+        // Show START GAME button and position it in front
+        startGameButton.setVisible(true);
+        startGameButton.toFront();
+        
+        // Configure START GAME button action
+        startGameButton.setOnAction(event -> onStartGameButtonClicked());
+        
+        // Set Deal button to disabled initially
+        dealButton1.setDisable(true);
+        
+        // Configure deal button action
+        dealButton1.setOnAction(e -> onDealClicked());
+        
+        // Initialize shuffle counter
+        shuffleCounterLabel.setText("Shuffles: " + shuffleCount + "/" + REQUIRED_SHUFFLES);
+        
+        // Setup shuffle button actions
+        setupShuffleButtons();
+    }
+
+    private void onStartGameButtonClicked() {
+        // Hide START GAME button
+        startGameButton.setVisible(false);
+        
+        // Show shuffle controls
+        shuffleVBox.setVisible(true);
+        
+        // Reset shuffle count
+        shuffleCount = 0;
+        shuffleCounterLabel.setText("Shuffles: " + shuffleCount + "/" + REQUIRED_SHUFFLES);
+        
+        // Add a move history entry
+        addMoveHistoryEntry("Game started. Shuffle the deck at least " + REQUIRED_SHUFFLES + " times.");
+    }
+
+    private void setupShuffleButtons() {
+        // Cut shuffle
+        shuffleButton.setOnAction(event -> {
+            animateShuffle("cut");
+            updateShuffleCount();
+        });
+        
+        // Riffle shuffle
+        shuffleButton2.setOnAction(event -> {
+            animateShuffle("riffle");
+            updateShuffleCount();
+        });
+        
+        // Overhand shuffle
+        shuffleButton1.setOnAction(event -> {
+            animateShuffle("overhead");
+            updateShuffleCount();
+        });
+        
+        // Pile shuffle
+        shuffleButton11.setOnAction(event -> {
+            animateShuffle("scramble");
+            updateShuffleCount();
+        });
+    }
+
+    private void updateShuffleCount() {
+        shuffleCount++;
+        shuffleCounterLabel.setText("Shuffles: " + shuffleCount + "/" + REQUIRED_SHUFFLES);
+        
+        // Add a move history entry
+        addMoveHistoryEntry("Deck shuffled. (" + shuffleCount + "/" + REQUIRED_SHUFFLES + ")");
+        
+        // Enable deal button if required shuffles are completed
+        if (shuffleCount >= REQUIRED_SHUFFLES) {
+            dealButton1.setDisable(false);
+            dealButton1.getStyleClass().add("deal-button-enabled");
+            shuffleInstructionLabel.setText("Deck is sufficiently shuffled. You can now deal the cards.");
+            addMoveHistoryEntry("Deck sufficiently shuffled. Ready to deal.");
+        }
     }
 
 
     // GAME LOOP
 
     /**
-     * Loops through each stage of a Game of Whist, calling
+     * [This method is preserved for documentation purposes but its implementation has been moved]
+     * See the implementation at the end of the file.
      */
-    public void startWhistGameLoop() {
-        // Loops until a Player reaches 6 Points
-        while (gameInProgress) {
-            // Increments the Round counter every new round
-            whistGame.setRound(whistGame.getRound() + 1);
-            // TODO: Move history entry: Round 1 begins!
-
-            // Performs different tasks depending on the Game Stage
-            switch (whistGame.getGameStage()) {
-                // Handles the selection of the dealer, deck shuffling, and card dealing
-                case DEAL:
-                    // DEBUG: Shows stage
-                    System.out.println("-=Dealing Stage=-\n");
-
-                    /*
-                     The Dealer is the Player who draws the lowest rank Card
-                     */
-
-                    // Shuffles the Deck a bit so Players' selections are random
-                    whistGame.getDeck().overheadShuffle();
-
-                    // Renders the whole face-down deck so that Players can select a card from it
-                    deckDisplay = renderWholePile(whistGame.getDeck());
-                    // TODO: Play animation of all cards starting in the centre of the screen then splaying out
-                    //  (They will overlap each other when fully splayed)
-
-                    // Makes every Card StackPane able to be picked by the Players
-                    for (StackPane currentPane : deckDisplay) {
-                        // Makes the Card able to be Selected by a Player
-                        makeIntoSelectable(currentPane);
-                        // Indicates that the Card is Clickable to Players with a visible glow
-                        makeGlow(currentPane);
-                    }
-
-
-                    /*
-                     Players are prompted to pick cards to compare them, looping until a successful comparison
-                     */
-
-                    // Declares if the comparison was successful
-                    boolean goodCompare = false;
-
-                    // Loops until a good comparison is made
-                    while (!goodCompare) {
-                        // Cards that were clicked by the Players
-                        Card card1 = null;
-                        Card card2 = null;
-                        Card winningCard;
-                        StackPane card1Display = null;
-                        StackPane card2Display = null;
-
-                        // TODO: Prompt each Player to select a Card
-                        //  (When they select a card, it will be dealt to them with whistGame.dealCard(<clicked card>))
-                        //  (However, this won't be reflected visually!)
-
-                        // TODO: Play animation of selected Cards moving from the deck to the bottom middle of screen
-
-                        // TODO: Make 10 second timer for Selecting Cards
-
-                        // Flips selected Cards face up to reveal them to the Players
-                        // (They are generated face down during initialization)
-                        // Flip real cards
-                        card1.flip();
-                        card2.flip();
-                        // Re-render flipped cards to update visuals
-                        card1Display = renderCard(card1);
-                        card2Display = renderCard(card2);
-
-                        // TODO: Move history entry: The cards that each player picked after they are revealed
-
-                        // Compares selected Cards to select Dealer. Lowest Rank gets Dealer
-                        winningCard = whistGame.compareCards(card1, card2);
-
-                        // Checks if the comparison is valid, cancelling the loop if so
-                        if (winningCard != null) {
-                            // Ends the loop because the comparison was successful
-                            goodCompare = true;
-
-                            // Gives a gold glow to the lower valued Card
-                            if (card1 == winningCard) {
-                                makeGlow(card2Display);
-
-                                // TODO: Prompt all Players that Player 2 is the Dealer
-                                // TODO: Move history entry: Dealer selected
-                            } else {
-                                makeGlow(card1Display);
-
-                                // TODO: Prompt all Players that Player 1 is the Dealer
-                                // TODO: Move history entry: Dealer selected
-
-                            }
-
-                            // Checks each Players' Hands for the Card
-                            // First Player
-                            if (whistGame.getPlayer1().checkHand(winningCard)) {
-                                // Sets the turn holder to the first Player, as they get to lead the first trick
-                                whistGame.setTurnHolder(whistGame.getPlayer1());
-                            }
-                            // Second Player
-                            if (whistGame.getPlayer2().checkHand(winningCard)) {
-                                // Sets the turn holder to the second Player, as they get to lead the first trick
-                                whistGame.setTurnHolder(whistGame.getPlayer2());
-                            }
-
-                            // Flips selected Cards face down to match the deck orientation
-                            // (They are face up from before)
-                            // Flip real cards
-                            card1.flip();
-                            card2.flip();
-                            // Re-renders flipped cards to update visuals
-                            card1Display = renderCard(card1);
-                            card2Display = renderCard(card2);
-
-                            // Removes the Cards from the Players' Hands and puts them back into the Deck
-                            whistGame.getPlayer1().moveFromHand(card1, whistGame.getDeck());
-                            whistGame.getPlayer2().moveFromHand(card2, whistGame.getDeck());
-
-                            // Shuffles the Deck
-                            whistGame.getDeck().overheadShuffle();
-
-                            // TODO: Play animation of all Cards consolidating into one pile
-
-                            // Re-renders the deck as a simplified visual stack
-                            deckDisplay = renderPile(whistGame.getDeck());
-
-                        } else {
-                            // TODO: Prompt the Players that they have to pick again
-                            // TODO: Move history entry: Tied! Must go again
-
-                            // Flips selected Cards face down to match the deck orientation
-                            // (They are face up from before)
-                            // Flip real cards
-                            card1.flip();
-                            card2.flip();
-                            // Re-render flipped cards to update visuals
-                            card1Display = renderCard(card1);
-                            card2Display = renderCard(card2);
-
-                            // Removes the Cards from the Players' Hands and puts them back into the Deck
-                            // Real Cards
-                            whistGame.getPlayer1().moveFromHand(card1, whistGame.getDeck());
-                            whistGame.getPlayer2().moveFromHand(card2, whistGame.getDeck());
-                            // Visual Cards
-
-                            // Shuffles the Deck
-                            whistGame.getDeck().overheadShuffle();
-                        }
-                    }
-
-
-                    /*
-                     The Dealer is prompted to finish setting up the game by shuffling, dealing, and then showing Trump
-                     */
-
-                    // Shuffling
-                    // TODO: Prompt the Dealer to shuffle 5 times
-
-                    // TODO: Create buttons for all types of shuffling and displays them at the bottom of the screen
-                    //  Shuffle Types: Cut, Scramble, Riffle, Overhand
-                    //  (Use the card.cut, card.scrambleShuffle, card.riffleShuffle, and card.overheadShuffle methods)
-                    //  (Buttons should be disabled while a short shuffle animation plays)
-                    //  (We should also make icons for each type of shuffle to have on the buttons)
-                    //  (Move history entry: Dealer used <shuffle name> on the deck)
-
-                    // TODO: Make 10 second timer for Shuffling Cards
-
-                    // TODO: Remove buttons after 5 shuffles are done
-
-
-
-                    // Dealing
-                    // Indicates who should get the card each loop
-                    boolean toDealer = false;
-
-                    // TODO: Prompt the dealer to deal 13 cards to each Player
-
-                    // TODO: Make 10 second timer for Dealing Cards
-
-                    // Loops until both Players have 13 Cards in their Hands
-                    while (whistGame.getDeck().getSize() > 26) {
-                        // Re-renders the Deck to update visuals
-                        deckDisplay = renderPile(whistGame.getDeck());
-                        // Makes the Card able to be Dealt by the Dealer into Player's Hands
-                        makeIntoDeal(deckDisplay.getFirst());
-                        // Indicates that the Card is Clickable to Players with a visible glow
-                        makeGlow(deckDisplay.getFirst());
-                    }
-
-                    // TODO: Move history entry: 13 cards have been dealt to each player
-
-
-                    // Creating Draw Pile
-                    // Creates the Draw Pile from the remaining deck once cards are dealt out
-                    whistGame.setDraw(whistGame.getDeck());
-
-                    // Clears the Deck
-                    whistGame.getDeck().clear();
-                    // TODO: Un-render the Display Deck
-                    //deckDisplay.clear(); // I am not sure how to do this
-
-                    // Renders the Draw Pile
-                    drawPileDisplay = renderPile(whistGame.getDraw());
-
-                    // Sets the top card to a clickable Trump Card to be revealed
-                    makeIntoTrump(drawPileDisplay.getFirst());
-                    // Makes it glow to indicate interactiveness
-                    makeGlow(drawPileDisplay.getFirst());
-
-                    // TODO: Make 5 second timer for Revealing Trump
-
-
-                    /*
-                     Players' Hands are sorted and revealed to them
-                     */
-
-                    // TODO: For now, it is okay if both players' hands are shown on the screen for ease of testing
-
-                    // Sorts each Players' Hand and then reveals their Cards
-                    whistGame.getPlayer1().sortHand();
-                    whistGame.getPlayer2().sortHand();
-                    whistGame.showHand(whistGame.getPlayer1());
-                    whistGame.showHand(whistGame.getPlayer2());
-
-                    // Re-renders and makes all Cards playable in each Players' Hand to match new sorting
-                    // Player 1
-                    for (int i = 0; i < player1Cards.size(); i++) {
-                        // Current Card in Display
-                        StackPane displayCard = player1Cards.get(i);
-                        // Current Card in Logic
-                        Card whistCard = (Card) whistGame.getPlayer1().getHand().get(i);
-
-                        // Re-renders the Card
-                        displayCard = renderCard(whistCard);
-                        // Makes the Card Playable
-                        makeIntoPlayable(displayCard);
-
-                        // Puts the modified Card into the Player's visual Hand
-                        player1Cards.set(i, displayCard);
-                    }
-                    // Player 2
-                    for (int i = 0; i < player2Cards.size(); i++) {
-                        // Current Card in Display
-                        StackPane displayCard = player2Cards.get(i);
-                        // Current Card in Logic
-                        Card whistCard = (Card) whistGame.getPlayer2().getHand().get(i);
-
-                        // Re-renders the Card
-                        displayCard = renderCard(whistCard);
-                        // Makes the Card Playable
-                        makeIntoPlayable(displayCard);
-
-                        // Puts the modified Card into the Player's visual Hand
-                        player2Cards.set(i, displayCard);
-                    }
-
-
-
-                    // Moves the game to the next stage
-                    whistGame.nextStage();
-                    // TODO: Move history entry: Moving into <whistGame.getStage()> stage!
-                    break;
-
-                // Handles the trick taking logic while Players are drafting their hand
-                case DRAFT:
-                    // DEBUG: Shows stage
-                    System.out.println("-=Drafting Stage=-\n");
-
-
-                    // Moves the game to the next stage
-                    whistGame.nextStage();
-                    // TODO: Move history entry: Moving into <whistGame.getStage()> stage!
-                    break;
-
-                // Handles the trick taking logic while Players are tallying points
-                case DUEL:
-                    // DEBUG: Shows stage
-                    System.out.println("-=Dueling Stage=-\n");
-
-                    // Moves the game to the next stage
-                    whistGame.nextStage();
-                    break;
-            }
-
-            // Checks if any Player has yet reached 6 points
-            for (Player currentPlayer : whistGame.getPlayers()) {
-                if (currentPlayer.getScore() >= 6) {
-                    // TODO: Display end screen
-                    // TODO: Move history entry: Gave over, winner = blah
-
-                    // Ends the Game
-                    gameInProgress = false;
-                    break;
-                }
-            }
-        }
-    }
+    // Duplicate method removed - see implementation at the end of the file
 
 
     // RENDER METHODS
 
-    //TODO: Will render a pile with the top card pane visible, and the other cards as a single image pane of a card pile
+    /**
+     * Renders a card pile with a stack effect
+     *
+     * @param pile The card pile to render
+     * @return List of StackPanes representing the pile
+     */
     private List<StackPane> renderPile(CardPile pile) {
-        // The List of Card StackPanes
         List<StackPane> pileToRender = new ArrayList<>();
-
-        // Gets the first card of the given pile to render it
-        Card cardToRender = pile.getTopCard();
-
-        // TODO: Render a StackPane that is a stack of cards in a single image
-        StackPane bottomPile = new StackPane();
-
-        // Renders the top Card
-        StackPane topCard = renderCard(cardToRender);
-
-        // Puts each element into the list
-        pileToRender.add(topCard);
-        pileToRender.add(bottomPile);
-
-        // Returns the list of cards
+        
+        // Check if pile has cards
+        if (pile == null || pile.getSize() == 0) {
+            // Create an empty pile indicator
+            StackPane emptyPile = new StackPane();
+            emptyPile.setPrefWidth(80);
+            emptyPile.setPrefHeight(120);
+            emptyPile.getStyleClass().add("empty-pile");
+            
+            // Add a label to indicate empty pile
+            Label emptyLabel = new Label("Empty");
+            emptyLabel.getStyleClass().add("pile-label");
+            emptyPile.getChildren().add(emptyLabel);
+            
+            pileToRender.add(emptyPile);
+            return pileToRender;
+        }
+        
+        // Calculate how many cards to show in the stack (up to 5)
+        int stackSize = Math.min(pile.getSize(), 5);
+        
+        // Create a container for all the cards
+        StackPane pileContainer = new StackPane();
+        pileContainer.setPrefWidth(80);
+        pileContainer.setPrefHeight(120);
+        
+        // Add stack effect cards (bottom to top)
+        for (int i = stackSize - 1; i >= 0; i--) {
+            // Create card back for stack effect
+            ImageView stackCardImage = createCardImageView("/images/whist images/CardBackside1.png");
+            StackPane stackCardPane = new StackPane(stackCardImage);
+            stackCardPane.getStyleClass().add("card-view");
+            stackCardPane.getStyleClass().add("card-back");
+            
+            // Position with slight offset to create stack effect
+            stackCardPane.setTranslateX((stackSize - i - 1) * 2);
+            stackCardPane.setTranslateY((stackSize - i - 1) * 2);
+            
+            // Add to container with proper z-order
+            stackCardPane.setViewOrder(i);
+            pileContainer.getChildren().add(stackCardPane);
+        }
+        
+        // If the pile has at least one card, render and add the top card
+        if (pile.getSize() > 0) {
+            Card topCard = pile.getTopCard();
+            StackPane topCardPane = renderCard(topCard);
+            
+            // Position the top card at the top of the stack
+            topCardPane.setTranslateX(stackSize * 2);
+            topCardPane.setTranslateY(stackSize * 2);
+            topCardPane.setViewOrder(-1); // Ensure it's on top
+            
+            // Add to the container
+            pileContainer.getChildren().add(topCardPane);
+            
+            // Store the top card for interaction
+            pileContainer.getProperties().put("topCard", topCard);
+        }
+        
+        // Add the container to the return list
+        pileToRender.add(pileContainer);
+        
         return pileToRender;
     }
 
-    // TODO: Will create card panes for all cards in a pile
+    /**
+     * Renders all cards in a pile with an interactive fan layout
+     *
+     * @param pile The card pile to render
+     * @return List of StackPanes representing all cards in the pile
+     */
     private List<StackPane> renderWholePile(CardPile pile) {
         // The List of Card StackPanes
         List<StackPane> cardsToRender = new ArrayList<>();
 
-        // Iterates through the card pile to create a StackPane for each of its cards and put it into the list
+        // Get the total number of cards in the pile
+        int totalCards = pile.getCards().size();
+        if (totalCards == 0) return cardsToRender;
+        
+        // Calculate optimal fan parameters based on number of cards
+        double centerX = 0;
+        double centerY = 0;
+        double radius = 300; // Increased radius for better spread
+        
+        // Determine fan angles based on number of cards
+        double startAngle = totalCards > 26 ? -75 : -60;
+        double endAngle = totalCards > 26 ? 75 : 60;
+        double angleIncrement = (endAngle - startAngle) / (Math.max(totalCards - 1, 1));
+        
+        // Create card panes with fan layout
+        int index = 0;
         for (Card cardToRender : pile.getCards()) {
-            // Renders the Card
-            StackPane topCard = renderCard(cardToRender);
-
-            // Adds the Card to the List
-            cardsToRender.add(topCard);
+            // Renders the Card using the improved method
+            StackPane cardPane = renderCard(cardToRender);
+            
+            // Calculate position in fan layout
+            double angle = startAngle + (index * angleIncrement);
+            double radians = Math.toRadians(angle);
+            
+            // Position the card in a fan layout
+            double offsetX = radius * Math.sin(radians);
+            double offsetY = -radius * Math.cos(radians);
+            
+            // Apply position
+            cardPane.setTranslateX(centerX + offsetX);
+            cardPane.setTranslateY(centerY + offsetY);
+            
+            // Apply rotation to match fan curve
+            cardPane.setRotate(angle);
+            
+            // Set z-order for proper stacking
+            cardPane.setViewOrder(-index);
+            
+            // Add hover effects for better visibility
+            setupCardHoverEffects(cardPane, index);
+            
+            // Add to result list
+            cardsToRender.add(cardPane);
+            index++;
         }
 
-        // Returns the list of cards
         return cardsToRender;
     }
 
@@ -516,95 +439,119 @@ public class WhistController implements Initializable {
      * @return The rendered StackPane
      */
     private StackPane renderCard(Card card) {
-        // Gets the information of the Card
-        SuitType suit = card.getSuit();
-        int rank = card.getRank();
-        boolean faceDown = card.isFaceDown();
-
-        // Create the image view for the Card StackPane
-        ImageView cardImage = new ImageView();
-        cardImage.setFitHeight(120);
-        cardImage.setFitWidth(80);
-        cardImage.setPreserveRatio(true);
-
+        // Create the image view for the Card StackPane using the helper method
+        ImageView cardImage = createCardImageView(getCardImagePath(card));
+        
         // Create a Card StackPane
         StackPane cardPane = new StackPane(cardImage);
         cardPane.getStyleClass().add("card-view");
-
+        
+        // Set preferred dimensions
+        cardPane.setPrefWidth(80);
+        cardPane.setPrefHeight(120);
+        
         // Attaches the Card object to this StackPane
         cardPane.getProperties().put("card", card);
-
-        // Renders the relevant image for the Card based on which way its facing
-        // Initializes a String Filepath to the relevant image for this Card
-        String imagePath = "/images/whist images/";
-
-        // Gets the back image for the Card StackPane when it is face down
-        if (faceDown) {
-            imagePath += "CardBackside1.png";
+        
+        // Add card suit and rank as style classes for potential CSS styling
+        if (!card.isFaceDown()) {
+            cardPane.getStyleClass().add(card.getSuit().toString().toLowerCase());
+            cardPane.getStyleClass().add("rank-" + card.getRank());
+        } else {
+            cardPane.getStyleClass().add("card-back");
         }
-        // Gets the face image for the Card StackPane when it is face up
-        else {
-            // Adds the Suit folders to the Filepath
-            switch (suit) {
-                case HEARTS:
-                    imagePath += "Hearts/";
-                    break;
-                case DIAMONDS:
-                    imagePath += "Diamonds/";
-                    break;
-                case SPADES:
-                    imagePath += "Spades/";
-                    break;
-                case CLUBS:
-                    imagePath += "Clubs/";
-                    break;
-            }
-
-            // Adds the Rank of the card to the Filepath image name
-            switch (rank) {
-                case 1 -> imagePath += "ace_of_" + suit.toString().toLowerCase() + ".png";
-                case 13 -> imagePath += "king_of_" + suit.toString().toLowerCase() + ".png";
-                case 12 -> imagePath += "queen_of_" + suit.toString().toLowerCase() + ".png";
-                case 11 -> imagePath += "jack_of_" + suit.toString().toLowerCase() + ".png";
-                default -> imagePath += rank + "_of_" + suit.toString().toLowerCase() + ".png";
-            }
-        }
-
-        // Applies the image to the Card StackPane. Displays placeholder image if the path is unreachable
-        try {
-            cardImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
-        } catch (Exception e) {
-            // Falls back to placeholder image if desired image is not found
-            try {
-                cardImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/unknown.png"))));
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        }
-
-        // Adds the Image to the Card StackPane
-        cardPane.getChildren().add(cardImage);
-
-        // Returns the Card StackPane
+        
         return cardPane;
     }
 
     // TODO: Makes a rendered Card clickable for Playing
     private void makeIntoPlayable(StackPane cardPane) {
+        // Get the associated card
+        Card associatedCard = (Card) cardPane.getProperties().get("card");
+        if (associatedCard == null) return;
+
+        // Add glow effect to indicate this card is active
+        makeGlow(cardPane);
+
         // Create click handler for card selection and animation
         cardPane.setOnMouseClicked(event -> {
-
             // DEBUG: Shows the card that was clicked
-            System.out.println("Played Card: " + cardPane.getProperties().get("card").toString());
+            System.out.println("Played Card: " + associatedCard.toString());
 
-            // The Card associated with this StackPane
-            Card associatedCard = (Card) cardPane.getProperties().get("card");
+            // Check whose turn it is and if this card belongs to that player
+            Player currentPlayer = whistGame.getTurnHolder();
+            boolean isCurrentPlayerCard = currentPlayer.checkHand(associatedCard);
 
+            if (!isCurrentPlayerCard) {
+                // Not this player's turn or card
+                showAlert(Alert.AlertType.WARNING, "Invalid Play", "It's not your turn or you can't play this card!");
+                return;
+            }
 
-            // TODO:
+            // Check if this card is playable according to game rules
+            boolean isValidCard = false;
+            List<Card> playableCards;
 
-            // Makes Card inert after being clicked
+            // If there are cards in the trick already, we need to follow suit if possible
+            if (!whistGame.getTrick().isEmpty()) {
+                Card leadCard = whistGame.getTrick().getFirst();
+                playableCards = whistGame.getPlayableCards(currentPlayer, leadCard);
+            } else {
+                // Player is leading, all cards are playable
+                playableCards = whistGame.getPlayableCards(currentPlayer);
+            }
+
+            // Check if the card is in the list of playable cards
+            for (Card validCard : playableCards) {
+                if (validCard == associatedCard) {
+                    isValidCard = true;
+                    break;
+                }
+            }
+
+            if (!isValidCard) {
+                showAlert(Alert.AlertType.WARNING, "Invalid Card", "You can't play this card - please follow suit if possible.");
+                return;
+            }
+
+            // Play the card in game logic
+            whistGame.playCard(associatedCard);
+
+            // Add move history entry
+            addMoveHistoryEntry(currentPlayer.getUsername() + " played " + associatedCard.toString());
+
+            // Animate card being played to trick area
+            playCardToTrick(cardPane);
+
+            // Make card inert after being played
             makeIntoInert(cardPane);
+
+            // Switch turn to other player
+            Player nextPlayer = currentPlayer == whistGame.getPlayer1() ? 
+                whistGame.getPlayer2() : whistGame.getPlayer1();
+            whistGame.setTurnHolder(nextPlayer);
+
+            // Update UI to show whose turn it is
+            updateUI();
+            statusLabel.setText(whistGame.getTurnHolder().getUsername() + "'s turn to play");
+
+            // If both players have played a card, determine the trick winner
+            if (whistGame.getTrick().size() == 2) {
+                // Delay to show the cards before resolving the trick
+                Timeline trickResolution = new Timeline(
+                    new KeyFrame(Duration.seconds(1.5), e -> resolveTrick())
+                );
+                trickResolution.play();
+            } else {
+                // Make the next player's cards playable
+                resetPlayableCards();
+                
+                // Start timer for the next player's turn
+                startGameTimer(15, () -> {
+                    // Auto-play a card if timer expires
+                    autoPlayCard();
+                });
+            }
         });
     }
 
@@ -632,23 +579,120 @@ public class WhistController implements Initializable {
         });
     }
 
-    // TODO: Makes a rendered Card clickable for Selecting Dealer
+    // TODO: Will add click handling for selectable cards
     private void makeIntoSelectable(StackPane cardPane) {
-        // Create click handler for card selection and animation
+        // Check for null
+        if (cardPane == null) return;
+        
+        // Get the card from the cardPane properties
+        Card card = (Card) cardPane.getProperties().get("card");
+        if (card == null) return;
+        
+        // Add selectable styling
+        cardPane.getStyleClass().add("selectable-card");
+        
+        // Make the card slightly enlarge when hovered
+        cardPane.setOnMouseEntered(event -> {
+            if (!cardPane.getStyleClass().contains("selected")) {
+                cardPane.setScaleX(1.1);
+                cardPane.setScaleY(1.1);
+                cardPane.setEffect(new DropShadow(10, Color.GOLD));
+            }
+        });
+        
+        cardPane.setOnMouseExited(event -> {
+            if (!cardPane.getStyleClass().contains("selected")) {
+                cardPane.setScaleX(1.0);
+                cardPane.setScaleY(1.0);
+                cardPane.setEffect(null);
+            }
+        });
+        
+        // Create click handler
         cardPane.setOnMouseClicked(event -> {
-
-            // DEBUG: Shows the card that was clicked
-            System.out.println("Selected Card: " + cardPane.getProperties().get("card").toString());
-
-            // The Card associated with this StackPane
-            Card associatedCard = (Card) cardPane.getProperties().get("card");
-
-            // TODO: Get the Player who clicked and put it into their Hand temporarily
-            //  (How to get player who clicked?)
-            //whistGame.dealCard(whistGame.getDraw(), associatedCard, whistGame.getPlayer<1 or 2>);
-
-            // Makes Card inert after being clicked
+            // Get the current player
+            Player currentPlayer = whistGame.getCurrentTurn();
+            String currentPlayerName = currentPlayer.getUsername();
+            
+            // Check if the current player has already selected a card
+            boolean hasSelected = false;
+            for (StackPane existingCardPane : deckDisplay) {
+                if (existingCardPane.getStyleClass().contains("selected") && 
+                    existingCardPane.getProperties().get("selectedBy") != null &&
+                    existingCardPane.getProperties().get("selectedBy").equals(currentPlayerName)) {
+                    hasSelected = true;
+                    break;
+                }
+            }
+            
+            // If the player has already selected, don't allow another selection
+            if (hasSelected) {
+                showAlert(AlertType.WARNING, "Card Already Selected", 
+                          "You've already selected a card. Wait for the other player to select.");
+                return;
+            }
+            
+            // Mark card as selected and store who selected it
+            cardPane.getStyleClass().add("selected");
+            cardPane.getProperties().put("selectedBy", currentPlayerName);
+            
+            // Temporarily assign card to player for dealer determination
+            whistGame.dealCard(whistGame.getDeck(), card, currentPlayer);
+            
+            // Add to move history
+            addMoveHistoryEntry(currentPlayerName + " selected " + card.toString() + " for dealer determination");
+            
+            // Animate card selection
+            animateCardSelection(cardPane);
+            
+            // Disable further selection for this card
             makeIntoInert(cardPane);
+            
+            // Check if both players have selected a card
+            boolean bothSelected = true;
+            Card player1Card = null;
+            Card player2Card = null;
+            StackPane player1CardPane = null;
+            StackPane player2CardPane = null;
+            
+            for (Player player : whistGame.getPlayers()) {
+                boolean found = false;
+                for (StackPane cp : deckDisplay) {
+                    if (cp.getProperties().get("selectedBy") != null && 
+                        cp.getProperties().get("selectedBy").equals(player.getUsername())) {
+                        found = true;
+                        Card selectedCard = (Card) cp.getProperties().get("card");
+                        
+                        if (player == whistGame.getPlayers().getFirst()) {
+                            player1Card = selectedCard;
+                            player1CardPane = cp;
+                        } else {
+                            player2Card = selectedCard;
+                            player2CardPane = cp;
+                        }
+                        break;
+                    }
+                }
+                if (!found) {
+                    bothSelected = false;
+                }
+            }
+            
+            // If both players have selected, determine the dealer
+            if (bothSelected && player1Card != null && player2Card != null) {
+                completeDealerSelection(player1Card, player2Card, player1CardPane, player2CardPane);
+            } else {
+                // Switch turns to the other player
+                // Replace whistGame.nextTurn() with direct turn switching
+                if (whistGame.getTurnHolder() == whistGame.getPlayer1()) {
+                    whistGame.setTurnHolder(whistGame.getPlayer2());
+                } else {
+                    whistGame.setTurnHolder(whistGame.getPlayer1());
+                }
+                updateUI();
+                // Update status message
+                statusLabel.setText("Waiting for " + whistGame.getCurrentTurn().getUsername() + " to select a card");
+            }
         });
     }
 
@@ -656,100 +700,678 @@ public class WhistController implements Initializable {
     private void makeIntoTrump(StackPane cardPane) {
         // Create click handler for card selection and animation
         cardPane.setOnMouseClicked(event -> {
-
             // DEBUG: Shows the card that was clicked
             System.out.println("Trump Card: " + cardPane.getProperties().get("card").toString());
 
-            // The Card associated with this StackPane
-            Card associatedCard = (Card) cardPane.getProperties().get("card");
-
-            // Flips the real Card
-            associatedCard.flip();
-            // TODO: Re-render Card to show that it is flipped
-
-            // Sets the Trump Suit of the Game
-            whistGame.setTrump(associatedCard.getSuit());
+            // Execute the trump reveal logic
+            revealTrumpCard();
 
             // Makes Card inert after being clicked
             makeIntoInert(cardPane);
         });
     }
 
-    // TODO: Makes a rendered Card clickable for Dealing it to other Players
-    private void makeIntoDeal(StackPane cardPane) {
-        // Create click handler for card selection and animation
-        cardPane.setOnMouseClicked(event -> {
-
-            // DEBUG: Shows the card that was clicked
-            System.out.println("Dealt Card: " + cardPane.getProperties().get("card").toString());
-
-            // The Card associated with this StackPane
-            Card associatedCard = (Card) cardPane.getProperties().get("card");
-
-            // Checks which Player the Card is to be dealt to, starting with the Non-dealer
-            if (!dealToDealer) {
-                // Puts the real Card into the Non-dealer's Hand
-                whistGame.dealCard(whistGame.getDeck(), associatedCard, whistGame.getTurnHolder());
-
-                // Puts the display Card into the Non-dealer's Hand
-                // Checks for the Player who is the turn holder to give them the Card
-                if (whistGame.getPlayer1() == whistGame.getTurnHolder()) {
-                    // Gives display Card
-                    deckDisplay.remove(cardPane);
-                    player1Cards.add(cardPane);
-                } else {
-                    // Gives display Card
-                    deckDisplay.remove(cardPane);
-                    player2Cards.add(cardPane);
-                }
-
-                // TODO: Play animation of top card moving to Player's Hand
-
-                // Sets the recipient to the other Player
-                dealToDealer = true;
-            } else  {
-                // Puts the real Card into the Dealer's Hand
-                // Checks for the Player who is not the turn holder to give them the Card
-                if (whistGame.getPlayer1() != whistGame.getTurnHolder()) {
-                    // Gives real Card
-                    whistGame.dealCard(whistGame.getDeck(), associatedCard, whistGame.getPlayer1());
-                    // Gives display Card
-                    deckDisplay.remove(cardPane);
-                    player1Cards.add(cardPane);
-
-
-                } else {
-                    // Gives real Card
-                    whistGame.dealCard(whistGame.getDeck(), associatedCard, whistGame.getPlayer2());
-                    // Gives display Card
-                    deckDisplay.remove(cardPane);
-                    player2Cards.add(cardPane);
-
-                }
-
-                // TODO: Play animation of top card moving to Player's Hand
-
-                // Sets the recipient to the other Player
-                dealToDealer = false;
+    /**
+     * Reveals the trump card and updates the game stage
+     */
+    private void revealTrumpCard() {
+        // Get the top card from the draw pile
+        if (whistGame.getDraw() != null && !whistGame.getDraw().getCards().isEmpty()) {
+            Card trumpCard = whistGame.getDraw().getTopCard();
+            
+            // Flip the card face up if needed
+            if (trumpCard.isFaceDown()) {
+                trumpCard.flip();
             }
+            
+            // Set the trump suit in the game logic
+            whistGame.setTrump(trumpCard.getSuit());
+            
+            // Add move history entry
+            addMoveHistoryEntry("Trump suit revealed: " + trumpCard.getSuit().getDisplayName());
+            
+            // Update the trump card display
+            updateTrumpCardDisplay(trumpCard);
+            
+            // Update game status
+            statusLabel.setText("Trump suit revealed: " + trumpCard.getSuit().getDisplayName());
+            
+            // Start a 5-second timer to transition to DRAFT stage
+            startGameTimer(5, () -> {
+                // Progress to DRAFT stage
+                prepareDraftStage();
+            });
+        } else {
+            // Handle error - no draw pile or empty draw pile
+            showAlert(Alert.AlertType.ERROR, "Error", "No cards available to reveal as trump!");
+        }
+    }
 
+    /**
+     * Makes a rendered Card clickable for Dealing it to other Players
+     */
+    private void makeIntoDeal(StackPane cardPane) {
+        // Get the associated card
+        Card associatedCard = (Card) cardPane.getProperties().get("card");
+        if (associatedCard == null) return;
+        
+        // Add glow effect to indicate this card is active
+        makeGlow(cardPane);
+        
+        // Determine which player will receive the card
+        Player recipient;
+        boolean isPlayer1;
+        String recipientName;
+        
+            if (!dealToDealer) {
+            // Non-dealer receives card first (turn holder)
+            recipient = whistGame.getTurnHolder();
+            recipientName = recipient.getUsername();
+            isPlayer1 = (recipient == whistGame.getPlayer1());
+        } else {
+            // Dealer receives card
+            recipient = whistGame.getDealer();
+            recipientName = recipient.getUsername();
+            isPlayer1 = (recipient == whistGame.getPlayer1());
+        }
+        
+        // Deal card in game logic
+        whistGame.dealCard(whistGame.getDeck(), associatedCard, recipient);
+        
+        // Add move history entry
+        addMoveHistoryEntry("Dealt " + associatedCard.toString() + " to " + recipientName);
+        
+        // Create animation for card moving to player's hand
+        animateCardDeal(cardPane, isPlayer1);
+        
+        // Toggle dealToDealer flag for next card
+        dealToDealer = !dealToDealer;
+        
+        // Make card inert after dealing
+        makeIntoInert(cardPane);
+        
+        // Check if we need to continue dealing
+        int totalDealtCards = whistGame.getPlayer1().getHand().size() + whistGame.getPlayer2().getHand().size();
+        if (totalDealtCards < 26) { // 13 cards per player
+            // Get the next card from the deck if available
+            if (whistGame.getDeck().getSize() > 0) {
+                // Update the deck display
+                updateDeckDisplay();
+                
+                // Get the top card pane
+                if (!deckDisplay.isEmpty()) {
+                    StackPane nextCardPane = deckDisplay.get(0);
+                    
+                    // Set up a short delay before dealing the next card
+                    Timeline dealDelay = new Timeline(
+                        new KeyFrame(Duration.millis(300), e -> makeIntoDeal(nextCardPane))
+                    );
+                    dealDelay.play();
+                }
+            }
+        } else {
+            // All cards dealt
+            Timeline completionDelay = new Timeline(
+                new KeyFrame(Duration.seconds(1), e -> prepareForTrumpReveal())
+            );
+            completionDelay.play();
+        }
+    }
 
-            // Makes Card inert after being clicked
-            makeIntoInert(cardPane);
+    /**
+     * Updates the deck display after a card has been dealt
+     */
+    private void updateDeckDisplay() {
+        // Clear current deck display
+        deckDisplay.clear();
+        animationContainer.getChildren().clear();
+        
+        // Render the updated deck
+        if (whistGame.getDeck().getSize() > 0) {
+            deckDisplay = renderPile(whistGame.getDeck());
+            
+            // Position the deck in the center of the screen
+            double centerX = animationContainer.getWidth() / 2;
+            double centerY = animationContainer.getHeight() / 2;
+            
+            for (StackPane cardPane : deckDisplay) {
+                // Add card to animation container
+                animationContainer.getChildren().add(cardPane);
+                
+                // Position card in center
+                cardPane.setLayoutX(centerX - cardPane.getPrefWidth() / 2);
+                cardPane.setLayoutY(centerY - cardPane.getPrefHeight() / 2);
+            }
+        }
+    }
+
+    /**
+     * Animates a card being dealt from the deck to a player's hand
+     * 
+     * @param cardPane The card pane to animate
+     * @param isPlayer1 Whether the card is being dealt to player 1
+     */
+    private void animateCardDeal(StackPane cardPane, boolean isPlayer1) {
+        // Store original position
+        double startX = cardPane.getLayoutX();
+        double startY = cardPane.getLayoutY();
+        
+        // Calculate target position based on which player is receiving the card
+        double targetX, targetY;
+        
+        if (isPlayer1) {
+            // Target Player 1's hand area (bottom)
+            targetX = playerHandArea.localToScene(playerHandArea.getBoundsInLocal()).getMinX() + 
+                     (playerHandArea.getWidth() / 2) - 40;
+            targetY = playerHandArea.localToScene(playerHandArea.getBoundsInLocal()).getMinY() + 
+                     (playerHandArea.getHeight() / 2) - 60;
+        } else {
+            // Target Player 2's hand area (top)
+            targetX = opponentHandArea.localToScene(opponentHandArea.getBoundsInLocal()).getMinX() + 
+                     (opponentHandArea.getWidth() / 2) - 40;
+            targetY = opponentHandArea.localToScene(opponentHandArea.getBoundsInLocal()).getMinY() + 
+                     (opponentHandArea.getHeight() / 2) - 60;
+        }
+        
+        // Create animation
+        SequentialTransition dealAnimation = new SequentialTransition();
+        
+        // Flip card if it's player 1 (face up)
+        if (isPlayer1) {
+            // Get the associated card and flip it face up in the logic
+            Card card = (Card) cardPane.getProperties().get("card");
+            if (card != null && card.isFaceDown()) {
+                card.flip(); // Flip the card face up in the logic
+                
+                // Create a flip animation
+                RotateTransition flipCard = new RotateTransition(Duration.millis(200), cardPane);
+                flipCard.setAxis(Rotate.Y_AXIS);
+                flipCard.setFromAngle(0);
+                flipCard.setToAngle(180);
+                flipCard.setCycleCount(1);
+                
+                // Update the card image halfway through the flip
+                flipCard.setOnFinished(e -> updateCardImage(cardPane, card));
+                
+                dealAnimation.getChildren().add(flipCard);
+            }
+        }
+        
+        // Create move animation
+        TranslateTransition moveCard = new TranslateTransition(Duration.millis(500), cardPane);
+        moveCard.setFromX(0);
+        moveCard.setFromY(0);
+        moveCard.setToX(targetX - startX);
+        moveCard.setToY(targetY - startY);
+        
+        dealAnimation.getChildren().add(moveCard);
+        
+        // Add the card to the player's hand after animation
+        moveCard.setOnFinished(e -> {
+            // Remove from animation container
+            animationContainer.getChildren().remove(cardPane);
+            
+            // Add to appropriate hand area
+            if (isPlayer1) {
+                playerHandArea.getChildren().add(cardPane);
+                    player1Cards.add(cardPane);
+                } else {
+                opponentHandArea.getChildren().add(cardPane);
+                    player2Cards.add(cardPane);
+                }
+
+            // Reset transforms
+            cardPane.setTranslateX(0);
+            cardPane.setTranslateY(0);
         });
+        
+        // Play the animation
+        dealAnimation.play();
+    }
+
+    /**
+     * Deals all remaining cards to players automatically
+     */
+    private void dealAllCards() {
+        // Make sure dealer and turn holder are set in the game
+        if (whistGame.getDealer() == null) {
+            // If dealer is not set, set player 1 as dealer by default
+            whistGame.setDealer(whistGame.getPlayer1());
+            System.out.println("Dealer was null, setting to Player 1");
+        }
+        
+        if (whistGame.getTurnHolder() == null) {
+            // Set player 2 as the turn holder (non-dealer)
+            whistGame.setTurnHolder(whistGame.getPlayer2());
+            System.out.println("Turn holder was null, setting to Player 2");
+        }
+        
+        // Get remaining cards in the deck
+        List<Card> remainingCards = whistGame.getDeck().getCards();
+        
+        // Make a copy to avoid concurrent modification
+        List<Card> cardsToDeal = new ArrayList<>(remainingCards);
+        
+        // Determine players and track cards to add to their visual hands
+        Player dealer = whistGame.getDealer();
+        Player nonDealer = whistGame.getTurnHolder();
+        
+        // Make sure we have valid players to deal to
+        if (dealer == null || nonDealer == null) {
+            System.out.println("Error: Could not determine dealer or non-dealer");
+            return;
+        }
+        
+        // Alternate dealing cards to dealer and non-dealer
+        boolean dealingToDealer = false;
+        
+        for (Card card : cardsToDeal) {
+            Player recipient = dealingToDealer ? dealer : nonDealer;
+            
+            // Deal card in game logic
+            try {
+                whistGame.dealCard(whistGame.getDeck(), card, recipient);
+                // Add move history entry
+                addMoveHistoryEntry("Auto-dealt card to " + recipient.getUsername());
+            } catch (Exception e) {
+                System.out.println("Error dealing card: " + e.getMessage());
+            }
+            
+            // Toggle flag for next card
+            dealingToDealer = !dealingToDealer;
+        }
+        
+        // Update UI to show hands
+        updatePlayerHandDisplay();
+    }
+
+    /**
+     * Updates the display of player hands after dealing
+     */
+    private void updatePlayerHandDisplay() {
+        // Clear current hand displays
+        playerHandArea.getChildren().clear();
+        opponentHandArea.getChildren().clear();
+        player1Cards.clear();
+        player2Cards.clear();
+        
+        // Render player 1's hand
+        for (GamePiece piece : whistGame.getPlayer1().getHand()) {
+            if (piece instanceof Card card) {
+                // Flip card face up for player 1
+                if (card.isFaceDown()) {
+                    card.flip();
+                }
+                
+                // Create card pane
+                StackPane cardPane = renderCard(card);
+                
+                // Add to player area
+                playerHandArea.getChildren().add(cardPane);
+                    player1Cards.add(cardPane);
+            }
+        }
+        
+        // Render player 2's hand (face down)
+        for (GamePiece piece : whistGame.getPlayer2().getHand()) {
+            if (piece instanceof Card card) {
+                // Create card pane (face down)
+                StackPane cardPane = renderCard(card);
+                
+                // Add to opponent area
+                opponentHandArea.getChildren().add(cardPane);
+                    player2Cards.add(cardPane);
+            }
+        }
+    }
+
+    /**
+     * Prepares for the trump reveal phase after dealing is complete
+     */
+    private void prepareForTrumpReveal() {
+        // Stop any running timer
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        
+        // Add move history entry
+        addMoveHistoryEntry("All cards dealt. Preparing for trump reveal.");
+        
+        // Update the game stage
+        whistGame.setGameStage(StageType.DRAFT);
+        
+        // Update UI
+        updateUI();
+        
+        // Set up draw pile for trump card
+        CardPile drawPile = new CardPile();
+        
+        // Move any remaining cards to the draw pile
+        for (Card card : whistGame.getDeck().getCards()) {
+            drawPile.addCards(card);
+        }
+        
+        // Set the draw pile in the game
+        whistGame.setDraw(drawPile);
+        
+        // Show the dealer overlay for trump reveal
+        dealerOverlay.setVisible(true);
+        
+        // Update dealer overlay for trump reveal
+        shuffleInstructionLabel.setText("Click to reveal the trump suit.");
+        dealerTitle.setText("REVEAL TRUMP");
+        
+        // Hide all shuffle buttons and deal button
+        shuffleButton.setVisible(false);     // Cut button
+        shuffleButton1.setVisible(false);    // Overhand button
+        shuffleButton2.setVisible(false);    // Riffle button
+        shuffleButton11.setVisible(false);   // Pile button
+        dealButton1.setVisible(false);       // Deal button
+        shuffleCounterLabel.setVisible(false);
+        
+        // Hide the button container HBoxes to ensure no buttons are visible
+        for (Node node : shuffleVBox.getChildren()) {
+            if (node instanceof HBox && ((HBox) node).getChildren().stream()
+                    .anyMatch(child -> child instanceof Button && 
+                               (((Button) child).getText().contains("Cut") || 
+                                ((Button) child).getText().contains("Riffle") ||
+                                ((Button) child).getText().contains("Overhand") ||
+                                ((Button) child).getText().contains("Pile")))) {
+                node.setVisible(false);
+            }
+        }
+        
+        // Create a trump reveal button with purple styling
+        Button revealButton = new Button("Reveal Trump");
+        revealButton.getStyleClass().add("reveal-trump-button");
+        revealButton.setPrefWidth(200);
+        revealButton.setPrefHeight(40);
+        
+        // Get the top card from the draw pile to display
+        Card topCard = null;
+        if (!drawPile.getCards().isEmpty()) {
+            topCard = drawPile.getTopCard();
+        } else {
+            // Create a random card as fallback if draw pile is empty
+            topCard = new Card(1, SuitType.SPADES);
+        }
+        
+        // Store the trump card for use in the reveal animation
+        final Card trumpCard = topCard;
+        
+        // Create a card view for the trump card (face down initially)
+        StackPane cardContainer = new StackPane();
+        cardContainer.getStyleClass().add("card-image-container");
+        cardContainer.setPrefWidth(200);
+        cardContainer.setPrefHeight(280);
+        cardContainer.setMaxWidth(200);
+        cardContainer.setMaxHeight(280);
+        
+        // Create card backside that fills the entire container
+        ImageView cardBackImageView = new ImageView();
+        try {
+            Image cardBackImage = new Image(getClass().getResourceAsStream("/images/whist images/CardBackside1.png"));
+            cardBackImageView.setImage(cardBackImage);
+            cardBackImageView.setFitWidth(200);
+            cardBackImageView.setFitHeight(280);
+            cardBackImageView.setPreserveRatio(true);
+        } catch (Exception e) {
+            System.err.println("Error loading card back image: " + e.getMessage());
+        }
+        
+        // Add the card back image to the container
+        cardContainer.getChildren().add(cardBackImageView);
+        
+        // Connect the reveal button to the trump reveal animation
+        revealButton.setOnAction(event -> {
+            animateTrumpReveal(cardContainer, trumpCard);
+        });
+        
+        // Update the dealer overlay layout
+        VBox dealerContent = (VBox) dealerOverlay.lookup(".dealer-content");
+        if (dealerContent != null) {
+            // Find and replace the existing card image container
+            for (int i = 0; i < dealerContent.getChildren().size(); i++) {
+                if (dealerContent.getChildren().get(i) instanceof StackPane &&
+                    dealerContent.getChildren().get(i).getStyleClass().contains("card-image-container")) {
+                    dealerContent.getChildren().set(i, cardContainer);
+                    break;
+                }
+            }
+            
+            // Add the reveal button after the instruction label
+            for (int i = 0; i < dealerContent.getChildren().size(); i++) {
+                if (dealerContent.getChildren().get(i) instanceof Label &&
+                    ((Label) dealerContent.getChildren().get(i)).getText().contains("Click to reveal")) {
+                    // Add button after the instruction label
+                    dealerContent.getChildren().add(i + 1, revealButton);
+                    break;
+                }
+            }
+        }
+        
+        // Start a timer for the trump reveal phase (15 seconds)
+        startGameTimer(15, () -> {
+            // Auto-reveal trump if time expires
+            animateTrumpReveal(cardContainer, trumpCard);
+        });
+    }
+
+    /**
+     * Animates the trump card reveal with a flip effect
+     */
+    private void animateTrumpReveal(StackPane cardContainer, Card trumpCard) {
+        // Create front card view with the trumpCard image
+        StackPane frontCardView = new StackPane();
+        frontCardView.setPrefSize(200, 280);
+        
+        // Create image view for the front of the card
+        ImageView frontImageView = new ImageView();
+        try {
+            // Get the image for the trump card
+            String imagePath = getCardImagePath(trumpCard);
+            Image cardFrontImage = new Image(getClass().getResourceAsStream(imagePath));
+            frontImageView.setImage(cardFrontImage);
+            frontImageView.setFitWidth(200);
+            frontImageView.setFitHeight(280);
+            frontImageView.setPreserveRatio(true);
+        } catch (Exception e) {
+            System.err.println("Error loading trump card image: " + e.getMessage());
+        }
+        
+        // Add the image to the front view
+        frontCardView.getChildren().add(frontImageView);
+        frontCardView.setVisible(false); // Initially hidden
+        
+        // Get the current back card view (should be the first child of cardContainer)
+        StackPane currentCardView = null;
+        for (Node node : cardContainer.getChildren()) {
+            if (node instanceof ImageView || node instanceof StackPane) {
+                currentCardView = new StackPane(node);
+                break;
+            }
+        }
+        
+        // If we couldn't find an existing view, create a new one
+        if (currentCardView == null) {
+            currentCardView = new StackPane();
+            ImageView backImageView = new ImageView();
+            try {
+                Image cardBackImage = new Image(getClass().getResourceAsStream("/images/whist images/CardBackside1.png"));
+                backImageView.setImage(cardBackImage);
+                backImageView.setFitWidth(200);
+                backImageView.setFitHeight(280);
+                backImageView.setPreserveRatio(true);
+            } catch (Exception e) {
+                System.err.println("Error loading card back image: " + e.getMessage());
+            }
+            currentCardView.getChildren().add(backImageView);
+        }
+        
+        // Clear container and add both views
+        cardContainer.getChildren().clear();
+        cardContainer.getChildren().addAll(currentCardView, frontCardView);
+        
+        // Call the 3-argument version with the prepared views
+        animateTrumpReveal(cardContainer, currentCardView, frontCardView, trumpCard);
+    }
+    
+    /**
+     * Animates the trump card reveal with a flip effect
+     * Internal implementation used by the public method
+     */
+    private void animateTrumpReveal(StackPane cardContainer, StackPane currentCardView, StackPane frontCardView, Card trumpCard) {
+        // Create rotation transforms for the flip effect
+        RotateTransition rotateOut = new RotateTransition(Duration.millis(150), currentCardView);
+        rotateOut.setAxis(Rotate.Y_AXIS);
+        rotateOut.setFromAngle(0);
+        rotateOut.setToAngle(90);
+        rotateOut.setInterpolator(Interpolator.EASE_BOTH);
+        
+        RotateTransition rotateIn = new RotateTransition(Duration.millis(150), frontCardView);
+        rotateIn.setAxis(Rotate.Y_AXIS);
+        rotateIn.setFromAngle(-90);
+        rotateIn.setToAngle(0);
+        rotateIn.setInterpolator(Interpolator.EASE_BOTH);
+        
+        // Add a little bounce effect
+        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(100), cardContainer);
+        scaleUp.setToX(1.05);
+        scaleUp.setToY(1.05);
+        
+        ScaleTransition scaleDown = new ScaleTransition(Duration.millis(100), cardContainer);
+        scaleDown.setToX(1.0);
+        scaleDown.setToY(1.0);
+        
+        // Create the sequence of animations
+        SequentialTransition sequence = new SequentialTransition(
+            rotateOut,
+            new javafx.animation.PauseTransition(Duration.millis(150)),
+            rotateIn,
+            new SequentialTransition(scaleUp, scaleDown)
+        );
+        
+        // At the halfway point, switch the images
+        rotateOut.setOnFinished(e -> {
+            currentCardView.setVisible(false);
+            frontCardView.setVisible(true);
+            
+            // Update the trumpCard display in the main game area
+            updateTrumpCardDisplay(trumpCard);
+            
+            // Add move history entry for revealing trump
+            addMoveHistoryEntry("Trump suit revealed: " + trumpCard.getSuit().getDisplayName());
+            
+            // Update the game state
+            whistGame.setTrump(trumpCard.getSuit());
+        });
+        
+        // When animation completes, prepare for the draft stage
+        sequence.setOnFinished(e -> {
+            // Wait 2 seconds to let player see the card, then proceed to draft stage
+            PauseTransition pause = new PauseTransition(Duration.millis(2000));
+            pause.setOnFinished(event -> {
+                // Close the dealer overlay
+                dealerOverlay.setVisible(false);
+                
+                // Move to the draft stage
+                prepareDraftStage();
+            });
+            pause.play();
+        });
+        
+        // Play the animation
+        sequence.play();
+        
+        // Disable the reveal button to prevent multiple clicks
+        for (Node node : cardContainer.getParent().getChildrenUnmodifiable()) {
+            if (node instanceof Button && ((Button) node).getText().contains("Reveal")) {
+                ((Button) node).setDisable(true);
+            }
+        }
+    }
+
+    /**
+     * Updates the trump card display with the selected card
+     */
+    private void updateTrumpCardDisplay(Card trumpCard) {
+        // Clear current trump display
+        trumpCardDisplay.getChildren().clear();
+        
+        // Flip the trump card face up if needed
+        if (trumpCard.isFaceDown()) {
+            trumpCard.flip();
+        }
+        
+        // Create a card pane for the trump card
+        StackPane trumpCardPane = renderCard(trumpCard);
+        
+        // Make it slightly smaller to fit the display area
+        trumpCardPane.setScaleX(0.9);
+        trumpCardPane.setScaleY(0.9);
+        
+        // Add to the trump display
+        trumpCardDisplay.getChildren().add(trumpCardPane);
+        
+        // Add a label showing the trump suit
+        Label trumpLabel = new Label("Trump: " + trumpCard.getSuit().getDisplayName());
+        trumpLabel.getStyleClass().add("trump-label");
+        trumpLabel.setTranslateY(60);
+        trumpCardDisplay.getChildren().add(trumpLabel);
     }
 
     // TODO: Makes a clickable rendered Card un-clickable
     private void makeIntoInert(StackPane cardPane) {
-        // TODO: Remove on-click event from the given cardPane
+        // Remove on-click event from the card
+        cardPane.setOnMouseClicked(null);
 
-        // TODO: Remove glow if there is any
+        // Remove hover effect from card if it exists
+        cardPane.getStyleClass().remove("card-hover");
 
+        // Remove any glow effects
+        cardPane.setEffect(null);
     }
 
     // TODO: Makes a Card have a faint glow around the edge to indicate interactiveness
     private void makeGlow(StackPane cardPane) {
-        // TODO: Add the glow effect
+        // Create a glow effect
+        javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow(0.5);
+        
+        // Add a drop shadow with a yellow/gold color for highlighting
+        javafx.scene.effect.DropShadow dropShadow = new javafx.scene.effect.DropShadow();
+        dropShadow.setColor(javafx.scene.paint.Color.GOLD);
+        dropShadow.setRadius(15);
+        dropShadow.setSpread(0.2);
+        dropShadow.setInput(glow);
+        
+        // Apply the effect to the card
+        cardPane.setEffect(dropShadow);
+        
+        // Add hover effect to enhance interactivity
+        cardPane.setOnMouseEntered(e -> {
+            // Increase the glow intensity on hover
+            javafx.scene.effect.Glow hoverGlow = new javafx.scene.effect.Glow(0.8);
+            dropShadow.setInput(hoverGlow);
+            cardPane.setEffect(dropShadow);
+            
+            // Scale up slightly
+            cardPane.setScaleX(1.05);
+            cardPane.setScaleY(1.05);
+            
+            // Change cursor to hand to indicate it's clickable
+            cardPane.setCursor(javafx.scene.Cursor.HAND);
+        });
+        
+        cardPane.setOnMouseExited(e -> {
+            // Reset to original glow on mouse exit
+            javafx.scene.effect.Glow normalGlow = new javafx.scene.effect.Glow(0.5);
+            dropShadow.setInput(normalGlow);
+            cardPane.setEffect(dropShadow);
+            
+            // Reset scale
+            cardPane.setScaleX(1.0);
+            cardPane.setScaleY(1.0);
+        });
     }
 
 
@@ -829,8 +1451,8 @@ public class WhistController implements Initializable {
         List<Player> players = new ArrayList<>();
         
         // Create dummy accounts for testing
-        UserAccount player1Account = new UserAccount("Player 1", "password");
-        UserAccount player2Account = new UserAccount("Player 2", "password");
+        UserAccount player1Account = new UserAccount("Player 1", "Player 1");
+        UserAccount player2Account = new UserAccount("Player 2", "Player 2");
         
         // Create players with the accounts
         Player player1 = new Player(player1Account);
@@ -852,11 +1474,166 @@ public class WhistController implements Initializable {
      * Setup button event handlers
      */
     private void setupButtonHandlers() {
-        // Shuffle button handler
-        //shuffleButton.setOnAction(event -> onShuffleClicked());
+        // Start game button handler
+        if (startGameButton != null) {
+            startGameButton.setOnAction(event -> onStartGameClicked());
+        }
         
-        // Deal button handler
-        //dealButton.setOnAction(event -> onDealClicked());
+        // Note: Shuffle buttons are now created dynamically in showShuffleOverlay()
+        
+        // Deal button handler is also created in showShuffleOverlay()
+        
+        // Forfeit button handler
+        if (forfeitButton != null) {
+            forfeitButton.setOnAction(event -> onForfeitClicked());
+        }
+        
+        // Back button handler is already set up in FXML via onBackButtonClicked
+        
+        // Rules button handler is already set up in FXML via onRulesClicked
+    }
+    
+    /**
+     * Handles the start game button click
+     */
+    private void onStartGameClicked() {
+        try {
+            System.out.println("onStartGameClicked method called");
+            
+            // Set game in progress
+            gameInProgress = true;
+            
+            // Add move history entry
+            addMoveHistoryEntry("Game started");
+            
+            // Make sure the dealer overlay exists and is prepared
+            if (dealerOverlay == null) {
+                System.err.println("Error: dealerOverlay is null");
+                return;
+            }
+            
+            // Clear animation container for transition
+            if (animationContainer != null) {
+                animationContainer.getChildren().clear();
+            }
+            
+            // Switch to shuffle overlay
+            showShuffleOverlay();
+            
+            // Reset shuffle count
+            shuffleCount = 0;
+            
+            // Set the game stage if needed
+            if (whistGame.getGameStage() == null) {
+                whistGame.setGameStage(StageType.DEAL);
+            }
+            
+            // Prepare the initial game stage
+            prepareGameStage(whistGame.getGameStage());
+            
+            System.out.println("Game started successfully");
+        } catch (Exception e) {
+            System.err.println("Error in onStartGameClicked: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Show error to user
+            showAlert(Alert.AlertType.ERROR, "Game Start Error", 
+                     "Could not start the game: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Handles clicks on the various shuffle buttons
+     * @param shuffleType The type of shuffle to perform
+     */
+    private void onShuffleClicked(String shuffleType) {
+        // Increment shuffle count
+        shuffleCount++;
+        
+        // Update the shuffle counter label
+        if (shuffleCounterLabel != null) {
+            shuffleCounterLabel.setText("Shuffles: " + shuffleCount + "/" + REQUIRED_SHUFFLES);
+        }
+        
+        // Log the shuffle
+        addMoveHistoryEntry("Performed a " + shuffleType + " shuffle");
+        
+        // Execute the correct shuffle type on the deck
+        switch (shuffleType.toLowerCase()) {
+            case "riffle":
+                whistGame.getDeck().riffleShuffle();
+                break;
+            case "overhand":
+                whistGame.getDeck().overheadShuffle();
+                break;
+            case "cut":
+                whistGame.getDeck().cut();
+                break;
+            case "random":
+                // Choose a random shuffle method
+                int randomShuffle = random.nextInt(3);
+                switch (randomShuffle) {
+                    case 0:
+                        whistGame.getDeck().riffleShuffle();
+                        break;
+                    case 1:
+                        whistGame.getDeck().overheadShuffle();
+                        break;
+                    case 2:
+                        whistGame.getDeck().cut();
+                        break;
+                }
+                break;
+            default:
+                // Default to overhead shuffle
+                whistGame.getDeck().overheadShuffle();
+                break;
+        }
+        
+        // Play shuffle animation
+        animateShuffle(shuffleType);
+        
+        // Enable deal button once enough shuffles have been performed
+        if (shuffleCount >= REQUIRED_SHUFFLES && dealButton1 != null) {
+            dealButton1.setDisable(false);
+            dealButton1.getStyleClass().add("deal-button-enabled");
+            
+            // Update instruction to indicate player can deal now
+            if (shuffleInstructionLabel != null) {
+                shuffleInstructionLabel.setText("Deck has been shuffled. Ready to deal!");
+            }
+        }
+    }
+    
+    /**
+     * Handles the original shuffle button click (for backward compatibility)
+     */
+    private void onShuffleClicked() {
+        // Call the new method with default shuffle type
+        onShuffleClicked("overhead");
+    }
+    
+    /**
+     * Handles the deal button click
+     */
+    private void onDealClicked() {
+        // Disable the deal button to prevent multiple clicks
+        dealButton1.setDisable(true);
+        
+        // Add move history entry
+        addMoveHistoryEntry("Cards dealt to players.");
+        
+        // Deal all cards in the game logic
+        dealAllCards();
+        
+        // Hide dealer overlay after dealing is complete
+        dealerOverlay.setVisible(false);
+        
+        // Update UI to reflect the new game state
+        updateUI();
+        
+        // Move to the next stage (typically trump reveal)
+        prepareForTrumpReveal();
     }
 
     // TODO: Modify this to match new shuffle logic in whistGameLoop()
@@ -865,13 +1642,50 @@ public class WhistController implements Initializable {
      */
     private void updateUI() {
         // Update stage label
+        if (gameStageLabel != null && whistGame != null) {
         gameStageLabel.setText(whistGame.getGameStage().getDisplayName());
+        }
         
         // Update round counter
-        roundCounter.setText(String.valueOf(whistGame.getRound() + 1));
+        if (roundCounter != null && whistGame != null) {
+            roundCounter.setText(String.valueOf(whistGame.getRound()));
+        }
         
         // Update shuffle counter
-        //shuffleCounterLabel.setText("Shuffles: " + game.getShuffleCount() + "/3");
+        if (shuffleCounterLabel != null) {
+            shuffleCounterLabel.setText("Shuffles: " + shuffleCount + "/" + REQUIRED_SHUFFLES);
+        }
+        
+        // Update current player label
+        if (currentPlayerLabel != null && whistGame != null && whistGame.getTurnHolder() != null) {
+            String playerName = whistGame.getTurnHolder() == whistGame.getPlayer1() ? "Player 1" : "Player 2";
+            currentPlayerLabel.setText(playerName);
+        }
+        
+        // Update game status
+        if (statusLabel != null) {
+            String status = "Game in progress";
+            if (!gameInProgress) {
+                status = "Game not started";
+            } else if (whistGame != null) {
+                StageType stage = whistGame.getGameStage();
+                switch (stage) {
+                    case DEAL:
+                        status = "Dealing phase";
+                        break;
+                    case DRAFT:
+                        status = "Draft phase";
+                        break;
+                    case DUEL:
+                        status = "Duel phase";
+                        break;
+                    default:
+                        status = "Game over";
+                        break;
+                }
+            }
+            statusLabel.setText(status);
+        }
         
         // Update player information
         updatePlayerInfo();
@@ -881,15 +1695,52 @@ public class WhistController implements Initializable {
      * Update player information in the UI
      */
     private void updatePlayerInfo() {
-        // Get players
-        Player player1 = whistGame.getPlayers().getFirst();
-        Player player2 = whistGame.getPlayers().getLast();
+        if (whistGame == null) return;
         
-        // Update player names and scores
-        player1Name.setText(player1.getUsername());
-        player2Name.setText(player2.getUsername());
-        player1Score.setText("Score: " + player1.getScore());
-        player2Score.setText("Score: " + player2.getScore());
+        // Update Player 1 information
+        if (player1Name != null && whistGame.getPlayer1() != null) {
+            player1Name.setText(whistGame.getPlayer1().getUsername());
+        }
+        
+        if (player1Score != null && whistGame.getPlayer1() != null) {
+            player1Score.setText("Score: " + whistGame.getPlayer1().getScore());
+        }
+        
+        // Highlight current player
+        if (player1Status != null && whistGame.getTurnHolder() != null) {
+            if (whistGame.getTurnHolder() == whistGame.getPlayer1()) {
+                player1Status.setText("Current Turn");
+                player1Status.getStyleClass().add("active-status");
+            } else {
+                player1Status.setText("Waiting");
+                player1Status.getStyleClass().remove("active-status");
+            }
+        }
+        
+        // Update Player 2 information
+        if (player2Name != null && whistGame.getPlayer2() != null) {
+            player2Name.setText(whistGame.getPlayer2().getUsername());
+        }
+        
+        if (player2Score != null && whistGame.getPlayer2() != null) {
+            player2Score.setText("Score: " + whistGame.getPlayer2().getScore());
+        }
+        
+        // Highlight current player
+        if (player2Status != null && whistGame.getTurnHolder() != null) {
+            if (whistGame.getTurnHolder() == whistGame.getPlayer2()) {
+                player2Status.setText("Current Turn");
+                player2Status.getStyleClass().add("active-status");
+            } else {
+                player2Status.setText("Waiting");
+                player2Status.getStyleClass().remove("active-status");
+            }
+        }
+        
+        // Update match ID label if available
+        if (matchIdLabel != null && matchId != null) {
+            matchIdLabel.setText(matchId);
+        }
     }
 
     // TODO: Either remove this or adjust to match new deal stage logic as per whistGameLoop()
@@ -899,10 +1750,10 @@ public class WhistController implements Initializable {
     private void fixButtonPositioning() {
         // Set proper width for both buttons
         shuffleButton.setPrefWidth(120);
-        dealButton.setPrefWidth(120);
+        dealButton1.setPrefWidth(120);
 
         // Make sure the deal button text is showing correctly
-        dealButton.setText("Deal");
+        dealButton1.setText("Deal");
 
         // Find the HBox containing buttons and adjust its alignment
         HBox buttonBox = (HBox) dealerOverlay.lookup(".dealer-content > HBox");
@@ -1063,17 +1914,26 @@ public class WhistController implements Initializable {
     }
 
     /**
-     * Add a message to the move history list
-     * 
-     * @param message The message to add to the history
+     * Add an entry to the move history list with timestamp
+     * @param message The message to add to the move history
      */
     private void addMoveHistoryEntry(String message) {
-        // Add the move to the history list
+        // Create timestamp
+        String timestamp = java.time.LocalTime.now().format(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss"));
+        
+        // Format entry with timestamp
+        String entry = "[" + timestamp + "] " + message;
+        
+        // Add to move history list
         if (moveHistoryList != null) {
-            moveHistoryList.getItems().add(message);
-            // Scroll to bottom
+            moveHistoryList.getItems().add(entry);
+            
+            // Auto-scroll to bottom
             moveHistoryList.scrollTo(moveHistoryList.getItems().size() - 1);
         }
+        
+        // Log to console for debugging
+        System.out.println("Move History: " + entry);
     }
 
     // TODO: This needs to be fixed. Must cooperate with logic in whistGameLoop()
@@ -1087,8 +1947,10 @@ public class WhistController implements Initializable {
 
             if (controller != null) {
                 controller.setGame("Whist");
-                // TODO: Broken line
-                //controller.setCurrentUser(currentUsername, isGuest);
+                // Get username from player 1's account
+                String username = whistGame.getPlayer1().getUsername();
+                // Use a generic "Guest" flag for now, can be updated with real authentication later
+                controller.setCurrentUser(username, true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1693,54 +2555,6 @@ public class WhistController implements Initializable {
     }
 
      */
-
-
-
-
-
-    // TODO: May not be useful anymore
-    /**
-     * Animate a card being selected (moves up, scales up, and flips face up)
-     * 
-     * @param cardPane The card to animate
-     */
-    private void animateCardSelection(StackPane cardPane) {
-        // Store initial position for later
-        double initialY = cardPane.getTranslateY();
-        
-        // Create a sequential animation
-        javafx.animation.SequentialTransition sequence = new javafx.animation.SequentialTransition();
-        
-        // Move up animation
-        javafx.animation.TranslateTransition moveUp = new javafx.animation.TranslateTransition(Duration.millis(150), cardPane);
-        moveUp.setByY(-30); // Move up by 30 pixels
-        
-        // Rotation animation
-        javafx.animation.RotateTransition rotate = new javafx.animation.RotateTransition(Duration.millis(300), cardPane);
-        rotate.setAxis(javafx.scene.transform.Rotate.Y_AXIS);
-        rotate.setFromAngle(0);
-        rotate.setToAngle(360);
-        rotate.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
-        
-        // Scale animation
-        javafx.animation.ScaleTransition scale = new javafx.animation.ScaleTransition(Duration.millis(200), cardPane);
-        scale.setToX(1.5);
-        scale.setToY(1.5);
-        
-        // Add all animations to sequence
-        sequence.getChildren().addAll(moveUp, new javafx.animation.ParallelTransition(rotate, scale));
-        
-        // When animation finishes, flip the card face up
-        sequence.setOnFinished(event -> {
-            // TODO: Broken line
-            // Flip card face up
-            //flipCardFaceUp(cardPane);
-        });
-        
-        // Play the animation
-        sequence.play();
-    }
-
     // TODO: Card flipping needs to be done differently to accommodate whist logic
     /**
      * Flip a card to face up, showing the actual card image
@@ -1843,86 +2657,48 @@ public class WhistController implements Initializable {
      * @param cardPane The card to play
      */
     private void playCardToTrick(StackPane cardPane) {
-        // Animation to move card to the trick area
-        javafx.animation.TranslateTransition moveToTrick = new javafx.animation.TranslateTransition(Duration.millis(300), cardPane);
+        // Get the card associated with this pane
+        Card card = (Card) cardPane.getProperties().get("card");
+        if (card == null) {
+            System.err.println("Error: Card not found in cardPane properties");
+            return;
+        }
         
-        // Calculate move to center
-        double cardX = cardPane.localToScene(cardPane.getBoundsInLocal()).getMinX();
-        double cardY = cardPane.localToScene(cardPane.getBoundsInLocal()).getMinY();
+        // Get the current player
+        Player currentPlayer = whistGame.getTurnHolder();
         
-        double trickAreaX = trickArea.localToScene(trickArea.getBoundsInLocal()).getMinX() + 
-                          trickArea.getWidth()/2 - 40;
-        double trickAreaY = trickArea.localToScene(trickArea.getBoundsInLocal()).getMinY() + 
-                          trickArea.getHeight()/2 - 60;
+        // Play the card in game logic
+        whistGame.playCard(card);
         
-        moveToTrick.setByX(trickAreaX - cardX);
-        moveToTrick.setByY(trickAreaY - cardY);
+        // Add move history entry
+        String cardName = card.isFaceDown() ? "a card" : card.getRank() + " of " + card.getSuit();
+        addMoveHistoryEntry(currentPlayer.getUsername() + " played " + cardName);
         
-        // Scale back to normal size during move
-        javafx.animation.ScaleTransition scaleBack = new javafx.animation.ScaleTransition(Duration.millis(300), cardPane);
-        scaleBack.setToX(1.0);
-        scaleBack.setToY(1.0);
-        
-        // Play parallel animations
-        javafx.animation.ParallelTransition playCardAnimation = new javafx.animation.ParallelTransition(moveToTrick, scaleBack);
-        
-        // When animation completes
-        playCardAnimation.setOnFinished(event -> {
-            // Remove from hand
-            playerHandArea.getChildren().remove(cardPane);
-            
-            // Add to trick area
-            trickArea.getChildren().add(cardPane);
-            
-            // Reset position in new parent
-            cardPane.setTranslateX(0);
-            cardPane.setTranslateY(0);
-            
-            // Record move in history
-            int cardRank = (int) cardPane.getProperties().get("rank");
-            gamelogic.pieces.SuitType cardSuit = (gamelogic.pieces.SuitType) cardPane.getProperties().get("suit");
-            
-            String rankName;
-            switch (cardRank) {
-                case 1: rankName = "Ace"; break;
-                case 11: rankName = "Jack"; break;
-                case 12: rankName = "Queen"; break;
-                case 13: rankName = "King"; break;
-                default: rankName = String.valueOf(cardRank); break;
-            }
-            
-            addMoveHistoryEntry("You played: " + rankName + " of " + cardSuit.toString());
-
-            // TODO: Broken lines
-            // End player's turn
-            //isPlayerTurn = false;
-            //updatePlayerStatusIndicators();
-            
-            // Simulate opponent's turn after a delay
-            simulateOpponentTurn();
-        });
-        
-        // Play the animation
-        playCardAnimation.play();
+        // Use our enhanced animation method instead of basic movement
+        animatePlayCardToTrick(cardPane);
     }
 
     /**
-     * Hide hand areas during dealing stage
+     * Hides the player hand areas during certain phases (e.g. dealing)
      */
     private void hideHandAreas() {
-        if (playerHandArea != null && opponentHandArea != null) {
-            playerHandArea.getStyleClass().add("hand-area-hidden");
-            opponentHandArea.getStyleClass().add("hand-area-hidden");
+        if (playerHandArea != null) {
+            playerHandArea.setVisible(false);
+        }
+        if (opponentHandArea != null) {
+            opponentHandArea.setVisible(false);
         }
     }
     
     /**
-     * Show hand areas after dealing is complete
+     * Shows the player hand areas 
      */
     private void showHandAreas() {
-        if (playerHandArea != null && opponentHandArea != null) {
-            playerHandArea.getStyleClass().remove("hand-area-hidden");
-            opponentHandArea.getStyleClass().remove("hand-area-hidden");
+        if (playerHandArea != null) {
+            playerHandArea.setVisible(true);
+        }
+        if (opponentHandArea != null) {
+            opponentHandArea.setVisible(true);
         }
     }
 
@@ -1936,7 +2712,7 @@ public class WhistController implements Initializable {
         
         // Hide shuffle and deal buttons
         shuffleButton.setVisible(false);
-        dealButton.setVisible(false);
+        dealButton1.setVisible(false);
         
         // Hide shuffle counter as requested
         shuffleCounterLabel.setVisible(false);
@@ -2050,20 +2826,28 @@ public class WhistController implements Initializable {
      * @param message Alert message
      */
     private void showAlert(AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        // Use Platform.runLater to avoid IllegalStateException during animations
+        javafx.application.Platform.runLater(() -> {
+            try {
+                Alert alert = new Alert(type);
+                alert.setTitle(title);
+                alert.setHeaderText(null);
+                alert.setContentText(message);
+                alert.show(); // Use show() instead of showAndWait() to avoid blocking
+            } catch (Exception e) {
+                System.err.println("Error showing alert: " + e.getMessage());
+            }
+        });
     }
 
     // ANIMATION METHODS
 
-    // TODO: This may need to be adjusted to fit new shuffle logic
     /**
-     * Animate the shuffling of cards
+     * Animate the shuffling of cards with the specified animation
+     * 
+     * @param shuffleType The type of shuffle animation to display
      */
-    private void animateShuffle() {
+    private void animateShuffle(String shuffleType) {
         // Find the card image in the dealer overlay
         StackPane cardContainer = (StackPane) dealerOverlay.lookup(".card-image-container");
         if (cardContainer == null || cardContainer.getChildren().isEmpty()) return;
@@ -2071,16 +2855,122 @@ public class WhistController implements Initializable {
         // Get the card image
         ImageView cardImage = (ImageView) cardContainer.getChildren().get(0);
         
-        // Create a rotation animation
-        javafx.animation.RotateTransition rotate = new javafx.animation.RotateTransition(Duration.seconds(1), cardImage);
-        rotate.setAxis(javafx.scene.transform.Rotate.Y_AXIS);
+        // Create animations based on shuffle type
+        switch (shuffleType) {
+            case "riffle":
+                // Riffle shuffle animation (splitting and combining)
+                SequentialTransition riffleAnimation = new SequentialTransition();
+                
+                // First split the card visually (scale down width)
+                ScaleTransition splitCards = new ScaleTransition(Duration.millis(300), cardImage);
+                splitCards.setFromX(1.0);
+                splitCards.setToX(0.5);
+                
+                // Then show combining motion (rapid up/down movement)
+                TranslateTransition riffleMotion = new TranslateTransition(Duration.millis(500), cardImage);
+                riffleMotion.setFromY(0);
+                riffleMotion.setToY(10);
+                riffleMotion.setCycleCount(6);
+                riffleMotion.setAutoReverse(true);
+                
+                // Finally recombine (scale back to normal)
+                ScaleTransition combineCards = new ScaleTransition(Duration.millis(300), cardImage);
+                combineCards.setFromX(0.5);
+                combineCards.setToX(1.0);
+                
+                riffleAnimation.getChildren().addAll(splitCards, riffleMotion, combineCards);
+                riffleAnimation.play();
+                break;
+                
+            case "cut":
+                // Cut shuffle animation (split deck and swap positions)
+                SequentialTransition cutAnimation = new SequentialTransition();
+                
+                // Split the card (create visual gap)
+                TranslateTransition cutSplit = new TranslateTransition(Duration.millis(400), cardImage);
+                cutSplit.setFromY(0);
+                cutSplit.setToY(-40);
+                
+                // Swap positions (show cut happening)
+                RotateTransition cutRotate = new RotateTransition(Duration.millis(500), cardImage);
+                cutRotate.setAxis(Rotate.Z_AXIS);
+                cutRotate.setFromAngle(0);
+                cutRotate.setToAngle(180);
+                
+                // Return to normal position
+                TranslateTransition cutReturn = new TranslateTransition(Duration.millis(400), cardImage);
+                cutReturn.setFromY(-40);
+                cutReturn.setToY(0);
+                
+                cutAnimation.getChildren().addAll(cutSplit, cutRotate, cutReturn);
+                cutAnimation.play();
+                break;
+                
+            case "scramble":
+                // Scramble shuffle animation (random movements)
+                SequentialTransition scrambleAnimation = new SequentialTransition();
+                
+                // First spread cards out
+                ScaleTransition spreadOut = new ScaleTransition(Duration.millis(300), cardImage);
+                spreadOut.setFromX(1.0);
+                spreadOut.setToX(1.2);
+                spreadOut.setFromY(1.0);
+                spreadOut.setToY(1.2);
+                
+                // Chaotic motion
+                Timeline chaoticMotion = new Timeline();
+                for (int i = 0; i < 10; i++) {
+                    double randomX = (Math.random() - 0.5) * 40;
+                    double randomY = (Math.random() - 0.5) * 40;
+                    double randomRotate = (Math.random() - 0.5) * 60;
+                    
+                    KeyFrame frame = new KeyFrame(Duration.millis(i * 100), 
+                        new KeyValue(cardImage.translateXProperty(), randomX),
+                        new KeyValue(cardImage.translateYProperty(), randomY),
+                        new KeyValue(cardImage.rotateProperty(), randomRotate)
+                    );
+                    chaoticMotion.getKeyFrames().add(frame);
+                }
+                
+                // Return to normal
+                KeyFrame finalFrame = new KeyFrame(Duration.millis(1000),
+                    new KeyValue(cardImage.translateXProperty(), 0),
+                    new KeyValue(cardImage.translateYProperty(), 0),
+                    new KeyValue(cardImage.rotateProperty(), 0)
+                );
+                chaoticMotion.getKeyFrames().add(finalFrame);
+                
+                // Back to normal size
+                ScaleTransition scaleBack = new ScaleTransition(Duration.millis(300), cardImage);
+                scaleBack.setFromX(1.2);
+                scaleBack.setToX(1.0);
+                scaleBack.setFromY(1.2);
+                scaleBack.setToY(1.0);
+                
+                scrambleAnimation.getChildren().addAll(spreadOut, chaoticMotion, scaleBack);
+                scrambleAnimation.play();
+                break;
+                
+            case "overhead":
+            default:
+                // Overhead shuffle animation (simple rotation)
+                RotateTransition rotate = new RotateTransition(Duration.seconds(1), cardImage);
+                rotate.setAxis(Rotate.Y_AXIS);
         rotate.setFromAngle(0);
         rotate.setToAngle(360);
         rotate.setCycleCount(1);
-        rotate.setInterpolator(javafx.animation.Interpolator.EASE_BOTH);
-        
-        // Play the animation
+                rotate.setInterpolator(Interpolator.EASE_BOTH);
         rotate.play();
+                break;
+        }
+    }
+
+    /**
+     * Original animation method (for backward compatibility)
+     */
+    private void animateShuffle() {
+        // Call the new method with default shuffle type
+        animateShuffle("overhead");
     }
 
     // SIMULATION METHODS
@@ -2126,7 +3016,7 @@ public class WhistController implements Initializable {
         addMoveHistoryEntry("Opponent shuffled the deck.");
         
         // Enable dealing for player
-        dealButton.setDisable(false);
+        dealButton1.setDisable(false);
         
         // Update status
         gameStatusLabel.setText("Opponent shuffled. Your turn to deal cards.");
@@ -2204,47 +3094,76 @@ public class WhistController implements Initializable {
     // private void prepareNextRound() {}
     
     /**
-     * Start the game timer (will be used in DUEL stage)
+     * Starts a game timer with a specified duration and timeout action
+     * 
+     * @param seconds Number of seconds to run the timer
+     * @param timeoutAction Action to perform when timer expires
      */
-    private void startGameTimer() {
-        // Only start timer in DUEL stage
-        if (whistGame.getGameStage() != gamelogic.whist.StageType.DUEL) {
-            return;
-        }
-        
-        // Reset timer
-        timeRemaining = 15;
-        updateTimerDisplay();
-        
-        // Stop existing timer if running
+    private void startGameTimer(int seconds, Runnable timeoutAction) {
+        // Cancel any existing timer
         if (gameTimer != null) {
             gameTimer.stop();
         }
         
-        // Create new timer
+        // Set initial time
+        timeRemaining = seconds;
+        
+        // Update display
+        updateTimerDisplay();
+        
+        // Create new timer with 1-second intervals
         gameTimer = new Timeline(
             new KeyFrame(Duration.seconds(1), event -> {
+                // Decrement time
                 timeRemaining--;
+                
+                // Update timer display
                 updateTimerDisplay();
                 
+                // Check if timer has expired
                 if (timeRemaining <= 0) {
-                    // Time's up, handle automatic move
-                    // This will be implemented later
+                    // Stop timer
                     gameTimer.stop();
+                    
+                    // Execute timeout action if provided
+                    if (timeoutAction != null) {
+                        timeoutAction.run();
+                    }
                 }
             })
         );
         
-        gameTimer.setCycleCount(15);
+        // Set to repeat until stopped
+        gameTimer.setCycleCount(seconds);
+        
+        // Start the timer
         gameTimer.play();
     }
     
     /**
-     * Update the timer display
+     * Updates the timer display with current remaining time
      */
     private void updateTimerDisplay() {
-        timerLabel.setText("00:" + (timeRemaining < 10 ? "0" : "") + timeRemaining);
-        timerProgressBar.setProgress(timeRemaining / 15.0);
+        // Update label with formatted time
+        if (timerLabel != null) {
+            timerLabel.setText(String.format("%02d:%02d", timeRemaining / 60, timeRemaining % 60));
+        }
+        
+        // Update progress bar
+        if (timerProgressBar != null) {
+            // Calculate progress (1.0 to 0.0)
+            double progress = timeRemaining / 15.0; // Assuming 15 seconds is max time
+            timerProgressBar.setProgress(progress);
+            
+            // Change color based on time remaining
+            if (timeRemaining <= 5) {
+                timerProgressBar.getStyleClass().remove("timer-normal");
+                timerProgressBar.getStyleClass().add("timer-warning");
+            } else {
+                timerProgressBar.getStyleClass().remove("timer-warning");
+                timerProgressBar.getStyleClass().add("timer-normal");
+            }
+        }
     }
 
 
@@ -2278,4 +3197,2317 @@ public class WhistController implements Initializable {
         }
     }
     */
+
+    // GAME STAGE MANAGEMENT
+
+    /**
+     * Prepares the game for the current stage by setting up required UI elements and interactions
+     * 
+     * @param stage The current game stage to prepare for
+     */
+    private void prepareGameStage(StageType stage) {
+        if (stage == null) {
+            // Game is over
+            handleGameEnd();
+            return;
+        }
+        
+        // Update UI to reflect current stage
+        updateUI();
+        
+        switch (stage) {
+            case DEAL:
+                prepareDealStage();
+                break;
+            case DRAFT:
+                prepareDraftStage();
+                break;
+            case DUEL:
+                prepareDuelStage();
+                break;
+        }
+    }
+    
+    /**
+     * Handles progression to the next game stage
+     */
+    private void progressToNextStage() {
+        // Move to the next stage in the game logic
+        whistGame.nextStage();
+        
+        // Add move history entry about stage change
+        addMoveHistoryEntry("Moving into " + whistGame.getGameStage().getDisplayName() + " stage!");
+        
+        // Prepare UI for the new stage
+        prepareGameStage(whistGame.getGameStage());
+    }
+    
+    /**
+     * Prepares the UI and game logic for the DEAL stage
+     */
+    private void prepareDealStage() {
+        // DEBUG: Shows stage
+        System.out.println("-=Dealing Stage=-\n");
+        
+        // Increment round counter at the start of a new round
+        whistGame.setRound(whistGame.getRound() + 1);
+        addMoveHistoryEntry("Round " + whistGame.getRound() + " begins!");
+        
+        // Update UI with new round info
+        updateUI();
+        
+        // Setup dealer selection
+        setupDealerSelectionUI();
+    }
+    
+    /**
+     * Prepares the UI and game logic for the DRAFT stage
+     */
+    private void prepareDraftStage() {
+        // DEBUG: Shows stage
+        System.out.println("-=Drafting Stage=-\n");
+        
+        // Hide dealer overlay
+        dealerOverlay.setVisible(false);
+        
+        // Reset trick counters at the start of DRAFT stage
+        currentTrickNumber = 0;
+        player1TricksWon = 0;
+        player2TricksWon = 0;
+        
+        // Add move history entry
+        addMoveHistoryEntry("Draft stage started. Players will take turns playing cards to compete for prize cards from the draw pile.");
+        
+        // Show hand areas for gameplay
+        showHandAreas();
+        
+        // Make sure the trick area is visible and clear
+        trickArea.getChildren().clear();
+        trickArea.setVisible(true);
+        
+        // Show draw pile for prize cards
+        // Create discard pile if it doesn't exist
+        if (whistGame.getDiscard() == null) {
+            whistGame.setDiscard(new CardPile());
+        }
+        
+        // Set up player hands - show them face up to their owners
+        whistGame.showHand(whistGame.getPlayer1());
+        whistGame.showHand(whistGame.getPlayer2());
+        
+        // Update player hand displays
+        updatePlayerHandDisplay();
+        
+        // Update UI to reflect the current stage
+        updateUI();
+        
+        // Show whose turn it is
+        currentPlayerLabel.setText(whistGame.getTurnHolder().getUsername());
+        statusLabel.setText(whistGame.getTurnHolder().getUsername() + "'s turn to play - Trick " + (currentTrickNumber + 1) + " of 13");
+        
+        // Make the current player's cards playable
+        if (whistGame.getTurnHolder() == whistGame.getPlayer1()) {
+            // Make player 1's cards playable
+            for (StackPane cardPane : player1Cards) {
+                makeIntoPlayable(cardPane);
+            }
+        } else {
+            // Make player 2's cards playable
+            for (StackPane cardPane : player2Cards) {
+                makeIntoPlayable(cardPane);
+            }
+        }
+        
+        // Start a timer for the player's turn
+        startGameTimer(15, () -> {
+            // Auto-play a card if timer expires
+            autoPlayCard();
+        });
+    }
+    
+    /**
+     * Resolves a trick after both players have played a card
+     */
+    private void resolveTrick() {
+        // Stop any running timer
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        
+        // Get the cards in the trick
+        if (whistGame.getTrick().size() != 2) {
+            // Not enough cards to resolve trick
+            return;
+        }
+        
+        // Determine the trick winner
+        Player trickWinner = whistGame.getTrickWinner();
+        if (trickWinner == null) {
+            // No winner (should not happen)
+            showAlert(Alert.AlertType.ERROR, "Error", "Could not determine trick winner!");
+            return;
+        }
+        
+        // Increment trick count
+        currentTrickNumber++;
+        
+        // Track tricks won by each player
+        if (trickWinner == whistGame.getPlayer1()) {
+            player1TricksWon++;
+        } else {
+            player2TricksWon++;
+        }
+        
+        // Add move history entry
+        addMoveHistoryEntry(trickWinner.getUsername() + " won trick " + currentTrickNumber + " of 13");
+        
+        // Show winner visually
+        statusLabel.setText(trickWinner.getUsername() + " won trick " + currentTrickNumber + " of 13");
+        
+        // Update turn holder for next trick (winner leads next trick)
+        whistGame.setTurnHolder(trickWinner);
+        
+        // Handle based on game stage
+        if (whistGame.getGameStage() == StageType.DRAFT) {
+            // DRAFT stage logic
+            handleDraftStageTrickCompletion(trickWinner);
+        } else if (whistGame.getGameStage() == StageType.DUEL) {
+            // DUEL stage logic
+            handleDuelStageTrickCompletion(trickWinner);
+        }
+    }
+    
+    /**
+     * Handles trick completion for DRAFT stage
+     * @param trickWinner The player who won the trick
+     */
+    private void handleDraftStageTrickCompletion(Player trickWinner) {
+        // Animate trick cards moving to discard pile after a delay
+        Timeline discardDelay = new Timeline(
+            new KeyFrame(Duration.seconds(1), e -> {
+                // Clear trick area visually
+                animateCardsToDiscard();
+                
+                // Discard cards in game logic
+                whistGame.completeTrick();
+                
+                // In DRAFT stage, winner gets to take a prize card
+                if (!whistGame.getDraw().getCards().isEmpty()) {
+                    // Get the top card from the draw pile
+                    Card prizeCard = whistGame.getDraw().getTopCard();
+                    
+                    // Reveal the card face up
+                    if (prizeCard.isFaceDown()) {
+                        prizeCard.flip();
+                    }
+                    
+                    // Create a visual representation of the prize card
+                    StackPane prizeCardPane = renderCard(prizeCard);
+                    
+                    // Show animation of prize card going to winner's hand
+                    animatePrizeCardToWinner(prizeCardPane, trickWinner);
+                    
+                    // Add to winner's hand in game logic
+                    whistGame.takeCard(whistGame.getDraw(), prizeCard, trickWinner);
+                    
+                    // Add move history entry
+                    addMoveHistoryEntry(trickWinner.getUsername() + " drew " + prizeCard.toString() + " as a prize");
+                    
+                    // Check if we've completed all tricks or draw pile is empty
+                    if (currentTrickNumber >= 13 || whistGame.getDraw().getCards().isEmpty()) {
+                        // Show summary of tricks
+                        String summaryMessage = "DRAFT stage completed. Tricks won: " + 
+                                              whistGame.getPlayer1().getUsername() + ": " + player1TricksWon + 
+                                              ", " + whistGame.getPlayer2().getUsername() + ": " + player2TricksWon;
+                        addMoveHistoryEntry(summaryMessage);
+                        
+                        // Progress to DUEL stage after a delay
+                        Timeline stageDelay = new Timeline(
+                            new KeyFrame(Duration.seconds(2), e2 -> {
+                                progressToNextStage();
+                            })
+                        );
+                        stageDelay.play();
+                    } else {
+                        // Update UI and continue with next trick
+                        updatePlayerHandDisplay();
+                        
+                        // Clear trick area for next trick
+                        trickArea.getChildren().clear();
+                        
+                        // Update status to show current trick number
+                        statusLabel.setText(trickWinner.getUsername() + "'s turn to play - Trick " + (currentTrickNumber + 1) + " of 13");
+                        currentPlayerLabel.setText(trickWinner.getUsername());
+                        
+                        // Make appropriate cards playable for the next trick
+                        resetPlayableCards();
+                    }
+                }
+            })
+        );
+        discardDelay.play();
+    }
+    
+    /**
+     * Animates a prize card moving to the winner's hand
+     */
+    private void animatePrizeCardToWinner(StackPane prizeCardPane, Player winner) {
+        // Add the prize card to the animation container
+        animationContainer.getChildren().add(prizeCardPane);
+        
+        // Position in the center initially (where the draw pile would be)
+        double centerX = animationContainer.getWidth() / 2;
+        double centerY = animationContainer.getHeight() / 2;
+        prizeCardPane.setLayoutX(centerX - prizeCardPane.getPrefWidth() / 2);
+        prizeCardPane.setLayoutY(centerY - prizeCardPane.getPrefHeight() / 2);
+        
+        // Determine target position based on which player won
+        double targetY = winner == whistGame.getPlayer1() ? 
+                       playerHandArea.localToScene(playerHandArea.getBoundsInLocal()).getMinY() : 
+                       opponentHandArea.localToScene(opponentHandArea.getBoundsInLocal()).getMinY();
+        
+        // Create animation to move card to winner's hand
+        TranslateTransition moveToHand = new TranslateTransition(Duration.millis(800), prizeCardPane);
+        moveToHand.setToY(targetY - centerY);
+        
+        // Add rotation for visual flair
+        RotateTransition rotate = new RotateTransition(Duration.millis(800), prizeCardPane);
+        rotate.setByAngle(360);
+        rotate.setInterpolator(Interpolator.EASE_BOTH);
+        
+        // Combine animations
+        ParallelTransition prizeAnimation = new ParallelTransition(prizeCardPane, moveToHand, rotate);
+        
+        // Remove card from animation container when done
+        prizeAnimation.setOnFinished(e -> {
+            animationContainer.getChildren().remove(prizeCardPane);
+        });
+        
+        // Play the animation
+        prizeAnimation.play();
+    }
+    
+    /**
+     * Animates cards in the trick area moving to the discard pile
+     */
+    private void animateCardsToDiscard() {
+        // Get all cards in the trick area
+        List<Node> trickCards = new ArrayList<>(trickArea.getChildren());
+        
+        // Calculate discard pile position (assuming it's offscreen)
+        double discardX = 500;
+        double discardY = 300;
+        
+        // Create a sequential animation to stagger card movements
+        SequentialTransition staggeredAnimation = new SequentialTransition();
+        
+        for (int i = 0; i < trickCards.size(); i++) {
+            Node cardNode = trickCards.get(i);
+            if (cardNode instanceof StackPane cardPane) {
+                // Create movement animation
+                Path path = new Path();
+                
+                // Get start position
+                double startX = cardPane.getLayoutX();
+                double startY = cardPane.getLayoutY();
+                
+                // Create curved path with a control point
+                MoveTo moveTo = new MoveTo(0, 0);
+                
+                // Random curve height for natural movement
+                double curveHeight = -100 - (Math.random() * 50);
+                
+                // Create a quadratic curve for more natural movement
+                QuadCurveTo curve = new QuadCurveTo(
+                    (discardX - startX) / 2, // Control point X
+                    curveHeight,             // Control point Y (above the path)
+                    discardX - startX,       // End X
+                    discardY - startY        // End Y
+                );
+                
+                path.getElements().add(moveTo);
+                path.getElements().add(curve);
+                
+                // Create path transition
+                PathTransition pathTransition = new PathTransition(Duration.millis(600), path, cardPane);
+                pathTransition.setInterpolator(Interpolator.EASE_OUT);
+                
+                // Add rotation for visual interest
+                RotateTransition rotateTransition = new RotateTransition(
+                    Duration.millis(600),
+                    cardPane
+                );
+                rotateTransition.setByAngle(
+                    (Math.random() > 0.5 ? 1 : -1) * (180 + Math.random() * 180)
+                );
+                rotateTransition.setInterpolator(Interpolator.EASE_OUT);
+                
+                // Add scaling for visual interest
+                ScaleTransition scaleTransition = new ScaleTransition(
+                    Duration.millis(600),
+                    cardPane
+                );
+                scaleTransition.setToX(0.7);
+                scaleTransition.setToY(0.7);
+                
+                // Fade out
+                FadeTransition fadeTransition = new FadeTransition(
+                    Duration.millis(400),
+                    cardPane
+                );
+                fadeTransition.setFromValue(1.0);
+                fadeTransition.setToValue(0.0);
+                fadeTransition.setDelay(Duration.millis(200 + (i * 100)));
+                
+                // Create combined animation for this card
+                ParallelTransition cardAnimation = new ParallelTransition(
+                    cardPane,
+                    pathTransition,
+                    rotateTransition,
+                    scaleTransition,
+                    fadeTransition
+                );
+                
+                // Set up completion action
+                final int index = i;
+                cardAnimation.setOnFinished(e -> {
+                    // Remove card from trick area
+                    trickArea.getChildren().remove(cardPane);
+                    
+                    // If this was the last card, update game state
+                    if (index == trickCards.size() - 1) {
+                        // Trigger any post-discard updates
+                        resetPlayableCards();
+                    }
+                });
+                
+                // Add slight delay between cards
+                PauseTransition delay = new PauseTransition(Duration.millis(i * 100));
+                
+                // Add to sequential animation
+                SequentialTransition cardSequence = new SequentialTransition(delay, cardAnimation);
+                staggeredAnimation.getChildren().add(cardSequence);
+            }
+        }
+        
+        // Play the animation
+        staggeredAnimation.play();
+    }
+    
+    /**
+     * Resets playable cards for the next trick
+     */
+    private void resetPlayableCards() {
+        // Clear any existing click handlers
+        for (StackPane cardPane : player1Cards) {
+            makeIntoInert(cardPane);
+        }
+        for (StackPane cardPane : player2Cards) {
+            makeIntoInert(cardPane);
+        }
+        
+        // Make current player's cards playable
+        if (whistGame.getTurnHolder() == whistGame.getPlayer1()) {
+            for (StackPane cardPane : player1Cards) {
+                makeIntoPlayable(cardPane);
+            }
+        } else {
+            for (StackPane cardPane : player2Cards) {
+                makeIntoPlayable(cardPane);
+            }
+        }
+        
+        // Start timer for the next player's turn
+        startGameTimer(15, () -> {
+            autoPlayCard();
+        });
+    }
+    
+    /**
+     * Prepares the UI and game logic for the DUEL stage
+     */
+    private void prepareDuelStage() {
+        // DEBUG: Shows stage
+        System.out.println("-=Dueling Stage=-\n");
+        
+        // Reset trick counters for the DUEL stage
+        currentTrickNumber = 0;
+        player1TricksWon = 0;
+        player2TricksWon = 0;
+        
+        // Add move history entry
+        addMoveHistoryEntry("Duel stage started. Players will take turns playing cards to win tricks and score points.");
+        
+        // Make sure hand areas are visible
+        showHandAreas();
+        
+        // Make sure trick area is visible and clear
+        trickArea.getChildren().clear();
+        trickArea.setVisible(true);
+        
+        // Set up player hands if needed
+        whistGame.showHand(whistGame.getPlayer1());
+        whistGame.showHand(whistGame.getPlayer2());
+        
+        // Update hand displays
+        updatePlayerHandDisplay();
+        
+        // Update UI to reflect the current stage
+        updateUI();
+        
+        // Show whose turn it is - first player to play in DUEL is non-dealer
+        Player firstPlayer = whistGame.getDealer() == whistGame.getPlayer1() ? 
+                            whistGame.getPlayer2() : whistGame.getPlayer1();
+        whistGame.setTurnHolder(firstPlayer);
+        
+        // Update labels
+        currentPlayerLabel.setText(firstPlayer.getUsername());
+        statusLabel.setText(firstPlayer.getUsername() + "'s turn to play - Trick " + (currentTrickNumber + 1) + " of 13");
+        
+        // Make first player's cards playable
+        resetPlayableCards();
+        
+        // Start timer for the first player's turn
+        startGameTimer(15, () -> {
+            // Auto-play a card if timer expires
+            autoPlayCard();
+        });
+    }
+    
+    /**
+     * Ends the current round and checks for game completion
+     */
+    private void endRound() {
+        // Stop any running timer
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        
+        // Get the current round number
+        int currentRound = whistGame.getRound();
+        
+        // Add move history entry
+        addMoveHistoryEntry("Round " + currentRound + " completed.");
+        
+        // Check if any player has reached 6 points
+        if (checkForGameEnd()) {
+            // Game is over
+            handleGameEnd();
+        } else {
+            // Show round results before starting a new round
+            showRoundResults(currentRound);
+        }
+    }
+    
+    /**
+     * Shows the round results overlay
+     * @param roundNumber The round that was just completed
+     */
+    private void showRoundResults(int roundNumber) {
+        // Set round result title and message
+        roundResultTitle.setText("Round " + roundNumber + " Complete");
+        
+        // Create detailed round results message
+        StringBuilder resultMessage = new StringBuilder();
+        resultMessage.append(whistGame.getPlayer1().getUsername())
+                  .append(" won ").append(player1TricksWon).append(" tricks (")
+                  .append(player1TricksWon - 6).append(" points)\n\n")
+                  .append(whistGame.getPlayer2().getUsername())
+                  .append(" won ").append(player2TricksWon).append(" tricks (")
+                  .append(player2TricksWon - 6).append(" points)\n\n")
+                  .append("Current scores: ")
+                  .append(whistGame.getPlayer1().getUsername()).append(" ")
+                  .append(whistGame.getPlayer1().getScore()).append(" - ")
+                  .append(whistGame.getPlayer2().getUsername()).append(" ")
+                  .append(whistGame.getPlayer2().getScore());
+        
+        roundResultMessage.setText(resultMessage.toString());
+        
+        // Create a continue button
+        Button continueButton = new Button("Continue to Next Round");
+        continueButton.getStyleClass().add("result-button");
+        
+        // Add button to the overlay
+        VBox content = (VBox) roundResultOverlay.lookup(".result-content");
+        if (content != null && !content.getChildren().contains(continueButton)) {
+            content.getChildren().add(continueButton);
+        }
+        
+        // Set up button action
+        continueButton.setOnAction(e -> {
+            // Hide overlay
+            roundResultOverlay.setVisible(false);
+            
+            // Start new round
+            prepareNextRound();
+        });
+        
+        // Show overlay with animation
+        roundResultOverlay.setOpacity(0);
+        roundResultOverlay.setVisible(true);
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), roundResultOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+    }
+    
+    /**
+     * Prepares and starts the next round
+     */
+    private void prepareNextRound() {
+        // Increase round number
+        whistGame.setRound(whistGame.getRound() + 1);
+        
+        // Set stage back to DEAL
+        whistGame.setGameStage(StageType.DEAL);
+        
+        // Create a new deck
+        whistGame.getDeck().clear();
+        CardPile newDeck = new CardPile();
+        for (Card card : newDeck.getCards()) {
+            whistGame.getDeck().addCard(card);
+        }
+        
+        // Reset draw and discard piles
+        whistGame.setDraw(new CardPile());
+        whistGame.setDiscard(new CardPile());
+        
+        // Clear players' hands and reset trick counter
+        whistGame.getPlayer1().setHand(new ArrayList<>());
+        whistGame.getPlayer2().setHand(new ArrayList<>());
+        currentTrickNumber = 0;
+        player1TricksWon = 0;
+        player2TricksWon = 0;
+        
+        // Reset trump suit
+        whistGame.setTrump(null);
+        
+        // Reset shuffle count
+        shuffleCount = 0;
+        
+        // Reset the game board visually
+        resetGameBoard();
+        
+        // Add move history entry for the new round with a separator
+        addMoveHistoryEntry("----- Round " + whistGame.getRound() + " -----");
+        
+        // Reset dealer for alternating rounds
+        // If Player 1 was dealer last round, Player 2 becomes dealer this round and vice versa
+        if (whistGame.getDealer() == whistGame.getPlayer1()) {
+            whistGame.setDealer(whistGame.getPlayer2());
+        } else {
+            whistGame.setDealer(whistGame.getPlayer1());
+        }
+        
+        // Update dealer display
+        if (dealerTitle != null) {
+            dealerTitle.setText("DEALER: " + whistGame.getDealer().getUsername());
+        }
+        
+        // Reset turn holder to non-dealer to start the round
+        Player nonDealer = (whistGame.getDealer() == whistGame.getPlayer1()) ? 
+                         whistGame.getPlayer2() : whistGame.getPlayer1();
+        whistGame.setTurnHolder(nonDealer);
+        
+        // Update player status indicators to show the new dealer
+        updatePlayerInfo();
+        
+        // Prepare for the next round by starting with dealer selection
+        prepareGameStage(StageType.DEAL);
+    }
+    
+    /**
+     * Sets up the dealer selection phase of the DEAL stage
+     */
+    private void setupDealerSelection() {
+        // For rounds after the first, we already have a dealer assigned
+        int currentRound = whistGame.getRound();
+        if (currentRound > 1 && whistGame.getDealer() != null) {
+            // Skip dealer selection and move directly to shuffling phase
+            addMoveHistoryEntry("Round " + currentRound + ": " + whistGame.getDealer().getUsername() + " is the dealer");
+            showShuffleOverlay();
+            return;
+        }
+        
+        // First round - need to select a dealer
+        // Add move history entry
+        addMoveHistoryEntry("Dealer selection phase started");
+        
+        // Hide the dealer overlay to show the deck for selection
+        dealerOverlay.setVisible(false);
+        
+        // Show hand areas to prepare for card selection
+        showHandAreas();
+        
+        // Track which player has selected a card
+        final boolean[] player1Selected = {false};
+        final boolean[] player2Selected = {false};
+        final Card[] selectedCards = {null, null};
+        final StackPane[] selectedCardDisplays = {null, null};
+        
+        // Shuffles the Deck a bit so Players' selections are random
+        whistGame.getDeck().overheadShuffle();
+
+        // Renders the whole face-down deck so that Players can select a card from it
+        deckDisplay = renderWholePile(whistGame.getDeck());
+        
+        // Makes every Card StackPane able to be picked by the Players
+        for (StackPane currentPane : deckDisplay) {
+            // The Card associated with this StackPane
+            Card associatedCard = (Card) currentPane.getProperties().get("card");
+            
+            // Set up click handler
+            currentPane.setOnMouseClicked(event -> {
+                // Determine which player clicked based on selection state
+                if (!player1Selected[0]) {
+                    // Player 1 selection
+                    player1Selected[0] = true;
+                    selectedCards[0] = associatedCard;
+                    selectedCardDisplays[0] = currentPane;
+                    
+                    // Deal the card to player 1 temporarily
+                    whistGame.dealCard(whistGame.getDeck(), associatedCard, whistGame.getPlayer1());
+                    
+                    // Add move history entry
+                    addMoveHistoryEntry("Player 1 selected a card for dealer determination");
+                    
+                    // Make the card inert after selection
+                    makeIntoInert(currentPane);
+                    
+                } else if (!player2Selected[0]) {
+                    // Player 2 selection
+                    player2Selected[0] = true;
+                    selectedCards[1] = associatedCard;
+                    selectedCardDisplays[1] = currentPane;
+                    
+                    // Deal the card to player 2 temporarily
+                    whistGame.dealCard(whistGame.getDeck(), associatedCard, whistGame.getPlayer2());
+                    
+                    // Add move history entry
+                    addMoveHistoryEntry("Player 2 selected a card for dealer determination");
+                    
+                    // Make the card inert after selection
+                    makeIntoInert(currentPane);
+                    
+                    // Both players have selected, proceed to comparison
+                    completeDealerSelection(selectedCards[0], selectedCards[1], 
+                                          selectedCardDisplays[0], selectedCardDisplays[1]);
+                }
+            });
+            
+            // Indicates that the Card is Clickable to Players with a visible glow
+            makeGlow(currentPane);
+        }
+        
+        // Start a timer for card selection
+        startSelectionTimer(15, () -> {
+            // If time runs out without selections, auto-select cards
+            if (!player1Selected[0] || !player2Selected[0]) {
+                addMoveHistoryEntry("Time ran out! Auto-selecting cards for dealer determination");
+                
+                // Reset selection state to force progression
+                player1Selected[0] = true;
+                player2Selected[0] = true;
+                
+                // Get two random cards
+                if (selectedCards[0] == null) {
+                    selectedCards[0] = whistGame.getDeck().getCards().get(0);
+                    selectedCardDisplays[0] = deckDisplay.get(0);
+                    whistGame.dealCard(whistGame.getDeck(), selectedCards[0], whistGame.getPlayer1());
+                }
+                
+                if (selectedCards[1] == null) {
+                    selectedCards[1] = whistGame.getDeck().getCards().get(0);
+                    selectedCardDisplays[1] = deckDisplay.get(0);
+                    whistGame.dealCard(whistGame.getDeck(), selectedCards[1], whistGame.getPlayer2());
+                }
+                
+                // Proceed to comparison
+                completeDealerSelection(selectedCards[0], selectedCards[1], 
+                                      selectedCardDisplays[0], selectedCardDisplays[1]);
+            }
+        });
+    }
+    
+    /**
+     * Starts a timer for the given duration and executes the provided action when time runs out
+     * @param seconds The duration in seconds
+     * @param timeoutAction The action to execute when time runs out
+     */
+    private void startSelectionTimer(int seconds, Runnable timeoutAction) {
+        // Set time remaining
+        timeRemaining = seconds;
+        
+        // Update timer display
+        updateTimerDisplay();
+        
+        // Create and start a new timer
+        gameTimer = new Timeline(
+            new KeyFrame(Duration.seconds(1), event -> {
+                // Decrement time
+                timeRemaining--;
+                
+                // Update display
+                updateTimerDisplay();
+                
+                // Check if time is up
+                if (timeRemaining <= 0) {
+                    // Stop timer
+                    gameTimer.stop();
+                    
+                    // Execute timeout action
+                    timeoutAction.run();
+                }
+            })
+        );
+        
+        // Set cycle count to indefinite and start
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+        gameTimer.play();
+    }
+
+    /**
+     * Completes the dealer selection process after both players have selected cards
+     * @param player1Card Card selected by first player
+     * @param player2Card Card selected by second player
+     * @param player1CardPane StackPane of first player's card
+     * @param player2CardPane StackPane of second player's card
+     */
+    private void completeDealerSelection(Card player1Card, Card player2Card, 
+                                        StackPane player1CardPane, StackPane player2CardPane) {
+        // Stop any existing timer
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        
+        // Reveal cards by flipping them face up if they're face down
+        if (player1Card.isFaceDown()) {
+            player1Card.flip();
+            // Update the card image in UI
+            updateCardImage(player1CardPane, player1Card);
+        }
+        
+        if (player2Card.isFaceDown()) {
+            player2Card.flip();
+            // Update the card image in UI
+            updateCardImage(player2CardPane, player2Card);
+        }
+        
+        // Get players
+        Player player1 = whistGame.getPlayers().getFirst();
+        Player player2 = whistGame.getPlayers().getLast();
+        
+        // Add move history entries
+        addMoveHistoryEntry(player1.getUsername() + " drew " + player1Card.toString());
+        addMoveHistoryEntry(player2.getUsername() + " drew " + player2Card.toString());
+        
+        // Compare cards using whistGame.compareCards()
+        Card winningCard = whistGame.compareCards(player1Card, player2Card);
+        Player dealer;
+        String resultText;
+        
+        // Handle win or tie
+        if (winningCard == null) {
+            // It's a tie - cards have the same rank
+            addMoveHistoryEntry("Tie! Cards have the same rank. Comparing suits...");
+            
+            // Break tie by comparing suits (Spades > Hearts > Diamonds > Clubs)
+            if (player1Card.getSuit().ordinal() > player2Card.getSuit().ordinal()) {
+                dealer = player1;
+                resultText = player1.getUsername() + " becomes the dealer with " + player1Card.toString() + " (tie broken by suit)";
+            } else if (player2Card.getSuit().ordinal() > player1Card.getSuit().ordinal()) {
+                dealer = player2;
+                resultText = player2.getUsername() + " becomes the dealer with " + player2Card.toString() + " (tie broken by suit)";
+            } else {
+                // Complete tie (same rank and suit) - very rare but handle it
+                addMoveHistoryEntry("Complete tie! Same rank AND suit. Re-selecting...");
+                
+                // Return cards to deck and restart dealer selection after a delay
+                Timeline timeline = new Timeline(
+                    new KeyFrame(Duration.seconds(2), e -> {
+                        returnCardsToDeck(player1Card, player2Card);
+                        setupDealerSelectionUI();
+                    })
+                );
+                timeline.play();
+                
+                // Show message about re-selection
+                showAlert(AlertType.INFORMATION, "Complete Tie", 
+                          "Both players selected the same card! Restarting dealer selection.");
+                return;
+            }
+        } else if (winningCard == player1Card) {
+            dealer = player1;
+            resultText = player1.getUsername() + " becomes the dealer with " + player1Card.toString();
+        } else {
+            dealer = player2;
+            resultText = player2.getUsername() + " becomes the dealer with " + player2Card.toString();
+        }
+        
+        // Set the dealer in the game
+        whistGame.setDealer(dealer);
+        // Set turn holder (non-dealer goes first)
+        whistGame.setTurnHolder(dealer == player1 ? player2 : player1);
+        
+        // Add result to move history
+        addMoveHistoryEntry(resultText);
+        
+        // Apply visual indication to winning card
+        StackPane winningCardPane = (dealer == player1) ? player1CardPane : player2CardPane;
+        StackPane losingCardPane = (dealer == player1) ? player2CardPane : player1CardPane;
+        
+        // Show gold glow on winning card, dim the losing card
+        makeGlow(winningCardPane);
+        losingCardPane.setOpacity(0.7);
+        
+        // Show result in alert
+        showAlert(AlertType.INFORMATION, "Dealer Selected", resultText);
+        
+        // Animate results
+        Timeline timeline = new Timeline();
+        
+        // Highlight winning card
+        KeyFrame highlightFrame = new KeyFrame(Duration.millis(500), 
+            new KeyValue(winningCardPane.effectProperty(), new DropShadow(20, Color.GOLD)));
+        
+        // After highlighting, transition to the next phase
+        KeyFrame transitionFrame = new KeyFrame(Duration.millis(2000), e -> {
+            // Return cards to the deck
+            returnCardsToDeck(player1Card, player2Card);
+            
+            // Clean up display
+            for (StackPane cardPane : deckDisplay) {
+                animationContainer.getChildren().remove(cardPane);
+            }
+            deckDisplay.clear();
+            
+            // Transition to the next part of the game (DEAL stage)
+            whistGame.setGameStage(StageType.DEAL);
+            updateUI();
+            
+            // Add move history entry
+            addMoveHistoryEntry("Dealer selection complete. Moving to dealing phase.");
+            
+            // Show shuffle overlay for next phase
+            showShuffleOverlay();
+        });
+        
+        timeline.getKeyFrames().addAll(highlightFrame, transitionFrame);
+        timeline.play();
+    }
+    
+    /**
+     * Updates a card's image in the UI after it's been flipped
+     * @param cardPane The StackPane containing the card
+     * @param card The card with updated state
+     */
+    private void updateCardImage(StackPane cardPane, Card card) {
+        // Get the image view from the card pane
+        ImageView cardImageView = (ImageView) cardPane.getChildren().get(0);
+        
+        // Update image using the centralized method
+        String imagePath = getCardImagePath(card);
+        
+        try {
+            cardImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        } catch (Exception e) {
+            try {
+                cardImageView.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/unknown.png"))));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        // Update style classes
+        cardPane.getStyleClass().removeAll("hearts", "diamonds", "spades", "clubs", "card-back");
+        cardPane.getStyleClass().removeAll("rank-1", "rank-2", "rank-3", "rank-4", "rank-5",
+                               "rank-6", "rank-7", "rank-8", "rank-9", "rank-10",
+                               "rank-11", "rank-12", "rank-13");
+        
+        if (card.isFaceDown()) {
+            cardPane.getStyleClass().add("card-back");
+        } else {
+            cardPane.getStyleClass().add(card.getSuit().toString().toLowerCase());
+            cardPane.getStyleClass().add("rank-" + card.getRank());
+        }
+    }
+    
+    /**
+     * Sets up the dealer selection phase with a deck display and timer
+     */
+    private void setupDealerSelectionUI() {
+        // Add move history entry
+        addMoveHistoryEntry("Dealer selection phase started");
+        
+        // Hide the dealer overlay to show the deck for selection
+        dealerOverlay.setVisible(false);
+        
+        // Show hand areas to prepare for card selection
+        showHandAreas();
+        
+        // Clear animation container first to prevent stacking
+        animationContainer.getChildren().clear();
+        
+        // Shuffles the Deck a bit so Players' selections are random
+        whistGame.getDeck().overheadShuffle();
+
+        // Renders the whole face-down deck so that Players can select a card from it
+        deckDisplay = renderWholePile(whistGame.getDeck());
+        
+        // Add cards to the animation container
+        for (StackPane cardPane : deckDisplay) {
+            animationContainer.getChildren().add(cardPane);
+            
+            // Make each card selectable
+            makeIntoSelectable(cardPane);
+        }
+        
+        // Update player status
+        currentPlayerLabel.setText(whistGame.getCurrentTurn().getUsername());
+        statusLabel.setText("Select a card to determine the dealer");
+        
+        // Start a 10-second timer for selection
+        startSelectionTimer(10, () -> {
+            // If time runs out, select random cards for both players
+            statusLabel.setText("Time's up! Selecting random cards...");
+            
+            // Simulate card selection for both players
+            List<Card> allCards = whistGame.getDeck().getCards();
+            if (allCards.size() >= 2) {
+                Card randomCard1 = allCards.get(random.nextInt(allCards.size()));
+                allCards.remove(randomCard1);
+                Card randomCard2 = allCards.get(random.nextInt(allCards.size()));
+                
+                // Get the corresponding StackPanes
+                StackPane cardPane1 = null;
+                StackPane cardPane2 = null;
+                
+                for (StackPane cardPane : deckDisplay) {
+                    Card card = (Card) cardPane.getProperties().get("card");
+                    if (card == randomCard1) {
+                        cardPane1 = cardPane;
+                    } else if (card == randomCard2) {
+                        cardPane2 = cardPane;
+                    }
+                }
+                
+                if (cardPane1 != null && cardPane2 != null) {
+                    // Complete dealer selection with the random cards
+                    completeDealerSelection(randomCard1, randomCard2, cardPane1, cardPane2);
+                }
+            }
+        });
+    }
+    
+    /**
+     * Returns cards from players back to the deck
+     * 
+     * @param player1Card Card from player 1 to return
+     * @param player2Card Card from player 2 to return
+     */
+    private void returnCardsToDeck(Card player1Card, Card player2Card) {
+        // Remove cards from player hands
+        whistGame.getPlayer1().getHand().remove(player1Card);
+        whistGame.getPlayer2().getHand().remove(player2Card);
+        
+        // Add the cards back to the deck
+        whistGame.getDeck().addCard(player1Card);
+        whistGame.getDeck().addCard(player2Card);
+    }
+    
+    /**
+     * Animates a card when it's selected
+     * @param cardPane The StackPane containing the card to animate
+     */
+    private void animateCardSelection(StackPane cardPane) {
+        // Store original position
+        double origX = cardPane.getTranslateX();
+        double origY = cardPane.getTranslateY();
+        
+        // Get current player to determine animation direction
+        Player currentPlayer = whistGame.getCurrentTurn();
+        double targetY = (currentPlayer == whistGame.getPlayers().getFirst()) ? -100 : 100;
+        
+        // Create animation
+        Timeline timeline = new Timeline();
+        
+        // Scale up
+        KeyFrame scaleUp = new KeyFrame(Duration.millis(150), 
+            new KeyValue(cardPane.scaleXProperty(), 1.2),
+            new KeyValue(cardPane.scaleYProperty(), 1.2));
+        
+        // Move toward player
+        KeyFrame moveToPlayer = new KeyFrame(Duration.millis(300),
+            new KeyValue(cardPane.translateYProperty(), targetY));
+        
+        // Add glow effect
+        DropShadow glow = new DropShadow(15, Color.GOLD);
+        KeyFrame addGlow = new KeyFrame(Duration.millis(400), 
+            new KeyValue(cardPane.effectProperty(), glow));
+        
+        timeline.getKeyFrames().addAll(scaleUp, moveToPlayer, addGlow);
+        timeline.play();
+    }
+
+    /**
+     * Checks if any player has reached the winning score
+     * @return true if a player has won, false otherwise
+     */
+    private boolean checkForGameEnd() {
+        for (Player currentPlayer : whistGame.getPlayers()) {
+            if (currentPlayer.getScore() >= 6) {
+                // Set the winner in the game
+                whistGame.setWinner(currentPlayer);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+
+    /**
+     * Shows the start game overlay with a start game button
+     */
+    private void showStartGameOverlay() {
+        // Check if animationContainer exists
+        if (animationContainer == null) {
+            System.out.println("Warning: animationContainer is null, cannot show start game overlay");
+            return; // Exit early if animationContainer is null
+        }
+        
+        // Hide other overlays
+        dealerOverlay.setVisible(false);
+        if (roundResultOverlay != null) roundResultOverlay.setVisible(false);
+        if (gameOverOverlay != null) gameOverOverlay.setVisible(false);
+        
+        // Create overlay container
+        StackPane startGameOverlay = new StackPane();
+        startGameOverlay.getStyleClass().add("start-game-overlay");
+        startGameOverlay.setPrefWidth(400);
+        startGameOverlay.setPrefHeight(300);
+        
+        // Create content
+        VBox content = new VBox(20);
+        content.setAlignment(javafx.geometry.Pos.CENTER);
+        content.setPadding(new Insets(30));
+        
+        // Title
+        Label title = new Label("WHIST");
+        title.getStyleClass().add("dealer-title");
+        title.setStyle("-fx-font-size: 36px;");
+        
+        // Description
+        Label description = new Label("A classic trick-taking card game");
+        description.getStyleClass().add("shuffle-instruction");
+        
+        // Use the existing FXML startGameButton instead of creating a new button
+        if (startGameButton == null) {
+            // Create a new button only if the FXML button doesn't exist
+            startGameButton = new Button("Start Game");
+        }
+        
+        // Update button styling
+        startGameButton.getStyleClass().add("start-game-button");
+        startGameButton.setPrefWidth(200);
+        startGameButton.setPrefHeight(50);
+        
+        // Make sure the click listener works - this is important and wasn't set up correctly
+        startGameButton.setOnAction(e -> {
+            System.out.println("Start button clicked");
+            onStartGameClicked();
+        });
+        
+        // Add elements to content
+        content.getChildren().addAll(title, description, startGameButton);
+        startGameOverlay.getChildren().add(content);
+        
+        // Add to animation container
+        animationContainer.getChildren().clear();
+        animationContainer.getChildren().add(startGameOverlay);
+        
+        // Center properly in the animation container 
+        // Use JavaFX Platform.runLater to ensure positioning happens after layout is complete
+        javafx.application.Platform.runLater(() -> {
+            double containerWidth = animationContainer.getWidth();
+            double containerHeight = animationContainer.getHeight();
+            
+            if (containerWidth > 0 && containerHeight > 0) {
+                startGameOverlay.setLayoutX((containerWidth - startGameOverlay.getPrefWidth()) / 2);
+                startGameOverlay.setLayoutY((containerHeight - startGameOverlay.getPrefHeight()) / 2);
+            } else {
+                // Fallback position if container dimensions not available
+                startGameOverlay.setLayoutX(400);
+                startGameOverlay.setLayoutY(250);
+            }
+            
+            // Ensure visibility
+            startGameOverlay.setVisible(true);
+            startGameOverlay.toFront();
+            
+            System.out.println("Start game overlay positioned at: " + 
+                              startGameOverlay.getLayoutX() + ", " + 
+                              startGameOverlay.getLayoutY());
+        });
+    }
+    
+    /**
+     * Shows the shuffle overlay with shuffle options
+     */
+    private void showShuffleOverlay() {
+        // Make the dealer overlay visible
+        dealerOverlay.setVisible(true);
+        
+        // Set the title
+        dealerTitle.setText("SHUFFLE DECK");
+        
+        // Set the instruction text
+        shuffleInstructionLabel.setText("Please shuffle the deck at least " + REQUIRED_SHUFFLES + " times");
+        
+        // Reset the shuffle counter
+        shuffleCount = 0;
+        shuffleCounterLabel.setText("Shuffles: " + shuffleCount + "/" + REQUIRED_SHUFFLES);
+        shuffleCounterLabel.setVisible(true);
+        
+        // Get the HBox containing the buttons
+        HBox buttonBox = (HBox) dealerOverlay.lookup(".dealer-content > HBox");
+        if (buttonBox != null) {
+            // Clear existing buttons
+            buttonBox.getChildren().clear();
+            
+            // Create shuffle buttons for different shuffle types
+            Button riffleButton = new Button("Riffle Shuffle");
+            riffleButton.getStyleClass().add("shuffle-button");
+            riffleButton.setOnAction(e -> onShuffleClicked("riffle"));
+            
+            Button overheadButton = new Button("Overhead Shuffle");
+            overheadButton.getStyleClass().add("shuffle-button");
+            overheadButton.setOnAction(e -> onShuffleClicked("overhead"));
+            
+            Button cutButton = new Button("Cut Deck");
+            cutButton.getStyleClass().add("shuffle-button");
+            cutButton.setOnAction(e -> onShuffleClicked("cut"));
+            
+            // Create deal button (initially disabled)
+            dealButton1 = new Button("Deal");
+            dealButton1.getStyleClass().add("deal-button");
+            dealButton1.setDisable(true);
+            dealButton1.setOnAction(e -> onDealClicked());
+            
+            // Add buttons in a 2x2 grid
+            GridPane buttonGrid = new GridPane();
+            buttonGrid.setHgap(10);
+            buttonGrid.setVgap(10);
+            buttonGrid.add(riffleButton, 0, 0);
+            buttonGrid.add(overheadButton, 1, 0);
+            buttonGrid.add(cutButton, 0, 1);
+            buttonGrid.add(dealButton1, 1, 1);
+            
+            // Add the grid to the button box
+            buttonBox.getChildren().add(buttonGrid);
+        }
+    }
+
+    /**
+     * Sets up the dealing phase with automatic dealing animation
+     */
+    private void setupDealingPhase() {
+        // Hide dealer overlay during dealing
+        dealerOverlay.setVisible(false);
+        
+        // Clear animation container to prevent stacking
+        animationContainer.getChildren().clear();
+        
+        // Show hand areas for dealing
+        showHandAreas();
+        
+        // Set initial deal state - first card goes to non-dealer (whoever has the turn)
+        dealToDealer = false;
+        
+        // Add move history entry
+        addMoveHistoryEntry("Dealing cards to players");
+        
+        // Update status for dealing phase
+        statusLabel.setText("Dealing cards to players...");
+        currentPlayerLabel.setText("Dealer: " + (whistGame.getDealer() == whistGame.getPlayer1() ? 
+                                    whistGame.getPlayer1().getUsername() : 
+                                    whistGame.getPlayer2().getUsername()));
+        
+        // Render the deck for dealing
+        deckDisplay = renderPile(whistGame.getDeck());
+        
+        // Position the deck in the center of the screen
+        double centerX = animationContainer.getWidth() / 2;
+        double centerY = animationContainer.getHeight() / 2;
+        
+        for (StackPane cardPane : deckDisplay) {
+            // Add card to animation container
+            animationContainer.getChildren().add(cardPane);
+            
+            // Position card in center
+            cardPane.setLayoutX(centerX - cardPane.getPrefWidth() / 2);
+            cardPane.setLayoutY(centerY - cardPane.getPrefHeight() / 2);
+        }
+        
+        // Start dealing animation for the first card
+        if (!deckDisplay.isEmpty()) {
+            StackPane topCard = deckDisplay.get(0);
+            // Call makeIntoDeal for top card (will trigger dealing animation)
+            makeIntoDeal(topCard);
+        }
+        
+        // Start timer for the dealing phase (10 seconds)
+        startDealingTimer(10, () -> {
+            // If timer runs out, auto-complete dealing
+            completeDealing();
+        });
+    }
+
+    /**
+     * Starts a timer for the dealing phase
+     * @param seconds Number of seconds for the timer
+     * @param timeoutAction Action to perform when timer expires
+     */
+    private void startDealingTimer(int seconds, Runnable timeoutAction) {
+        // Reset timer if it exists
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        
+        // Create a new timer
+        timeRemaining = seconds;
+        
+        // Update timer display
+        updateTimerDisplay();
+        
+        // Create a new timeline for the timer
+        gameTimer = new Timeline();
+        gameTimer.setCycleCount(seconds);
+        
+        // Create the tick event - each second
+        KeyFrame frame = new KeyFrame(Duration.seconds(1), event -> {
+            timeRemaining--;
+            
+            // Update timer display
+            updateTimerDisplay();
+            
+            // Check if timer has expired
+            if (timeRemaining <= 0) {
+                gameTimer.stop();
+                if (timeoutAction != null) {
+                    timeoutAction.run();
+                }
+            }
+        });
+        
+        gameTimer.getKeyFrames().add(frame);
+        gameTimer.play();
+    }
+
+    /**
+     * Completes the dealing process automatically
+     */
+    private void completeDealing() {
+        // Stop any running timer
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        
+        // Add move history entry
+        addMoveHistoryEntry("Dealing completed automatically");
+        
+        // Deal all remaining cards to players
+        dealAllCards();
+        
+        // Proceed to next stage
+        prepareForTrumpReveal();
+    }
+
+    /**
+     * Automatically plays a card for the current player when their turn timer expires
+     */
+    private void autoPlayCard() {
+        // Get the current player
+        Player currentPlayer = whistGame.getTurnHolder();
+        
+        // Get list of valid cards
+        List<Card> playableCards;
+        if (!whistGame.getTrick().isEmpty()) {
+            Card leadCard = whistGame.getTrick().getFirst();
+            playableCards = whistGame.getPlayableCards(currentPlayer, leadCard);
+        } else {
+            playableCards = whistGame.getPlayableCards(currentPlayer);
+        }
+        
+        // If no playable cards, show an error and return
+        if (playableCards.isEmpty()) {
+            showAlert(Alert.AlertType.ERROR, "Error", "No playable cards found!");
+            return;
+        }
+        
+        // Select a random card from the playable ones
+        Card cardToPlay = playableCards.get(random.nextInt(playableCards.size()));
+        
+        // Find the UI representation of the card
+        StackPane cardPane = null;
+        if (currentPlayer == whistGame.getPlayer1()) {
+            for (StackPane pane : player1Cards) {
+                Card card = (Card) pane.getProperties().get("card");
+                if (card == cardToPlay) {
+                    cardPane = pane;
+                    break;
+                }
+            }
+        } else {
+            for (StackPane pane : player2Cards) {
+                Card card = (Card) pane.getProperties().get("card");
+                if (card == cardToPlay) {
+                    cardPane = pane;
+                    break;
+                }
+            }
+        }
+        
+        if (cardPane == null) {
+            // Could not find the UI representation, play the card without animation
+            whistGame.playCard(cardToPlay);
+            
+            // Add move history entry
+            addMoveHistoryEntry(currentPlayer.getUsername() + " auto-played " + cardToPlay.toString());
+            
+            // Switch turn to other player
+            Player nextPlayer = currentPlayer == whistGame.getPlayer1() ? 
+                whistGame.getPlayer2() : whistGame.getPlayer1();
+            whistGame.setTurnHolder(nextPlayer);
+            
+            // Update UI
+            updateUI();
+            statusLabel.setText(nextPlayer.getUsername() + "'s turn to play");
+            
+            // If both players have played a card, determine the trick winner
+            if (whistGame.getTrick().size() == 2) {
+                // Delay to show the cards before resolving the trick
+                Timeline trickResolution = new Timeline(
+                    new KeyFrame(Duration.seconds(1.5), e -> resolveTrick())
+                );
+                trickResolution.play();
+            }
+        } else {
+            // Found the UI representation, trigger its click handler to play it
+            cardPane.fireEvent(new MouseEvent(MouseEvent.MOUSE_CLICKED, 0, 0, 0, 0,
+                    MouseButton.PRIMARY, 1, false, false, false, false,
+                    false, false, false, false, false, false, null));
+        }
+    }
+
+    /**
+     * Animates cards in the trick area moving to the winner's spoils
+     * 
+     * @param winner The player who won the trick
+     */
+    private void animateCardsToSpoils(Player winner) {
+        // Get all cards in the trick area
+        List<Node> trickCards = new ArrayList<>(trickArea.getChildren());
+        
+        for (Node cardNode : trickCards) {
+            if (cardNode instanceof StackPane cardPane) {
+                // Create animation
+                TranslateTransition spoilsTransition = new TranslateTransition(Duration.millis(600), cardPane);
+                
+                // Calculate target position based on which player won
+                double targetX;
+                double targetY;
+                
+                if (winner == whistGame.getPlayer1()) {
+                    // Animate to bottom right for player 1
+                    targetX = 400;
+                    targetY = 200;
+                } else {
+                    // Animate to top right for player 2
+                    targetX = 400;
+                    targetY = -200;
+                }
+                
+                spoilsTransition.setToX(targetX);
+                spoilsTransition.setToY(targetY);
+                
+                // Add rotation and scaling for visual flair
+                RotateTransition rotate = new RotateTransition(Duration.millis(600), cardPane);
+                rotate.setByAngle(winner == whistGame.getPlayer1() ? 360 : -360);
+                
+                ScaleTransition scale = new ScaleTransition(Duration.millis(600), cardPane);
+                scale.setToX(0.7);
+                scale.setToY(0.7);
+                
+                // Create parallel animation for smoother effect
+                ParallelTransition spoilsAnimation = new ParallelTransition(cardPane, 
+                                                                           spoilsTransition, 
+                                                                           rotate,
+                                                                           scale);
+                
+                // Add a fade effect at the end
+                FadeTransition fadeOut = new FadeTransition(Duration.millis(200), cardPane);
+                fadeOut.setFromValue(1.0);
+                fadeOut.setToValue(0.0);
+                fadeOut.setDelay(Duration.millis(500));
+                
+                // Combine sequential animations
+                SequentialTransition fullAnimation = new SequentialTransition(spoilsAnimation, fadeOut);
+                
+                // Remove from trick area when complete
+                fullAnimation.setOnFinished(e -> trickArea.getChildren().remove(cardPane));
+                
+                // Play the animation
+                fullAnimation.play();
+            }
+        }
+    }
+    
+    /**
+     * Handles trick completion for DUEL stage
+     * @param trickWinner The player who won the trick
+     */
+    private void handleDuelStageTrickCompletion(Player trickWinner) {
+        // Animate trick cards moving to winner's spoils after a delay
+        Timeline spoilsDelay = new Timeline(
+            new KeyFrame(Duration.seconds(1), e -> {
+                // Get the cards from the trick
+                List<Card> trickCards = new ArrayList<>(whistGame.getTrick());
+                
+                // Add the cards to the winner's spoils in game logic
+                for (Card card : trickCards) {
+                    trickWinner.addToSpoils(card);
+                }
+                
+                // Visually animate cards moving to winner's side
+                animateCardsToSpoils(trickWinner);
+                
+                // Discard cards from trick and players' hands
+                whistGame.completeTrick();
+                
+                // Add move history entry about trick winner
+                String trickMessage = trickWinner.getUsername() + " added the trick cards to their spoils";
+                addMoveHistoryEntry(trickMessage);
+                
+                // Check if we've completed all 13 tricks
+                if (currentTrickNumber >= 13 || whistGame.getPlayer1().getHand().isEmpty()) {
+                    // Calculate scores for the round
+                    int player1RoundScore = player1TricksWon - 6; // Tricks won minus 6
+                    int player2RoundScore = player2TricksWon - 6; // Tricks won minus 6
+                    
+                    // Update player scores
+                    whistGame.getPlayer1().addPoints(player1RoundScore);
+                    whistGame.getPlayer2().addPoints(player2RoundScore);
+                    
+                    // Update UI to reflect scores
+                    player1Score.setText("Score: " + whistGame.getPlayer1().getScore());
+                    player2Score.setText("Score: " + whistGame.getPlayer2().getScore());
+                    
+                    // Show summary of round
+                    String summaryMessage = "DUEL stage completed. " +
+                                          whistGame.getPlayer1().getUsername() + " won " + player1TricksWon + 
+                                          " tricks (" + player1RoundScore + " points), " +
+                                          whistGame.getPlayer2().getUsername() + " won " + player2TricksWon + 
+                                          " tricks (" + player2RoundScore + " points)";
+                    addMoveHistoryEntry(summaryMessage);
+                    
+                    // End the round after a delay
+                    Timeline roundEndDelay = new Timeline(
+                        new KeyFrame(Duration.seconds(2), e2 -> {
+                            endRound();
+                        })
+                    );
+                    roundEndDelay.play();
+                } else {
+                    // Continue with the next trick
+                    
+                    // Clear trick area for next trick
+                    trickArea.getChildren().clear();
+                    
+                    // Update status to show current trick number
+                    statusLabel.setText(trickWinner.getUsername() + "'s turn to play - Trick " + (currentTrickNumber + 1) + " of 13");
+                    currentPlayerLabel.setText(trickWinner.getUsername());
+                    
+                    // Make appropriate cards playable for the next trick
+                    resetPlayableCards();
+                    
+                    // Start timer for the next turn
+                    startGameTimer(15, () -> {
+                        // Auto-play a card if timer expires
+                        autoPlayCard();
+                    });
+                }
+            })
+        );
+        spoilsDelay.play();
+    }
+
+    /**
+     * Handles the end of the game, showing the game over overlay
+     */
+    private void handleGameEnd() {
+        // Get the winning player
+        Player winner = whistGame.getWinner();
+        if (winner == null) {
+            // No winner set, shouldn't happen but handle it gracefully
+            showAlert(Alert.AlertType.ERROR, "Error", "Could not determine game winner!");
+            return;
+        }
+        
+        // Add move history entry about game end
+        String gameEndMessage = "Game Over! " + winner.getUsername() + " wins with " + winner.getScore() + " points!";
+        addMoveHistoryEntry(gameEndMessage);
+        
+        // Set game over message and title
+        gameOverTitle.setText("Game Over");
+        gameOverMessage.setText(winner.getUsername() + " won the game with " + winner.getScore() + " points!");
+        
+        // Add winning player highlight
+        if (winner == whistGame.getPlayer1()) {
+            gameOverTitle.setStyle("-fx-text-fill: -fx-player-x-color;");
+        } else {
+            gameOverTitle.setStyle("-fx-text-fill: -fx-player-o-color;");
+        }
+        
+        // Show game over overlay with animation
+        gameOverOverlay.setOpacity(0);
+        gameOverOverlay.setVisible(true);
+        
+        // Set up return to lobby button action
+        returnToLobbyButton.setOnAction(e -> navigateToGameLobby());
+        
+        // Animate overlay appearance
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), gameOverOverlay);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        fadeIn.play();
+        
+        // Play celebratory animation for winner
+        playCelebrationAnimation(winner);
+        
+        // Stop the game
+        gameInProgress = false;
+    }
+    
+    /**
+     * Plays a celebration animation for the winning player
+     * @param winner The player who won the game
+     */
+    private void playCelebrationAnimation(Player winner) {
+        // Clear animation container first
+        animationContainer.getChildren().clear();
+        
+        // Determine color palette based on winner
+        Color baseColor;
+        List<Color> colorPalette = new ArrayList<>();
+        
+        if (winner == whistGame.getPlayer1()) {
+            // Player 1 winning colors (blues and golds)
+            baseColor = Color.web("#3B82F6");
+            colorPalette.add(Color.web("#3B82F6")); // Blue
+            colorPalette.add(Color.web("#2563EB")); // Darker blue
+            colorPalette.add(Color.web("#FBBF24")); // Gold
+            colorPalette.add(Color.web("#F59E0B")); // Amber
+            colorPalette.add(Color.web("#FFFFFF")); // White
+        } else {
+            // Player 2 winning colors (reds and golds)
+            baseColor = Color.web("#EF4444");
+            colorPalette.add(Color.web("#EF4444")); // Red
+            colorPalette.add(Color.web("#DC2626")); // Darker red
+            colorPalette.add(Color.web("#FBBF24")); // Gold
+            colorPalette.add(Color.web("#F59E0B")); // Amber
+            colorPalette.add(Color.web("#FFFFFF")); // White
+        }
+        
+        // Create several animation layers
+        
+        // 1. Confetti particles
+        createConfettiAnimation(colorPalette, 150);
+        
+        // 2. Firework explosions
+        createFireworkAnimation(colorPalette, 8);
+        
+        // 3. Trophy icon burst
+        createTrophyIconAnimation(baseColor);
+        
+        // 4. Create winner text with particle effects
+        createWinnerTextAnimation(winner.getUsername(), baseColor);
+        
+        // Play a winning sound
+        // MediaPlayer winSound = new MediaPlayer(new Media(getClass().getResource("/sounds/win_celebration.mp3").toString()));
+        // winSound.play();
+    }
+    
+    /**
+     * Creates confetti particle animation
+     * @param colorPalette Colors to use for particles
+     * @param particleCount Number of particles to create
+     */
+    private void createConfettiAnimation(List<Color> colorPalette, int particleCount) {
+        for (int i = 0; i < particleCount; i++) {
+            // Create a random particle shape
+            Node particle;
+            double size = random.nextInt(15) + 5;
+            
+            if (random.nextDouble() < 0.7) {
+                // Rectangle particle (70% chance)
+                Rectangle confetti = new Rectangle(size, size);
+                
+                // Sometimes use elongated rectangles
+                if (random.nextDouble() < 0.3) {
+                    confetti.setWidth(size * 2);
+                    confetti.setHeight(size / 2);
+                }
+                
+                particle = confetti;
+            } else {
+                // Circle particle (30% chance)
+                Circle circle = new Circle(size / 2);
+                particle = circle;
+            }
+            
+            // Set random color from palette
+            Color color = colorPalette.get(random.nextInt(colorPalette.size()));
+            if (particle instanceof Shape shape) {
+                shape.setFill(color);
+            }
+            
+            // Add subtle glow effect
+            DropShadow glow = new DropShadow(8, color.brighter());
+            particle.setEffect(glow);
+            
+            // Set initial position spread across top of screen
+            particle.setTranslateX(random.nextInt((int) animationContainer.getWidth()));
+            particle.setTranslateY(-50 - random.nextInt(200)); // Start above the visible area
+            
+            // Add to animation container
+            animationContainer.getChildren().add(particle);
+            
+            // Create falling animation with physics
+            TranslateTransition fall = new TranslateTransition(
+                    Duration.millis(random.nextInt(3000) + 2000), particle);
+            
+            // End position varying across the screen
+            fall.setToY(animationContainer.getHeight() + 100);
+            
+            // Horizontal drift
+            double drift = (random.nextDouble() - 0.5) * 400;
+            fall.setToX(particle.getTranslateX() + drift);
+            
+            // Rotation animation
+            RotateTransition rotate = new RotateTransition(
+                    Duration.millis(random.nextInt(3000) + 1000), particle);
+            rotate.setByAngle(random.nextInt(720) - 360);
+            rotate.setCycleCount(Animation.INDEFINITE);
+            
+            // Add subtle size pulsing
+            ScaleTransition pulse = new ScaleTransition(
+                    Duration.millis(random.nextInt(500) + 500), particle);
+            pulse.setByX(0.2);
+            pulse.setByY(0.2);
+            pulse.setCycleCount(Animation.INDEFINITE);
+            pulse.setAutoReverse(true);
+            
+            // Play combined animations
+            ParallelTransition animation = new ParallelTransition(
+                    particle, fall, rotate, pulse);
+            
+            // Remove particle when animation completes
+            animation.setOnFinished(e -> 
+                    animationContainer.getChildren().remove(particle));
+            
+            // Add slight delay for staggered effect
+            PauseTransition delay = new PauseTransition(
+                    Duration.millis(random.nextInt(1500)));
+            delay.setOnFinished(e -> animation.play());
+            delay.play();
+        }
+    }
+    
+    /**
+     * Creates firework explosion animation
+     * @param colorPalette Colors to use for fireworks
+     * @param burstCount Number of firework bursts to create
+     */
+    private void createFireworkAnimation(List<Color> colorPalette, int burstCount) {
+        for (int b = 0; b < burstCount; b++) {
+            // Random position for this firework
+            double burstX = random.nextDouble() * animationContainer.getWidth();
+            double burstY = 100 + random.nextDouble() * (animationContainer.getHeight() / 2);
+            Color burstColor = colorPalette.get(random.nextInt(colorPalette.size()));
+            
+            // Create a launch streamer effect
+            Circle launchPoint = new Circle(3);
+            launchPoint.setFill(burstColor);
+            launchPoint.setTranslateX(burstX);
+            launchPoint.setTranslateY(animationContainer.getHeight());
+            
+            // Add launch point to container
+            animationContainer.getChildren().add(launchPoint);
+            
+            // Create upward launch animation
+            TranslateTransition launch = new TranslateTransition(
+                    Duration.millis(700 + random.nextInt(500)), launchPoint);
+            launch.setToY(burstY);
+            
+            // Create trail effect during launch
+            Timeline trailEffect = new Timeline();
+            int trailFrames = 10;
+            for (int i = 0; i < trailFrames; i++) {
+                final int frameIndex = i;
+                KeyFrame trailFrame = new KeyFrame(Duration.millis(i * 80), e -> {
+                    Circle trailParticle = new Circle(2);
+                    trailParticle.setFill(burstColor.deriveColor(0, 1, 1, 0.7));
+                    trailParticle.setTranslateX(launchPoint.getTranslateX() + (random.nextDouble() - 0.5) * 5);
+                    trailParticle.setTranslateY(launchPoint.getTranslateY() + (random.nextDouble() * 10));
+                    
+                    animationContainer.getChildren().add(trailParticle);
+                    
+                    FadeTransition fadeTrial = new FadeTransition(
+                            Duration.millis(300), trailParticle);
+                    fadeTrial.setToValue(0);
+                    fadeTrial.setOnFinished(ev -> 
+                            animationContainer.getChildren().remove(trailParticle));
+                    fadeTrial.play();
+                });
+                trailEffect.getKeyFrames().add(trailFrame);
+            }
+            
+            // Create the burst effect after launch completes
+            launch.setOnFinished(e -> {
+                // Remove the launch point
+                animationContainer.getChildren().remove(launchPoint);
+                
+                // Create the burst particles
+                int particleCount = 30 + random.nextInt(30);
+                for (int i = 0; i < particleCount; i++) {
+                    Circle particle = new Circle(2 + random.nextDouble() * 2);
+                    
+                    // Vary colors slightly within palette
+                    Color particleColor = burstColor.interpolate(
+                            colorPalette.get(random.nextInt(colorPalette.size())), 
+                            random.nextDouble() * 0.3);
+                    
+                    particle.setFill(particleColor);
+                    particle.setTranslateX(burstX);
+                    particle.setTranslateY(burstY);
+                    
+                    // Add glow effect
+                    DropShadow glow = new DropShadow(8, particleColor);
+                    particle.setEffect(glow);
+                    
+                    animationContainer.getChildren().add(particle);
+                    
+                    // Calculate random direction
+                    double angle = random.nextDouble() * 360;
+                    double distance = 50 + random.nextDouble() * 150;
+                    double endX = burstX + Math.cos(Math.toRadians(angle)) * distance;
+                    double endY = burstY + Math.sin(Math.toRadians(angle)) * distance;
+                    
+                    // Create particle animation
+                    TranslateTransition move = new TranslateTransition(
+                            Duration.millis(500 + random.nextInt(500)), particle);
+                    move.setToX(endX);
+                    move.setToY(endY);
+                    
+                    // Add gravity effect
+                    Timeline gravity = new Timeline(new KeyFrame(
+                            Duration.millis(700),
+                            new KeyValue(
+                                    particle.translateYProperty(),
+                                    endY + 50 + random.nextDouble() * 100,
+                                    Interpolator.EASE_IN
+                            )
+                    ));
+                    
+                    // Fade out
+                    FadeTransition fade = new FadeTransition(
+                            Duration.millis(600), particle);
+                    fade.setDelay(Duration.millis(200));
+                    fade.setToValue(0);
+            
+            // Play animations
+                    SequentialTransition sequence = new SequentialTransition(
+                            new ParallelTransition(move, fade),
+                            gravity
+                    );
+                    
+                    sequence.setOnFinished(ev -> 
+                            animationContainer.getChildren().remove(particle));
+                    sequence.play();
+                }
+                
+                // Add a flash effect at burst point
+                Circle flash = new Circle(100);
+                flash.setFill(Color.WHITE.deriveColor(0, 1, 1, 0.7));
+                flash.setTranslateX(burstX);
+                flash.setTranslateY(burstY);
+                animationContainer.getChildren().add(flash);
+                
+                FadeTransition flashFade = new FadeTransition(
+                        Duration.millis(300), flash);
+                flashFade.setFromValue(0.7);
+                flashFade.setToValue(0);
+                flashFade.setOnFinished(ev -> 
+                        animationContainer.getChildren().remove(flash));
+                flashFade.play();
+            });
+            
+            // Add delay between fireworks
+            PauseTransition burstDelay = new PauseTransition(
+                    Duration.millis(random.nextInt(1500) + b * 300));
+            burstDelay.setOnFinished(e -> {
+                launch.play();
+                trailEffect.play();
+            });
+            burstDelay.play();
+        }
+    }
+    
+    /**
+     * Creates a trophy icon animation in the center of the screen
+     * @param baseColor Base color for the trophy
+     */
+    private void createTrophyIconAnimation(Color baseColor) {
+        // Create central trophy icon
+        ImageView trophyIcon = new ImageView();
+        try {
+            trophyIcon.setImage(new Image(Objects.requireNonNull(
+                    getClass().getResourceAsStream("/images/trophy.png"))));
+        } catch (Exception e) {
+            // Fallback to a simple trophy shape if image not found
+            Rectangle trophyBase = new Rectangle(40, 50);
+            trophyBase.setFill(baseColor);
+            trophyBase.setArcWidth(10);
+            trophyBase.setArcHeight(10);
+            trophyIcon = new ImageView();
+        }
+        
+        trophyIcon.setFitWidth(100);
+        trophyIcon.setFitHeight(100);
+        trophyIcon.setPreserveRatio(true);
+        
+        // Position in center
+        trophyIcon.setTranslateX((animationContainer.getWidth() / 2) - 50);
+        trophyIcon.setTranslateY((animationContainer.getHeight() / 2) - 150);
+        
+        // Add a gold glow
+        DropShadow trophyGlow = new DropShadow(20, Color.GOLD);
+        trophyIcon.setEffect(trophyGlow);
+        
+        // Make initially invisible
+        trophyIcon.setOpacity(0);
+        trophyIcon.setScaleX(0.1);
+        trophyIcon.setScaleY(0.1);
+        
+        animationContainer.getChildren().add(trophyIcon);
+        
+        // Create entrance animation
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), trophyIcon);
+        fadeIn.setToValue(1.0);
+        
+        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(800), trophyIcon);
+        scaleUp.setToX(1.2);
+        scaleUp.setToY(1.2);
+        scaleUp.setInterpolator(Interpolator.EASE_OUT);
+        
+        ScaleTransition scaleBounce = new ScaleTransition(Duration.millis(300), trophyIcon);
+        scaleBounce.setToX(1.0);
+        scaleBounce.setToY(1.0);
+        scaleBounce.setDelay(Duration.millis(800));
+        
+        // Add rotation for dramatic effect
+        RotateTransition spin = new RotateTransition(Duration.millis(1000), trophyIcon);
+        spin.setByAngle(360 * 2);
+        spin.setInterpolator(Interpolator.EASE_OUT);
+        
+        // Play the animation with delay
+        PauseTransition trophyDelay = new PauseTransition(Duration.millis(500));
+        trophyDelay.setOnFinished(e -> {
+            ParallelTransition parallel = new ParallelTransition(
+                    fadeIn, scaleUp, spin);
+            SequentialTransition sequence = new SequentialTransition(
+                    parallel, scaleBounce);
+            sequence.play();
+        });
+        trophyDelay.play();
+    }
+    
+    /**
+     * Creates animated winner text
+     * @param winnerName Name of the winning player
+     * @param baseColor Color to use for text
+     */
+    private void createWinnerTextAnimation(String winnerName, Color baseColor) {
+        // Create winner text
+        Text winnerText = new Text(winnerName + " WINS!");
+        winnerText.setFont(Font.font("Arial", FontWeight.BOLD, 48));
+        winnerText.setFill(baseColor);
+        winnerText.setStroke(Color.WHITE);
+        winnerText.setStrokeWidth(2);
+        
+        // Center text
+        double textWidth = winnerText.getBoundsInLocal().getWidth();
+        winnerText.setTranslateX((animationContainer.getWidth() / 2) - (textWidth / 2));
+        winnerText.setTranslateY((animationContainer.getHeight() / 2) - 50);
+        
+        // Add glow effect
+        DropShadow textGlow = new DropShadow(15, baseColor);
+        winnerText.setEffect(textGlow);
+        
+        // Make initially invisible
+        winnerText.setOpacity(0);
+        winnerText.setScaleX(0.5);
+        winnerText.setScaleY(0.5);
+        
+        animationContainer.getChildren().add(winnerText);
+        
+        // Create entrance animation
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(500), winnerText);
+        fadeIn.setToValue(1.0);
+        fadeIn.setDelay(Duration.millis(1000)); // Appear after trophy
+        
+        ScaleTransition scaleUp = new ScaleTransition(Duration.millis(800), winnerText);
+        scaleUp.setToX(1.2);
+        scaleUp.setToY(1.2);
+        scaleUp.setDelay(Duration.millis(1000));
+        
+        ScaleTransition scaleBounce = new ScaleTransition(Duration.millis(300), winnerText);
+        scaleBounce.setToX(1.0);
+        scaleBounce.setToY(1.0);
+        scaleBounce.setDelay(Duration.millis(1800));
+        
+        // Add pulsing effect
+        Timeline pulsate = new Timeline(
+            new KeyFrame(Duration.ZERO, 
+                new KeyValue(textGlow.radiusProperty(), 15)),
+            new KeyFrame(Duration.millis(500),
+                new KeyValue(textGlow.radiusProperty(), 25)),
+            new KeyFrame(Duration.millis(1000),
+                new KeyValue(textGlow.radiusProperty(), 15))
+        );
+        pulsate.setCycleCount(Animation.INDEFINITE);
+        
+        // Play animations
+        ParallelTransition parallel = new ParallelTransition(
+                fadeIn, scaleUp);
+        SequentialTransition sequence = new SequentialTransition(
+                parallel, scaleBounce);
+        sequence.setOnFinished(e -> pulsate.play());
+        sequence.play();
+    }
+
+    /**
+     * Resets the game board visually for a new round
+     */
+    private void resetGameBoard() {
+        // Clear all visual elements
+        if (playerHandArea != null) {
+            playerHandArea.getChildren().clear();
+        }
+        if (opponentHandArea != null) {
+            opponentHandArea.getChildren().clear();
+        }
+        if (trickArea != null) {
+            trickArea.getChildren().clear();
+        }
+        if (trumpCardDisplay != null) {
+            trumpCardDisplay.getChildren().clear();
+        }
+        if (animationContainer != null) {
+            animationContainer.getChildren().clear();
+        }
+        
+        // Reset collection data structures
+        player1Cards.clear();
+        player2Cards.clear();
+        deckDisplay.clear();
+        drawPileDisplay.clear();
+        discardPileDisplay.clear();
+        
+        // Hide any overlays that might be visible
+        if (roundResultOverlay != null) {
+            roundResultOverlay.setVisible(false);
+        }
+        if (gameOverOverlay != null) {
+            gameOverOverlay.setVisible(false);
+        }
+        
+        // Show appropriate areas
+        showHandAreas();
+        
+        // Update UI labels
+        statusLabel.setText("Starting round " + whistGame.getRound());
+        gameStageLabel.setText(StageType.DEAL.getDisplayName());
+        roundCounter.setText(String.valueOf(whistGame.getRound()));
+        
+        // Update player info displays
+        updatePlayerInfo();
+    }
+
+    /**
+     * Generates the appropriate image path for a card based on its properties
+     * 
+     * @param card The card to generate an image path for
+     * @return The path to the card image
+     */
+    private String getCardImagePath(Card card) {
+        String imagePath = "/images/whist images/";
+        
+        if (card.isFaceDown()) {
+            imagePath += "CardBackside1.png";
+        } else {
+            // Add suit folder
+            switch (card.getSuit()) {
+                case HEARTS:
+                    imagePath += "Hearts/";
+                    break;
+                case DIAMONDS:
+                    imagePath += "Diamonds/";
+                    break;
+                case SPADES:
+                    imagePath += "Spades/";
+                    break;
+                case CLUBS:
+                    imagePath += "Clubs/";
+                    break;
+            }
+            
+            // Add rank to filename
+            int rank = card.getRank();
+            switch (rank) {
+                case 1 -> imagePath += "ace_of_" + card.getSuit().toString().toLowerCase() + ".png";
+                case 13 -> imagePath += "king_of_" + card.getSuit().toString().toLowerCase() + ".png";
+                case 12 -> imagePath += "queen_of_" + card.getSuit().toString().toLowerCase() + ".png";
+                case 11 -> imagePath += "jack_of_" + card.getSuit().toString().toLowerCase() + ".png";
+                default -> imagePath += rank + "_of_" + card.getSuit().toString().toLowerCase() + ".png";
+            }
+        }
+        
+        return imagePath;
+    }
+
+    /**
+     * Creates an ImageView for a card with proper error handling
+     *
+     * @param imagePath Path to the card image
+     * @return ImageView with the card image
+     */
+    private ImageView createCardImageView(String imagePath) {
+        ImageView cardImage = new ImageView();
+        cardImage.setFitHeight(120);
+        cardImage.setFitWidth(80);
+        cardImage.setPreserveRatio(true);
+        
+        try {
+            cardImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        } catch (Exception e) {
+            try {
+                // Fallback to placeholder if image not found
+                cardImage.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/unknown.png"))));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        
+        return cardImage;
+    }
+
+    /**
+     * Sets up hover effects for cards in fan layout
+     * 
+     * @param cardPane The card to add effects to
+     * @param index The index of the card in the layout
+     */
+    private void setupCardHoverEffects(StackPane cardPane, int index) {
+        cardPane.setOnMouseEntered(e -> {
+            // Lift card slightly
+            cardPane.setTranslateY(cardPane.getTranslateY() - 20);
+            
+            // Add highlight effect
+            DropShadow glow = new DropShadow(15, Color.GOLD);
+            cardPane.setEffect(glow);
+            
+            // Bring to front
+            cardPane.toFront();
+            
+            // Scale up slightly
+            cardPane.setScaleX(1.1);
+            cardPane.setScaleY(1.1);
+        });
+        
+        cardPane.setOnMouseExited(e -> {
+            // Return to original position
+            cardPane.setTranslateY(cardPane.getTranslateY() + 20);
+            
+            // Remove effect
+            cardPane.setEffect(null);
+            
+            // Reset z-order
+            cardPane.setViewOrder(-index);
+            
+            // Reset scale
+            cardPane.setScaleX(1.0);
+            cardPane.setScaleY(1.0);
+        });
+    }
+
+    /**
+     * Animates playing a card to the trick area with enhanced visual effects
+     * @param cardPane The card pane to animate
+     */
+    private void animatePlayCardToTrick(StackPane cardPane) {
+        // Check if animation container exists
+        if (animationContainer == null) {
+            System.out.println("Warning: animationContainer is null, cannot animate card to trick");
+            
+            // Just add the card directly to the trick area without animation
+            if (playerHandArea.getChildren().contains(cardPane)) {
+                playerHandArea.getChildren().remove(cardPane);
+            } else if (opponentHandArea.getChildren().contains(cardPane)) {
+                opponentHandArea.getChildren().remove(cardPane);
+            }
+            
+            // Add to trick area directly
+            trickArea.getChildren().add(cardPane);
+            
+            // Reset transforms
+            cardPane.setTranslateX(0);
+            cardPane.setTranslateY(0);
+            cardPane.setRotate(0);
+            cardPane.setScaleX(1.0);
+            cardPane.setScaleY(1.0);
+            
+            return;
+        }
+        
+        // Store original position
+        Bounds originalBounds = cardPane.localToScene(cardPane.getBoundsInLocal());
+        double startX = originalBounds.getMinX();
+        double startY = originalBounds.getMinY();
+        
+        // Calculate target position in trick area
+        double targetX, targetY;
+        
+        // Get trick area bounds
+        Bounds trickAreaBounds = trickArea.localToScene(trickArea.getBoundsInLocal());
+        
+        // Determine position based on current trick status
+        boolean isFirstCard = trickArea.getChildren().isEmpty();
+        
+        if (isFirstCard) {
+            // Position first card on left side
+            targetX = trickAreaBounds.getMinX() + 20;
+            targetY = trickAreaBounds.getMinY() + (trickAreaBounds.getHeight() / 2) - 60;
+        } else {
+            // Position second card on right side
+            targetX = trickAreaBounds.getMinX() + 140;
+            targetY = trickAreaBounds.getMinY() + (trickAreaBounds.getHeight() / 2) - 60;
+        }
+        
+        // Remove from player hand
+        if (playerHandArea.getChildren().contains(cardPane)) {
+            playerHandArea.getChildren().remove(cardPane);
+        } else if (opponentHandArea.getChildren().contains(cardPane)) {
+            opponentHandArea.getChildren().remove(cardPane);
+        }
+        
+        // Add to animation container for movement
+        animationContainer.getChildren().add(cardPane);
+        
+        // Position correctly in animation container
+        cardPane.setTranslateX(startX - animationContainer.localToScene(animationContainer.getBoundsInLocal()).getMinX());
+        cardPane.setTranslateY(startY - animationContainer.localToScene(animationContainer.getBoundsInLocal()).getMinY());
+        
+        // Create animations
+        
+        // Create arc path for more natural movement
+        Path path = new Path();
+        MoveTo moveTo = new MoveTo(cardPane.getTranslateX(), cardPane.getTranslateY());
+        
+        // Create quadratic curve for more natural movement
+        QuadCurveTo curve = new QuadCurveTo(
+            (targetX + cardPane.getTranslateX()) / 2,          // Control point X (midway)
+            cardPane.getTranslateY() - 80,                     // Control point Y (above path)
+            targetX - animationContainer.localToScene(animationContainer.getBoundsInLocal()).getMinX(),  // End X
+            targetY - animationContainer.localToScene(animationContainer.getBoundsInLocal()).getMinY()   // End Y
+        );
+        
+        path.getElements().addAll(moveTo, curve);
+        
+        // Create path transition
+        PathTransition pathTransition = new PathTransition(Duration.millis(600), path, cardPane);
+        pathTransition.setInterpolator(Interpolator.EASE_OUT);
+        
+        // Add rotation for visual interest
+        RotateTransition rotateTransition = new RotateTransition(Duration.millis(600), cardPane);
+        rotateTransition.setByAngle(isFirstCard ? 5 : -5); // Slight rotation
+        
+        // Add scale for emphasis
+        ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(300), cardPane);
+        scaleTransition.setToX(1.1);
+        scaleTransition.setToY(1.1);
+        
+        ScaleTransition scaleBack = new ScaleTransition(Duration.millis(300), cardPane);
+        scaleBack.setToX(1.0);
+        scaleBack.setToY(1.0);
+        scaleBack.setDelay(Duration.millis(300));
+        
+        // Create combined animation
+        ParallelTransition mainAnimation = new ParallelTransition(
+            cardPane, 
+            pathTransition,
+            rotateTransition,
+            new SequentialTransition(scaleTransition, scaleBack)
+        );
+        
+        // Add highlight effect when card lands
+        FadeTransition highlightFade = new FadeTransition(Duration.millis(300), cardPane);
+        highlightFade.setFromValue(1.0);
+        highlightFade.setToValue(0.7);
+        highlightFade.setCycleCount(2);
+        highlightFade.setAutoReverse(true);
+        
+        // When animation completes, move the card to the trick area
+        mainAnimation.setOnFinished(e -> {
+            // Remove from animation container
+            animationContainer.getChildren().remove(cardPane);
+            
+            // Reset transforms
+            cardPane.setTranslateX(0);
+            cardPane.setTranslateY(0);
+            cardPane.setRotate(0);
+            
+            // Add to trick area
+            trickArea.getChildren().add(cardPane);
+            
+            // Play highlight effect
+            highlightFade.play();
+            
+            // Add sound effect (optional)
+            // Media cardSound = new Media(getClass().getResource("/sounds/card_play.mp3").toString());
+            // MediaPlayer mediaPlayer = new MediaPlayer(cardSound);
+            // mediaPlayer.play();
+            
+            // Update game status
+            if (trickArea.getChildren().size() == 2) {
+                // Both players have played, resolve the trick
+                resolveTrick();
+            } else {
+                // Switch turns
+                Player nextPlayer = (whistGame.getTurnHolder() == whistGame.getPlayer1()) ? 
+                    whistGame.getPlayer2() : whistGame.getPlayer1();
+                whistGame.setTurnHolder(nextPlayer);
+                
+                // Update UI
+                currentPlayerLabel.setText(nextPlayer.getUsername());
+                
+                // Make the next player's cards playable
+                resetPlayableCards();
+            }
+        });
+        
+        // Play the animation
+        mainAnimation.play();
+    }
 }

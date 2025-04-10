@@ -41,8 +41,30 @@ public class UserAccount {
     public String getDob() {
         return dob;
     }
+    public String getEmail() {
+        return email;
+    }
 
     /**
      * Setters.
      */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+    
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+    
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 }

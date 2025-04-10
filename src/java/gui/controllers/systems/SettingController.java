@@ -116,7 +116,7 @@ public class SettingController {
             // In a real implementation, validate password complexity
 
             // Update password in database
-            boolean success = db.updatePassword(currentUsername, newPassword);
+            boolean success = db.updatePassword(currentUsername, "current_password", newPassword);
             if (success) {
                 showAlert(AlertType.INFORMATION, "Success", "Password updated successfully");
 

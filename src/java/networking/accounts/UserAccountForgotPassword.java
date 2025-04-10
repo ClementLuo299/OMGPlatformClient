@@ -1,11 +1,12 @@
 package networking.accounts;
 import networking.DatabaseStub;
+import java.util.Random;
 
 public class UserAccountForgotPassword {
 
     private DatabaseStub database;
 
-    public ForgottenPassword(DatabaseStub database) {
+    public UserAccountForgotPassword(DatabaseStub database) {
         this.database = database;
     }
 
@@ -29,8 +30,8 @@ public class UserAccountForgotPassword {
                 String tempPassword = generateTempPassword();
                 displayTempPassword(tempPassword);
                 user.setPassword(tempPassword);
-                system.out.println("Your new password is: \n");
-                system.out.println(tempPassword);
+                System.out.println("Your new password is: \n");
+                System.out.println(tempPassword);
                 database.saveDBState();
                 return true;
             }

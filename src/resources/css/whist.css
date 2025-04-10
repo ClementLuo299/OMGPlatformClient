@@ -281,7 +281,7 @@
 
 .card-back {
     -fx-background-color: -fx-card-back-color;
-    -fx-background-image: url('../icons/card_back_pattern.png');
+    -fx-background-image: url('../images/whist images/CardBackside1.png');
     -fx-background-size: cover;
 }
 
@@ -955,6 +955,33 @@
 
 .reveal-trump-button:hover {
     -fx-background-color: derive(#8e44ad, -10%);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Start Game Overlay Styles */
+.start-game-overlay {
+    -fx-background-color: rgba(255, 255, 255, 0.95);
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 15, 0, 0, 5);
+    -fx-padding: 25px;
+    -fx-alignment: center;
+}
+
+.start-game-button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 12px 30px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-min-width: 200px;
+}
+
+.start-game-button:hover {
+    -fx-background-color: derive(#4caf50, -10%);
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 2);
     -fx-scale-x: 1.02;
     -fx-scale-y: 1.02;

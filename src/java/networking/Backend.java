@@ -31,7 +31,7 @@ public class Backend {
     private Backend() {
         //Activate IO handlers
         guiHandler = new GUIIOHandler();
-        dbHandler = new DatabaseIOHandler();
+        dbHandler = DatabaseIOHandler.getInstance();
         dbHandlerHTTP = new DatabaseIOHandlerHTTP();
         gameHandler = new GameIOHandler();
     }

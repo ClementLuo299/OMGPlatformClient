@@ -134,8 +134,8 @@ public class CheckersGameController implements Initializable {
         
         try {
             // Create player accounts
-            networking.accounts.UserAccount account1 = new networking.accounts.UserAccount("Player 1", "pass", false);
-            networking.accounts.UserAccount account2 = new networking.accounts.UserAccount("Player 2", "pass", false);
+            networking.accounts.UserAccount account1 = new networking.accounts.UserAccount("Player 1", "pass");
+            networking.accounts.UserAccount account2 = new networking.accounts.UserAccount("Player 2", "pass");
             
             // Create Player objects with the accounts
             Player player1 = new Player(account1);

@@ -18,7 +18,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="800.0" prefWidth="1400.0" styleClass="main-container" stylesheets="@../css/whist.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.games.WhistController">
+<BorderPane prefHeight="800.0" prefWidth="1400.0" styleClass="main-container" stylesheets="@../css/whist.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.games.WhistController">
     <!-- Top section with game info -->
     <top>
         <HBox alignment="CENTER" spacing="10" styleClass="game-header">
@@ -100,7 +100,7 @@
                 <effect>
                     <DropShadow color="#00000066" height="15" radius="7.0" spread="0.05" width="15" />
                 </effect>
-                <VBox alignment="CENTER" spacing="20" styleClass="dealer-content">
+                <VBox fx:id="shuffleVBox" alignment="CENTER" spacing="20" styleClass="dealer-content">
                     <padding>
                         <Insets bottom="30" left="30" right="30" top="30" />
                     </padding>
@@ -119,21 +119,30 @@
                     </StackPane>
                     
                     <!-- Instruction Text -->
-                    <Label fx:id="shuffleInstructionLabel" styleClass="shuffle-instruction" text="Please Shuffle at least Three Times to Deal" textAlignment="CENTER" wrapText="true" />
-                    
-                    <!-- Shuffle Counter -->
-                    <Label fx:id="shuffleCounterLabel" styleClass="shuffle-counter" text="Shuffles: 0/3" />
+                    <Label fx:id="shuffleInstructionLabel" maxWidth="313.0" prefHeight="19.0" prefWidth="313.0" styleClass="shuffle-instruction" text="Shuffle at least Five Times to Deal" textAlignment="CENTER" wrapText="true" />
+               <HBox prefHeight="35.0" prefWidth="205.0">
+                  <children>
+                          
+                          <!-- Shuffle Counter -->
+                          <Label fx:id="shuffleCounterLabel" prefHeight="37.0" prefWidth="155.0" styleClass="shuffle-counter" text="   Shuffles: 0/5" />
+                     <Button fx:id="dealButton1" disable="true" prefHeight="35.0" prefWidth="133.0" styleClass="deal-button" text="Deal" />
+                  </children>
+               </HBox>
                     
                     <!-- Action Buttons -->
                     <HBox alignment="CENTER" spacing="15">
-                        <Button fx:id="shuffleButton" styleClass="shuffle-button" text="Shuffle" />
-                        <Button fx:id="dealButton" disable="true" prefHeight="35.0" prefWidth="114.0" styleClass="deal-button" text="Deal" />
+                        <Button fx:id="shuffleButton" prefHeight="43.0" prefWidth="139.0" styleClass="shuffle-button" text="Cut " />
+                  <Button fx:id="shuffleButton2" prefHeight="43.0" prefWidth="136.0" styleClass="shuffle-button" text="Riffle" />
                     </HBox>
+               <HBox alignment="CENTER" prefHeight="43.0" prefWidth="330.0" spacing="15">
+                  <children>
+                     <Button fx:id="shuffleButton1" prefHeight="43.0" prefWidth="139.0" styleClass="shuffle-button" text="Overhand " />
+                     <Button fx:id="shuffleButton11" prefHeight="43.0" prefWidth="136.0" styleClass="shuffle-button" text="Pile " />
+                  </children>
+               </HBox>
                 </VBox>
+            <Button fx:id="startGameButton" mnemonicParsing="false" styleClass="start-game-button" text="START GAME" />
             </StackPane>
-            
-            <!-- Animation Container -->
-            <StackPane fx:id="animationContainer" mouseTransparent="true" />
             
             <!-- Round Result Overlay (initially hidden) -->
             <StackPane fx:id="roundResultOverlay" styleClass="result-overlay" visible="false">

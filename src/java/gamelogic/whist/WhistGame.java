@@ -31,6 +31,8 @@ public class WhistGame extends Game {
     private CardPile discard;
     // The list which holds the current trick
     private List<Card> trick;
+    // The player who is the dealer for this round
+    private Player dealer;
 
 
     // CONSTRUCTOR
@@ -48,6 +50,7 @@ public class WhistGame extends Game {
         this.stage = StageType.DEAL;
         this.trump = null;
         this.deck = new CardPile();
+        this.trick = new ArrayList<>();
     }
 
 
@@ -115,6 +118,24 @@ public class WhistGame extends Game {
     public CardPile getDiscard() {
         return discard;
     }
+    
+    /**
+     * Gets the current Dealer of this Whist Game
+     * 
+     * @return The Player who is the dealer
+     */
+    public Player getDealer() {
+        return dealer;
+    }
+
+    /**
+     * Gets the Player whose turn it is currently
+     * 
+     * @return The Player whose turn it is
+     */
+    public Player getCurrentTurn() {
+        return getTurnHolder();
+    }
 
 
     // SETTERS
@@ -162,6 +183,15 @@ public class WhistGame extends Game {
      */
     public void setDiscard(CardPile discardPile) {
         this.discard = discardPile;
+    }
+    
+    /**
+     * Sets the current Dealer for this round of this Whist Game
+     * 
+     * @param dealer The Player who will be the dealer
+     */
+    public void setDealer(Player dealer) {
+        this.dealer = dealer;
     }
 
 

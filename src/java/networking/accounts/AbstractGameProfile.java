@@ -1,5 +1,6 @@
 package networking.accounts;
 
+import gamelogic.GameType;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,17 +35,19 @@ public abstract class AbstractGameProfile {
     /**
      * Adds a new game record to the player's history and updates the last game details.
      *
-     * @param opponent The opponent.
-     * @param result The result of the game (e.g., win, loss, draw, etc).
-     * @param score The score of the game.
+     * @param gameType The type of game
+     * @param player1 The first player account
+     * @param player2 The second player account
+     * @param winner The winner (1 for player1, 2 for player2)
+     * @param score The score of the game
      */
-    public void addGameRecord(String game, String opponent, String result, int score) {
-        GameRecord newRecord = new GameRecord(game, opponent, result, score);
+    public void addGameRecord(GameType gameType, UserAccount player1, UserAccount player2, int winner, int score) {
+        GameRecord newRecord = new GameRecord(gameType, player1, player2, winner, score);
         this.gameRecords.add(newRecord);
 
         // Update the last game details
-        setLastOpponent(opponent);
-        setLastGameResult(result);
+        setLastOpponent(winner == 1 ? player2.getUsername() : player1.getUsername());
+        setLastGameResult(winner == 1 ? "Win" : "Loss");
         setLastGameScore(score);
     }
 
