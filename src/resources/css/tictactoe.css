@@ -6,7 +6,7 @@
     -fx-text-color: #1a1a1a;
     -fx-player-x-color: #3B82F6;   /* Blue for Player X */
     -fx-player-o-color: #EF4444;   /* Red for Player O */
-    -fx-success-color: #10B981;    /* Green for success */
+    -fx-success-color: #2c8838;    /* Green for success */
     -fx-danger-color: #EF4444;     /* Red for danger */
     -fx-warning-color: #F59E0B;    /* Amber for warnings */
 }
@@ -215,29 +215,66 @@
 
 /* Game Board Styles */
 .game-board {
-    -fx-background-color: -fx-secondary-color;
-    -fx-background-radius: 8px;
-    -fx-padding: 10px;
-    -fx-hgap: 8;
-    -fx-vgap: 8;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 2);
-    -fx-max-width: 400px;
-    -fx-max-height: 400px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+    -fx-hgap: 0;
+    -fx-vgap: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 4, 0, 0, 1);
+    -fx-max-width: 350px;
+    -fx-max-height: 350px;
+    -fx-grid-lines-visible: false;
+    -fx-border-color: transparent;
+}
+
+/* Specific button border styling for TicTacToe grid effect */
+/* Top row */
+#btn00 {
+    -fx-border-width: 0 2px 2px 0;
+}
+#btn01 {
+    -fx-border-width: 0 2px 2px 2px;
+}
+#btn02 {
+    -fx-border-width: 0 0 2px 2px;
+}
+
+/* Middle row */
+#btn10 {
+    -fx-border-width: 2px 2px 2px 0;
+}
+#btn11 {
+    -fx-border-width: 2px 2px 2px 2px;
+}
+#btn12 {
+    -fx-border-width: 2px 0 2px 2px;
+}
+
+/* Bottom row */
+#btn20 {
+    -fx-border-width: 2px 2px 0 0;
+}
+#btn21 {
+    -fx-border-width: 2px 2px 0 2px;
+}
+#btn22 {
+    -fx-border-width: 2px 0 0 2px;
 }
 
 .board-button {
-    -fx-min-width: 70px;
-    -fx-min-height: 70px;
-    -fx-pref-width: 100px;
-    -fx-pref-height: 100px;
-    -fx-background-color: -fx-primary-color;
-    -fx-background-radius: 4px;
+    -fx-min-width: 80px;
+    -fx-min-height: 80px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
+    -fx-background-color: white;
+    -fx-background-radius: 0;
     -fx-font-size: 40px;
     -fx-font-weight: bold;
     -fx-cursor: hand;
-    -fx-border-radius: 4px;
-    -fx-border-width: 1px;
-    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 0;
+    -fx-border-color: #777777;
+    -fx-padding: 0;
+    -fx-alignment: center;
 }
 
 .board-button:hover {
@@ -246,15 +283,22 @@
 
 .board-button.x {
     -fx-text-fill: -fx-player-x-color;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.4), 1, 0, 0, 0);
 }
 
 .board-button.o {
     -fx-text-fill: -fx-player-o-color;
+    -fx-font-family: "Arial";
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.4), 1, 0, 0, 0);
 }
 
 .board-button.winning {
     -fx-background-color: #DCFCE7;
     -fx-text-fill: #059669;
+    -fx-effect: dropshadow(gaussian, rgba(5, 150, 105, 0.5), 2, 0, 0, 0);
 }
 
 /* Right Section Styles */
@@ -432,9 +476,14 @@
     .board-button {
         -fx-min-width: 65px;
         -fx-min-height: 65px;
-        -fx-pref-width: 90px;
-        -fx-pref-height: 90px;
+        -fx-pref-width: 75px;
+        -fx-pref-height: 75px;
         -fx-font-size: 36px;
+    }
+    
+    .game-board {
+        -fx-max-width: 300px;
+        -fx-max-height: 300px;
     }
 }
 
@@ -449,11 +498,16 @@
     }
     
     .board-button {
-        -fx-min-width: 60px;
-        -fx-min-height: 60px;
-        -fx-pref-width: 75px;
-        -fx-pref-height: 75px;
+        -fx-min-width: 55px;
+        -fx-min-height: 55px;
+        -fx-pref-width: 65px;
+        -fx-pref-height: 65px;
         -fx-font-size: 32px;
+    }
+    
+    .game-board {
+        -fx-max-width: 250px;
+        -fx-max-height: 250px;
     }
 }
 
