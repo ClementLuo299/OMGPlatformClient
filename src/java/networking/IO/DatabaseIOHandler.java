@@ -18,7 +18,7 @@ public class DatabaseIOHandler {
     private static DatabaseIOHandler instance;
 
     //Constructor
-    private DatabaseIOHandler(){
+    public DatabaseIOHandler(){
         //Create and populate database
         db = new DatabaseStub();
         db.populateDB();
