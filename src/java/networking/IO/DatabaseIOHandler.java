@@ -1,9 +1,12 @@
 package networking.IO;
 
 import networking.DatabaseStub;
+import networking.accounts.UserAccount;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
 
@@ -208,5 +211,31 @@ public class DatabaseIOHandler {
             return db.retrieve("users", "username", username).get("username") != null;
         }
         return false;
+    }
+
+    /**
+     * Get list of all user accounts
+     * @return List of UserAccount objects
+     */
+    public List<UserAccount> getUsers() {
+        List<UserAccount> users = new ArrayList<>();
+        List<Map<String, String>> accounts = db.retrieveAll("users");
+
+        if (accounts != null) {
+            for (Map<String, String> account : accounts) {
+                String username = account.get("username");
+                String password = account.get("password");
+                String email = account.get("email");
+
+                UserAccount user = new UserAccount(username, password);
+                // Add email if it exists
+                if (email != null) {
+                    user.setEmail(email);
+                }
+                users.add(user);
+            }
+        }
+
+        return users;
     }
 }
