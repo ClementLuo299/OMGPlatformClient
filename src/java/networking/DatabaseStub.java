@@ -1,128 +1,130 @@
 package networking;
 
+import networking.schema.DatabaseSchema;
+import networking.schema.TableSchema;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Simulates an external database.
  *
- * Schema (columns are in order):
- *
- * Table users:
- * Not Null Unique int uid,
- * Not Null Unique String username,
- * Not Null String password,
- * String dob,
- * int privacyLevel,
- * Not Null String dateCreated,
- * String bio,
- * String fullName
+ * @authors Clement Luo, Fatin Abrar Ankon,
+ * @date March 4, 2025
  */
 public class DatabaseStub {
+    // ATTRIBUTES
+
+    //Database schema
+    private DatabaseSchema schema;
+
+    //Data
+    private Map<String, List<Map<String,String>>> data;
+
     //File paths for tables
     HashMap<String, String> paths = new HashMap<String, String>();
 
     //Delimiter for text data
-    char delim = '\u0007';
+    char delim1 = '\u0007';
+    char delim2 = '\u0006';
 
-    //Constructor
-    public DatabaseStub(){
+    // CONSTRUCTOR
+
+    public DatabaseStub() {
+        schema = DatabaseSchema.getInstance();
         //Add file paths - using relative path from resources
         String dataDir = "src/resources/data";
-        paths.put("users", dataDir + "/users.txt");
+        //Get filenames from schema
+        for(String i : schema.getTableNames()){
+            paths.put(i, dataDir + "/" + i + ".txt");
+        }
     }
 
-    /**
-     * Table of users.
-     */
-    ArrayList<String[]> users = new ArrayList<>();
+    // METHODS
 
-    /**
-     * Insert data for a new user.
-     */
-    public void insertAccountData(String username, String password){
-        String[] arr = new String[2];
-        arr[0] = username;
-        arr[1] = password;
-        users.add(arr);
-    }
-
-    /**
-     * Insert data for a new user with name and date of birth.
-     */
-    public void insertAccountData(String username, String password, String fullName, String dateOfBirth){
-        String[] arr = new String[4];
-        arr[0] = username;
-        arr[1] = password;
-        arr[2] = fullName;
-        arr[3] = dateOfBirth;
-        users.add(arr);
-    }
-
-    /**
-     * Get account data.
-     */
-    public String[] getAccountData(String username){
-        String[] data = null;
-        for(String[] i : users){
-            if(i[0].equals(username)){
-                data = i;
-                break;
+    //Insert record
+    public void insert(String table, Map<String,String> record){
+        TableSchema tableSchema = schema.getTableSchema(table);
+        //Check if table exists
+        if(tableSchema != null){
+            //Add record to data
+            if(tableSchema.checkRecord(record)){
+                data.get(table).add(record);
             }
         }
-        return data;
     }
 
-    /**
-     * Check if account exists.
-     */
-    public boolean checkAccountExists(String username){
-        boolean result = false;
-        for(String[] i : users){
-            if (i[0].equals(username)) {
-                result = true;
-                break;
+    //Retrieve record based on column=value
+    public Map<String,String> retrieve(String table, String column, String value){
+        TableSchema tableSchema = schema.getTableSchema(table);
+
+        if(tableSchema != null){
+            //retrieve
+            List<Map<String,String>> tableData = data.get(table);
+
+            for (Map<String, String> row : tableData) {
+                if (row.get(column).equals(value)) {
+                    return row;
+                }
             }
         }
-        return result;
+        return null;
     }
+
+    //Update record
+    public void update(String table, String searchColumn, String value, String modColumn, String newValue){
+        Map<String,String> rec = retrieve(table,searchColumn,value);
+        rec.put(modColumn,newValue);
+        delete(table,searchColumn,value);
+        insert(table,rec);
+    }
+
+    //Delete record
+    public void delete(String table, String column, String value){
+        TableSchema tableSchema = schema.getTableSchema(table);
+
+        if(tableSchema != null) {
+            //retrieve table data
+            List<Map<String, String>> tableData = data.get(table);
+
+            //Delete
+            tableData.removeIf(row -> row.get(column).equals(value));
+            data.put(table, tableData);
+        }
+    }
+
+    // METHODS
 
     /**
      * Save the DB data.
      */
     public void saveDBState(){
-        //Save users table
-        try{
-            //Create file writer
-            File file = new File(paths.get("users"));
-            file.getParentFile().mkdirs(); // Create directories if they don't exist
-            BufferedWriter buffer = new BufferedWriter(new FileWriter(file));
+        for(String table : schema.getTableNames()){
+            try{
+                //Create file writer
+                File file = new File(paths.get(table));
+                file.getParentFile().mkdirs(); // Create directories if they don't exist
+                BufferedWriter buffer = new BufferedWriter(new FileWriter(file));
 
-            //Write data by line
-            for(String[] i : users){
-                // Write all available fields
-                StringBuilder line = new StringBuilder();
-                line.append(i[0]).append(delim).append(i[1]); // Username and password
-                
-                // Add name and date of birth if they exist
-                if (i.length > 2) {
-                    line.append(delim).append(i[2]); // Full name
-                    if (i.length > 3) {
-                        line.append(delim).append(i[3]); // Date of birth
+                //Get table data
+                List<Map<String,String>> tableData = data.get(table);
+
+
+                for(Map<String,String> row : tableData){
+                    StringBuilder out = new StringBuilder();
+                    for(String col : row.keySet()){
+                        out.append(col).append(delim1).append(row.get(col)).append(delim2);
                     }
+                    buffer.write(out.toString());
+                    buffer.newLine();
                 }
-                
-                buffer.write(line.toString());
-                buffer.newLine();
+
+                //Close file writer
+                buffer.close();
+            } catch (IOException e) {
+                System.out.println(table + " table could not be saved");
+                e.printStackTrace();
             }
-
-            //Close file writer
-            buffer.close();
-
-        } catch (IOException e) {
-            System.out.println("Users table could not be saved.");
-            e.printStackTrace();
         }
     }
 
@@ -130,38 +132,45 @@ public class DatabaseStub {
      * Load DB data from the files.
      */
     public void populateDB(){
-        //Read users table
-        try{
-            File file = new File(paths.get("users"));
-            if (!file.exists()) {
-                System.out.println("Users table does not exist yet. Will be created on first save.");
-                return;
-            }
-
-            //Create file reader
-            BufferedReader inFile = new BufferedReader(new FileReader(file));
-
-            //Read first line
-            String line = inFile.readLine();
-
-            //Add first line to database
-            if(line != null){
-                String[] cols = line.split(String.valueOf(delim));
-                users.add(cols);
-            }
-
-            while(line != null){
-                line = inFile.readLine();
-                if(line != null){
-                    String[] cols = line.split(String.valueOf(delim));
-                    users.add(cols);
+        for(String table : schema.getTableNames()) {
+            try{
+                //Retrieve file
+                File file = new File(paths.get(table));
+                if (!file.exists()) {
+                    System.out.println(table + " table does not exist yet. Will be created on first save.");
+                    return;
                 }
-            }
 
-            inFile.close();
-        } catch (IOException e) {
-            System.out.println("Users table could not be read.");
-            e.printStackTrace();
+                //Create file reader
+                BufferedReader inFile = new BufferedReader(new FileReader(file));
+
+                List<Map<String,String>> tableData = new ArrayList<>();
+
+                //Read first line
+                String line = inFile.readLine();
+
+                //Read the rest of the file
+                while(line != null){
+                    Map<String,String> row = new HashMap<>();
+                    String[] kvPairs = line.split(String.valueOf(delim2));
+                    for(String pair : kvPairs){
+                        String[] pairArr = pair.split(String.valueOf(delim1));
+                        row.put(pairArr[0],pairArr[1]);
+                    }
+                    tableData.add(row);
+                    line = inFile.readLine();
+                }
+
+                //Add to data
+                data.put(table,tableData);
+
+                //Close file
+                inFile.close();
+
+            } catch (IOException e){
+                System.out.println(table + " table could not be read.");
+                e.printStackTrace();
+            }
         }
     }
 }
