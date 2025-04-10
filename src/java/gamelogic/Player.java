@@ -1,6 +1,8 @@
 package gamelogic;
 
 import gamelogic.pieces.Card;
+import gamelogic.pieces.CardPile;
+import gamelogic.pieces.Checker;
 import gamelogic.pieces.SuitType;
 import networking.accounts.UserAccount;
 
@@ -195,6 +197,30 @@ public class Player {
     }
 
     /**
+     * Moves a specified Card from the Player's Hand to a specified Card Pile
+     *
+     * @param cardToMove The given Card to be moved from the Player's Hand
+     * @param whereToMove The given Card Pile where the Card will be moved
+     */
+    public void moveFromHand(Card cardToMove, CardPile whereToMove) {
+        this.hand.remove(cardToMove);
+
+        whereToMove.addCards(cardToMove);
+    }
+
+    /**
+     * Moves a specified Checker from the Player's Hand to a specified List
+     *
+     * @param checkerToMove The given Checker to be moved from the Player's Hand
+     * @param whereToMove The given List of Checkers where the Checker will be moved
+     */
+    public void moveFromHand(Checker checkerToMove, List<Checker> whereToMove) {
+        this.hand.remove(checkerToMove);
+
+        whereToMove.add(checkerToMove);
+    }
+
+    /**
      * Checks if a Game Piece is in a Player's Hand
      *
      * @param pieceToCheck The given Game Piece to check a Player's Hand for
@@ -230,26 +256,26 @@ public class Player {
         hand.clear();
 
         // Categorize cards by suit
-        for (GamePiece piece : tempHand) {
-            if (piece.getType() == PieceType.CARD) {
-                Card card = (Card) piece;
-                switch (card.getSuit()) {
+        for (GamePiece currentPiece : tempHand) {
+            if (currentPiece.getType() == PieceType.CARD) {
+                Card currentCard = (Card) currentPiece;
+                switch (currentCard.getSuit()) {
                     case SPADES:
-                        spades.add(card);
+                        spades.add(currentCard);
                         break;
                     case DIAMONDS:
-                        diamonds.add(card);
+                        diamonds.add(currentCard);
                         break;
                     case CLUBS:
-                        clubs.add(card);
+                        clubs.add(currentCard);
                         break;
                     case HEARTS:
-                        hearts.add(card);
+                        hearts.add(currentCard);
                         break;
                 }
             } else {
                 // If not a card, add it back immediately
-                hand.add(piece);
+                hand.add(currentPiece);
             }
         }
 

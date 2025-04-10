@@ -17,6 +17,10 @@ public class Game {
     private final List<Player> players;
     // The average number of turns/rounds this game takes to complete
     private final int avgPlays;
+    // Player 1 of this game
+    Player player1;
+    // Player 2 of this game
+    Player player2;
     // The player whose turn it is
     private Player turnHolder;
     // The player who won the game
@@ -36,6 +40,8 @@ public class Game {
         this.gameType = gameType;
         this.players = players;
         this.avgPlays = avgPlays;
+        this.player1 = this.players.getFirst();
+        this.player2 = this.players.getLast();
     }
 
 
@@ -51,12 +57,30 @@ public class Game {
     }
 
     /**
-     * Gets the list of players in this game
+     * Gets the list of Players in this game
      * 
-     * @return The list of players
+     * @return The list of Players
      */
     public List<Player> getPlayers() {
         return players;
+    }
+
+    /**
+     * Gets Player 1 in this game
+     *
+     * @return The first Player of this game
+     */
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    /**
+     * Gets Player 2 in this game
+     *
+     * @return The second Player of this game
+     */
+    public Player getPlayer2() {
+        return player2;
     }
 
     /**
