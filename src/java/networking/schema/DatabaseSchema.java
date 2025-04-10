@@ -25,6 +25,12 @@ import java.util.*;
  * String player2
  * int winner
  * int score
+ *
+ * Table user sessions:
+ * int id
+ * String username
+ * String datetimeCreated
+ * String datetimeEnded
  */
 
 /**
@@ -81,6 +87,15 @@ public class DatabaseSchema {
                 "score"
         );
         columns.put("gameRecords", gameRecords);
+
+        //User sessions table
+        List<String> userSessions = List.of(
+                "id",
+                "username",
+                "datetimeCreated",
+                "datetimeEnded"
+        );
+        columns.put("userSessions", userSessions);
 
         //Create schema
         createSchema();

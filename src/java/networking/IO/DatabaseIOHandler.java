@@ -3,6 +3,7 @@ package networking.IO;
 import networking.DatabaseStub;
 import networking.accounts.UserAccount;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -237,5 +238,43 @@ public class DatabaseIOHandler {
         }
 
         return users;
+    }
+
+    //USER SESSION METHODS
+
+    public void startUserSession(UserAccount account){
+        Map<String,String> rec = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
+        String nowAsStr = now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        //Didnt implement increment, so id = 1
+        rec.put("id","1");
+
+        //Other fields
+        rec.put("username",account.getUsername());
+        rec.put("datetimeCreated",nowAsStr);
+        rec.put("datetimeEnded",null);
+
+        db.insert("userSessions",rec);
+    }
+
+    public boolean checkActiveSession(UserAccount account){
+        Map<String,String> rec = db.retrieve("userSessions","username",account.getUsername());
+
+        if(rec != null){
+            return rec.get("datetimeEnded") == null;
+        }
+        return false;
+    }
+
+    public void endUserSession(UserAccount account){
+        Map<String,String> rec = db.retrieve("userSessions","username",account.getUsername());
+        LocalDateTime now = LocalDateTime.now();
+        String nowAsStr = now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+        //Update datetimeEnded
+        if(rec != null){
+            db.update("userSessions","username",account.getUsername(),"datetimeEnded",nowAsStr);
+        }
     }
 }
