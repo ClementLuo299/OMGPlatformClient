@@ -1,5 +1,4 @@
 package statistics;
-package statistics;
 
 import gamelogic.Player;
 
@@ -20,6 +19,8 @@ public class ExperienceHandler {
     Player winner;
     // The average plays for this Game
     int avgPlays;
+    // The total number of moves, from both players, in each game
+    int totalPlays
 
 
     // CONSTRUCTOR
@@ -49,17 +50,59 @@ public class ExperienceHandler {
     // METHODS
 
 
-    public int awardPoint() {
-        // Checks if the Player is at a levelling boundary
-
-
-
-        return 1;
+    public void awardWin() {
+        if (!(avgPlays < Math.floor(0.4 * totalPlays/2))) {
+            this.winner.setExpInLevel(this.winner.getExpInLevel() + 1);
+            if (this.winner.getExpInLevel() >= this.winner.getNextLevelThreshold()) {
+                increaseLevel(this.winner);
+            }
+        }  else  {
+            awardQuickWin();
+        }
     }
 
-    public void awardParticipation(List<Player> players) {
+    private void awardQuickWin()  {
+        if (avgPlays < Math.floor(0.4 * totalPlays/2)) {
+            this.winner.setExpInLevel(this.winner.getExpInLevel() + 2);
+            if (this.winner.getExpInLevel() >= this.winner.getNextLevelThreshold()) {
+                increaseLevel(this.winner);
+            }
+        }
+    }
+
+    public void awardLongGame ()  {
+        if (avgPlays < Math.ceil(1.25 * totalPlays/2)) {
+            this.winner.setExpInLevel(this.winner.getExpInLevel() + 2);
+            if (this.winner.getExpInLevel() >= this.winner.getNextLevelThreshold()) {
+                increaseLevel(this.winner);
+            }
+        }
+    }
+
+    public void awardParticipation() {
         // Goes through the Player List to award them one point
+        for (int i = 0; i < players.size(); i++)  {
+            players.get(i).setExpInLevel(players.get(i).getExpInLevel() + 1);
+            if (players.get(i).getExpInLevel() >= players.get(i).getNextLevelThreshold())  {
+                increaseLevel(players.get(i));
+            }
+        }
+
     }
+
+    public void increaseLevel  (Player p)  {
+        // increase player level
+        int expNewLevel = p.getNextLevelThreshold() - p.getExpInLevel();
+        double d = 1.2 * p.getNextLevelThreshold();
+        int nextLevelThreshold = (int)Math.round(d);
+        p.setLevel(p.getLevel() + 1);
+        p.setNextLevelThreshold(nextLevelThreshold);
+        p.setExpInLevel(expNewLevel);
+
+        // TODO: they can probably increase more than 1 level at once so add it
+    }
+
+
 
 
 }

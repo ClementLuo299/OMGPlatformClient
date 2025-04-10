@@ -29,6 +29,12 @@ public class Player {
     // The player's captured game pieces
     private List<GamePiece> spoils;
 
+    private int level;
+
+    private int expInLevel;
+
+    private int nextLevelThreshold;
+
 
     // CONSTRUCTOR
 
@@ -44,6 +50,7 @@ public class Player {
         this.score = 0;
         this.hand = new ArrayList<>();
         this.spoils = new ArrayList<>();
+
     }
 
 
@@ -112,6 +119,32 @@ public class Player {
     public void addPlay() {
         this.plays = plays++;
     }
+
+    public int getLevel()  {
+        return this.level;
+    }
+
+    public void setLevel(int num)  {
+        this.level = num;
+    }
+
+    public int getExpInLevel ()  {
+        return this.expInLevel;
+    }
+
+    public void setExpInLevel(int num)  {
+        this.expInLevel = num;
+    }
+
+    public int getNextLevelThreshold()  {
+        return this.nextLevelThreshold;
+    }
+
+    public void setNextLevelThreshold(int num)  {
+        this.nextLevelThreshold = num;
+    }
+
+
 
     /**
      * Adds a specified number of points to this Player
@@ -241,4 +274,5 @@ public class Player {
     private void sortCardsByRank(List<Card> cards) {
         cards.sort((card1, card2) -> Integer.compare(card2.getRank(), card1.getRank()));
     }
+
 }
