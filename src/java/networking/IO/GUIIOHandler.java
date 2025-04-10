@@ -13,8 +13,6 @@ public class GUIIOHandler {
 
     /**
      * Instantiates the GUI IO handler.
-     *
-     * @param cardList The given List of Cards to store in this Card Pile
      */
     public GUIIOHandler() {
         //

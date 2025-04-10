@@ -1,15 +1,17 @@
 package gui;
 
-import networking.IO.DatabaseIOHandler;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
+import networking.Backend;
 
 public class BoardGamePlatformApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
+            //Startup backend
+            Backend.getInstance();
+
             // Initialize the ScreenManager with the primary stage
             ScreenManager screenManager = ScreenManager.getInstance();
             screenManager.initialize(primaryStage);
@@ -38,7 +40,7 @@ public class BoardGamePlatformApp extends Application {
     @Override
     public void stop() {
         try {
-            DatabaseIOHandler.getInstance().saveDBData();
+            Backend.db().saveDBData();
         } catch (Exception e) {
             System.err.println("Error saving database data: " + e.getMessage());
             e.printStackTrace();
