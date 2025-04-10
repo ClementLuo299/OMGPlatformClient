@@ -70,9 +70,11 @@ public class DatabaseStub {
             //retrieve
             List<Map<String,String>> tableData = data.get(table);
 
-            for (Map<String, String> row : tableData) {
-                if (row.get(column).equals(value)) {
-                    return row;
+            if(tableData != null){
+                for (Map<String, String> row : tableData) {
+                    if (row.get(column).equals(value)) {
+                        return row;
+                    }
                 }
             }
         }
