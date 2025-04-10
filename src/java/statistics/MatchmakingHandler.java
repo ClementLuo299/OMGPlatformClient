@@ -3,19 +3,19 @@ package statistics;
 import gamelogic.GameType;
 import networking.accounts.UserAccount;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Handles the sorting of Players into Matches based on their Statistics
  *
- * @authors Dylan Shiels,
- * @date March 18, 2025
+ * @authors Dylan Shiels, Irith
+ * @date April 08, 2025
  */
 public class MatchmakingHandler {
     // ATTRIBUTES
 
     // The list of Players searching for Games
-    private HashMap<UserAccount, GameType> searchingUsers;
+    private LinkedHashMap<UserAccount, GameType> searchingUsers;
 
 
     // CONSTRUCTOR
@@ -23,7 +23,7 @@ public class MatchmakingHandler {
     /**
      * Instantiates the Matchmaking Handler for the OMG Platform
      */
-    public MatchmakingHandler(HashMap<UserAccount, GameType> searchingPlayers) {
+    public MatchmakingHandler(LinkedHashMap<UserAccount, GameType> searchingPlayers) {
         this.searchingUsers = searchingPlayers;
     }
 
@@ -82,8 +82,17 @@ public class MatchmakingHandler {
      * Sorts the Queue from Lowest Experience to Highest Experience
      */
     public void sortByExperience() {
+        // Convert entries to a list for sorting
+        List<Map.Entry<UserAccount, GameType>> entries = new ArrayList<>(searchingUsers.entrySet());
 
-        // TODO: Insert Experience Level Sorting Algorithm Here
+        // Sort by experience level (ascending)
+        // entries.sort(Comparator.comparingInt(entry -> entry.getKey().getExperienceLevel()));
+
+        // Clear and rebuild the LinkedHashMap in sorted order
+        searchingUsers.clear();
+        for (Map.Entry<UserAccount, GameType> entry : entries) {
+            searchingUsers.put(entry.getKey(), entry.getValue());
+        }
     }
 
     /**
@@ -126,13 +135,13 @@ public class MatchmakingHandler {
                 // Checks if this user is a close match, if so the search is ended and the Users are matched together
                 //if (levelDifference < 3 || levelDifference > -3) {
 
-                    // Selects this User to be matched up against the searching Player
-                    matchedUser = userToCheck;
+                // Selects this User to be matched up against the searching Player
+                matchedUser = userToCheck;
 
-                    // Matches the user in a game
+                // Matches the user in a game
 
-                    // Ends the search
-                    return;
+                // Ends the search
+                return;
                 //}
             }
         }
@@ -150,13 +159,13 @@ public class MatchmakingHandler {
                 // Checks if this user is a broad match, if so the search is ended and the Users are matched together
                 //if (levelDifference < 4 || levelDifference > -4) {
 
-                    // Selects this User to be matched up against the searching Player
-                    matchedUser = userToCheck;
+                // Selects this User to be matched up against the searching Player
+                matchedUser = userToCheck;
 
-                    // Matches the user in a game
+                // Matches the user in a game
 
-                    // Ends the search
-                    return;
+                // Ends the search
+                return;
                 //}
             }
         }
