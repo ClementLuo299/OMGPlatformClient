@@ -95,5 +95,3 @@ public class ConnectFourTests {
         assertTrue(game.drew());
     }
 }
-
- */
