@@ -32,38 +32,28 @@ public class DatabaseIOHandler {
         db.saveDBState();
     }
 
+    //USER ACCOUNT METHODS
+    
     /**
      * Register an account.
      *
-     * @param username
-     *            The username of the account.
-     * @param password
-     *            The password of the account.
-     */
-    public void RegisterAccount(String username, String password){
-        db.insertAccountData(username, password);
-    }
-    
-    /**
-     * Register an account with additional information.
-     *
      * @param username The username of the account.
      * @param password The password of the account.
-     * @param email The email of the account.
+     * @param firstName The first name of the user.
      * @param dob The date of birth of the user.
      */
-    public void RegisterAccount(String username, String password, String fullName, String dob) {
+    public void RegisterAccount(String username, String password, String firstName, String dob) {
         // For now, we'll just use the basic registration
         Map<String,String> record = new HashMap<>();
         record.put("username",username);
         record.put("password",password);
-        record.put("firstName",fullName);
+        record.put("firstName",firstName);
         record.put("dob",dob);
 
         //Increment was not implemented, so uid = 1
         record.put("uid","1");
 
-        //Other fields
+        //Other fields (Set to default)
         record.put("privacyLevel","1");
         LocalDate currentDate = LocalDate.now();
         String dateAsString = currentDate.format(DateTimeFormatter.ISO_DATE);
@@ -75,7 +65,37 @@ public class DatabaseIOHandler {
 
         //Insert record
         db.insert("users",record);
-        // In a real implementation, we would store the additional info
+    }
+
+    /**
+     * Register an account with minimal information.
+     *
+     * @param username The username of the account.
+     * @param password The password of the account.
+     */
+    public void RegisterAccount(String username, String password) {
+        // For now, we'll just use the basic registration
+        Map<String,String> record = new HashMap<>();
+        record.put("username",username);
+        record.put("password",password);
+
+        //Increment was not implemented, so uid = 1
+        record.put("uid","1");
+
+        //Other fields (Set to default)
+        record.put("privacyLevel","1");
+        LocalDate currentDate = LocalDate.now();
+        String dateAsString = currentDate.format(DateTimeFormatter.ISO_DATE);
+        record.put("dateCreated",dateAsString);
+        record.put("bio",null);
+        record.put("email",null);
+        record.put("middleName",null);
+        record.put("lastName",null);
+        record.put("firstName",null);
+        record.put("dob",null);
+
+        //Insert record
+        db.insert("users",record);
     }
 
     /**
@@ -116,19 +136,6 @@ public class DatabaseIOHandler {
     }
 
     /**
-     * Check if an account exists.
-     *
-     * @param username
-     *            The username of the account.
-     * @return boolean
-     *             true if the account exists,
-     *             false otherwise
-     */
-    private boolean CheckAccountExists(String username) {
-        return db.checkAccountExists(username);
-    }
-
-    /**
      * Check if a password is valid.
      *
      * @param username The username of the account.
@@ -143,9 +150,9 @@ public class DatabaseIOHandler {
         }
         
         // Update password
-        Map<String, String> data = db.getAccountData(username);
+        Map<String, String> data = db.retrieve("users","username",username);
         if (data != null) {
-            db.update("accounts", "username", username, "password", new_password);
+            db.update("users", "username", username, "password", new_password);
             return true;
         }
         return false;
@@ -188,7 +195,7 @@ public class DatabaseIOHandler {
     }
 
     /**
-     * Check if an account exists (for registration).
+     * Check if an account exists.
      *
      * @param username
      *            The username of the account.
