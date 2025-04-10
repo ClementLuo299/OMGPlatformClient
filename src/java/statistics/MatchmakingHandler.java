@@ -9,7 +9,7 @@ import java.util.*;
  * Handles the sorting of Players into Matches based on their Statistics
  *
  * @authors Dylan Shiels, Irith
- * @date April 08, 2025
+ * @date April 09, 2025
  */
 public class MatchmakingHandler {
     // ATTRIBUTES
@@ -114,64 +114,144 @@ public class MatchmakingHandler {
         int idealOpponentLevel;
 
 
-        // Finds the Lowest Experience Level User to prioritize less experienced Players
-
         // TODO: Get first entry of searchingUsers hashmap and set the variables above appropriately
-        // TODO: Set idealOpponentLevel = (gameExperienceLevel * sessionIntensityLevel)
+
+        // Finds the Lowest Experience Level User to prioritize less experienced Players
+        if (!searchingUsers.isEmpty()) {
+            // Get the first entry of the sorted map (lowest experience player)
+            Map.Entry<UserAccount, GameType> firstEntry = searchingUsers.entrySet().iterator().next();
+            searchingUser = firstEntry.getKey();
+            queuedGame = firstEntry.getValue();
+
+            // Get game-specific experience level from the UserAccount
+            //gameExperienceLevel = searchingUser.getExperienceLevel();
+
+            // Get session intensity level from the UserAccount
+            //sessionIntensityLevel = searchingUser.getSessionIntensityLevel();
+
+            // Calculate ideal opponent level using experience and intensity
+            //idealOpponentLevel = (int) (gameExperienceLevel * sessionIntensityLevel);
+        } else {
+            // No players in queue, exit matchmaking
+            return;
+        }
+        /*
+        It is assumed that UserAccount has methods:
+        1. getExperienceLevel() returning game-specific XP as int
+        2. getSessionIntensityLevel() returning intensity as float
+         */
 
 
 
         // Searches through the Queue to check for close matches
+        /*
         for (HashMap.Entry<UserAccount, GameType> entry : searchingUsers.entrySet()) {
             // Checks if the GameType is compatible
             if (queuedGame == entry.getValue()) {
                 // The User to check
                 UserAccount userToCheck = entry.getKey();
 
-                // TODO: Get the Experience and Intensity Level of this Opponent
-                // TODO: Calculate them together to get the OpponentMatchLevel to check against
-                // TODO: Calculate difference between idealOpponentLevel and opponentMatchLevel to get the levelDifference
+                // Skip the searching user itself
+                if (userToCheck == searchingUser) {
+                    continue;
+                }
 
-                // Checks if this user is a close match, if so the search is ended and the Users are matched together
-                //if (levelDifference < 3 || levelDifference > -3) {
+                // Get the Experience and Intensity Level of this Opponent
+                int opponentExp = userToCheck.getExperienceLevel();
+                float opponentIntensity = userToCheck.getSessionIntensityLevel();
 
-                // Selects this User to be matched up against the searching Player
-                matchedUser = userToCheck;
+                // Calculate match level using experience and intensity
+                int opponentMatchLevel = (int) (opponentExp * opponentIntensity);
 
-                // Matches the user in a game
+                // Calculate difference from ideal opponent level
+                int levelDifference = idealOpponentLevel - opponentMatchLevel;
 
-                // Ends the search
-                return;
-                //}
+                // Check if this user is a close match (within ±3 levels)
+                if (Math.abs(levelDifference) < 3) {
+                    // Selects this User to be matched up against the searching Player
+                    matchedUser = userToCheck;
+
+                    // Remove both players from queue
+                    searchingUsers.remove(searchingUser);
+                    searchingUsers.remove(matchedUser);
+
+                    // Matches the users in a game (implementation details would go here)
+
+                    // Ends the search
+                    return;
+                }
             }
         }
+         */
 
         // Searches through the Queue for broad matches
+        /*
         for (HashMap.Entry<UserAccount, GameType> entry : searchingUsers.entrySet()) {
             // Checks if the GameType is compatible
             if (queuedGame == entry.getValue()) {
                 // The User to check
                 UserAccount userToCheck = entry.getKey();
 
-                // TODO: Get the Experience Level of this Opponent
-                // TODO: Calculate difference between idealOpponentLevel and opponentLevel to get the levelDifference
+                // Skip the searching user itself
+                if (userToCheck == searchingUser) {
+                    continue;
+                }
 
-                // Checks if this user is a broad match, if so the search is ended and the Users are matched together
-                //if (levelDifference < 4 || levelDifference > -4) {
+                // Get the Experience Level of this Opponent
+                int opponentLevel = userToCheck.getExperienceLevel();
 
-                // Selects this User to be matched up against the searching Player
-                matchedUser = userToCheck;
+                // Calculate difference from ideal opponent level
+                int levelDifference = idealOpponentLevel - opponentLevel;
 
-                // Matches the user in a game
+                // Check if this user is a broad match (within ±4 levels)
+                if (Math.abs(levelDifference) < 4) {
+                    // Selects this User to be matched up against the searching Player
+                    matchedUser = userToCheck;
 
-                // Ends the search
-                return;
-                //}
+                    // Remove both players from queue
+                    searchingUsers.remove(searchingUser);
+                    searchingUsers.remove(matchedUser);
+
+                    // Matches the users in a game (implementation details would go here)
+
+                    // Ends the search
+                    return;
+                }
+            }
+        }
+         */
+
+        // Match with a random user if no good user is available
+        List<UserAccount> candidates = new ArrayList<>();
+
+        // Collect all users queued for the same game type, excluding the searching user
+        for (HashMap.Entry<UserAccount, GameType> entry : searchingUsers.entrySet()) {
+            // Check if the GameType matches and it's not the searching user
+            if (entry.getValue() == queuedGame && entry.getKey() != searchingUser) {
+                candidates.add(entry.getKey());
             }
         }
 
-        // Match with a random user if no good user is available
-        // TODO: Add this part
+        // Proceed if potential candidates exist
+        if (!candidates.isEmpty()) {
+            // Generate random index from candidate list
+            Random rand = new Random();
+            int randomIndex = rand.nextInt(candidates.size());
+
+            // Select random opponent from candidates
+            matchedUser = candidates.get(randomIndex);
+
+            // Remove both players from queue
+            searchingUsers.remove(searchingUser);
+            searchingUsers.remove(matchedUser);
+
+            // Matches the users in a game (implementation details would go here)
+
+            // Ends the search
+            return;
+        }
+
+        // No valid candidates available - matchmaking failed
 
     }
 }
