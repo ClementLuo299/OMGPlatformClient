@@ -1,6 +1,6 @@
 package networking.sessions;
 
-import gamelogic.AbstractGame;
+import gamelogic.Game;
 import gamelogic.GameType;
 import gamelogic.Player;
 import networking.IO.GameIOHandler;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class GameSession {
 
-    private AbstractGame game;
+    private Game game;
     private GameType gt;
     private GameIOHandler handler;
     private ArrayList<UserAccount> accounts;
@@ -26,7 +26,7 @@ public class GameSession {
         this.accounts = new ArrayList<>();
     }
 
-    public void setGame(AbstractGame game) {
+    public void setGame(Game game) {
         this.game = game;
     }
 

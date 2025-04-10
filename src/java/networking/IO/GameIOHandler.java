@@ -1,6 +1,6 @@
 package networking.IO;
 
-import gamelogic.AbstractGame;
+import gamelogic.Game;
 import gamelogic.GameType;
 import gamelogic.Player;
 import networking.accounts.GameRecord;
@@ -24,7 +24,7 @@ public class GameIOHandler {
         this.session = new GameSession();
     }
 
-    public void setupGame(AbstractGame game, UserAccount player1, UserAccount player2) {
+    public void setupGame(Game game, UserAccount player1, UserAccount player2) {
         session.setGame(game);
         session.addAccount(player1);
         session.addAccount(player2);
