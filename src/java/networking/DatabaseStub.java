@@ -57,6 +57,7 @@ public class DatabaseStub {
             //Add record to data
             if(tableSchema.checkRecord(record)){
                 data.get(table).add(record);
+                saveDBState();
             }
         }
     }
@@ -84,6 +85,7 @@ public class DatabaseStub {
         rec.put(modColumn,newValue);
         delete(table,searchColumn,value);
         insert(table,rec);
+        saveDBState();
     }
 
     //Delete record
@@ -97,6 +99,7 @@ public class DatabaseStub {
             //Delete
             tableData.removeIf(row -> row.get(column).equals(value));
             data.put(table, tableData);
+            saveDBState();
         }
     }
 
