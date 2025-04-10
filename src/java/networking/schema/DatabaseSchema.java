@@ -17,6 +17,14 @@ import java.util.*;
  * String firstName
  * String middleName
  * String lastName
+ *
+ * Table gameRecords:
+ * int id
+ * String game
+ * String player1
+ * String player2
+ * int winner
+ * int score
  */
 
 /**
@@ -62,6 +70,17 @@ public class DatabaseSchema {
                 "lastName"
         );
         columns.put("users", users);
+
+        //Game records table
+        List<String> gameRecords = List.of(
+                "id",
+                "game",
+                "player1",
+                "player2",
+                "winner",
+                "score"
+        );
+        columns.put("gameRecords", gameRecords);
 
         //Create schema
         createSchema();
