@@ -1,7 +1,11 @@
 package networking.IO;
 
 import networking.DatabaseStub;
+
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
+import java.time.LocalDate;
 
 /**
  * Handles communication between the backend and the program.
@@ -13,26 +17,12 @@ import java.util.Map;
 public class DatabaseIOHandler {
     //Database stub
     private DatabaseStub db;
-    
-    // Singleton instance
-    private static DatabaseIOHandler instance;
 
     //Constructor
     public DatabaseIOHandler(){
         //Create and populate database
         db = new DatabaseStub();
         db.populateDB();
-    }
-    
-    /**
-     * Get singleton instance
-     * @return DatabaseIOHandler instance
-     */
-    public static DatabaseIOHandler getInstance() {
-        if (instance == null) {
-            instance = new DatabaseIOHandler();
-        }
-        return instance;
     }
 
     /**
@@ -60,11 +50,31 @@ public class DatabaseIOHandler {
      * @param username The username of the account.
      * @param password The password of the account.
      * @param email The email of the account.
-     * @param fullName The full name of the user.
+     * @param dob The date of birth of the user.
      */
-    public void RegisterAccount(String username, String password, String email, String fullName) {
+    public void RegisterAccount(String username, String password, String email, String dob) {
         // For now, we'll just use the basic registration
-        db.insertAccountData(username, password);
+        Map<String,String> record = new HashMap<>();
+        record.put("username",username);
+        record.put("password",password);
+        record.put("email",email);
+        record.put("dob",dob);
+
+        //Increment was not implemented, so uid = 1
+        record.put("uid","1");
+
+        //Other fields
+        record.put("privacyLevel","1");
+        LocalDate currentDate = LocalDate.now();
+        String dateAsString = currentDate.format(DateTimeFormatter.ISO_DATE);
+        record.put("dateCreated",dateAsString);
+        record.put("bio",null);
+        record.put("firstName",null);
+        record.put("middleName",null);
+        record.put("lastName",null);
+
+        //Insert record
+        db.insert("users",record);
         // In a real implementation, we would store the additional info
     }
 
@@ -88,7 +98,7 @@ public class DatabaseIOHandler {
             return true;
         }
         
-        Map<String, String> accountData = db.getAccountData(username);
+        Map<String, String> accountData = db.retrieve("users","username",username);
         if (accountData != null) {
             System.out.println("Account found for: " + username);
             String storedPassword = accountData.get("password");
@@ -187,6 +197,9 @@ public class DatabaseIOHandler {
      *             false otherwise
      */
     public boolean isAccountExists(String username) {
-        return db.checkAccountExists(username);
+        if(db.retrieve("users","username",username) != null){
+            return db.retrieve("users", "username", username).get("username") != null;
+        }
+        return false;
     }
 }

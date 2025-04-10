@@ -2,11 +2,11 @@ package gui.controllers.systems;
 
 import gui.ScreenManager;
 import gui.controllers.systems.DashboardController;
-import networking.IO.DatabaseIOHandler;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import networking.Backend;
 
 public class LoginController {
 
@@ -33,9 +33,6 @@ public class LoginController {
     
     @FXML
     private Button loginButton1; // Guest login button
-
-    //Database IO Handler
-    private DatabaseIOHandler db = DatabaseIOHandler.getInstance();
     
     // Screen manager for navigation
     private ScreenManager screenManager = ScreenManager.getInstance();
@@ -63,7 +60,7 @@ public class LoginController {
             return;
         }
 
-        if (db.verifyCredentials(username, password)) {
+        if (Backend.db().verifyCredentials(username, password)) {
             System.out.println("Login successful!");
             switchToDashboard(username, false);
         } else {
@@ -81,7 +78,7 @@ public class LoginController {
         }
         
         // Check if username already exists in database
-        if (db.isAccountExists(guestUsername)) {
+        if (Backend.db().isAccountExists(guestUsername)) {
             showAlert("Guest Login Error", "This username is already taken. Please choose another one.");
             return;
         }
