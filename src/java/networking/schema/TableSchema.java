@@ -75,6 +75,7 @@ public class TableSchema {
      * @param columnName The name of the column
      * @param constraintType The type of constraint to be applied
      */
+    /*
     public void addConstraint(String columnName, String constraintType) {
         //Create set of constraints if it does not exist
         constraints.computeIfAbsent(columnName, _ -> new HashSet<>());
@@ -87,6 +88,7 @@ public class TableSchema {
             incrementCounters.put(columnName,1);
         }
     }
+     */
 
     /**
      * Check if a column has a constraint
