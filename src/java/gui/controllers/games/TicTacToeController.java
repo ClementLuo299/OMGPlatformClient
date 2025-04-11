@@ -439,6 +439,14 @@ public class TicTacToeController implements Initializable {
         updateScoreLabels();
         highlightWinningCombination();
         gameInProgress = false;
+
+        // ✅ Show alert
+        String winnerName = (winner == player1) ? "Player 1 " : "Player 2 ";
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText("We have a winner!");
+        alert.setContentText(winnerName + " wins the game!");
+        alert.showAndWait();
     }
 
     /**
@@ -454,6 +462,12 @@ public class TicTacToeController implements Initializable {
         }
         gameInProgress = false;
         addSystemMessage("Game ended in a draw!");
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText("It's a draw!");
+        alert.setContentText("The game ended in a draw. Try again!");
+        alert.showAndWait();
     }
 
     /**

@@ -99,7 +99,8 @@ public class CheckersGameController implements Initializable {
     // UI Elements 
     private StackPane[][] boardSquares = new StackPane[8][8];
     private Circle[][] checkerPieces = new Circle[8][8];
-    
+
+
     // Utility
     private final Random random = new Random();
     
@@ -945,21 +946,26 @@ public class CheckersGameController implements Initializable {
             showGameEndDialog(winner);
         });
     }
-    
+
+
+
+
     /**
      * Show a dialog when the game ends
      * @param winner The winning player
      */
+
     private void showGameEndDialog(Player winner) {
         Alert alert = new Alert(AlertType.INFORMATION);
         alert.setTitle("Game Over");
         alert.setHeaderText(winner.getUsername() + " Wins!");
         alert.setContentText("Congratulations to " + winner.getUsername() + " for winning the game!\n\n" +
-                            "Would you like to play again?");
-        
+                "Would you like to play again?");
+
         alert.showAndWait();
     }
-    
+
+
     /**
      * Add a message to the chat
      * @param sender The sender name
@@ -1103,4 +1109,10 @@ public class CheckersGameController implements Initializable {
         alert.setContentText(message);
         alert.showAndWait();
     }
+    public void declareWinner(String winnerName) {
+        statusLabel.setText(winnerName + " wins!");
+        // Optional: visually highlight the status
+        statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+    }
+
 } 

@@ -12,7 +12,7 @@ public class GamePiece {
     // ATTRIBUTES
 
     // The type of piece this piece is
-    private final PieceType type;
+    private final gamelogic.PieceType type;
     // The held status of this piece
     private boolean held;
 
@@ -25,7 +25,7 @@ public class GamePiece {
      * @param type The given Piece Type for this Game Piece
      * @param held The given Held status of this Game Piece
      */
-    public GamePiece(PieceType type, boolean held) {
+    public GamePiece(gamelogic.PieceType type, boolean held) {
         this.type = type;
         this.held = held;
     }
