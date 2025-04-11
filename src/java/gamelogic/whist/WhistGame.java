@@ -224,6 +224,18 @@ public class WhistGame extends Game {
         // Makes the card visible to all players by making its held status false
         cardToPlay.release();
 
+        Player player1 = this.getPlayers().getFirst();
+        Player player2 = this.getPlayers().getLast();
+
+        // player1 is playing this card
+        if(player1.checkHand(cardToPlay)){
+            this.setTurnHolder(player2);
+        }
+        if(player2.checkHand(cardToPlay)){
+            this.setTurnHolder(player1);
+        }
+
+
         // Adds the played Card to the Trick list
         trick.add(cardToPlay);
     }
@@ -298,6 +310,9 @@ public class WhistGame extends Game {
      */
     public Player getTrickWinner() {
         // The cards in the Trick
+        if(trick.isEmpty()){
+            return null;
+        }
         Card leadCard = trick.getFirst();
         Card followingCard = trick.getLast();
         // The winning card
