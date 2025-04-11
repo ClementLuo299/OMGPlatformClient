@@ -3,6 +3,7 @@ package networking.IO;
 import gamelogic.Game;
 import gamelogic.GameType;
 import networking.DatabaseStub;
+import networking.accounts.GameRecord;
 import networking.accounts.UserAccount;
 import networking.sessions.GameSession;
 
@@ -379,4 +380,105 @@ public class DatabaseIOHandler {
     }
 
     //GAME RECORD METHODS
+    public void registerGameRecord(GameRecord record){
+        Map<String,String> rec = new HashMap<>();
+        if(record != null){
+            rec.put("id","1");
+            rec.put("game",record.getGame().toString());
+            rec.put("player1",record.getP1().getUsername());
+            rec.put("player2",record.getP2().getUsername());
+            rec.put("winner",Integer.toString(record.getWinner()));
+            rec.put("score", Integer.toString(record.getScore()));
+
+            db.insert("gameRecords",rec);
+        }
+    }
+
+    public List<GameRecord> retrieveGameRecords(UserAccount account){
+        List<Map<String,String>> gameRecs = db.retrieveAll("gameRecords");
+
+        if(gameRecs != null){
+            //Retrieve all game sessions with player1 or player2 matching
+            List<Map<String,String>> gameRecs2 = gameRecs.stream().filter(x -> x.get("player1").equals(account.getUsername()) || x.get("player2").equals(account.getUsername()))
+                    .toList();
+
+            List<GameRecord> records = new ArrayList<>();
+
+            for(Map<String,String> i : gameRecs2){
+                GameRecord record = new GameRecord(GameType.valueOf(i.get("game"))
+                        ,getUser(i.get("player1"))
+                , getUser(i.get("player2"))
+                ,Integer.parseInt(i.get("winner"))
+                ,Integer.parseInt(i.get("score")));
+                records.add(record);
+            }
+
+            return records;
+        }
+        return null;
+    }
+
+    //STATS FUNCTIONS
+    public int getGamesPlayed(UserAccount account){
+        List<GameRecord> records = retrieveGameRecords(account);
+        if(records != null){
+            return records.size();
+        }
+        return 0;
+    }
+
+    private int getGamesWon(UserAccount account){
+        List<GameRecord> records = retrieveGameRecords(account);
+        int counter = 0;
+
+        if(records != null){
+            for(GameRecord r : records){
+                if(r.getWinner() == 1 && r.getP1().getUsername().equals(account.getUsername())){
+                    counter++;
+                }
+                else if(r.getWinner() == 2 && r.getP2().getUsername().equals(account.getUsername())){
+                    counter++;
+                }
+            }
+        }
+        return counter;
+    }
+
+    public double getWinRate(UserAccount account){
+        if(getGamesPlayed(account) != 0){
+            return (double) getGamesWon(account) / getGamesPlayed(account);
+        }
+        return 0;
+    }
+
+    private List<UserAccount> getAccountsRankedByWinRate(){
+        List<UserAccount> accounts = getUsers();
+        accounts.sort((p1,p2) -> Double.compare(getWinRate(p2),getWinRate(p1)));
+        return accounts;
+    }
+
+    public int getRank(UserAccount account){
+        List<UserAccount> sortedAccountList = getAccountsRankedByWinRate();
+        int counter = 0;
+
+        if(sortedAccountList != null){
+            for(UserAccount a : sortedAccountList){
+                if(!(a.getUsername().equals(account.getUsername()))){
+                    counter++;
+                }
+                else{
+                    counter++;
+                    break;
+                }
+            }
+        }
+        if(getWinRate(account) != 0){
+            return counter;
+        }
+        return 0;
+    }
+
+    public GameType getBestGame(UserAccount account){
+        return null;
+    }
 }
