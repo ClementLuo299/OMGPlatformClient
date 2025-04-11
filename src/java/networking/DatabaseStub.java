@@ -189,7 +189,7 @@ public class DatabaseStub {
                     }
 
                     username = line.substring(0, middle);
-                    password = line.substring(middle+1);
+                    password = line.substring(middle);
                     
                     Map<String, String> record = new HashMap<>();
                     record.put("username", username);
