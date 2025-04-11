@@ -15,12 +15,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -32,7 +27,8 @@ import javafx.scene.text.Text;
  * Handles game logic, UI updates, and user interactions.
  * This implements a local couch co-op mode where two players take turns using the same device.
  */
-public class TicTacToeController implements Initializable {
+public class
+TicTacToeController implements Initializable {
 
     // Main container
     @FXML private BorderPane mainContainer;
@@ -445,7 +441,12 @@ public class TicTacToeController implements Initializable {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Game Over");
         alert.setHeaderText("We have a winner!");
-        alert.setContentText(winnerName + " wins the game!");
+        alert.setContentText(winnerName + " won the game!");
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/alert-style.css").toExternalForm());
+        dialogPane.getStyleClass().add("custom-alert");
+
         alert.showAndWait();
     }
 
