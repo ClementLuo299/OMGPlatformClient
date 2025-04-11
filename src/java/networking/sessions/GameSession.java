@@ -29,20 +29,10 @@ public class GameSession {
         this.accounts = new ArrayList<>();
     }
 
+    //GETTERS
+
     public GameType getGameType(){
         return gt;
-    }
-
-    public boolean playerInGame(UserAccount account){
-        return accounts.contains(account);
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public void setDateTimeCreated(String dateTimeCreated){
-        this.dateTimeCreated = dateTimeCreated;
     }
 
     public String getDateTimeCreated(){
@@ -53,16 +43,32 @@ public class GameSession {
         return accounts;
     }
 
-    public void addAccount(UserAccount account) {
-        accounts.add(account);
-    }
-
     public boolean getStatus(){
         return open;
     }
 
+    //SETTERS
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public void setDateTimeCreated(String dateTimeCreated){
+        this.dateTimeCreated = dateTimeCreated;
+    }
+
+    public void addAccount(UserAccount account) {
+        accounts.add(account);
+    }
+
     public void closeSession(){
         open = false;
+    }
+
+    //METHODS
+
+    public boolean playerInGame(UserAccount account){
+        return accounts.contains(account);
     }
 
     public GameRecord generateGameRecord() {
