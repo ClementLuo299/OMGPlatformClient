@@ -390,6 +390,15 @@ public class WhistGame extends Game {
     }
 
     /**
+     * Resets the Deck for new rounds
+     * Will be removed later, as the same deck is supposed to be used over multiple rounds.
+     */
+    public void resetDeck() {
+        deck.clear();
+        this.deck = new CardPile();
+    }
+
+    /**
      * Moves this Whist Game to the next Stage of gameplay
      */
     public void nextStage() {

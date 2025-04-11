@@ -3763,11 +3763,7 @@ public class WhistController implements Initializable {
         whistGame.setGameStage(StageType.DEAL);
         
         // Create a new deck
-        whistGame.getDeck().clear();
-        CardPile newDeck = new CardPile();
-        for (Card card : newDeck.getCards()) {
-            whistGame.getDeck().addCard(card);
-        }
+        whistGame.resetDeck();
         
         // Reset draw and discard piles
         whistGame.setDraw(new CardPile());
