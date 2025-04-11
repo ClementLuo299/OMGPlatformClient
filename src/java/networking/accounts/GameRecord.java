@@ -57,6 +57,14 @@ public class GameRecord {
         return game;
     }
 
+    public UserAccount getP1(){
+        return player1;
+    }
+
+    public UserAccount getP2(){
+        return player2;
+    }
+
     /**
      * Returns a string representation of the game record, including the game, opponent, result, and score.
      *
