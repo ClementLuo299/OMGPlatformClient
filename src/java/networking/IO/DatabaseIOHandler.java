@@ -451,7 +451,30 @@ public class DatabaseIOHandler {
         return 0;
     }
 
+    private List<UserAccount> getAccountsRankedByWinRate(){
+        List<UserAccount> accounts = getUsers();
+        accounts.sort((p1,p2) -> Double.compare(getWinRate(p2),getWinRate(p1)));
+        return accounts;
+    }
+
     public int getRank(UserAccount account){
+        List<UserAccount> sortedAccountList = getAccountsRankedByWinRate();
+        int counter = 0;
+
+        if(sortedAccountList != null){
+            for(UserAccount a : sortedAccountList){
+                if(!(a.getUsername().equals(account.getUsername()))){
+                    counter++;
+                }
+                else{
+                    counter++;
+                    break;
+                }
+            }
+        }
+        if(getWinRate(account) != 0){
+            return counter;
+        }
         return 0;
     }
 
