@@ -4,7 +4,7 @@ A multiplayer board game platform built with JavaFX.
 
 ## Prerequisites
 
-- Java 17 or higher
+- Java 23 or higher
 - Maven 3.6 or higher
 
 ## Getting Started
