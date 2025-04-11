@@ -131,7 +131,7 @@ public class CardPile {
     // SETTERS
 
     /**
-     * Adds a new Card to the top of the Card Pile
+     * Adds a new Card to a Card Pile using the addCards method
      *
      * @param newCard The given Card to add to the Card Pile
      */
@@ -152,6 +152,24 @@ public class CardPile {
         // Adds the given Card to the top of the new Card Pile
         newCards.add(newCard);
         // Adds the Cards in the current Card Pile under the given Card
+        newCards.addAll(cards);
+
+        // Sets the current Card Pile to the new Card Pile
+        this.cards = newCards;
+    }
+
+    /**
+     * Adds a multiple new Cards to the top of the Card Pile
+     *
+     * @param newCardList The given Cards to add to the Card Pile
+     */
+    public void addCards(List<Card> newCardList) {
+        // List to store the new Card Pile based on the size required
+        List<Card> newCards = new ArrayList<>();
+
+        // Adds the given Card List to the top of the new Card Pile
+        newCards.addAll(newCardList);
+        // Adds the Cards in the current Card Pile under the given Cards
         newCards.addAll(cards);
 
         // Sets the current Card Pile to the new Card Pile

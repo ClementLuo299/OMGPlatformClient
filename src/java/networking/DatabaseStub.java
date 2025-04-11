@@ -231,13 +231,20 @@ public class DatabaseStub {
                 while(line != null){
                     Map<String,String> row = new HashMap<>();
                     String[] kvPairs = line.split(String.valueOf(delim2));
+
                     for(String pair : kvPairs){
                         if (pair.isEmpty()) continue;
                         String[] pairArr = pair.split(String.valueOf(delim1));
                         if (pairArr.length >= 2) {
-                            row.put(pairArr[0],pairArr[1]);
+                            if(pairArr[1].equals("null")){
+                                row.put(pairArr[0],null);
+                            }
+                            else {
+                                row.put(pairArr[0], pairArr[1]);
+                            }
                         }
                     }
+
                     if (!row.isEmpty()) {
                         tableData.add(row);
                     }

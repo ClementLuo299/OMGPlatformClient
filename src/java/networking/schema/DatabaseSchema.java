@@ -17,6 +17,32 @@ import java.util.*;
  * String firstName
  * String middleName
  * String lastName
+ *
+ * Table gameRecords:
+ * int id
+ * String game
+ * String player1
+ * String player2
+ * int winner
+ * int score
+ *
+ * Table userSessions:
+ * int id
+ * String username
+ * String datetimeCreated
+ * String datetimeEnded
+ *
+ * Table gameSessions
+ * int id
+ * String game
+ * String player1
+ * String player2
+ *
+ * Table gameMoves
+ * int id
+ * String player1
+ * String player2
+ * String data
  */
 
 /**
@@ -62,6 +88,44 @@ public class DatabaseSchema {
                 "lastName"
         );
         columns.put("users", users);
+
+        //Game records table
+        List<String> gameRecords = List.of(
+                "id",
+                "game",
+                "player1",
+                "player2",
+                "winner",
+                "score"
+        );
+        columns.put("gameRecords", gameRecords);
+
+        //User sessions table
+        List<String> userSessions = List.of(
+                "id",
+                "username",
+                "datetimeCreated",
+                "datetimeEnded"
+        );
+        columns.put("userSessions", userSessions);
+
+        //Game sessions table
+        List<String> gameSessions = List.of(
+                "id",
+                "game",
+                "player1",
+                "player2"
+        );
+        columns.put("gameSessions", gameSessions);
+
+        //Game moves table
+        List<String> gameMoves = List.of(
+                "id",
+                "game",
+                "player1",
+                "player2"
+        );
+        columns.put("gameMoves", gameMoves);
 
         //Create schema
         createSchema();
