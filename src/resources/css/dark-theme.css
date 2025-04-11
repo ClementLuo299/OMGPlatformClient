@@ -5,10 +5,6 @@
     -fx-text-color: #FFFFFF;       /* White text for contrast */
 }
 
-.root-container {
-    -fx-background-color: -fx-primary-color;
-}
-
 /* Sidebar Styling */
 .sidebar {
     -fx-background-color: -fx-primary-color;
@@ -211,3 +207,51 @@
     -fx-background-color: derive(-fx-accent-color, 10%);
 }
 
+.password-mask {
+    -fx-background-color: -fx-secondary-color; /* Using the dark secondary color */
+    -fx-border-color: -fx-text-color;         /* For better contrast */
+}
+
+/* Dark theme style overrides */
+.root-container {
+    -fx-primary-color: #1a1a1a !important;    /* Dark background */
+    -fx-secondary-color: #2a2a2a !important;  /* Slightly lighter dark */
+    -fx-accent-color: #3B82F6 !important;     /* Accent color */
+    -fx-text-color: #FFFFFF !important;       /* White text */
+    -fx-background-color: #1a1a1a !important;
+}
+
+/* Make sure to target specific components */
+.sidebar {
+    -fx-background-color: #1a1a1a !important;
+    -fx-border-color: #333333 !important;
+}
+
+.content-area {
+    -fx-background-color: #1a1a1a !important;
+}
+
+/* Target form fields explicitly */
+.password-mask, .text-field, .password-field {
+    -fx-background-color: #333333 !important;
+    -fx-text-fill: #FFFFFF !important;
+}
+
+/* Settings section backgrounds */
+.settings-section, .settings-section-compact {
+    -fx-background-color: #2a2a2a !important;
+}
+
+/* Labels and text */
+.title-text, .page-title, .section-title, .setting-label, .field-label {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+.page-subtitle {
+    -fx-text-fill: #AAAAAA !important;
+}
+
+/* Setting items */
+.setting-item, .setting-item-compact {
+    -fx-background-color: #333333 !important;
+}
