@@ -57,7 +57,6 @@ public class DatabaseStub {
             //Add record to data
             if(tableSchema.checkRecord(record)){
                 data.get(table).add(record);
-                saveDBState();
             }
         }
     }
@@ -134,7 +133,6 @@ public class DatabaseStub {
 
                 //Get table data
                 List<Map<String,String>> tableData = data.get(table);
-
 
                 for(Map<String,String> row : tableData){
                     StringBuilder out = new StringBuilder();

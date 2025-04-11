@@ -20,6 +20,7 @@ public class GameSession {
     private Game game;
     private GameType gt;
     private boolean open; //If the game session is open to join
+    private String dateTimeCreated;
     private ArrayList<UserAccount> accounts;
 
     public GameSession() {
@@ -38,6 +39,14 @@ public class GameSession {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public void setDateTimeCreated(String dateTimeCreated){
+        this.dateTimeCreated = dateTimeCreated;
+    }
+
+    public String getDateTimeCreated(){
+        return dateTimeCreated;
     }
 
     public List<UserAccount> getAccounts(){

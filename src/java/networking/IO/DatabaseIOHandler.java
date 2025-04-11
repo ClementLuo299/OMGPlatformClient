@@ -9,10 +9,7 @@ import networking.sessions.GameSession;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 
@@ -308,11 +305,13 @@ public class DatabaseIOHandler {
         + now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         //Other fields
-        record.put("game",session.getGameType().toString());
+        record.put("game",null);
         record.put("open",Boolean.toString(session.getStatus()));
         record.put("player1",session.getAccounts().get(0).getUsername());
         record.put("player2",session.getAccounts().get(1).getUsername());
-        record.put("datetimeCreated",now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        record.put("dateTimeCreated",now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+
+        db.insert("gameSessions",record);
     }
 
     //Return list of game sessions with player1, player2
@@ -341,22 +340,76 @@ public class DatabaseIOHandler {
         return null;
     }
 
+    //Search game session by id
+    private GameSession findGameSession(String id){
+        Map<String,String> s = db.retrieve("gameSessions","id",id);
+
+        if(s != null){
+            GameSession s2 = new GameSession();
+            s2.addAccount(getUser(s.get("player1")));
+            s2.addAccount(getUser(s.get("player2")));
+            s2.setDateTimeCreated(s.get("dateTimeCreated"));
+
+            return s2;
+        }
+        return null;
+    }
+
+    private String getID(GameSession session){
+        String p1 = session.getAccounts().get(0).toString();
+        String p2 = session.getAccounts().get(1).toString();
+        String dt = session.getDateTimeCreated();
+        return p1+p2+dt;
+    }
+
     //GAME MOVE METHODS
 
     //Register move to database
     public void registerMove(GameSession session, UserAccount player, int moveNumber, String moveData){
-        //
+        String id = getID(session);
+
+        Map<String,String> rec = new HashMap<>();
+
+        rec.put("gameSessionID",id);
+        rec.put("playerUsername",player.getUsername());
+        rec.put("moveNumber",Integer.toString(moveNumber));
+        rec.put("moveData",moveData);
+
+        db.insert("gameMoves",rec);
     }
 
     //Get latest move
     public Map<String,String> getMove(GameSession session){
-        //
-        return null;
+        String id = getID(session);
+        List<Map<String,String>> rec = getMoves(session);
+        Map<String,String> latestMove = null;
+        int highestMove = -1;
+
+        if(rec != null){
+            for(Map<String,String> i : rec){
+                if(Integer.parseInt(i.get("moveNumber")) > highestMove){
+                    highestMove = Integer.parseInt(i.get("moveNumber"));
+                    latestMove = i;
+                }
+            }
+        }
+        return latestMove;
     }
 
-    //Get all moves
+    //Get all moves in session
     public List<Map<String,String>> getMoves(GameSession session){
-        //
+        String id = getID(session);
+        List<Map<String,String>> dat = db.retrieveAll("gameMoves");
+
+        if(dat != null){
+            List<Map<String,String>> dat2 = new ArrayList<>();
+            for(Map<String,String> i : dat){
+                if(i.get("gameSessionID").equals(id)){
+                    dat2.add(i);
+                }
+            }
+            return dat2;
+        }
         return null;
     }
 
