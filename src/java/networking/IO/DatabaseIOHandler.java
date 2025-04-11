@@ -1,7 +1,10 @@
 package networking.IO;
 
+import gamelogic.Game;
+import gamelogic.GameType;
 import networking.DatabaseStub;
 import networking.accounts.UserAccount;
+import networking.sessions.GameSession;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 /**
  * Handles communication between the backend and the program.
@@ -240,6 +244,19 @@ public class DatabaseIOHandler {
         return users;
     }
 
+    public UserAccount getUser(String username){
+        Map<String,String> record = db.retrieve("users","username", username);
+
+        if(record != null){
+            UserAccount user = new UserAccount(record.get("username"),record.get("password"));
+            user.setDob(record.get("dob"));
+            user.setEmail(record.get("email"));
+            return user;
+        }
+
+        return null;
+    }
+
     //USER SESSION METHODS
 
     public void startUserSession(UserAccount account){
@@ -276,5 +293,46 @@ public class DatabaseIOHandler {
         if(rec != null){
             db.update("userSessions","username",account.getUsername(),"datetimeEnded",nowAsStr);
         }
+    }
+
+    //GAME SESSION METHODS
+
+    public void saveGameSession(GameSession session){
+        Map<String,String> record = new HashMap<>();
+
+        //Did not implement increment, so id = 1
+        record.put("id","1");
+
+        //Other fields
+        record.put("game",session.getGameType().toString());
+        record.put("open",Boolean.toString(session.getStatus()));
+        record.put("player1",session.getAccounts().get(0).getUsername());
+        record.put("player2",session.getAccounts().get(1).getUsername());
+    }
+
+    //Return list of game sessions with player1, player2
+    public List<GameSession> findGameSessions(UserAccount player1, UserAccount player2){
+        List<Map<String,String>> data = db.retrieveAll("gameSessions");
+
+        if(data != null){
+            //Retrieve all game sessions with player1 and player2 matching
+            List<Map<String,String>> data2 = data.stream().filter(x -> x.get("player1").equals(player1.getUsername()) && x.get("player2").equals(player2.getUsername()))
+                    .toList();
+
+            List<GameSession> gameSessions = new ArrayList<>();
+
+            for(Map<String,String> map : data2){
+                GameSession session = new GameSession();
+                //GameType gameType = GameType.valueOf(map.get("game"));
+                UserAccount p1 = getUser(map.get("player1"));
+                UserAccount p2 = getUser(map.get("player2"));
+                session.addAccount(p1);
+                session.addAccount(p2);
+                gameSessions.add(session);
+            }
+
+            return gameSessions;
+        }
+        return null;
     }
 }

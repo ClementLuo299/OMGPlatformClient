@@ -8,6 +8,7 @@ import networking.accounts.GameRecord;
 import networking.accounts.UserAccount;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A gameplay session.
@@ -18,11 +19,12 @@ public class GameSession {
 
     private Game game;
     private GameType gt;
-    private GameIOHandler handler;
+    private boolean open; //If the game session is open to join
     private ArrayList<UserAccount> accounts;
 
     public GameSession() {
         this.game = null;
+        this.open = true;
         this.accounts = new ArrayList<>();
     }
 
@@ -38,8 +40,20 @@ public class GameSession {
         this.game = game;
     }
 
+    public List<UserAccount> getAccounts(){
+        return accounts;
+    }
+
     public void addAccount(UserAccount account) {
         accounts.add(account);
+    }
+
+    public boolean getStatus(){
+        return open;
+    }
+
+    public void closeSession(){
+        open = false;
     }
 
     public GameRecord generateGameRecord() {

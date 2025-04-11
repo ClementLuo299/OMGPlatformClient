@@ -113,6 +113,7 @@ public class DatabaseSchema {
         List<String> gameSessions = List.of(
                 "id",
                 "game",
+                "open",
                 "player1",
                 "player2"
         );
