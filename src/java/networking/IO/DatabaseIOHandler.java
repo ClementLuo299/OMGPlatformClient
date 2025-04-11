@@ -380,7 +380,6 @@ public class DatabaseIOHandler {
 
     //Get latest move
     public Map<String,String> getMove(GameSession session){
-        String id = getID(session);
         List<Map<String,String>> rec = getMoves(session);
         Map<String,String> latestMove = null;
         int highestMove = -1;
@@ -417,18 +416,49 @@ public class DatabaseIOHandler {
 
     //Register message to database
     public void registerMessage(GameSession session, UserAccount player, int messageNumber, String message){
-        //
+        String id = getID(session);
+
+        Map<String,String> rec = new HashMap<>();
+
+        rec.put("gameSessionID",id);
+        rec.put("playerUsername",player.getUsername());
+        rec.put("messageNumber",Integer.toString(messageNumber));
+        rec.put("message",message);
+
+        db.insert("chatMessages",rec);
     }
 
     //Get latest message
     public Map<String,String> getMessage(GameSession session){
-        //
-        return null;
+        List<Map<String,String>> rec = getMessages(session);
+        Map<String,String> latestMessage = null;
+        int highestMessageNum = -1;
+
+        if(rec != null){
+            for(Map<String,String> i : rec){
+                if(Integer.parseInt(i.get("messageNumber")) > highestMessageNum){
+                    highestMessageNum = Integer.parseInt(i.get("messageNumber"));
+                    latestMessage = i;
+                }
+            }
+        }
+        return latestMessage;
     }
 
     //Get all messages
     public List<Map<String,String>> getMessages(GameSession session){
-        //
+        String id = getID(session);
+        List<Map<String,String>> dat = db.retrieveAll("chatMessages");
+
+        if(dat != null){
+            List<Map<String,String>> dat2 = new ArrayList<>();
+            for(Map<String,String> i : dat){
+                if(i.get("gameSessionID").equals(id)){
+                    dat2.add(i);
+                }
+            }
+            return dat2;
+        }
         return null;
     }
 
