@@ -17,7 +17,7 @@ public class BoardGamePlatformApp extends Application {
             screenManager.initialize(primaryStage);
             
             // Navigate to the opening screen (initial screen)
-            screenManager.navigateTo(ScreenManager.OPENING_SCREEN, null);
+            screenManager.navigateTo(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS);
             
             // Start preloading common screens in background for faster navigation
             new Thread(() -> {
