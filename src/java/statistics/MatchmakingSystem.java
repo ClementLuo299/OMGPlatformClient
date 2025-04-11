@@ -1,5 +1,6 @@
 package statistics;
 
+import gamelogic.Player;
 import networking.sessions.GameSession;
 import gamelogic.Game;
 import gamelogic.GameType;
@@ -61,9 +62,14 @@ public class MatchmakingSystem {
      * @throws MatchmakingException If queue is full or matchmaking fails
      */
     public void joinMatchmaking(UserAccount player, GameType gameType) throws MatchmakingException {
+        //Error handling
+        if (player == null || gameType == null) {
+            throw new MatchmakingException("Invalid matchmaking parameters");
+        }
+
         // Check queue capacity
         if (matchmakingHandler.getQueueSizeAll() >= MAX_QUEUE_SIZE) {
-            throw new MatchmakingException("Matchmaking queue is full");
+            throw new MatchmakingException("Queue full. Try again later");
         }
 
         // Try to find existing game first
@@ -99,11 +105,12 @@ public class MatchmakingSystem {
     /**
      * Adds player to an existing game session
      *
-     * @param player The UserAccount to add
+     * @param userAccount The UserAccount to add
      * @param game The Game to join
      */
-    private void joinExistingGame(UserAccount player, Game game) {
-        //game.getPlayers().add(player);
+    private void joinExistingGame(UserAccount userAccount, Game game) {
+        Player player = new Player(userAccount);
+        game.getPlayers().add(player);
         // Start game if both players are present
         if (game.getPlayers().size() == 2) {
             game.startGame();
@@ -134,7 +141,7 @@ public class MatchmakingSystem {
     private void alternativeMatchmaking(GameType gameType) throws MatchmakingException {
         // Get all queued players for this game type
         List<UserAccount> candidates = new ArrayList<>(
-                //matchmakingHandler.getSearchingUsers().keySet()
+                matchmakingHandler.getSearchingUsers().keySet()
         );
 
         if (candidates.size() >= 2) {
@@ -148,18 +155,21 @@ public class MatchmakingSystem {
     /**
      * Creates new game session and removes players from queue
      *
-     * @param players The List of UserAccounts to match
+     * @param users The List of UserAccounts to match
      * @param gameType The GameType for the new game
      */
-    private void createGame(List<UserAccount> players, GameType gameType) {
+    private void createGame(List<UserAccount> users, GameType gameType) {
+        List<Player> players = new ArrayList<>();
+        users.forEach(user -> players.add(new Player(user)));
+
         // Create new game with default 10 average plays
-        //Game newGame = new Game(gameType, players, 10);
-        //activeGames.get(gameType).add(newGame);
+        Game newGame = new Game(gameType, players, 10);
+        activeGames.get(gameType).add(newGame);
 
         // Clean up matchmaking queue
-        //players.forEach(player -> matchmakingHandler.getSearchingUsers().remove(player));
+        users.forEach(user -> matchmakingHandler.getSearchingUsers().remove(user));
 
         // Start the game session
-        //newGame.startGame();
+        newGame.startGame();
     }
 }

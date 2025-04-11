@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * Represents a user account.
  *
- * @authors Clement Luo,
+ * @authors Clement Luo, Irith Irith
  * @date March 4, 2025
  */
 public class UserAccount {
@@ -16,6 +16,8 @@ public class UserAccount {
     private String bio; //Biography
     private String fullName;
     private String dob; // Date of Birth as String
+    private int experienceLevel = 1; // Default to 1
+    private float sessionIntensityLevel = 1.0f; // Default to neutral
 
     /**
      * Constructor that takes only required fields.
@@ -44,6 +46,8 @@ public class UserAccount {
     public String getEmail() {
         return email;
     }
+    public int getExperienceLevel() {return experienceLevel;}
+    public float getSessionIntensityLevel() {return sessionIntensityLevel;}
 
     /**
      * Setters.
@@ -67,4 +71,8 @@ public class UserAccount {
     public void setBio(String bio) {
         this.bio = bio;
     }
+
+    public void setExperienceLevel(int experienceLevel) {this.experienceLevel = experienceLevel;}
+
+    public void setSessionIntensityLevel(float sessionIntensityLevel) {this.sessionIntensityLevel = sessionIntensityLevel;}
 }

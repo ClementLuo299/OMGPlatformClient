@@ -59,6 +59,15 @@ public class MatchmakingHandler {
         return queueCount;
     }
 
+    /**
+     * Gets the list of Players searching for Games along with their queued Game Types
+     *
+     * @return The LinkedHashMap of searching Users and their Game Types
+     */
+    public LinkedHashMap<UserAccount, GameType> getSearchingUsers() {
+        return searchingUsers;
+    }
+
 
     // SETTERS
 
@@ -86,13 +95,13 @@ public class MatchmakingHandler {
         List<Map.Entry<UserAccount, GameType>> entries = new ArrayList<>(searchingUsers.entrySet());
 
         // Sort by experience level (ascending)
-        // entries.sort(Comparator.comparingInt(entry -> entry.getKey().getExperienceLevel()));
+        entries.sort(Comparator.comparingInt(entry -> entry.getKey().getExperienceLevel()));
 
         // Clear and rebuild the LinkedHashMap in sorted order
         searchingUsers.clear();
-        for (Map.Entry<UserAccount, GameType> entry : entries) {
-            searchingUsers.put(entry.getKey(), entry.getValue());
-        }
+        entries.forEach(entry ->
+                searchingUsers.put(entry.getKey(), entry.getValue())
+        );
     }
 
     /**
@@ -114,8 +123,6 @@ public class MatchmakingHandler {
         int idealOpponentLevel;
 
 
-        // TODO: Get first entry of searchingUsers hashmap and set the variables above appropriately
-
         // Finds the Lowest Experience Level User to prioritize less experienced Players
         if (!searchingUsers.isEmpty()) {
             // Get the first entry of the sorted map (lowest experience player)
@@ -124,27 +131,20 @@ public class MatchmakingHandler {
             queuedGame = firstEntry.getValue();
 
             // Get game-specific experience level from the UserAccount
-            //gameExperienceLevel = searchingUser.getExperienceLevel();
+            gameExperienceLevel = searchingUser.getExperienceLevel();
 
             // Get session intensity level from the UserAccount
-            //sessionIntensityLevel = searchingUser.getSessionIntensityLevel();
+            sessionIntensityLevel = searchingUser.getSessionIntensityLevel();
 
             // Calculate ideal opponent level using experience and intensity
-            //idealOpponentLevel = (int) (gameExperienceLevel * sessionIntensityLevel);
+            idealOpponentLevel = (int) (gameExperienceLevel * sessionIntensityLevel);
         } else {
             // No players in queue, exit matchmaking
             return;
         }
-        /*
-        It is assumed that UserAccount has methods:
-        1. getExperienceLevel() returning game-specific XP as int
-        2. getSessionIntensityLevel() returning intensity as float
-         */
-
 
 
         // Searches through the Queue to check for close matches
-        /*
         for (HashMap.Entry<UserAccount, GameType> entry : searchingUsers.entrySet()) {
             // Checks if the GameType is compatible
             if (queuedGame == entry.getValue()) {
@@ -182,10 +182,8 @@ public class MatchmakingHandler {
                 }
             }
         }
-         */
 
         // Searches through the Queue for broad matches
-        /*
         for (HashMap.Entry<UserAccount, GameType> entry : searchingUsers.entrySet()) {
             // Checks if the GameType is compatible
             if (queuedGame == entry.getValue()) {
@@ -219,7 +217,6 @@ public class MatchmakingHandler {
                 }
             }
         }
-         */
 
         // Match with a random user if no good user is available
         List<UserAccount> candidates = new ArrayList<>();
