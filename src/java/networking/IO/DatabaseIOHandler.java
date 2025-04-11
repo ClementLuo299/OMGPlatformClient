@@ -299,15 +299,19 @@ public class DatabaseIOHandler {
 
     public void saveGameSession(GameSession session){
         Map<String,String> record = new HashMap<>();
+        LocalDateTime now = LocalDateTime.now();
 
-        //Did not implement increment, so id = 1
-        record.put("id","1");
+        //Did not implement increment, so id = player1 + player2 + datetimeCreated
+        record.put("id",session.getAccounts().get(0).getUsername()
+        + session.getAccounts().get(0).getUsername()
+        + now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         //Other fields
         record.put("game",session.getGameType().toString());
         record.put("open",Boolean.toString(session.getStatus()));
         record.put("player1",session.getAccounts().get(0).getUsername());
         record.put("player2",session.getAccounts().get(1).getUsername());
+        record.put("datetimeCreated",now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
     }
 
     //Return list of game sessions with player1, player2
@@ -335,4 +339,44 @@ public class DatabaseIOHandler {
         }
         return null;
     }
+
+    //GAME MOVE METHODS
+
+    //Register move to database
+    public void registerMove(GameSession session, UserAccount player, int moveNumber, String moveData){
+        //
+    }
+
+    //Get latest move
+    public Map<String,String> getMove(GameSession session){
+        //
+        return null;
+    }
+
+    //Get all moves
+    public List<Map<String,String>> getMoves(GameSession session){
+        //
+        return null;
+    }
+
+    //CHAT MESSAGE METHODS
+
+    //Register message to database
+    public void registerMessage(GameSession session, UserAccount player, int messageNumber, String message){
+        //
+    }
+
+    //Get latest message
+    public Map<String,String> getMessage(GameSession session){
+        //
+        return null;
+    }
+
+    //Get all messages
+    public List<Map<String,String>> getMessages(GameSession session){
+        //
+        return null;
+    }
+
+    //GAME RECORD METHODS
 }

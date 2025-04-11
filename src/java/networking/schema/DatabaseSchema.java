@@ -33,16 +33,24 @@ import java.util.*;
  * String datetimeEnded
  *
  * Table gameSessions
- * int id
+ * String id
  * String game
+ * boolean open
  * String player1
  * String player2
+ * String datetimeCreated
  *
  * Table gameMoves
- * int id
- * String player1
- * String player2
- * String data
+ * String gameSessionID
+ * String playerUsername
+ * int moveNumber
+ * String moveData
+ *
+ * Table chatMessages
+ * String gameSessionID
+ * String playerUsername
+ * int messageNumber
+ * String message
  */
 
 /**
@@ -115,18 +123,28 @@ public class DatabaseSchema {
                 "game",
                 "open",
                 "player1",
-                "player2"
+                "player2",
+                "dateTimeCreated"
         );
         columns.put("gameSessions", gameSessions);
 
         //Game moves table
         List<String> gameMoves = List.of(
-                "id",
-                "game",
-                "player1",
-                "player2"
+                "gameSessionID",
+                "playerUsername",
+                "moveNumber",
+                "moveData"
         );
         columns.put("gameMoves", gameMoves);
+
+        //Chat messages table
+        List<String> chatMessages = List.of(
+                "gameSessionID",
+                "playerUsername",
+                "messageNumber",
+                "message"
+        );
+        columns.put("chatMessages", chatMessages);
 
         //Create schema
         createSchema();
