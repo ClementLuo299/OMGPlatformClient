@@ -48,6 +48,15 @@ public class Game {
     // GETTERS
 
     /**
+     * Gets the type of this game
+     *
+     * @return The type of game
+     */
+    public GameType getGameType(){
+        return gameType;
+    }
+
+    /**
      * Gets the Player whose turn it is
      *
      * @return The turn holding Player
