@@ -26,6 +26,14 @@ public class GameSession {
         this.accounts = new ArrayList<>();
     }
 
+    public GameType getGameType(){
+        return gt;
+    }
+
+    public boolean playerInGame(UserAccount account){
+        return accounts.contains(account);
+    }
+
     public void setGame(Game game) {
         this.game = game;
     }
