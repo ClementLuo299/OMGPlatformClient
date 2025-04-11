@@ -503,24 +503,27 @@ public class DatabaseIOHandler {
 
     //STATS FUNCTIONS
     public int getGamesPlayed(UserAccount account){
-        List<GameRecord> records = retrieveGameRecords(account);
-        if(records != null){
-            return records.size();
+        if(account != null){
+            List<GameRecord> records = retrieveGameRecords(account);
+            if(records != null){
+                return records.size();
+            }
         }
         return 0;
     }
 
     private int getGamesWon(UserAccount account){
-        List<GameRecord> records = retrieveGameRecords(account);
         int counter = 0;
-
-        if(records != null){
-            for(GameRecord r : records){
-                if(r.getWinner() == 1 && r.getP1().getUsername().equals(account.getUsername())){
-                    counter++;
-                }
-                else if(r.getWinner() == 2 && r.getP2().getUsername().equals(account.getUsername())){
-                    counter++;
+        if(account != null){
+            List<GameRecord> records = retrieveGameRecords(account);
+            if(records != null){
+                for(GameRecord r : records){
+                    if(r.getWinner() == 1 && r.getP1().getUsername().equals(account.getUsername())){
+                        counter++;
+                    }
+                    else if(r.getWinner() == 2 && r.getP2().getUsername().equals(account.getUsername())){
+                        counter++;
+                    }
                 }
             }
         }

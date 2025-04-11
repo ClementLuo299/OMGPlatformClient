@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
+import networking.Backend;
 
 public class DashboardController {
     @FXML
@@ -123,6 +124,11 @@ public class DashboardController {
         } else {
             // For registered users, always display the username in the top corner
             usernameLabel.setText(username);
+
+            //Update stats
+            totalGames.setText(Integer.toString(Backend.db().getGamesPlayed(Backend.db().getUser(currentUsername))));
+            winRate.setText(String.format("%.2f%%",100 * Backend.db().getWinRate(Backend.db().getUser(currentUsername))));
+            currentRank.setText(Integer.toString(Backend.db().getRank(Backend.db().getUser(currentUsername))));
         }
     }
 
