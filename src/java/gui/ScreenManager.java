@@ -111,8 +111,10 @@ public class ScreenManager {
                 root = screenCache.get(fxmlPath);
                 // We don't have the controller here when loading from cache
             }
-            
-            setCssStylesheet(cssPath);
+
+            if(cssPath!=null){
+                setCssStylesheet(cssPath);
+            }
             mainContainer.setCenter(root);
             
             return controller;

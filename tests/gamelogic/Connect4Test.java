@@ -11,7 +11,7 @@ public class ConnectFourTests {
     private Player player1;
     private Player player2;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         player1 = new Player("Player 1");
         player2 = new Player("Player 2");

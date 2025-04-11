@@ -162,7 +162,7 @@ public class DatabaseStub {
         try {
             File userFile = new File("src/resources/data/users.txt");
             if (userFile.exists()) {
-                System.out.println("Loading users from users.txt");
+                System.out.println("DatabaseStub:\tLoading users from users.txt");
                 BufferedReader reader = new BufferedReader(new FileReader(userFile));
                 
                 // Create accounts table if not exists
@@ -174,22 +174,22 @@ public class DatabaseStub {
                 while ((line = reader.readLine()) != null) {
                     if (line.trim().isEmpty()) continue;
                     
-                    // Extract username and password (assuming pattern: usernamepassword)
-                    // For "ankonankon1", username="ankon", password="ankon1"
+                    // Extract username and password (assuming pattern: username#password)
+                    // For "ankon#ankon1", username="ankon", password="ankon1"
                     String username = "";
                     String password = "";
-                    
-                    // For the specific case of "ankonankon1"
-                    if (line.equals("ankonankon1")) {
-                        username = "ankon";
-                        password = "ankon1";
-                    } else {
-                        // Default fallback for other formats
-                        // Assuming the first half is username, second half is password
-                        int middle = line.length() / 2;
-                        username = line.substring(0, middle);
-                        password = line.substring(middle);
+
+                    // Default fallback for other formats
+                    // Assuming the first half is username, second half is password
+                    int middle = 0;
+                    for(middle=0; middle<line.length(); middle++){
+                        if(line.charAt(middle)=='#'){
+                            break;
+                        }
                     }
+
+                    username = line.substring(0, middle);
+                    password = line.substring(middle+1);
                     
                     Map<String, String> record = new HashMap<>();
                     record.put("username", username);
@@ -202,10 +202,10 @@ public class DatabaseStub {
                 
                 reader.close();
             } else {
-                System.out.println("users.txt file not found, will look for table-specific files");
+                System.out.println("DatabaseStub:\tusers.txt file not found, will look for table-specific files");
             }
         } catch (IOException e) {
-            System.out.println("Error reading users.txt: " + e.getMessage());
+            System.out.println("DatabaseStub:\tError reading users.txt: " + e.getMessage());
             e.printStackTrace();
         }
         
@@ -258,7 +258,7 @@ public class DatabaseStub {
         
         // Debug: Print loaded accounts
         if (data.containsKey("accounts")) {
-            System.out.println("Loaded " + data.get("accounts").size() + " accounts:");
+            System.out.println("DatabaseStub:\tLoaded " + data.get("accounts").size() + " accounts:");
             for (Map<String, String> account : data.get("accounts")) {
                 System.out.println("Username: " + account.get("username") + ", Password: " + account.get("password"));
             }
