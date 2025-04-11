@@ -95,13 +95,13 @@ public class ScreenManager {
         try {
             Parent root;
             Object controller = null;
-            
+
             // Special case for the game lobby - always reload it
             // This fixes the issue with game switching
             if (fxmlPath.equals(GAME_LOBBY_SCREEN)) {
                 return reloadAndNavigateTo(fxmlPath, cssPath);
             }
-            
+
             if (!screenCache.containsKey(fxmlPath)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
                 root = loader.load();
@@ -113,10 +113,15 @@ public class ScreenManager {
             }
 
             if(cssPath!=null){
-                setCssStylesheet(cssPath);
+                // Check if dark mode is enabled
+                if (ThemeManager.getInstance().isDarkTheme()) {
+                    setCssStylesheet("css/dark-theme.css");
+                } else {
+                    setCssStylesheet(cssPath);
+                }
             }
             mainContainer.setCenter(root);
-            
+
             return controller;
         } catch (IOException e) {
             e.printStackTrace();

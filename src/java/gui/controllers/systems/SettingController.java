@@ -1,6 +1,7 @@
 package gui.controllers.systems;
 
 import gui.ScreenManager;
+import gui.ThemeManager;
 import gui.controllers.games.GameLibraryController;
 import gui.controllers.statistics.LeaderboardController;
 
@@ -154,6 +155,12 @@ public class SettingController {
     private void updateThemeToggle() {
         HBox toggleSwitch = (HBox) toggleThumb.getParent();
         Scene scene = toggleSwitch.getScene(); // Get the current scene
+
+        // Get theme manager instance
+        ThemeManager themeManager = ThemeManager.getInstance();
+
+        // Update theme manager with current setting
+        themeManager.setDarkTheme(isDarkTheme);
 
         if (scene != null) {
             if (isDarkTheme) {

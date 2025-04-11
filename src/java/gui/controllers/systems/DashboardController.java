@@ -1,10 +1,12 @@
 package gui.controllers.systems;
 
+import gui.ThemeManager;
 import gui.controllers.games.GameLibraryController;
 import gui.controllers.statistics.LeaderboardController;
 import gui.ScreenManager;
 
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -52,10 +54,10 @@ public class DashboardController {
     public void initialize() {
         // Initialize activity list with some sample data
         activityList.getItems().addAll(
-            "Played Connect 4 - Won",
-            "Played Checkers - Lost",
-            "Played Whist - Won",
-            "Reached Level 12 in Connect 4"
+                "Played Connect 4 - Won",
+                "Played Checkers - Lost",
+                "Played Whist - Won",
+                "Reached Level 12 in Connect 4"
         );
 
         // Set initial stats
@@ -63,13 +65,33 @@ public class DashboardController {
         winRate.setText("64%");
         currentRank.setText("#156");
         bestGame.setText("Connect 4");
-        
+
         // Set button actions
         dashboardBtn.getStyleClass().add("selected"); // Mark current button as selected
         gamesBtn.setOnAction(event -> openGameLibrary());
         leaderboardBtn.setOnAction(event -> openLeaderboard());
         settingsBtn.setOnAction(event -> openSettings());
         signOutBtn.setOnAction(event -> signOut());
+
+        // Check if dark mode is enabled and apply it
+        applyCurrentTheme();
+    }
+
+    private void applyCurrentTheme() {
+        // Get the current scene
+        if (dashboardBtn.getScene() != null) {
+            Scene scene = dashboardBtn.getScene();
+
+            // Get theme preference and apply
+            ThemeManager themeManager = ThemeManager.getInstance();
+            if (themeManager.isDarkTheme()) {
+                ((Scene) scene).getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("/css/dark-theme.css").toExternalForm());
+            } else {
+                scene.getStylesheets().clear();
+                scene.getStylesheets().add(getClass().getResource("/css/dashboard.css").toExternalForm());
+            }
+        }
     }
     
     /**
