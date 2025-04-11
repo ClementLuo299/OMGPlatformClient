@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A class representing a Connect Four player profile. This class extends AbstractGameProfile
+ * A class representing a Checkers profile. This class extends AbstractGameProfile
  * and provides functionality specific to managing game records, player status, and rankings
- * in Connect Four.
+ * in Checkers.
  */
 public class CheckersProfile extends AbstractGameProfile {
 
