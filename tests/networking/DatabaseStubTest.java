@@ -1,12 +1,9 @@
 package networking;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class DatabaseStubTest {
-
-    class DatabaseStubTest {
 
         @Test
         void testAccountDataForNonexistentUser() {
@@ -39,4 +36,18 @@ class DatabaseStubTest {
             assertEquals("main player", data[2]);
             assertEquals("2005-05-05", data[3]);
         }
+    void testSaveAndLoadPreservesData() {
+        db.insertAccountData("player1", "password123", "Player main", "2005-05-05");
+        db.saveDBState();
+
+        DatabaseStub db2 = new DatabaseStub();
+        db2.populateDB();
+
+        String[] loaded = db2.getAccountData("player1");
+        assertNotNull(loaded);
+        assertEquals("player1", loaded[0]);
+        assertEquals("password123", loaded[1]);
+        assertEquals("Player main", loaded[2]);
+        assertEquals("2005-05-05", loaded[3]);
+    }
 }
