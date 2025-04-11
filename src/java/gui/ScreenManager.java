@@ -140,24 +140,30 @@ public class ScreenManager {
         try {
             // Remove from cache
             screenCache.remove(fxmlPath);
-            
+
             // Load fresh
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
             Parent root = loader.load();
             Object controller = loader.getController();
-            
+
             // Only cache screens that aren't game-specific
-            if (!fxmlPath.equals(GAME_LOBBY_SCREEN) && 
-                !fxmlPath.equals(TICTACTOE_SCREEN) && 
-                !fxmlPath.equals(CONNECTFOUR_SCREEN) &&
-                !fxmlPath.equals(CHECKERS_SCREEN) &&
-                !fxmlPath.equals(WHIST_SCREEN)) {
+            if (!fxmlPath.equals(GAME_LOBBY_SCREEN) &&
+                    !fxmlPath.equals(TICTACTOE_SCREEN) &&
+                    !fxmlPath.equals(CONNECTFOUR_SCREEN) &&
+                    !fxmlPath.equals(CHECKERS_SCREEN) &&
+                    !fxmlPath.equals(WHIST_SCREEN)) {
                 screenCache.put(fxmlPath, root);
             }
-            
-            setCssStylesheet(cssPath);
+
+            // Check if dark mode is enabled
+            if (ThemeManager.getInstance().isDarkTheme()) {
+                setCssStylesheet("css/dark-theme.css");
+            } else {
+                setCssStylesheet(cssPath);
+            }
+
             mainContainer.setCenter(root);
-            
+
             return controller;
         } catch (IOException e) {
             e.printStackTrace();

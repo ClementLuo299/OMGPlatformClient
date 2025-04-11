@@ -8,6 +8,7 @@ import gui.*;
 import gui.controllers.games.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
@@ -67,7 +68,7 @@ public class GameLobbyController implements Initializable {
     
     // Reference to the ScreenManager
     private ScreenManager screenManager = ScreenManager.getInstance();
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Setup player avatar with default color tint
@@ -77,11 +78,39 @@ public class GameLobbyController implements Initializable {
         } catch (Exception e) {
             System.err.println("Error setting up player avatar: " + e.getMessage());
         }
-        
+
         // Populate the matches list with sample data for the selected game
         refreshPublicMatches();
+
+        // Apply the current theme
+        applyCurrentTheme();
+    }
+
+    /**
+     * Apply the current theme from ThemeManager
+     */
+    /**
+     * Apply the current theme from ThemeManager
+     */
+    private void applyCurrentTheme() {
+        // Get the current scene (may be null during initialization)
+        Scene scene = null;
+        if (quickPlayButton != null && quickPlayButton.getScene() != null) {
+            scene = quickPlayButton.getScene();
+        } else if (gameTitle != null && gameTitle.getScene() != null) {
+            scene = gameTitle.getScene();
+        }
+
+        if (scene != null) {
+            // Register this scene with ThemeManager for theme updates
+            ThemeManager.getInstance().registerScene(scene);
+        }
     }
     
+    /**
+     * Set the current game name and update the UI accordingly
+     * @param gameName The name of the currently selected game
+     */
     /**
      * Set the current game name and update the UI accordingly
      * @param gameName The name of the currently selected game
@@ -89,16 +118,20 @@ public class GameLobbyController implements Initializable {
     public void setGame(String gameName) {
         // Store the game name
         this.gameName = gameName;
-        
+
         // Update UI elements
         gameTitle.setText(gameName + " - Game Lobby");
         statusLabel.setText(gameName + " Lobby");
-        
+
         // Clear any previous game-specific data
         clearPreviousGameData();
-        
+
         // Refresh the matches list with game-specific data
         refreshPublicMatches();
+
+        // Apply the current theme (in case it has changed)
+        // Use Platform.runLater to ensure scene is available
+        javafx.application.Platform.runLater(this::applyCurrentTheme);
     }
     
     /**
@@ -128,11 +161,14 @@ public class GameLobbyController implements Initializable {
     public void setCurrentUser(String username, boolean isGuest) {
         this.currentUsername = username;
         this.isGuest = isGuest;
-        
+
         // Update the player name if we have one
         if (username != null && !username.isEmpty()) {
             playerName.setText(username);
         }
+
+        // Apply theme with Platform.runLater to ensure scene is available
+        javafx.application.Platform.runLater(this::applyCurrentTheme);
     }
     
     /**
