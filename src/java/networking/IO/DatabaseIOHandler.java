@@ -427,7 +427,7 @@ public class DatabaseIOHandler {
         return 0;
     }
 
-    public int getGamesWon(UserAccount account){
+    private int getGamesWon(UserAccount account){
         List<GameRecord> records = retrieveGameRecords(account);
         int counter = 0;
 
@@ -445,7 +445,9 @@ public class DatabaseIOHandler {
     }
 
     public double getWinRate(UserAccount account){
-        //
+        if(getGamesPlayed(account) != 0){
+            return (double) getGamesWon(account) / getGamesPlayed(account);
+        }
         return 0;
     }
 
