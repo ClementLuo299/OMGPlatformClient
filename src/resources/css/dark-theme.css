@@ -9,6 +9,12 @@
     -fx-danger-color: #EF4444 !important;     /* Red for danger */
 }
 
+/* Text color fix - apply to ALL labels and text elements */
+.label, .text, Text, Label, .button, Button, .check-box, .radio-button, .hyperlink, .toggle-button {
+    -fx-text-fill: -fx-text-color !important;
+    -fx-fill: -fx-text-color !important;
+}
+
 /* Main Container */
 .main-container {
     -fx-background-color: -fx-primary-color !important;
@@ -65,10 +71,13 @@
 
 .player-name {
     -fx-text-fill: -fx-text-color !important;
+    -fx-fill: -fx-text-color !important;
+    -fx-font-weight: bold !important;
 }
 
 .player-level {
     -fx-text-fill: #AAAAAA !important;
+    -fx-fill: #AAAAAA !important;
 }
 
 /* Queue Section */
@@ -90,6 +99,7 @@
 
 .queue-status {
     -fx-text-fill: #AAAAAA !important;
+    -fx-fill: #AAAAAA !important;
 }
 
 /* Main Separator */
@@ -104,6 +114,8 @@
 
 .section-title {
     -fx-text-fill: -fx-text-color !important;
+    -fx-fill: -fx-text-color !important;
+    -fx-font-weight: bold !important;
 }
 
 .find-player-section,
@@ -141,6 +153,7 @@
 
 .search-result {
     -fx-text-fill: #AAAAAA !important;
+    -fx-fill: #AAAAAA !important;
 }
 
 /* Text Fields */
@@ -148,11 +161,17 @@
     -fx-background-color: #333333 !important;
     -fx-border-color: #444444 !important;
     -fx-text-fill: -fx-text-color !important;
+    -fx-prompt-text-fill: #999999 !important;
 }
 
 .text-field:focused {
     -fx-border-color: -fx-accent-color !important;
     -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 4, 0, 0, 0) !important;
+}
+
+/* Explicit targeting for TextField prompt text */
+.text-field .text {
+    -fx-fill: -fx-text-color !important;
 }
 
 /* List Views */
@@ -173,6 +192,11 @@
 .list-view .list-cell:selected {
     -fx-background-color: derive(-fx-accent-color, -20%) !important;
     -fx-text-fill: -fx-text-color !important;
+}
+
+/* Fix for list-cell text color */
+.list-view .list-cell .text {
+    -fx-fill: -fx-text-color !important;
 }
 
 /* Bottom Bar */
@@ -234,6 +258,29 @@
 .scroll-bar:horizontal .thumb:hover,
 .scroll-bar:vertical .thumb:hover {
     -fx-background-color: #666666 !important;
+}
+
+/* Fix for prompt text in text fields */
+.text-input-prompt {
+    -fx-text-fill: #888888 !important;
+    -fx-fill: #888888 !important;
+}
+
+/* Fix for any other potential text elements */
+.text, .content, .rich-text, TextField, TextArea, .combo-box, ComboBox {
+    -fx-text-fill: -fx-text-color !important;
+    -fx-fill: -fx-text-color !important;
+}
+
+/* Fix for hyperlinks and other specific text components */
+.hyperlink {
+    -fx-text-fill: -fx-accent-color !important;
+}
+
+/* Additional fixes for prompt text */
+.text-field:empty .prompt-text {
+    -fx-text-fill: #999999 !important;
+    -fx-fill: #999999 !important;
 }
 
 /* Responsive adjustments from original CSS remain applicable */
