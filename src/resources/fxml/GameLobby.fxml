@@ -120,7 +120,16 @@
                 <Insets bottom="15" left="20" right="20" top="15" />
             </padding>
             <Button fx:id="cancelButton" onAction="#onCancelButtonClicked" styleClass="cancel-button" text="Cancel" />
-            <Button fx:id="viewRulesButton" onAction="#onViewRulesClicked" styleClass="rules-button" text="View Game Rules" />
+            <Button fx:id="viewRulesButton" onAction="#onViewRulesClicked" styleClass="rules-button">
+                <graphic>
+                    <HBox alignment="CENTER" spacing="5">
+                        <ImageView fitHeight="20" fitWidth="20">
+                            <Image url="@../icons/rules.png" />
+                        </ImageView>
+                        <Label text="View Game Rules" />
+                    </HBox>
+                </graphic>
+            </Button>
         </HBox>
     </bottom>
 </BorderPane> 
