@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DatabaseStubTest {
 
+    // Tests the account data for a username that does not exist
         @Test
         void testAccountDataForNonexistentUser() {
             DatabaseStub db = new DatabaseStub();
@@ -16,7 +17,7 @@ class DatabaseStubTest {
 
             assertNull(result);
         }
-
+    // Tests whether checkAccountExists correctly identifies an existing account
         @Test
         void testAccountExist() {
             DatabaseStub db = new DatabaseStub();
@@ -26,6 +27,19 @@ class DatabaseStubTest {
             assertFalse(db.checkAccountExists("object"));
         }
 
+    //Tests database reaction to multiple accounts being created at once
+    void testMultipleAccountInsertionCount() {
+        DatabaseStub db = new DatabaseStub();
+
+        db.insertAccountData("player1", "password22", "player main", "2005-05-05");
+        db.insertAccountData("player2", "password22", "player secondary", "2007-07-07");
+        db.insertAccountData("player3", "password23", "player last", "2006-06-06");
+
+        List<String[]> all = db.getAllAccounts();
+
+        assertEquals(3, all.size(), "There should be exactly 3 accounts in the database.");
+    }
+    // Tests the validity of information after account is created
         @Test
         void testInsertWithFullNameAndDOB() {
             DatabaseStub db = new DatabaseStub();
@@ -39,7 +53,7 @@ class DatabaseStubTest {
             assertEquals("main player", data[2]);
             assertEquals("2005-05-05", data[3]);
         }
-
+    // Tests that account data is preserved properly after saving and loading data
         @Test
         void testSaveAndLoadPreservesData() {
 
@@ -59,6 +73,7 @@ class DatabaseStubTest {
         assertEquals("2005-05-05", loaded[3]);
         }
 
+        // Tests the outcome when theres a duplicate username inserted
     @Test
     void testInsertDuplicateUsername() {
         DatabaseStub db = new DatabaseStub();
@@ -78,6 +93,7 @@ class DatabaseStubTest {
         assertEquals("pass123", duplicates.get(0)[1], "The password should match the first inserted record.");
     }
 
+     //Tests database reaction to accounts with no username
     @Test
     void testInsertEmptyUsername() {
         DatabaseStub db = new DatabaseStub();
@@ -87,6 +103,7 @@ class DatabaseStubTest {
         assertFalse(result, "Insertion should fail when username is empty.");
     }
 
+    //Tests actions of deleting account, verifying it's removed from the database
     @Test
     void testDeleteAccount() {
         DatabaseStub db = new DatabaseStub();
@@ -106,6 +123,7 @@ class DatabaseStubTest {
         assertNull(db.getAccountData("player1"), "Deleted account should return null on retrieval.");
     }
 
+    //Tests reaction after attempt to delete an account that does not exist
     @Test
     void testDeletenonexistentAccount() {
         DatabaseStub db = new DatabaseStub();
@@ -114,6 +132,9 @@ class DatabaseStubTest {
 
         assertFalse(result, "Error, this account doesnt exist.");
         }
+
+    //Testing checkAccountExists function, whether it returns falls for a null username
+
     @Test
     void testCheckAccountExistsWithNull() {
         DatabaseStub db = new DatabaseStub();
@@ -121,6 +142,7 @@ class DatabaseStubTest {
         assertFalse(db.checkAccountExists(null), "checkAccountExists returns false.");
     }
 
+    //Tests reaction from database to special characters in the fields
     @Test
     void testInsertWithSpecialCharacters() {
         DatabaseStub db = new DatabaseStub();
