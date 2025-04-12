@@ -17,7 +17,7 @@ class DatabaseStubTest {
 
             assertNull(result);
         }
-    // Tests whether checkAccountExists correctly identifies an existing account
+    // Tests whether checkAccountExists correctly identifies an existing account.
         @Test
         void testAccountExist() {
             DatabaseStub db = new DatabaseStub();
