@@ -23,7 +23,6 @@ public class Connect4Tests {
         playerList.add(player1);
         playerList.add(player2);
         game = new ConnectFour(playerList);
-        game.drop(player1, 1);
     }
 
     @Test
@@ -65,43 +64,69 @@ public class Connect4Tests {
 
     @Test
     public void testDiagonalRightWin() {
-        game.drop(player1, 0);
         game.drop(player2, 0);
-        game.drop(player1, 1);
+        game.drop(player2, 0);
         game.drop(player2, 0);
         game.drop(player1, 0);
+
+        game.drop(player2, 1);
         game.drop(player2, 1);
         game.drop(player1, 1);
+
         game.drop(player2, 2);
         game.drop(player1, 2);
-        game.drop(player2, 2);
+
         game.drop(player1, 3);
-        assertEquals(game.getPlayers().getFirst(), game.getWinner());
+        printBoard();
+        assertEquals(player1, game.getWinner());
     }
 
     @Test
     public void testDiagonalLeftWin() {
-        game.drop(player1, 0);
-        game.drop(player2, 1);
-        game.drop(player1, 1);
+        game.drop(player2, 3);
+        game.drop(player2, 3);
+        game.drop(player2, 3);
+        game.drop(player1, 3);
+        game.drop(player2, 2);
         game.drop(player2, 2);
         game.drop(player1, 2);
-        game.drop(player2, 3);
-        game.drop(player1, 2);
-        game.drop(player2, 3);
-        game.drop(player1, 3);
-        game.drop(player2, 0);
-        game.drop(player1, 3);
+        game.drop(player2, 1);
+        game.drop(player1, 1);
+        game.drop(player1, 0);
+        printBoard();
         assertEquals(player1, game.getWinner());
     }
 
     @Test
     public void testDrawGame() {
-        for (int col = 0; col < 7; col++) {
-            for (int row = 0; row < 6; row++) {
-                game.drop((row + col) % 2 == 0 ? player1 : player2, col);
+        for(int i=0; i<7; i++){
+            if(i%2==0){
+                game.drop(player1, i);
+                game.drop(player1, i);
+                game.drop(player1, i);
+                game.drop(player2, i);
+                game.drop(player1, i);
+                game.drop(player1, i);
+            } else {
+                game.drop(player2, i);
+                game.drop(player2, i);
+                game.drop(player2, i);
+                game.drop(player1, i);
+                game.drop(player2, i);
+                game.drop(player2, i);
             }
         }
-        assertEquals(game.isDrawn(), true);
+
+        assertEquals(true, game.isDrawn());
+    }
+
+    private void printBoard() {
+        for (int row = 0; row < 6; row++) {
+            for (int col = 0; col < 7; col++) {
+                System.out.print(game.getBoard().charAt(row * 7 + col) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println("-----------------");
     }
 }
