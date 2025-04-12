@@ -36,7 +36,11 @@ class DatabaseStubTest {
             assertEquals("main player", data[2]);
             assertEquals("2005-05-05", data[3]);
         }
-    void testSaveAndLoadPreservesData() {
+
+        @Test
+        void testSaveAndLoadPreservesData() {
+
+        DatabaseStub db = new DatabaseStub();
         db.insertAccountData("player1", "password123", "Player main", "2005-05-05");
         db.saveDBState();
 
@@ -44,6 +48,7 @@ class DatabaseStubTest {
         db2.populateDB();
 
         String[] loaded = db2.getAccountData("player1");
+
         assertNotNull(loaded);
         assertEquals("player1", loaded[0]);
         assertEquals("password123", loaded[1]);
