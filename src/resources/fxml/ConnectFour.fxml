@@ -28,7 +28,7 @@
             <Button fx:id="backButton" onAction="#onBackButtonClicked" styleClass="back-button" text="Back to Games" />
             <Text fx:id="gameTitle" styleClass="game-title" text="Connect Four" />
             <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
-            
+
             <!-- Turn Indicator and Timer -->
             <HBox alignment="CENTER" spacing="10" styleClass="turn-indicator-container">
                 <Label fx:id="turnLabel" styleClass="turn-label" text="Current Turn:" />
@@ -37,12 +37,12 @@
                 <Label styleClass="timer-label" text="Move Timer:" />
                 <Label fx:id="timerLabel" styleClass="timer-value" text="00:30" />
             </HBox>
-            
+
             <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
             <Label fx:id="statusLabel" styleClass="status-label" text="Game starting..." />
         </HBox>
     </top>
-    
+
     <center>
         <HBox alignment="CENTER" spacing="0">
             <!-- Left Section: Game Controls and Player Info -->
@@ -50,7 +50,7 @@
                 <padding>
                     <Insets bottom="15" left="15" right="15" top="15" />
                 </padding>
-                
+
                 <!-- Game Controls Section -->
                 <VBox alignment="CENTER" spacing="10" styleClass="game-controls-section">
                     <padding>
@@ -61,20 +61,20 @@
                     <Button fx:id="forfeitGameButton" onAction="#onForfeitGameClicked" styleClass="control-button, forfeit-button" text="Forfeit Game" />
                     <Button fx:id="exitGameButton" onAction="#onBackButtonClicked" styleClass="control-button, exit-button" text="Exit Game" />
                 </VBox>
-                
+
                 <!-- Players Section -->
                 <VBox alignment="CENTER" spacing="10" styleClass="players-section" VBox.vgrow="ALWAYS">
                     <padding>
                         <Insets bottom="15" left="15" right="15" top="15" />
                     </padding>
                     <Label styleClass="section-title" text="Players" />
-                    
+
                     <!-- Match ID -->
                     <HBox alignment="CENTER" styleClass="match-id-container">
                         <Label styleClass="match-id-label" text="Match ID: " />
                         <Label fx:id="matchIdLabel" styleClass="match-id-value" text="M12345" />
                     </HBox>
-                    
+
                     <!-- Player 1 -->
                     <VBox alignment="CENTER" styleClass="player-info, player-red-info">
                         <padding>
@@ -86,10 +86,10 @@
                         <Label fx:id="player1Name" styleClass="player-name" text="Player 1 (Red)" />
                         <Label fx:id="player1Score" styleClass="player-score" text="Score: 0" />
                     </VBox>
-                    
+
                     <!-- VS Label -->
                     <Label styleClass="vs-label" text="VS" />
-                    
+
                     <!-- Player 2 -->
                     <VBox alignment="CENTER" styleClass="player-info, player-yellow-info">
                         <padding>
@@ -103,18 +103,18 @@
                     </VBox>
                 </VBox>
             </VBox>
-            
+
             <!-- Game Board (Center) -->
             <VBox alignment="CENTER" spacing="15" styleClass="center-section" HBox.hgrow="ALWAYS">
                 <padding>
                     <Insets bottom="15" left="15" right="15" top="15" />
                 </padding>
-                
+
                 <GridPane fx:id="gameBoard" alignment="CENTER" maxHeight="480" maxWidth="560" styleClass="game-board">
                     <padding>
                         <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
-                    
+
                     <!-- Row 0 (top) -->
                     <Button fx:id="cell00" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                     <Button fx:id="cell01" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -123,7 +123,7 @@
                     <Button fx:id="cell04" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="4" GridPane.rowIndex="0" />
                     <Button fx:id="cell05" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="5" GridPane.rowIndex="0" />
                     <Button fx:id="cell06" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="6" GridPane.rowIndex="0" />
-                    
+
                     <!-- Row 1 -->
                     <Button fx:id="cell10" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                     <Button fx:id="cell11" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -132,7 +132,7 @@
                     <Button fx:id="cell14" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                     <Button fx:id="cell15" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="5" GridPane.rowIndex="1" />
                     <Button fx:id="cell16" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                    
+
                     <!-- Row 2 -->
                     <Button fx:id="cell20" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                     <Button fx:id="cell21" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -141,7 +141,7 @@
                     <Button fx:id="cell24" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="4" GridPane.rowIndex="2" />
                     <Button fx:id="cell25" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="5" GridPane.rowIndex="2" />
                     <Button fx:id="cell26" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                    
+
                     <!-- Row 3 -->
                     <Button fx:id="cell30" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="0" GridPane.rowIndex="3" />
                     <Button fx:id="cell31" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -150,7 +150,7 @@
                     <Button fx:id="cell34" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                     <Button fx:id="cell35" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="5" GridPane.rowIndex="3" />
                     <Button fx:id="cell36" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                    
+
                     <!-- Row 4 -->
                     <Button fx:id="cell40" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="0" GridPane.rowIndex="4" />
                     <Button fx:id="cell41" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -159,7 +159,7 @@
                     <Button fx:id="cell44" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="4" GridPane.rowIndex="4" />
                     <Button fx:id="cell45" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="5" GridPane.rowIndex="4" />
                     <Button fx:id="cell46" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="6" GridPane.rowIndex="4" />
-                    
+
                     <!-- Row 5 (bottom) -->
                     <Button fx:id="cell50" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                     <Button fx:id="cell51" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="1" GridPane.rowIndex="5" />
@@ -168,7 +168,7 @@
                     <Button fx:id="cell54" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="4" GridPane.rowIndex="5" />
                     <Button fx:id="cell55" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="5" GridPane.rowIndex="5" />
                     <Button fx:id="cell56" onMouseEntered="#onCellMouseEntered" onMouseExited="#onCellMouseExited" onMouseClicked="#onCellMouseClicked" styleClass="board-cell" GridPane.columnIndex="6" GridPane.rowIndex="5" />
-                    
+
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="70" prefWidth="80" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="70" prefWidth="80" />
@@ -188,13 +188,13 @@
                     </rowConstraints>
                 </GridPane>
             </VBox>
-            
+
             <!-- Right Section: Move History and In-Game Chat -->
             <VBox alignment="CENTER" spacing="15" styleClass="right-section">
                 <padding>
                     <Insets bottom="15" left="15" right="15" top="15" />
                 </padding>
-                
+
                 <!-- Move History with modern design -->
                 <VBox styleClass="move-history-section">
                     <padding>
@@ -213,7 +213,7 @@
                         <ListView fx:id="moveHistoryList" styleClass="move-history-list" />
                     </ScrollPane>
                 </VBox>
-                
+
                 <VBox alignment="CENTER" spacing="10" styleClass="chat-section" VBox.vgrow="ALWAYS">
                     <padding>
                         <Insets bottom="15" left="15" right="15" top="15" />
@@ -223,10 +223,10 @@
                         <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
                         <Label fx:id="chatStatusLabel" styleClass="chat-status" text="Online" />
                     </HBox>
-                    
+
                     <!-- Chat Messages Area -->
                     <TextArea fx:id="chatMessagesArea" editable="false" styleClass="chat-messages" VBox.vgrow="ALWAYS" wrapText="true" />
-                    
+
                     <!-- Message Input Area -->
                     <HBox alignment="CENTER" spacing="8" styleClass="chat-input-container">
                         <TextField fx:id="chatInputField" promptText="Type your message..." styleClass="chat-input" HBox.hgrow="ALWAYS" />
@@ -236,4 +236,4 @@
             </VBox>
         </HBox>
     </center>
-</BorderPane> 
+</BorderPane>
