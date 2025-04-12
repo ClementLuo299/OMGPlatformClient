@@ -352,6 +352,13 @@ TextArea .content {
 .control-button {
     -fx-text-fill: #FFFFFF !important;
 }
+.left-section {
+    -fx-background-color: #808080 !important;
+    -fx-min-width: 220px;
+    -fx-pref-width: 250px;
+    -fx-max-width: 280px;
+    -fx-spacing: 15px;
+}
 /* Game Controls Section - enhanced contrast */
 .left-section .game-controls-section {
     -fx-background-color: #222222 !important;
@@ -400,6 +407,22 @@ TextArea .content {
     -fx-background-radius: 4px !important;
 }
 
+.right-section {
+    -fx-background-color: #808080 !important;
+    -fx-min-width: 220px;
+    -fx-pref-width: 250px;
+    -fx-max-width: 280px;
+    -fx-spacing: 15px;
+}
+/* Left Side Section - Player & Queue */
+.move-history-section {
+    -fx-background-color: #222222 !important;
+    -fx-background-radius: 0 !important;
+}
+.chat-section{
+    -fx-background-color: #222222 !important;
+    -fx-background-radius: 0 !important;
+}
 /* Force text visibility in these sections */
 .players-section .label,
 .players-section .text,
