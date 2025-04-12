@@ -185,4 +185,15 @@ public class DatabaseStub {
             e.printStackTrace();
         }
     }
+
+    public boolean deleteAccount(String username) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i)[0].equals(username)) {
+                users.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -87,4 +87,22 @@ class DatabaseStubTest {
         assertFalse(result, "Insertion should fail when username is empty.");
     }
 
+    @Test
+    void testDeleteAccount() {
+        DatabaseStub db = new DatabaseStub();
+
+        db.insertAccountData("player1", "pass123", "Player One", "2000-01-01");
+
+        // Ensure the account exists before deletion
+        assertNotNull(db.getAccountData("player1"));
+
+        // Perform deletion
+        boolean deleted = db.deleteAccount("player1");
+
+        // Ensure deletion was successful
+        assertTrue(deleted, "Account should be successfully deleted.");
+
+        // Ensure account no longer exists
+        assertNull(db.getAccountData("player1"), "Deleted account should return null on retrieval.");
+    }
 }
