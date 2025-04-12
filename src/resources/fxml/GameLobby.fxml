@@ -21,7 +21,14 @@
             <padding>
                 <Insets bottom="15" left="20" right="20" top="15" />
             </padding>
-            <Button fx:id="backButton" onAction="#onBackButtonClicked" styleClass="back-button" text="Back to Games" />
+            <Button fx:id="backButton" onAction="#onBackButtonClicked" styleClass="back-button" text="Back to Games">
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="20.0">
+                  <image>
+                     <Image url="@../icons/collapse.png" />
+                  </image>
+               </ImageView>
+            </graphic></Button>
             <Text fx:id="gameTitle" styleClass="game-title" text="Game Lobby" />
             <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
             <Label fx:id="statusLabel" styleClass="status-label" text="Game Lobby" />
@@ -31,7 +38,7 @@
     <center>
         <HBox alignment="CENTER">
             <!-- Left Section: Player Info and Queue Options -->
-            <VBox alignment="CENTER" spacing="20" styleClass="player-section" HBox.hgrow="ALWAYS" maxWidth="600" minWidth="400">
+            <VBox alignment="CENTER" maxWidth="600" minWidth="400" spacing="20" styleClass="player-section" HBox.hgrow="ALWAYS">
                 <padding>
                     <Insets bottom="30" left="30" right="30" top="30" />
                 </padding>
@@ -68,7 +75,7 @@
             <Separator orientation="VERTICAL" styleClass="main-separator" />
             
             <!-- Right Section: Find Player, Browse Matches -->
-            <VBox alignment="CENTER" spacing="15" styleClass="search-section" HBox.hgrow="ALWAYS" maxWidth="600" minWidth="400">
+            <VBox alignment="CENTER" maxWidth="600" minWidth="400" spacing="15" styleClass="search-section" HBox.hgrow="ALWAYS">
                 <padding>
                     <Insets bottom="30" left="30" right="30" top="30" />
                 </padding>
@@ -141,4 +148,4 @@
             </Button>
         </HBox>
     </bottom>
-</BorderPane> 
+</BorderPane>
