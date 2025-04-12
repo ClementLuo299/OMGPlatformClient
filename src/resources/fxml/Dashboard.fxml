@@ -139,7 +139,7 @@
                 <VBox styleClass="game-stat-card">
                     <HBox>
                         <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/navigation/games.png" />
+                            <Image url="@../icons/game/connect_four_icon.png" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Connect 4" />
@@ -154,7 +154,7 @@
                 <VBox styleClass="game-stat-card">
                     <HBox>
                         <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/navigation/games.png" />
+                            <Image url="@../icons/game/checkers_icon.jpg" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Checkers" />
@@ -169,7 +169,7 @@
                 <VBox styleClass="game-stat-card">
                     <HBox>
                         <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/navigation/games.png" />
+                            <Image url="@../icons/game/whist_icon.png" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Whist" />
@@ -177,6 +177,21 @@
                         </VBox>
                         <Pane HBox.hgrow="ALWAYS" />
                         <Button onAction="#playWhist" styleClass="play-button" text="Play" />
+                    </HBox>
+                </VBox>
+                
+                <!-- Tic Tac Toe Stats -->
+                <VBox styleClass="game-stat-card">
+                    <HBox>
+                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
+                            <Image url="@../icons/game/tic_tac_toe_icon.png" />
+                        </ImageView>
+                        <VBox>
+                            <Label styleClass="game-name" text="Tic Tac Toe" />
+                            <Label styleClass="game-details" text="Level 7 • 65% Win Rate" />
+                        </VBox>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button onAction="#playTicTacToe" styleClass="play-button" text="Play" />
                     </HBox>
                 </VBox>
             </VBox>

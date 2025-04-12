@@ -1,6 +1,7 @@
 package gui.controllers.systems;
 
 import gui.ThemeManager;
+import gui.controllers.GameLobbyController;
 import gui.controllers.games.GameLibraryController;
 import gui.controllers.statistics.LeaderboardController;
 import gui.ScreenManager;
@@ -202,20 +203,66 @@ public class DashboardController {
 
     @FXML
     private void playConnect4() {
-        // TODO: Implement Connect 4 game launch
-        showAlert("Info", "Connect 4 game launch not implemented yet");
+        try {
+            GameLobbyController controller = (GameLobbyController)
+                    screenManager.navigateTo(ScreenManager.GAME_LOBBY_SCREEN, ScreenManager.GAME_LOBBY_CSS);
+            
+            if (controller != null) {
+                controller.setGame("Connect 4");
+                controller.setCurrentUser(currentUsername, isGuest);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not launch Connect 4: " + e.getMessage());
+        }
     }
-
+    
     @FXML
     private void playCheckers() {
-        // TODO: Implement Checkers game launch
-        showAlert("Info", "Checkers game launch not implemented yet");
+        try {
+            GameLobbyController controller = (GameLobbyController)
+                    screenManager.navigateTo(ScreenManager.GAME_LOBBY_SCREEN, ScreenManager.GAME_LOBBY_CSS);
+            
+            if (controller != null) {
+                controller.setGame("Checkers");
+                controller.setCurrentUser(currentUsername, isGuest);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not launch Checkers: " + e.getMessage());
+        }
     }
-
+    
     @FXML
     private void playWhist() {
-        // TODO: Implement Whist game launch
-        showAlert("Info", "Whist game launch not implemented yet");
+        try {
+            GameLobbyController controller = (GameLobbyController)
+                    screenManager.navigateTo(ScreenManager.GAME_LOBBY_SCREEN, ScreenManager.GAME_LOBBY_CSS);
+            
+            if (controller != null) {
+                controller.setGame("Whist");
+                controller.setCurrentUser(currentUsername, isGuest);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not launch Whist: " + e.getMessage());
+        }
+    }
+    
+    @FXML
+    private void playTicTacToe() {
+        try {
+            GameLobbyController controller = (GameLobbyController)
+                    screenManager.navigateTo(ScreenManager.GAME_LOBBY_SCREEN, ScreenManager.GAME_LOBBY_CSS);
+            
+            if (controller != null) {
+                controller.setGame("Tic Tac Toe");
+                controller.setCurrentUser(currentUsername, isGuest);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("Error", "Could not launch Tic Tac Toe: " + e.getMessage());
+        }
     }
 
     private void showAlert(String title, String content) {
