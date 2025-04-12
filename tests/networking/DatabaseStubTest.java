@@ -78,4 +78,13 @@ class DatabaseStubTest {
         assertEquals("pass123", duplicates.get(0)[1], "The password should match the first inserted record.");
     }
 
+    @Test
+    void testInsertEmptyUsername() {
+        DatabaseStub db = new DatabaseStub();
+
+        boolean result = db.insertAccountData("", "pass123", "NoName", "1990-01-01");
+
+        assertFalse(result, "Insertion should fail when username is empty.");
+    }
+
 }

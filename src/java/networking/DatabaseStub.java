@@ -53,6 +53,7 @@ public class DatabaseStub {
      * Insert data for a new user with name and date of birth.
      */
     public boolean insertAccountData(String username, String password, String fullName, String dateOfBirth){
+        if (username == null || username.trim().isEmpty()) return false;
         if (checkAccountExists(username)) {
             return false; //Already exists not registering
         }
