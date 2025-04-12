@@ -1,4 +1,4 @@
-package gamelogic.whist;
+package gamelogic;
 
 import java.io.*;
 import java.util.*;
@@ -11,6 +11,8 @@ import gamelogic.pieces.CardPile;
 import gamelogic.pieces.SuitType;
 import gamelogic.pieces.Card;
 
+import gamelogic.whist.StageType;
+import gamelogic.whist.WhistGame;
 import networking.accounts.UserAccount;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -155,9 +157,10 @@ class WhistGameTests {
     void showHand(){
         Card eightOfSpadesHand = new Card(PieceType.CARD, false, SuitType.SPADES, 8, true);
         Card eightOfSpadesOut = new Card(PieceType.CARD, false, SuitType.SPADES, 8, true);
-        player1.addToHand(eightOfSpadesHand);
-        game.showHand(player1);
 
+        player1.addToHand(eightOfSpadesHand);
+
+        game.showHand(player1);
         eightOfSpadesOut.flip();
 
         assertEquals(eightOfSpadesHand.isFaceDown(), eightOfSpadesOut.isFaceDown());
