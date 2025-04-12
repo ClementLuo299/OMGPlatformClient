@@ -57,6 +57,7 @@ public class DatabaseStub {
             //Add record to data
             if(tableSchema.checkRecord(record)){
                 data.get(table).add(record);
+                saveDBState();
             }
         }
     }
