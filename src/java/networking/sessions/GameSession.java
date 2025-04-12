@@ -7,6 +7,8 @@ import networking.IO.GameIOHandler;
 import networking.accounts.GameRecord;
 import networking.accounts.UserAccount;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,16 @@ public class GameSession {
         this.game = null;
         this.open = true;
         this.accounts = new ArrayList<>();
+    }
+
+    public GameSession(Game game, UserAccount player1, UserAccount player2) {
+        this.game = game;
+        this.gt = game.getGameType();
+        this.open = true;
+        this.dateTimeCreated = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        this.accounts = new ArrayList<>();
+        accounts.add(player1);
+        accounts.add(player2);
     }
 
     //GETTERS
@@ -51,6 +63,7 @@ public class GameSession {
 
     public void setGame(Game game) {
         this.game = game;
+        this.gt = game.getGameType();
     }
 
     public void setDateTimeCreated(String dateTimeCreated){

@@ -305,7 +305,7 @@ public class DatabaseIOHandler {
         + now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
 
         //Other fields
-        record.put("game",null);
+        record.put("game",session.getGameType().toString());
         record.put("open",Boolean.toString(session.getStatus()));
         record.put("player1",session.getAccounts().get(0).getUsername());
         record.put("player2",session.getAccounts().get(1).getUsername());
