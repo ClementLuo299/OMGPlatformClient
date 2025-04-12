@@ -3,6 +3,7 @@ package networking;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Simulates an external database.
@@ -51,13 +52,18 @@ public class DatabaseStub {
     /**
      * Insert data for a new user with name and date of birth.
      */
-    public void insertAccountData(String username, String password, String fullName, String dateOfBirth){
+    public boolean insertAccountData(String username, String password, String fullName, String dateOfBirth){
+        if (checkAccountExists(username)) {
+            return false; //Already exists not registering
+        }
+
         String[] arr = new String[4];
         arr[0] = username;
         arr[1] = password;
         arr[2] = fullName;
         arr[3] = dateOfBirth;
         users.add(arr);
+        return true; //Register Success
     }
 
     /**
@@ -72,6 +78,20 @@ public class DatabaseStub {
             }
         }
         return data;
+    }
+
+    /**
+     * Get all accounts with the specified username.
+     * This is useful for checking if any duplicates were inserted.
+     */
+    public List<String[]> getAllAccountsByUsername(String username) {
+        List<String[]> result = new ArrayList<>();
+        for (String[] account : users) {
+            if (account[0].equals(username)) {
+                result.add(account);
+            }
+        }
+        return result;
     }
 
     /**
