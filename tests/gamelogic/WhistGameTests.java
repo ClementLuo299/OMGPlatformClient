@@ -155,9 +155,10 @@ class WhistGameTests {
     void showHand(){
         Card eightOfSpadesHand = new Card(PieceType.CARD, false, SuitType.SPADES, 8, true);
         Card eightOfSpadesOut = new Card(PieceType.CARD, false, SuitType.SPADES, 8, true);
-        player1.addToHand(eightOfSpadesHand);
-        game.showHand(player1);
 
+        player1.addToHand(eightOfSpadesHand);
+
+        game.showHand(player1);
         eightOfSpadesOut.flip();
 
         assertEquals(eightOfSpadesHand.isFaceDown(), eightOfSpadesOut.isFaceDown());
