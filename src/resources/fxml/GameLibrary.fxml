@@ -103,7 +103,7 @@
             <HBox styleClass="game-cards-container">
                 <!-- Connect 4 Card (First) -->
                 <VBox fx:id="connect4Card" styleClass="game-card">
-                    <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
+                    <ImageView fitHeight="106.0" fitWidth="124.0" preserveRatio="true" styleClass="game-image">
                         <Image url="@../icons/game/connect_four_icon.png" />
                     </ImageView>
                     <Label styleClass="game-title" text="Connect 4" />
