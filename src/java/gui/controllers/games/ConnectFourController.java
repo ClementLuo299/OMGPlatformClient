@@ -14,12 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
@@ -533,19 +528,17 @@ public class ConnectFourController implements Initializable {
             }
         }
     }
-    
-    /**
-     * Handle a game win scenario
-     */
+
     private void handleGameWon() {
-        // Get the winner from the game using reflection
+        // Get the winner from the game
         Player winner = getWinnerFromGame();
-        
+
         // Stop the timer
         if (moveTimer != null) {
             moveTimer.stop();
         }
-        
+
+        // Update score and status
         if (winner == player1) {
             player1ScoreCount++;
             statusLabel.setText("Player 1 wins!");
@@ -553,16 +546,30 @@ public class ConnectFourController implements Initializable {
             player2ScoreCount++;
             statusLabel.setText("Player 2 wins!");
         }
-        
+
         updateScoreLabels();
         gameInProgress = false;
-        
+
         // Highlight winning pieces
         highlightWinningPieces();
-        
+
         // Add game end message to chat
         addSystemMessage(winner.getUsername() + " has won the game!");
+
+        // ✅ Show alert
+        String winnerName = winner.getUsername();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText("We have a winner!");
+        alert.setContentText(winnerName + " won the game!");
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/alert-style.css").toExternalForm());
+        dialogPane.getStyleClass().add("custom-alert");
+
+        alert.showAndWait();
     }
+
     
     /**
      * Handle a game draw scenario
@@ -591,6 +598,18 @@ public class ConnectFourController implements Initializable {
             player1Name.setStyle("-fx-font-weight: normal; -fx-text-fill: -fx-text-color;");
             player2Name.setStyle("-fx-font-weight: bold; -fx-text-fill: -fx-player-yellow-color;");
         }
+
+    //Show alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText("It's a draw!");
+        alert.setContentText("The game ended in a draw. Try again!");
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/alert-style.css").toExternalForm());
+        dialogPane.getStyleClass().add("custom-alert");
+
+        alert.showAndWait();
     }
     
     /**
