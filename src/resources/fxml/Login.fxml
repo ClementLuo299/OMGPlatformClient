@@ -9,9 +9,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
 <StackPane xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.systems.LoginController">
@@ -53,8 +52,7 @@
             <VBox alignment="TOP_CENTER" spacing="15" styleClass="login-form">
                 <Label styleClass="subtitle" text="Continue as Guest" />
                 <Label styleClass="input-label" text="Username" />
-                <TextField fx:id="usernameField1" promptText="Enter your username" styleClass="input-field" />
-                <Region prefHeight="95.0" /> <!-- Spacer to align the button with the other form -->
+                <TextField fx:id="usernameField1" promptText="Enter your username" styleClass="input-field" /> <!-- Spacer to align the button with the other form -->
                 <Button fx:id="loginButton1" styleClass="login-button" text="Sign in" />
             </VBox>
         </HBox>
