@@ -317,3 +317,97 @@
         -fx-max-width: 280px !important;
     }
 }
+/* Game Controls Section - only fix text and background */
+.left-section .game-controls-section {
+    -fx-background-color: #222222 !important;
+}
+
+/* Ensure text in controls section is visible */
+.game-controls-section .section-title,
+.game-controls-section .label {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+/* Message board text visibility fix */
+.chat-messages {
+    -fx-control-inner-background: #333333 !important;
+    -fx-background-color: #333333 !important;
+    -fx-text-fill: white !important;
+}
+
+.chat-messages .content {
+    -fx-background-color: #333333 !important;
+}
+
+TextArea .content {
+    -fx-background-color: #333333 !important;
+}
+
+/* Match ID visibility fix */
+.match-id-label, .match-id-value {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+/* This preserves button colors but ensures text is visible */
+.control-button {
+    -fx-text-fill: #FFFFFF !important;
+}
+/* Game Controls Section - enhanced contrast */
+.left-section .game-controls-section {
+    -fx-background-color: #222222 !important;
+    -fx-border-color: #444444 !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 5px !important;
+}
+
+/* Control buttons text visibility */
+.control-button {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+/* Players Section - enhanced contrast */
+.left-section .players-section {
+    -fx-background-color: #222222 !important;
+    -fx-border-color: #444444 !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 5px !important;
+}
+
+/* Add contrast between player info cards and their container */
+.left-section .player-info {
+    -fx-background-color: #2A2A2A !important;
+    -fx-background-radius: 4px !important;
+}
+
+/* Add specific contrast to red player */
+.left-section .player-red-info {
+    -fx-border-color: #EF4444 !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 4px !important;
+}
+
+/* Add specific contrast to yellow player */
+.left-section .player-yellow-info {
+    -fx-border-color: #F59E0B !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 4px !important;
+}
+
+/* Match ID container with better contrast */
+.left-section .match-id-container {
+    -fx-background-color: #2A2A2A !important;
+    -fx-padding: 5px !important;
+    -fx-background-radius: 4px !important;
+}
+
+/* Force text visibility in these sections */
+.players-section .label,
+.players-section .text,
+.game-controls-section .label,
+.game-controls-section .text,
+.match-id-label,
+.match-id-value,
+.section-title {
+    -fx-text-fill: #FFFFFF !important;
+    -fx-fill: #FFFFFF !important;
+}
