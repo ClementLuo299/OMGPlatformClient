@@ -33,8 +33,9 @@
                 <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field" />
                 
                 <!-- Remember Me & Forgot Password -->
+                <!-- TODO: Add remember me and forgot password functionality -->
                 <HBox alignment="CENTER_LEFT" spacing="60">
-                    <CheckBox fx:id="rememberMe" styleClass="checkbox" text="Remember me" />
+                    <CheckBox fx:id="rememberMe" styleClass="checkbox" text="Remember me" visible="false" />
                     <Hyperlink fx:id="forgotPasswordLink" styleClass="link" text="Forgot password" />
                 </HBox>
                 
