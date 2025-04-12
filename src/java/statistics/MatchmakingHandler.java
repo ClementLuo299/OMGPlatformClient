@@ -8,7 +8,7 @@ import java.util.*;
 /**
  * Handles the sorting of Players into Matches based on their Statistics
  *
- * @authors Dylan Shiels, Irith Irith
+ * @authors Irith Irith, Dylan Shiels
  * @date March 18, 2025
  */
 public class MatchmakingHandler {

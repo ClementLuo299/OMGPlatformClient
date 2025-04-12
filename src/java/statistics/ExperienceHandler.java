@@ -1,6 +1,7 @@
 package statistics;
 
 import gamelogic.Player;
+import networking.accounts.UserAccount;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class ExperienceHandler {
     // The list of players being given experience
     List<Player> players;
     // The Winner of the game
-    Player winner;
+    UserAccount winner;
     // The average plays for this Game
     int avgPlays;
     // The total number of moves, from both players, in each game
@@ -34,7 +35,7 @@ public class ExperienceHandler {
      */
     public ExperienceHandler(List<Player> players, Player winner, int avgPlays) {
         this.players = players;
-        this.winner = winner;
+        this.winner = winner.getAccount();
         this.avgPlays = avgPlays;
     }
 
@@ -82,15 +83,15 @@ public class ExperienceHandler {
     public void awardParticipation() {
         // Goes through the Player List to award them one point
         for (int i = 0; i < players.size(); i++)  {
-            players.get(i).setExpInLevel(players.get(i).getExpInLevel() + 1);
-            if (players.get(i).getExpInLevel() >= players.get(i).getNextLevelThreshold())  {
-                increaseLevel(players.get(i));
+            players.get(i).getAccount().setExpInLevel(players.get(i).getAccount().getExpInLevel() + 1);
+            if (players.get(i).getAccount().getExpInLevel() >= players.get(i).getAccount().getNextLevelThreshold())  {
+                increaseLevel(players.get(i).getAccount());
             }
         }
 
     }
 
-    public void increaseLevel  (Player p)  {
+    public void increaseLevel(UserAccount p)  {
         // increase player level
         int expNewLevel = p.getNextLevelThreshold() - p.getExpInLevel();
         double d = 1.2 * p.getNextLevelThreshold();
