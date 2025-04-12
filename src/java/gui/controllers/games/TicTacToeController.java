@@ -357,7 +357,7 @@ TicTacToeController implements Initializable {
         int row = position / 3;
         int col = position % 3;
         addMoveToHistory(currentPlayer, row, col);
-        
+
         // Update UI
         if (currentPlayer == player1) {
             button.setText("X");
@@ -366,7 +366,8 @@ TicTacToeController implements Initializable {
             button.setText("O");
             button.getStyleClass().add("o");
         }
-        
+
+
         // Get the winner from the game using reflection
         Player winner = getWinnerFromGame();
         
@@ -468,6 +469,11 @@ TicTacToeController implements Initializable {
         alert.setTitle("Game Over");
         alert.setHeaderText("It's a draw!");
         alert.setContentText("The game ended in a draw. Try again!");
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/css/alert-style.css").toExternalForm());
+        dialogPane.getStyleClass().add("custom-alert");
+
         alert.showAndWait();
     }
 

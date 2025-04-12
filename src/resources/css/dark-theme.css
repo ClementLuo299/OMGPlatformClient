@@ -20,6 +20,8 @@
     -fx-background-color: -fx-primary-color !important;
 }
 
+
+
 /* Game Header Styles */
 .game-header {
     -fx-background-color: -fx-primary-color !important;
@@ -316,6 +318,7 @@
         -fx-padding: 12px !important;
         -fx-max-width: 280px !important;
     }
+<<<<<<< HEAD
 }
 /* Game Controls Section - only fix text and background */
 .left-section .game-controls-section {
@@ -433,4 +436,32 @@ TextArea .content {
 .section-title {
     -fx-text-fill: #FFFFFF !important;
     -fx-fill: #FFFFFF !important;
+
+}
+/* Dark mode changes */
+.dark-theme .board-button.x {
+    -fx-text-fill: white !important;  /* X turns white in dark mode */
+}
+
+.dark-theme .board-button.o {
+    -fx-text-fill: white !important;  /* O turns white in dark mode */
+}
+
+.board-button:hover {
+    -fx-background-color: derive(-fx-primary-color, -3%);
+}
+
+/* Other specific styles for buttons to make them clearly visible */
+.board-button.x, .board-button.o {
+    -fx-background-color: black !important;
+    -fx-border-color: #777777;
+    -fx-border-radius: 0;
+    -fx-min-width: 80px;
+    -fx-min-height: 80px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-alignment: center;
 }
