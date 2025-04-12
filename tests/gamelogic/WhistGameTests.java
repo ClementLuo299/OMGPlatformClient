@@ -160,7 +160,7 @@ class WhistGameTests {
 
         eightOfSpadesOut.flip();
 
-        assertEquals(player1.getHand().get(0).isFaceDown, eightOfSpades.isFaceDown);
+        assertEquals(eightOfSpadesHand.isFaceDown(), eightOfSpadesOut.isFaceDown());
     }
 
 

@@ -1,22 +1,32 @@
-package gamelogic.tictactoe;
+package gamelogic;
 
-import gamelogic.*;
+import gamelogic.tictactoe.TicTacToeGame;
+import networking.accounts.UserAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-class TicTacToeTest {
+class TicTacToeTests {
 
-    private PlayerMock player1;
-    private PlayerMock player2;
-    private TicTacToe game;
+    private UserAccount user1;
+    private UserAccount user2;
+    private Player player1;
+    private Player player2;
+    private List<Player> players;
+    private TicTacToeGame game;
 
     @BeforeEach
     void setUp() {
-        player1 = new PlayerMock(true);
-        player2 = new PlayerMock(true);
-        game = new TicTacToe(player1, player2);
+        this.user1 = new UserAccount("Name1", "Pass");
+        this.user2 = new UserAccount("Name2", "Pass");
+        this.player1 = new Player(user1);
+        this.player2 = new Player(user2);
+        this.players.add(player1);
+        this.players.add(player2);
+        this.game = new TicTacToeGame(players);
     }
 
     @Test
@@ -27,13 +37,13 @@ class TicTacToeTest {
     @Test
     void testPlaceMovePlayer1() {
         game.place(player1, 0);
-        assertEquals('X', game.board.charAt(0));
+        assertEquals('X', game.getBoard().charAt(0));
     }
 
     @Test
     void testPlaceMovePlayer2() {
         game.place(player2, 1);
-        assertEquals('O', game.board.charAt(1));
+        assertEquals('O', game.getBoard().charAt(1));
     }
 
     @Test
@@ -74,7 +84,7 @@ class TicTacToeTest {
         game.place(player2, 6);
         game.place(player1, 7);
         game.place(player2, 8);
-        assertTrue(game.drew());
+        assertTrue(game.isDrawn());
         assertNull(game.getWinner());
     }
 

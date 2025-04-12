@@ -1,9 +1,11 @@
-package gameLogic;
+package gamelogic;
 
 import gamelogic.connectfour.ConnectFour;
 import gamelogic.Player;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+
 import static org.junit.Assert.*;
 
 public class ConnectFourTests {
