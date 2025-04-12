@@ -69,6 +69,3 @@ The project uses:
 - Maven for build management
 - JUnit for testing
 
-## License
-
-[Your License Here]
