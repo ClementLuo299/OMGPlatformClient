@@ -1,4 +1,4 @@
-package gamelogic.whist;
+package gamelogic;
 
 import java.io.*;
 import java.util.*;
@@ -11,6 +11,8 @@ import gamelogic.pieces.CardPile;
 import gamelogic.pieces.SuitType;
 import gamelogic.pieces.Card;
 
+import gamelogic.whist.StageType;
+import gamelogic.whist.WhistGame;
 import networking.accounts.UserAccount;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
