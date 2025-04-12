@@ -16,7 +16,6 @@ public class UserAccount {
     private String bio; //Biography
     private String fullName;
     private String dob; // Date of Birth as String
-    private int experienceLevel = 1; // Default to 1
     private float sessionIntensityLevel = 1.0f; // Default to neutral
     private boolean online; // The online status of this player
     private int level;
@@ -51,7 +50,7 @@ public class UserAccount {
     public String getEmail() {
         return email;
     }
-    public int getExperienceLevel() {return experienceLevel;}
+    public int getExperienceLevel() {return level;}
     public float getSessionIntensityLevel() {return sessionIntensityLevel;}
 
     /**
@@ -73,16 +72,8 @@ public class UserAccount {
         return this.expInLevel;
     }
 
-    public void setExpInLevel(int num)  {
-        this.expInLevel = num;
-    }
-
     public int getNextLevelThreshold()  {
         return this.nextLevelThreshold;
-    }
-
-    public void setNextLevelThreshold(int num)  {
-        this.nextLevelThreshold = num;
     }
 
 
@@ -109,8 +100,6 @@ public class UserAccount {
         this.bio = bio;
     }
 
-    public void setExperienceLevel(int experienceLevel) {this.experienceLevel = experienceLevel;}
-
     public void setSessionIntensityLevel(float sessionIntensityLevel) {this.sessionIntensityLevel = sessionIntensityLevel;}
 
     /**
@@ -129,5 +118,13 @@ public class UserAccount {
 
     public void setLevel(int num)  {
         this.level = num;
+    }
+
+    public void setExpInLevel(int num)  {
+        this.expInLevel = num;
+    }
+
+    public void setNextLevelThreshold(int num)  {
+        this.nextLevelThreshold = num;
     }
 }

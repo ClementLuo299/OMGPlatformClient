@@ -1,5 +1,7 @@
 package gamelogic;
 
+import statistics.ExperienceHandler;
+
 import java.util.List;
 
 /**
@@ -156,7 +158,7 @@ public class Game {
      */
     public void endGame() {
         // Awards players with experience points
-        this.awardPoints();
+        awardPoints();
 
         // TODO: Add logic to announce ending state of the game (Win, Loss, Draw)
 
@@ -167,6 +169,15 @@ public class Game {
      * Awards Experience Points to Players based on their Performance
      */
     public void awardPoints() {
-        // TODO: Add logic to award points to players using avgPlays variable
+        // The experience handler for this Game
+        ExperienceHandler awardSystem = new ExperienceHandler(players, winner, avgPlays);
+
+        // Awards the Players points based on their performance
+        awardSystem.awardParticipation();
+        awardSystem.awardWin();
+        awardSystem.awardLongGame();
+
+        // Modifies intensity levels
+        awardSystem.modifyIntensityLevel();
     }
 }

@@ -16,13 +16,12 @@ public class ExperienceHandler {
 
     // The list of players being given experience
     List<Player> players;
-    // The Winner of the game
-    UserAccount winner;
+    // The UserAccount of a Game's Winner
+    UserAccount winnerAccount;
+    // The Player instance of a Game's Winner
+    Player winnerPlayer;
     // The average plays for this Game
     int avgPlays;
-    // The total number of moves, from both players, in each game
-    int totalPlays;
-
 
     // CONSTRUCTOR
 
@@ -35,75 +34,144 @@ public class ExperienceHandler {
      */
     public ExperienceHandler(List<Player> players, Player winner, int avgPlays) {
         this.players = players;
-        this.winner = winner.getAccount();
+        this.winnerAccount = winner.getAccount();
         this.avgPlays = avgPlays;
     }
 
 
-    // GETTERS
-
-
-
-    // SETTERS
-
-
-
     // METHODS
 
+    /**
+     * Modifies the Intensity Level of the User
+     */
+    public void modifyIntensityLevel() {
+        // Gets the experience and intensity level of the winning player
+        int winnerLevel = winnerAccount.getLevel();
+        float winnerIntensity = winnerAccount.getSessionIntensityLevel();
 
-    public void awardWin() {
-        if (!(avgPlays < Math.floor(0.4 * totalPlays/2))) {
-            this.winner.setExpInLevel(this.winner.getExpInLevel() + 1);
-            if (this.winner.getExpInLevel() >= this.winner.getNextLevelThreshold()) {
-                increaseLevel(this.winner);
+        // Goes through the list of all players to modify their intensity level
+        for (Player currentPlayer : players) {
+            if (currentPlayer != winnerPlayer) {
+                // Gets the account of the current Player
+                UserAccount currentUser = currentPlayer.getAccount();
+
+                // Gets the levels of the loser
+                int loserLevel = currentUser.getLevel();
+                float loserIntensity = currentUser.getSessionIntensityLevel();
+
+                // Checks the difference in level to appropriately adjust intensity for both Players
+                // Winner is a higher level than their opponent
+                if (winnerLevel > loserLevel) {
+                    winnerAccount.setSessionIntensityLevel(winnerIntensity);
+                    currentUser.setSessionIntensityLevel((float) (loserIntensity - 0.1));
+
+                // Winner is a lower level than their opponent
+                } else if (winnerLevel < loserLevel) {
+                    winnerAccount.setSessionIntensityLevel((float) (winnerIntensity + 0.2));
+                    currentUser.setSessionIntensityLevel((float) (loserIntensity - 0.3));
+                }
             }
-        }  else  {
+        }
+    }
+
+    /**
+     * Awards the Winning Player for their victory
+     */
+    public void awardWin() {
+        // The number of plays this Player made
+        int totalPlays = winnerPlayer.getPlays();
+
+        // Checks that the Game was of normal length
+        if (!(avgPlays < Math.floor(0.4 * totalPlays/2))) {
+            // Adds exp to this User
+            this.winnerAccount.setExpInLevel(this.winnerAccount.getExpInLevel() + 1);
+
+            // Checks if this user is at a threshold
+            if (this.winnerAccount.getExpInLevel() >= this.winnerAccount.getNextLevelThreshold()) {
+                increaseLevel(this.winnerAccount);
+            }
+        // Awards the winner for a quick win if the game was short
+        } else {
             awardQuickWin();
         }
     }
 
+    /**
+     * Awards the Winning Player for playing really well
+     */
     private void awardQuickWin()  {
+        // The number of plays this Player made
+        int totalPlays = winnerPlayer.getPlays();
+
+        // Checks that the game was quick
         if (avgPlays < Math.floor(0.4 * totalPlays/2)) {
-            this.winner.setExpInLevel(this.winner.getExpInLevel() + 2);
-            if (this.winner.getExpInLevel() >= this.winner.getNextLevelThreshold()) {
-                increaseLevel(this.winner);
+            // Adds exp to this User
+            this.winnerAccount.setExpInLevel(this.winnerAccount.getExpInLevel() + 2);
+
+            // Checks if this user is at a threshold
+            if (this.winnerAccount.getExpInLevel() >= this.winnerAccount.getNextLevelThreshold()) {
+                increaseLevel(this.winnerAccount);
             }
         }
     }
 
+    /**
+     * Awards all Players for playing competitively
+     */
     public void awardLongGame ()  {
-        if (avgPlays < Math.ceil(1.25 * totalPlays/2)) {
-            this.winner.setExpInLevel(this.winner.getExpInLevel() + 2);
-            if (this.winner.getExpInLevel() >= this.winner.getNextLevelThreshold()) {
-                increaseLevel(this.winner);
+        // The total number of Plays across all Players
+        int totalPlays = 0;
+
+        // Goes through the list of Players to get their Plays
+        for (Player currentPlayer : players) {
+            totalPlays += currentPlayer.getPlays();
+        }
+
+        // Checks that the game was considered long (*2 because avgPlays is based on one Player)
+        if ((avgPlays * 2) < Math.ceil(1.25 * totalPlays/2)) {
+            // Goes through the Player List to award them one point
+            for (Player player : players) {
+                // Adds exp to this User
+                player.getAccount().setExpInLevel(player.getAccount().getExpInLevel() + 1);
+
+                // Checks if this user is at a threshold
+                if (player.getAccount().getExpInLevel() >= player.getAccount().getNextLevelThreshold()) {
+                    increaseLevel(player.getAccount());
+                }
             }
         }
     }
 
+    /**
+     * Awards all Players for participating in a full Game
+     */
     public void awardParticipation() {
         // Goes through the Player List to award them one point
-        for (int i = 0; i < players.size(); i++)  {
-            players.get(i).getAccount().setExpInLevel(players.get(i).getAccount().getExpInLevel() + 1);
-            if (players.get(i).getAccount().getExpInLevel() >= players.get(i).getAccount().getNextLevelThreshold())  {
-                increaseLevel(players.get(i).getAccount());
+        for (Player player : players) {
+            // Adds exp to this User
+            player.getAccount().setExpInLevel(player.getAccount().getExpInLevel() + 1);
+
+            // Checks if this user is at a threshold
+            if (player.getAccount().getExpInLevel() >= player.getAccount().getNextLevelThreshold()) {
+                increaseLevel(player.getAccount());
             }
         }
-
     }
 
-    public void increaseLevel(UserAccount p)  {
+    /**
+     * Increases the Level of the user if they pass the Points Threshold of their next Level
+     *
+     * @param user The given User Account to level up
+     */
+    public void increaseLevel(UserAccount user)  {
         // increase player level
-        int expNewLevel = p.getNextLevelThreshold() - p.getExpInLevel();
-        double d = 1.2 * p.getNextLevelThreshold();
+        int expNewLevel = user.getNextLevelThreshold() - user.getExpInLevel();
+        double d = 1.2 * user.getNextLevelThreshold();
         int nextLevelThreshold = (int)Math.round(d);
-        p.setLevel(p.getLevel() + 1);
-        p.setNextLevelThreshold(nextLevelThreshold);
-        p.setExpInLevel(expNewLevel);
+        user.setLevel(user.getLevel() + 1);
+        user.setNextLevelThreshold(nextLevelThreshold);
+        user.setExpInLevel(expNewLevel);
 
         // TODO: they can probably increase more than 1 level at once so add it
     }
-
-
-
-
 }
