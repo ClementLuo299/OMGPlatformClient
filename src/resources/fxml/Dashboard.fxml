@@ -90,7 +90,11 @@
             </VBox>
             <Pane HBox.hgrow="ALWAYS" />
             <VBox styleClass="profile-summary">
-                <ImageView fx:id="profileImage" fitHeight="40" fitWidth="40" styleClass="profile-image" />
+            <ImageView fitHeight="49.0" fitWidth="54.0">
+               <image>
+                  <Image url="@../icons/badge.png" />
+               </image>
+            </ImageView>
                 <Label fx:id="usernameLabel" styleClass="username" text="PlayerName" />
                 <Label fx:id="playerLevel" styleClass="player-level" text="Level 10" />
             </VBox>
