@@ -18,7 +18,7 @@
             <!-- App Title -->
             <HBox styleClass="app-title">
                 <ImageView fitHeight="24" fitWidth="24">
-                    <Image url="@../icons/navigation/games.png" />
+                    <Image url="@../icons/navigation/unknown.png" />
                 </ImageView>
                 <Label styleClass="title-text" text="Board Game Hub" />
             </HBox>
