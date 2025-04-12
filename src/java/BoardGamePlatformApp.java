@@ -3,6 +3,9 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import networking.Backend;
 
+/**
+ * Launches the Program!
+ */
 public class BoardGamePlatformApp extends Application {
 
     @Override
