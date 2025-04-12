@@ -138,7 +138,7 @@
                 <!-- Connect 4 Stats -->
                 <VBox styleClass="game-stat-card">
                     <HBox>
-                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
+                        <ImageView fitHeight="48" fitWidth="55" styleClass="game-icon">
                             <Image url="@../icons/game/connect_four_icon.png" />
                         </ImageView>
                         <VBox>
