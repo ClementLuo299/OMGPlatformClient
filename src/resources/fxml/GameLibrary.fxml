@@ -138,7 +138,7 @@
                     </ImageView>
                     <Label styleClass="game-title" text="Whist Card Game" />
                     <HBox styleClass="game-info">
-                        <Label styleClass="game-players" text="4 Players" />
+                        <Label styleClass="game-players" text="2-4 Players" />
                         <Label styleClass="game-time" text="20-45 min" />
                     </HBox>
                     <Label styleClass="game-description" text="Classic trick-taking card game played with a standard deck of 52 playing cards." wrapText="true" />

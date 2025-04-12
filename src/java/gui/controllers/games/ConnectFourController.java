@@ -598,18 +598,6 @@ public class ConnectFourController implements Initializable {
             player1Name.setStyle("-fx-font-weight: normal; -fx-text-fill: -fx-text-color;");
             player2Name.setStyle("-fx-font-weight: bold; -fx-text-fill: -fx-player-yellow-color;");
         }
-
-    //Show alert
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Game Over");
-        alert.setHeaderText("It's a draw!");
-        alert.setContentText("The game ended in a draw. Try again!");
-
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/css/alert-style.css").toExternalForm());
-        dialogPane.getStyleClass().add("custom-alert");
-
-        alert.showAndWait();
     }
     
     /**
