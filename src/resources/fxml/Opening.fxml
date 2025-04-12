@@ -6,6 +6,6 @@
 <StackPane xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.OpeningController">
    <children>
       <!-- WebView for background and START button with glow effect -->
-      <WebView fx:id="buttonWebView" prefHeight="800.0" prefWidth="1400.0" />
+      <WebView fx:id="buttonWebView" prefHeight="800.0" prefWidth="1500.0" />
    </children>
 </StackPane>
