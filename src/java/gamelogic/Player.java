@@ -300,16 +300,4 @@ public class Player {
     private void sortCardsByRank(List<Card> cards) {
         cards.sort((card1, card2) -> Integer.compare(card2.getRank(), card1.getRank()));
     }
-
-    /**
-     * Checks if the player is online
-     *
-     * @return true if the player is online, false otherwise
-     */
-    public boolean isOnline() {
-        // Since this is a stub implementation, always return true
-        // In a real application, this would check the player's connection status
-        return true;
-    }
-
 }

@@ -90,21 +90,21 @@ class TicTacToeTests {
 
     @Test
     void testPlayer1WinsIfPlayer2Offline() {
-        player2.setOnline(false);
+        player2.getAccount().logOff();
         assertEquals(player1, game.getWinner());
     }
 
     @Test
     void testPlayer2WinsIfPlayer1Offline() {
-        player1.setOnline(false);
+        player1.getAccount().logOff();
         assertEquals(player2, game.getWinner());
     }
 
     @Test
     void testIllegalMoveIgnored() {
         game.place(player1, 0);
-        char before = game.board.charAt(0);
+        char before = game.getBoard().charAt(0);
         game.place(player2, 0); // Should be ignored since it's already taken
-        assertEquals(before, game.board.charAt(0));
+        assertEquals(before, game.getBoard().charAt(0));
     }
 }

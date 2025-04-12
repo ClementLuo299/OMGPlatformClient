@@ -18,6 +18,7 @@ public class UserAccount {
     private String dob; // Date of Birth as String
     private int experienceLevel = 1; // Default to 1
     private float sessionIntensityLevel = 1.0f; // Default to neutral
+    private boolean online;
 
     /**
      * Constructor that takes only required fields.
@@ -50,6 +51,17 @@ public class UserAccount {
     public float getSessionIntensityLevel() {return sessionIntensityLevel;}
 
     /**
+     * Checks if the player is online
+     *
+     * @return true if the player is online, false otherwise
+     */
+    public boolean isOnline() {
+        // Since this is a stub implementation, always return true
+        // In a real application, this would check the player's connection status
+        return true;
+    }
+
+    /**
      * Setters.
      */
     public void setPassword(String password) {
@@ -75,4 +87,18 @@ public class UserAccount {
     public void setExperienceLevel(int experienceLevel) {this.experienceLevel = experienceLevel;}
 
     public void setSessionIntensityLevel(float sessionIntensityLevel) {this.sessionIntensityLevel = sessionIntensityLevel;}
+
+    /**
+     * Sets the Online status of this User to true
+     */
+    public void logIn() {
+        this.online = true;
+    }
+
+    /**
+     * Sets the Online status of this User to false
+     */
+    public void logOff() {
+        this.online = false;
+    }
 }
