@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * Represents a user account.
  *
- * @authors Clement Luo, Irith Irith
+ * @authors Clement Luo, Irith Irith, Dylan Shiels
  * @date March 4, 2025
  */
 public class UserAccount {
@@ -18,7 +18,11 @@ public class UserAccount {
     private String dob; // Date of Birth as String
     private int experienceLevel = 1; // Default to 1
     private float sessionIntensityLevel = 1.0f; // Default to neutral
-    private boolean online;
+    private boolean online; // The online status of this player
+    private int level;
+    private int expInLevel;
+    private int nextLevelThreshold;
+
 
     /**
      * Constructor that takes only required fields.
@@ -61,6 +65,27 @@ public class UserAccount {
         return true;
     }
 
+    public int getLevel()  {
+        return this.level;
+    }
+
+    public int getExpInLevel ()  {
+        return this.expInLevel;
+    }
+
+    public void setExpInLevel(int num)  {
+        this.expInLevel = num;
+    }
+
+    public int getNextLevelThreshold()  {
+        return this.nextLevelThreshold;
+    }
+
+    public void setNextLevelThreshold(int num)  {
+        this.nextLevelThreshold = num;
+    }
+
+
     /**
      * Setters.
      */
@@ -100,5 +125,9 @@ public class UserAccount {
      */
     public void logOff() {
         this.online = false;
+    }
+
+    public void setLevel(int num)  {
+        this.level = num;
     }
 }
