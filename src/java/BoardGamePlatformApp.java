@@ -27,7 +27,7 @@ public class BoardGamePlatformApp extends Application {
             }).start();
             
             primaryStage.setTitle("OMG Platform");
-            primaryStage.setWidth(1400);
+            primaryStage.setWidth(1500);
             primaryStage.setHeight(800);
             primaryStage.setMinWidth(800);
             primaryStage.setMinHeight(600);
