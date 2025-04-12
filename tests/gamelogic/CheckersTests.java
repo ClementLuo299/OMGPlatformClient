@@ -20,8 +20,8 @@ public class CheckersTests {
     @Before
     public void setUp() {
         players = new ArrayList<>();
-        players.add(new Player(new UserAccount("guest1", true)));
-        players.add(new Player(new UserAccount("guest2", true)));
+        players.add(new Player(new UserAccount("guest1", "pass")));
+        players.add(new Player(new UserAccount("guest2", "pass")));
         game = new CheckersGame(players);
     }
 
