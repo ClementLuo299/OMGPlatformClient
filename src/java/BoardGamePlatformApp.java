@@ -1,5 +1,4 @@
-package gui;
-
+import gui.ScreenManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import networking.Backend;
