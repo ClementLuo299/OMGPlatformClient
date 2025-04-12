@@ -66,7 +66,3 @@ The project uses:
 - JavaFX for the UI
 - Maven for build management
 - JUnit for testing
-
-## License
-
-[Your License Here]
