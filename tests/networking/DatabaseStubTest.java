@@ -105,4 +105,41 @@ class DatabaseStubTest {
         // Ensure account no longer exists
         assertNull(db.getAccountData("player1"), "Deleted account should return null on retrieval.");
     }
+
+    @Test
+    void testDeletenonexistentAccount() {
+        DatabaseStub db = new DatabaseStub();
+
+        boolean result = db.deleteAccount("p1");
+
+        assertFalse(result, "Error, this account doesnt exist.");
+        }
+    @Test
+    void testCheckAccountExistsWithNull() {
+        DatabaseStub db = new DatabaseStub();
+
+        assertFalse(db.checkAccountExists(null), "checkAccountExists returns false.");
+    }
+
+    @Test
+    void testInsertWithSpecialCharacters() {
+        DatabaseStub db = new DatabaseStub();
+
+        String username = "_player_Xx34#";
+        String password = "p@ass0word;!";
+        String fullName = "_player_Xx34# m4in";
+        String dob = "2005-05-05";
+
+        boolean inserted = db.insertAccountData("_player_Xx34#", "p@ass0word;!", "_player_Xx34# m4in", "2005-05-05");
+        assertTrue(inserted, "Should allow insertion with special characters.");
+
+        String[] data = db.getAccountData(username);
+        assertNotNull(data);
+        assertEquals("_player_Xx34#", data[0]);
+        assertEquals("p@ass0word;!", data[1]);
+        assertEquals("_player_Xx34# m4in", data[2]);
+        assertEquals("2005-05-05", data[3]);
+    }
+
+
 }
