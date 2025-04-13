@@ -5,6 +5,7 @@ import gamelogic.GameType;
 import gamelogic.Player;
 import gamelogic.pieces.Checker;
 import gamelogic.pieces.Colour;
+import statistics.ExperienceHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,6 +124,15 @@ public class CheckersGame extends Game {
         }
         
         // If the opponent has no valid moves, the current player wins
+        if (allPossibleMoves.isEmpty())  {
+            Player winner = player;
+
+            if (winner != null) {
+                setWinner(winner);
+                super.setWinner(winner);
+                super.endGame();
+            }
+        }
         return allPossibleMoves.isEmpty();
     }
 

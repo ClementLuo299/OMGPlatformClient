@@ -3,6 +3,8 @@ package gamelogic.connectfour;
 import gamelogic.*;
 import gamelogic.pieces.Checker;
 import gamelogic.pieces.Colour;
+import statistics.ExperienceHandler;
+
 import java.util.List;
 
 import static gamelogic.connectfour.ConnectGrid.ROWS;
@@ -92,8 +94,11 @@ public class ConnectFour extends Game {
             
             // Check if game is over
             Player winner = checkWinner();
+
             if (winner != null) {
+                super.setWinner(winner);
                 setWinner(winner);
+                super.endGame();
             }
             
             // Switch turn to next player

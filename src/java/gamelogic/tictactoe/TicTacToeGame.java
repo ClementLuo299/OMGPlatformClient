@@ -1,6 +1,8 @@
 package gamelogic.tictactoe;
 
 import gamelogic.*;
+import statistics.ExperienceHandler;
+
 import java.util.List;
 
 /**
@@ -29,7 +31,7 @@ public class TicTacToeGame extends Game {
      * @param players List of players, should contain exactly 2 players
      */
     public TicTacToeGame(List<Player> players) {
-        super(GameType.TICTACTOE, players, 5); // Average moves is about 5 for TicTacToe
+        super(GameType.TICTACTOE, players, 10); // Average moves, between both players, is about 10 for TicTacToe
         if (players.size() != 2) {
             throw new IllegalArgumentException("TicTacToe requires exactly 2 players");
         }
@@ -73,8 +75,12 @@ public class TicTacToeGame extends Game {
         
         // Check if game is over
         Player winner = checkWinner();
+
         if (winner != null) {
+
+            super.setWinner(winner);
             setWinner(winner);
+            super.endGame();
         }
         
         // Switch turn to next player

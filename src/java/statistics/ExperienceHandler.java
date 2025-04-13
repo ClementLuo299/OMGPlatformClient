@@ -23,6 +23,8 @@ public class ExperienceHandler {
     // The average plays for this Game
     int avgPlays;
 
+    int totalPlays = 0;
+
     // CONSTRUCTOR
 
     /**
@@ -35,7 +37,11 @@ public class ExperienceHandler {
     public ExperienceHandler(List<Player> players, Player winner, int avgPlays) {
         this.players = players;
         this.winnerAccount = winner.getAccount();
+        this.winnerPlayer = winner;
         this.avgPlays = avgPlays;
+        for (Player p: players)  {
+            totalPlays += p.getPlays();
+        }
     }
 
 
@@ -79,10 +85,9 @@ public class ExperienceHandler {
      */
     public void awardWin() {
         // The number of plays this Player made
-        int totalPlays = winnerPlayer.getPlays();
 
         // Checks that the Game was of normal length
-        if (!(avgPlays < Math.floor(0.4 * totalPlays/2))) {
+        if (!(winnerPlayer.getPlays() < Math.floor(0.4 * avgPlays))) {
             // Adds exp to this User
             this.winnerAccount.setExpInLevel(this.winnerAccount.getExpInLevel() + 1);
 
@@ -101,31 +106,20 @@ public class ExperienceHandler {
      */
     private void awardQuickWin()  {
         // The number of plays this Player made
-        int totalPlays = winnerPlayer.getPlays();
 
-        // Checks that the game was quick
-        if (avgPlays < Math.floor(0.4 * totalPlays/2)) {
             // Adds exp to this User
             this.winnerAccount.setExpInLevel(this.winnerAccount.getExpInLevel() + 2);
-
             // Checks if this user is at a threshold
             if (this.winnerAccount.getExpInLevel() >= this.winnerAccount.getNextLevelThreshold()) {
                 increaseLevel(this.winnerAccount);
             }
-        }
+
     }
 
     /**
      * Awards all Players for playing competitively
      */
     public void awardLongGame ()  {
-        // The total number of Plays across all Players
-        int totalPlays = 0;
-
-        // Goes through the list of Players to get their Plays
-        for (Player currentPlayer : players) {
-            totalPlays += currentPlayer.getPlays();
-        }
 
         // Checks that the game was considered long (*2 because avgPlays is based on one Player)
         if ((avgPlays * 2) < Math.ceil(1.25 * totalPlays/2)) {

@@ -268,4 +268,8 @@ public class Player {
     private void sortCardsByRank(List<Card> cards) {
         cards.sort((card1, card2) -> Integer.compare(card2.getRank(), card1.getRank()));
     }
+
+    public void setPlays (int n)  {
+        this.plays = n;
+    }
 }

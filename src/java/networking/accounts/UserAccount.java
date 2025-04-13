@@ -30,6 +30,10 @@ public class UserAccount {
         this.username = username;
         this.password = password;
         this.created_date = LocalDate.now().toString();
+
+        this.expInLevel = 0;
+        this.nextLevelThreshold = 10;
+        this.level = 0;
     }
 
     /**
@@ -101,7 +105,6 @@ public class UserAccount {
     }
 
     public void setSessionIntensityLevel(float sessionIntensityLevel) {this.sessionIntensityLevel = sessionIntensityLevel;}
-
     /**
      * Sets the Online status of this User to true
      */
