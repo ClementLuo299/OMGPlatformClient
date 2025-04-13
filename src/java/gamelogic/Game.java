@@ -1,5 +1,7 @@
 package gamelogic;
 
+import networking.accounts.AbstractGameProfile;
+import networking.accounts.TicTacToeProfile;
 import statistics.ExperienceHandler;
 
 import java.util.List;
@@ -179,5 +181,14 @@ public class Game {
 
         // Modifies intensity levels
         awardSystem.modifyIntensityLevel();
+
+        // Update statistics
+        if (gameType.equals(GameType.TICTACTOE))  {
+
+        }  else if (gameType.equals(GameType.TICTACTOE))  {
+
+        }   else  {
+
+        }
     }
 }

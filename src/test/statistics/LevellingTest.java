@@ -1,3 +1,5 @@
+package statistics;
+
 import statistics.*;
 import gamelogic.Player;
 import networking.accounts.UserAccount;
