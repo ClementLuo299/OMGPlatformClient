@@ -2,6 +2,7 @@ package gamelogic.pieces;
 
 import gamelogic.GamePiece;
 import gamelogic.PieceType;
+import gamelogic.pieces.Colour;
 
 /**
  * Handles the creation and handling of Cards for Playing Card Games
@@ -34,6 +35,19 @@ public class Card extends GamePiece {
         this.suit = suit;
         this.rank = rank;
         this.faceDown = faceDown;
+    }
+
+    /**
+     * Instantiates a Card Game Piece with default values and specified rank and suit
+     *
+     * @param rank The given integer Rank of this Card
+     * @param suit The given Suit Type of this Card
+     */
+    public Card(int rank, SuitType suit) {
+        super(PieceType.CARD, false);
+        this.suit = suit;
+        this.rank = rank;
+        this.faceDown = true;
     }
 
 
@@ -72,7 +86,7 @@ public class Card extends GamePiece {
     /**
      * Flips this Card to change its Face visibility
      */
-    protected void flip() {
+    public void flip() {
         this.faceDown = !faceDown;
     }
 
@@ -81,6 +95,7 @@ public class Card extends GamePiece {
      *
      * @return The String of information for this Card
      */
+    @Override
     public String toString() {
         // Initialized String to return
         String cardTitle;

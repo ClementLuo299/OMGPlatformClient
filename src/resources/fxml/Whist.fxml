@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="800.0" prefWidth="1500.0" styleClass="main-container" stylesheets="@../css/whist.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.games.WhistController">
+    <!-- Top section with game info -->
+    <top>
+        <HBox alignment="CENTER" spacing="10" styleClass="game-header">
+            <padding>
+                <Insets bottom="10" left="15" right="15" top="10" />
+            </padding>
+            <Button fx:id="backButton" onAction="#onBackButtonClicked" styleClass="back-button" text="Back to Lobby" />
+            <Text fx:id="gameTitle" styleClass="game-title" text="Whist" />
+            <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
+            
+            <!-- Round Counter - Single Line -->
+            <HBox alignment="CENTER" spacing="5" styleClass="info-indicator">
+                <Label styleClass="info-label" text="Round:" />
+                <Label fx:id="roundCounter" styleClass="info-value" text="1" />
+            </HBox>
+            
+            <!-- Current Turn Indicator -->
+            <HBox alignment="CENTER" spacing="5" styleClass="turn-indicator-container">
+                <Label styleClass="turn-label" text="Current Turn:" />
+                <Label fx:id="currentPlayerLabel" styleClass="current-player-label" text="Player 1" />
+            </HBox>
+            
+            <!-- Move Timer with Progress Bar -->
+            <HBox alignment="CENTER" spacing="5" styleClass="timer-container">
+                <Label styleClass="timer-label" text="Move Timer:" />
+                <Label fx:id="timerLabel" styleClass="timer-value" text="00:15" />
+                <ProgressBar fx:id="timerProgressBar" progress="1.0" styleClass="timer-progress-bar" />
+            </HBox>
+            
+            <!-- Game Stage - Single Line -->
+            <HBox alignment="CENTER" spacing="5" styleClass="info-indicator">
+                <Label styleClass="info-label" text="Stage:" />
+                <Label fx:id="gameStageLabel" styleClass="info-value" text="DEAL" />
+            </HBox>
+            
+            <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
+            <Label fx:id="statusLabel" styleClass="status-label" text="Game starting..." />
+        </HBox>
+    </top>
+    
+    <!-- Center section with game board -->
+    <center>
+        <StackPane alignment="CENTER">
+            <!-- Table background -->
+            <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#0f743c" height="680.0" stroke="#006330" strokeType="INSIDE" strokeWidth="5.0" width="900.0" />
+            
+            <!-- Game Layout -->
+            <VBox alignment="CENTER" spacing="20" StackPane.alignment="CENTER">
+                <!-- Opponent (Player 2) Hand Area - Top -->
+                <VBox alignment="CENTER" spacing="10">
+                    <Label styleClass="player-label" text="Opponent's Hand" />
+                    <HBox fx:id="opponentHandArea" alignment="CENTER" spacing="-20" styleClass="hand-area, opponent-hand-area" />
+                </VBox>
+                
+                <!-- Center Game Area -->
+                <HBox alignment="CENTER" spacing="20" styleClass="center-game-area">
+                    <!-- Trump Card Display Area -->
+                    <VBox alignment="CENTER" spacing="5" styleClass="trump-card-container">
+                        <Label styleClass="area-label" text="Trump" />
+                        <StackPane fx:id="trumpCardDisplay" maxHeight="120" maxWidth="80" minHeight="120" minWidth="80" styleClass="trump-display" />
+                    </VBox>
+                    
+                    <!-- Trick Area -->
+                    <VBox alignment="CENTER" spacing="5">
+                        <Label styleClass="area-label" text="Current Trick" />
+                        <HBox fx:id="trickArea" alignment="CENTER" minHeight="120" minWidth="200" spacing="20" styleClass="trick-area" />
+                    </VBox>
+                </HBox>
+                
+                <!-- Current Player (Player 1) Hand Area - Bottom -->
+                <VBox alignment="CENTER" spacing="10">
+                    <Label styleClass="player-label" text="Your Hand" />
+                    <HBox fx:id="playerHandArea" alignment="CENTER" spacing="-20" styleClass="hand-area, player-hand-area" />
+                </VBox>
+            </VBox>
+            
+            <!-- Dealer Overlay -->
+            <StackPane fx:id="dealerOverlay" maxHeight="500" maxWidth="400" styleClass="dealer-overlay">
+                <effect>
+                    <DropShadow color="#00000066" height="15" radius="7.0" spread="0.05" width="15" />
+                </effect>
+                <VBox fx:id="shuffleVBox" alignment="CENTER" spacing="20" styleClass="dealer-content">
+                    <padding>
+                        <Insets bottom="30" left="30" right="30" top="30" />
+                    </padding>
+                    
+                    <!-- Dealer Title -->
+                    <Label fx:id="dealerTitle" styleClass="dealer-title" text="DEALER" />
+                    
+                    <!-- Card Image -->
+                    <StackPane styleClass="card-image-container">
+                        <effect>
+                            <DropShadow color="#00000048" height="10" radius="4.5" width="10" />
+                        </effect>
+                        <ImageView fitHeight="280.0" fitWidth="200" preserveRatio="true">
+                            <Image url="@../images/whist%20images/CardBackside1.png" />
+                        </ImageView>
+                    </StackPane>
+                    
+                    <!-- Instruction Text -->
+                    <Label fx:id="shuffleInstructionLabel" maxWidth="313.0" prefHeight="19.0" prefWidth="313.0" styleClass="shuffle-instruction" text="Shuffle at least Five Times to Deal" textAlignment="CENTER" wrapText="true" />
+               <HBox prefHeight="35.0" prefWidth="205.0">
+                  <children>
+                          
+                          <!-- Shuffle Counter -->
+                          <Label fx:id="shuffleCounterLabel" prefHeight="37.0" prefWidth="155.0" styleClass="shuffle-counter" text="   Shuffles: 0/5" />
+                     <Button fx:id="dealButton1" disable="true" prefHeight="35.0" prefWidth="133.0" styleClass="deal-button" text="Deal" />
+                  </children>
+               </HBox>
+                    
+                    <!-- Action Buttons -->
+                    <HBox alignment="CENTER" spacing="15">
+                        <Button fx:id="shuffleButton" prefHeight="43.0" prefWidth="139.0" styleClass="shuffle-button" text="Cut " />
+                  <Button fx:id="shuffleButton2" prefHeight="43.0" prefWidth="136.0" styleClass="shuffle-button" text="Riffle" />
+                    </HBox>
+               <HBox alignment="CENTER" prefHeight="43.0" prefWidth="330.0" spacing="15">
+                  <children>
+                     <Button fx:id="shuffleButton1" prefHeight="43.0" prefWidth="139.0" styleClass="shuffle-button" text="Overhand " />
+                     <Button fx:id="shuffleButton11" prefHeight="43.0" prefWidth="136.0" styleClass="shuffle-button" text="Pile " />
+                  </children>
+               </HBox>
+                </VBox>
+            <Button fx:id="startGameButton" mnemonicParsing="false" styleClass="start-game-button" text="START GAME" />
+            </StackPane>
+            
+            <!-- Round Result Overlay (initially hidden) -->
+            <StackPane fx:id="roundResultOverlay" styleClass="result-overlay" visible="false">
+                <VBox alignment="CENTER" spacing="20" styleClass="result-content">
+                    <Label fx:id="roundResultTitle" styleClass="result-title" text="Round Complete" />
+                    <Label fx:id="roundResultMessage" styleClass="result-message" text="Round result details" />
+                </VBox>
+            </StackPane>
+            
+            <!-- Game Over Overlay (initially hidden) -->
+            <StackPane fx:id="gameOverOverlay" styleClass="result-overlay" visible="false">
+                <VBox alignment="CENTER" spacing="20" styleClass="result-content">
+                    <Label fx:id="gameOverTitle" styleClass="result-title" text="Game Over" />
+                    <Label fx:id="gameOverMessage" styleClass="result-message" text="Game result details" />
+                    <Button fx:id="returnToLobbyButton" styleClass="result-button" text="Return to Lobby" />
+                </VBox>
+            </StackPane>
+        </StackPane>
+    </center>
+   <left>
+         <!-- Left Section: Game Controls and Player Info -->
+         <VBox alignment="CENTER" spacing="15" styleClass="left-section" BorderPane.alignment="CENTER">
+             <padding>
+                 <Insets bottom="15" left="15" right="15" top="15" />
+             </padding>
+             
+                <!-- Game Controls Section -->
+             <VBox alignment="CENTER" prefHeight="285.0" prefWidth="220.0" spacing="10" styleClass="game-controls-section">
+                 <padding>
+                     <Insets bottom="15" left="15" right="15" top="15" />
+                 </padding>
+                 <Label styleClass="section-title" text="Game Controls" />
+                 <Button fx:id="restartGameButton" styleClass="control-button, restart-button" text="Restart Game" />
+                 <Button fx:id="forfeitGameButton" styleClass="control-button, forfeit-button" text="Forfeit Game" />
+                 <Button fx:id="exitGameButton" styleClass="control-button, exit-button" text="Exit Game" />
+            <Button fx:id="restartGameButton1" onAction="#onRulesClicked" styleClass="control-button, restart-button" text="Game Rules" />
+             </VBox>
+             
+                <!-- Players Section -->
+             <VBox alignment="CENTER" prefHeight="460.0" prefWidth="220.0" spacing="10" styleClass="players-section" VBox.vgrow="ALWAYS">
+                 <padding>
+                     <Insets bottom="15" left="15" right="15" top="15" />
+                 </padding>
+                 <Label styleClass="section-title" text="Players" />
+                 
+                    <!-- Match ID -->
+                 <HBox alignment="CENTER" styleClass="match-id-container">
+                     <Label styleClass="match-id-label" text="Match ID: " />
+                     <Label fx:id="matchIdLabel" styleClass="match-id-value" text="M12345" />
+                 </HBox>
+                 
+                    <!-- Player 1 -->
+                 <VBox alignment="CENTER" styleClass="player-info, player-x-info">
+                     <padding>
+                         <Insets bottom="10" left="10" right="10" top="10" />
+                     </padding>
+                     <ImageView fx:id="player1Avatar" fitHeight="60" fitWidth="60" styleClass="player-avatar">
+                         <Image url="@../images/singleplayer.png" />
+                     </ImageView>
+                     <Label fx:id="player1Name" styleClass="player-name" text="Player 1" />
+                     <Label fx:id="player1Score" styleClass="player-score" text="Score: 0" />
+                 </VBox>
+                 
+                    <!-- VS Label -->
+                 <Label styleClass="vs-label" text="VS" />
+                 
+                    <!-- Player 2 -->
+                 <VBox alignment="CENTER" styleClass="player-info, player-o-info">
+                     <padding>
+                         <Insets bottom="10" left="10" right="10" top="10" />
+                     </padding>
+                     <ImageView fx:id="player2Avatar" fitHeight="60" fitWidth="60" styleClass="player-avatar">
+                         <Image url="@../images/singleplayer.png" />
+                     </ImageView>
+                     <Label fx:id="player2Name" styleClass="player-name" text="Player 2" />
+                     <Label fx:id="player2Score" styleClass="player-score" text="Score: 0" />
+                 </VBox>
+             </VBox>
+         </VBox>
+   </left>
+   <right>
+         
+            <!-- Right Section: Move History and In-Game Chat -->
+         <VBox alignment="CENTER" spacing="15" styleClass="right-section" BorderPane.alignment="CENTER">
+             <padding>
+                 <Insets bottom="15" left="15" right="15" top="15" />
+             </padding>
+             
+                <!-- Move History with modern design -->
+             <VBox styleClass="move-history-section">
+                 <padding>
+                     <Insets bottom="12" left="15" right="15" top="12" />
+                 </padding>
+                 <HBox alignment="CENTER_LEFT" spacing="10">
+                     <Label styleClass="section-title" text="Move History">
+                         <HBox.margin>
+                             <Insets bottom="5" right="10" top="0" />
+                         </HBox.margin>
+                     </Label>
+                     <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
+                     <Label fx:id="moveCountLabel" styleClass="move-count-label" text="Moves: 0" />
+                 </HBox>
+                 <ScrollPane fitToHeight="true" prefHeight="180" styleClass="move-history-container">
+                     <ListView fx:id="moveHistoryList" styleClass="move-history-list" />
+                 </ScrollPane>
+             </VBox>
+             
+                <VBox alignment="CENTER" spacing="10" styleClass="chat-section" VBox.vgrow="ALWAYS">
+                 <padding>
+                     <Insets bottom="15" left="15" right="15" top="15" />
+                 </padding>
+            <VBox prefHeight="381.0" prefWidth="218.0">
+               <children>
+                       <HBox alignment="CENTER_LEFT" spacing="5">
+                           <Label prefHeight="24.0" prefWidth="144.0" styleClass="section-title" text="In-Game Chat" /> <!-- Spacer -->
+                           <Label fx:id="chatStatusLabel" styleClass="chat-status" text="Online" />
+                       </HBox>
+                        <Pane prefHeight="353.0" prefWidth="218.0" />
+               </children>
+            </VBox>
+                 
+                    <!-- Message Input Area -->
+                 <HBox alignment="CENTER" spacing="8" styleClass="chat-input-container">
+                     <TextField fx:id="chatInputField" promptText="Type your message..." styleClass="chat-input" HBox.hgrow="ALWAYS" />
+                     <Button fx:id="sendMessageButton" onAction="#onSendChatClicked" styleClass="send-button" text="Send" />
+                 </HBox>
+             </VBox>
+         </VBox>
+   </right>
+</BorderPane>

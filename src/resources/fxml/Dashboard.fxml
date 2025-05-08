@@ -9,13 +9,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="800.0" prefWidth="1400" styleClass="root-container" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.DashboardController">
+<HBox prefHeight="800.0" prefWidth="1500" styleClass="root-container" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.systems.DashboardController">
     <!-- Left Sidebar Navigation -->
     <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
         <!-- App Title -->
         <HBox styleClass="app-title">
             <ImageView fitHeight="24" fitWidth="24">
-                <Image url="@../icons/games.png" />
+                <Image url="@../icons/navigation/unknown.png" />
             </ImageView>
             <Label styleClass="title-text" text="Board Game Hub" />
         </HBox>
@@ -26,7 +26,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/dashboard.png" />
+                            <Image url="@../icons/navigation/dashboard.png" />
                         </ImageView>
                         <Label text="Dashboard" />
                     </HBox>
@@ -37,7 +37,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@../icons/navigation/games.png" />
                         </ImageView>
                         <Label text="Games" />
                     </HBox>
@@ -59,7 +59,7 @@
                 <graphic>
                     <HBox styleClass="nav-button-content">
                         <ImageView fitHeight="20" fitWidth="20">
-                            <Image url="@../icons/settings.png" />
+                            <Image url="@../icons/navigation/settings.png" />
                         </ImageView>
                         <Label text="Settings" />
                     </HBox>
@@ -90,7 +90,11 @@
             </VBox>
             <Pane HBox.hgrow="ALWAYS" />
             <VBox styleClass="profile-summary">
-                <ImageView fx:id="profileImage" fitHeight="40" fitWidth="40" styleClass="profile-image" />
+            <ImageView fitHeight="49.0" fitWidth="54.0">
+               <image>
+                  <Image url="@../icons/badge.png" />
+               </image>
+            </ImageView>
                 <Label fx:id="usernameLabel" styleClass="username" text="PlayerName" />
                 <Label fx:id="playerLevel" styleClass="player-level" text="Level 10" />
             </VBox>
@@ -138,8 +142,8 @@
                 <!-- Connect 4 Stats -->
                 <VBox styleClass="game-stat-card">
                     <HBox>
-                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/games.png" />
+                        <ImageView fitHeight="48" fitWidth="55" styleClass="game-icon">
+                            <Image url="@../icons/game/connect_four_icon.png" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Connect 4" />
@@ -154,7 +158,7 @@
                 <VBox styleClass="game-stat-card">
                     <HBox>
                         <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@../icons/game/checkers_icon.jpg" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Checkers" />
@@ -169,7 +173,7 @@
                 <VBox styleClass="game-stat-card">
                     <HBox>
                         <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/games.png" />
+                            <Image url="@../icons/game/whist_icon.png" />
                         </ImageView>
                         <VBox>
                             <Label styleClass="game-name" text="Whist" />
@@ -177,6 +181,21 @@
                         </VBox>
                         <Pane HBox.hgrow="ALWAYS" />
                         <Button onAction="#playWhist" styleClass="play-button" text="Play" />
+                    </HBox>
+                </VBox>
+                
+                <!-- Tic Tac Toe Stats -->
+                <VBox styleClass="game-stat-card">
+                    <HBox>
+                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
+                            <Image url="@../icons/game/tic_tac_toe_icon.png" />
+                        </ImageView>
+                        <VBox>
+                            <Label styleClass="game-name" text="Tic Tac Toe" />
+                            <Label styleClass="game-details" text="Level 7 • 65% Win Rate" />
+                        </VBox>
+                        <Pane HBox.hgrow="ALWAYS" />
+                        <Button onAction="#playTicTacToe" styleClass="play-button" text="Play" />
                     </HBox>
                 </VBox>
             </VBox>

@@ -1,0 +1,520 @@
+/* Color Variables */
+* {
+    -fx-primary-color: #FFFFFF;    /* 60% - White */
+    -fx-secondary-color: #F5F6FA;  /* 30% - Light Grey */
+    -fx-accent-color: #3B82F6;     /* 10% - Light Blue */
+    -fx-text-color: #1a1a1a;
+    -fx-player-white-color: #FFFFFF;   /* White for Player 1 (replaces beige/red) */
+    -fx-player-black-color: #212121; /* Black for Player 2 */
+    -fx-success-color: #10B981;    /* Green for success */
+    -fx-danger-color: #EF4444;     /* Red for danger */
+    -fx-warning-color: #F59E0B;    /* Amber for warnings */
+    
+    /* Board colors */
+    -fx-board-dark: #81582e;       /* Dark wooden squares */
+    -fx-board-light: #d2ab78;      /* Light wooden squares */
+    
+    /* Checker pieces colors */
+    -fx-white-piece: #FFFFFF;      /* White pieces (replaces beige/red) */
+    -fx-black-piece: #212121;      /* Black pieces */
+    -fx-king-highlight: #FFD700;   /* Gold for King highlight */
+}
+
+.main-container {
+    -fx-background-color: -fx-primary-color;
+}
+
+/* Game Header Styles */
+.game-header {
+    -fx-background-color: -fx-primary-color;
+    -fx-border-color: -fx-secondary-color;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 8px 15px;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-accent-color;
+    -fx-cursor: hand;
+    -fx-border-color: -fx-accent-color;
+    -fx-border-radius: 4px;
+    -fx-padding: 6px 12px;
+    -fx-background-radius: 4px;
+    -fx-font-size: 12px;
+}
+
+.back-button:hover {
+    -fx-background-color: derive(-fx-accent-color, 90%);
+}
+
+.game-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-fill: -fx-text-color;
+}
+
+.status-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-weight: normal;
+}
+
+/* Turn indicator and timer */
+.turn-indicator-container {
+    -fx-background-color: rgba(59, 130, 246, 0.1);
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 20px;
+}
+
+.turn-label, .timer-label {
+    -fx-text-fill: rgba(0, 0, 0, 0.6);
+    -fx-font-size: 13px;
+}
+
+.current-player-label {
+    -fx-text-fill: -fx-text-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.timer-value {
+    -fx-text-fill: -fx-text-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.timer-warning {
+    -fx-text-fill: -fx-warning-color;
+}
+
+/* Section Titles */
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+/* Left Section Styles */
+.left-section {
+    -fx-background-color: derive(-fx-secondary-color, 40%);
+    -fx-min-width: 220px;
+    -fx-pref-width: 250px;
+    -fx-max-width: 280px;
+    -fx-spacing: 15px;
+}
+
+/* Game Controls Section */
+.game-controls-section {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 8px;
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0, 0, 2);
+}
+
+.control-button {
+    -fx-min-width: 180px;
+    -fx-min-height: 35px;
+    -fx-background-radius: 6px;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 8px 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0, 0, 1);
+}
+
+.control-button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.restart-button {
+    -fx-background-color: -fx-accent-color;
+}
+
+.restart-button:hover {
+    -fx-background-color: derive(-fx-accent-color, -10%);
+}
+
+.forfeit-button {
+    -fx-background-color: -fx-danger-color;
+}
+
+.forfeit-button:hover {
+    -fx-background-color: derive(-fx-danger-color, -10%);
+}
+
+.exit-button {
+    -fx-background-color: -fx-warning-color;
+}
+
+.exit-button:hover {
+    -fx-background-color: derive(-fx-warning-color, -10%);
+}
+
+/* Players Section */
+.players-section {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 8px;
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 6, 0, 0, 2);
+}
+
+.match-id-container {
+    -fx-spacing: 5px;
+    -fx-padding: 3px 8px;
+    -fx-background-color: derive(-fx-secondary-color, 10%);
+    -fx-background-radius: 4px;
+}
+
+.match-id-label {
+    -fx-text-fill: -fx-text-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.match-id-value {
+    -fx-text-fill: -fx-accent-color;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.vs-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #666666;
+}
+
+/* Player Info Styles */
+.player-info {
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px;
+    -fx-spacing: 6px;
+    -fx-min-width: 180px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 3, 0, 0, 1);
+}
+
+.player-red-info {
+    -fx-border-color: -fx-player-white-color;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+}
+
+.player-blue-info {
+    -fx-border-color: -fx-player-black-color;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+}
+
+.player-avatar {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 1);
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+/* Player 1 avatar color styling - white tint */
+#player1Avatar {
+    -fx-effect: innershadow(gaussian, -fx-player-white-color, 25, 0.5, 0, 0);
+    -fx-border-color: -fx-player-white-color;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+}
+
+/* Player 2 avatar color styling - black tint */
+#player2Avatar {
+    -fx-effect: innershadow(gaussian, -fx-player-black-color, 25, 0.5, 0, 0);
+    -fx-border-color: -fx-player-black-color;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+}
+
+.player-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.player-score {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666666;
+}
+
+/* Center Section / Game Board */
+.center-section {
+    -fx-background-color: #808080;  /* Grey background for checkers board area */
+    -fx-padding: 20px;
+}
+
+.game-board {
+    -fx-background-color: #a07840;
+    -fx-border-color: #5d432c;
+    -fx-border-width: 4px;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 12, 0, 0, 6);
+}
+
+/* Board Squares */
+.board-square {
+    -fx-min-width: 70px;
+    -fx-min-height: 70px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
+    -fx-cursor: hand;
+}
+
+.light-square {
+    -fx-background-color: #d2ab78;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.dark-square {
+    -fx-background-color: #6e4b25;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+/* Checker pieces */
+.checker-piece {
+    -fx-stroke-width: 2;
+    -fx-stroke: #000000;
+    -fx-stroke-type: inside;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 2);
+    -fx-transition-duration: 0.2s;
+}
+
+/* Adding hover effects for modern 3D highlight */
+.checker-piece:hover {
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0, 0, 4);
+    -fx-cursor: hand;
+}
+
+.beige-piece {
+    -fx-fill: -fx-white-piece;
+    -fx-stroke: #CCCCCC;
+}
+
+.beige-piece:hover, .white-piece:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 12, 0.7, 0, 4);
+    -fx-stroke-width: 2.5;
+}
+
+.white-piece {
+    -fx-fill: -fx-white-piece;
+    -fx-stroke: #CCCCCC;
+}
+
+.black-piece {
+    -fx-fill: -fx-black-piece;
+    -fx-stroke: #000000;
+}
+
+.black-piece:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.8), 12, 0.7, 0, 4);
+    -fx-stroke-width: 2.5;
+}
+
+.king-piece {
+    -fx-border-color: -fx-king-highlight;
+    -fx-border-width: 3px;
+    -fx-effect: innershadow(gaussian, -fx-king-highlight, 10, 0.5, 0, 0);
+}
+
+.king-piece:hover {
+    -fx-effect: innershadow(gaussian, -fx-king-highlight, 15, 0.7, 0, 0), 
+               dropshadow(gaussian, -fx-king-highlight, 10, 0.5, 0, 5);
+    -fx-border-width: 3.5px;
+}
+
+.selected-piece {
+    -fx-effect: dropshadow(gaussian, #3366ff, 10, 0.7, 0, 0);
+    -fx-border-color: #3366ff;
+    -fx-border-width: 3px;
+}
+
+.valid-move {
+    -fx-background-color: rgba(76, 175, 80, 0.5);
+    -fx-effect: dropshadow(gaussian, rgba(76, 175, 80, 0.7), 5, 0, 0, 0);
+}
+
+.capture-move {
+    -fx-background-color: rgba(255, 87, 34, 0.6);
+    -fx-effect: dropshadow(gaussian, rgba(255, 87, 34, 0.8), 7, 0, 0, 0);
+}
+
+/* Right Section Styles */
+.right-section {
+    -fx-background-color: derive(-fx-secondary-color, 40%);
+    -fx-min-width: 220px;
+    -fx-pref-width: 250px;
+    -fx-max-width: 280px;
+    -fx-spacing: 15px;
+}
+
+/* Move History Section */
+.move-history-section {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 8px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+}
+
+.move-count-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #666666;
+    -fx-padding: 0 0 5 0;
+}
+
+.move-history-container {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4px;
+    -fx-padding: 0;
+    -fx-pref-height: 250px;
+}
+
+.move-history-container .viewport {
+    -fx-background-color: transparent;
+}
+
+.move-history-list {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px;
+}
+
+.move-history-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 6px 8px;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 12px;
+    -fx-border-color: derive(-fx-secondary-color, -10%);
+    -fx-border-width: 0 0 1 0;
+}
+
+.move-history-list .list-cell:hover {
+    -fx-background-color: derive(-fx-secondary-color, 20%);
+}
+
+/* Chat Section */
+.chat-section {
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 8px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 4, 0, 0, 2);
+}
+
+.chat-status {
+    -fx-font-size: 12px;
+    -fx-text-fill: -fx-success-color;
+    -fx-padding: 0 0 5 0;
+}
+
+.chat-messages {
+    -fx-background-color: transparent;
+    -fx-background-radius: 4px;
+    -fx-padding: 0;
+    -fx-pref-height: 200px;
+}
+
+.chat-text {
+    -fx-background-color: -fx-secondary-color;
+    -fx-control-inner-background: -fx-secondary-color;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 12px;
+    -fx-padding: 5px;
+}
+
+.chat-input-container {
+    -fx-spacing: 5px;
+}
+
+.chat-input {
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-radius: 4px;
+    -fx-text-fill: -fx-text-color;
+    -fx-font-size: 12px;
+    -fx-padding: 7px;
+}
+
+.chat-input:focused {
+    -fx-background-color: derive(-fx-secondary-color, -5%);
+}
+
+.send-button {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 7px 12px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+}
+
+.send-button:hover {
+    -fx-background-color: derive(-fx-accent-color, -10%);
+}
+
+/* Scrollbar styling */
+.scroll-bar:horizontal,
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-border-radius: 0.0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c9c9c9;
+    -fx-background-radius: 5.0em;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #a8a8a8;
+}
+
+/* Responsive adjustments for smaller screens */
+@media screen and (max-width: 1200px) {
+    .left-section, .right-section {
+        -fx-min-width: 200px;
+        -fx-pref-width: 220px;
+    }
+    
+    .control-button {
+        -fx-min-width: 150px;
+    }
+    
+    .board-square {
+        -fx-min-width: 60px;
+        -fx-min-height: 60px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .left-section, .right-section {
+        -fx-min-width: 180px;
+        -fx-pref-width: 200px;
+    }
+    
+    .control-button {
+        -fx-min-width: 140px;
+    }
+    
+    .board-square {
+        -fx-min-width: 50px;
+        -fx-min-height: 50px;
+    }
+}

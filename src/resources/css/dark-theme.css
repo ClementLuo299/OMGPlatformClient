@@ -1,0 +1,467 @@
+/* Color Variables - Dark Theme */
+* {
+    -fx-primary-color: #1a1a1a !important;    /* Dark background */
+    -fx-secondary-color: #2a2a2a !important;  /* Slightly lighter dark for panels */
+    -fx-accent-color: #3B82F6 !important;     /* Accent blue */
+    -fx-text-color: #FFFFFF !important;       /* White text for contrast */
+    -fx-success-color: #10B981 !important;    /* Green for success */
+    -fx-warning-color: #F59E0B !important;    /* Amber for warnings */
+    -fx-danger-color: #EF4444 !important;     /* Red for danger */
+}
+
+/* Text color fix - apply to ALL labels and text elements */
+.label, .text, Text, Label, .button, Button, .check-box, .radio-button, .hyperlink, .toggle-button {
+    -fx-text-fill: -fx-text-color !important;
+    -fx-fill: -fx-text-color !important;
+}
+
+/* Main Container */
+.main-container {
+    -fx-background-color: -fx-primary-color !important;
+}
+
+
+
+/* Game Header Styles */
+.game-header {
+    -fx-background-color: -fx-primary-color !important;
+    -fx-border-color: #333333 !important;
+    -fx-border-width: 0 0 2 0 !important;
+}
+
+.back-button {
+    -fx-background-color: transparent !important;
+    -fx-text-fill: -fx-accent-color !important;
+    -fx-border-color: -fx-accent-color !important;
+    -fx-border-radius: 4px !important;
+}
+
+.back-button:hover {
+    -fx-background-color: rgba(59, 130, 246, 0.2) !important;
+}
+
+.game-title {
+    -fx-font-size: 22px !important;
+    -fx-font-weight: bold !important;
+    -fx-fill: -fx-text-color !important;
+}
+
+.status-label {
+    -fx-text-fill: -fx-text-color !important;
+}
+
+/* Left Side Section - Player & Queue */
+.player-section {
+    -fx-background-color: #222222 !important;
+    -fx-background-radius: 0 !important;
+}
+
+.player-card {
+    -fx-background-color: -fx-secondary-color !important;
+    -fx-background-radius: 10px !important;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 8, 0, 0, 2) !important;
+}
+
+.player-avatar {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 6, 0, 0, 2) !important;
+}
+
+#playerAvatar {
+    -fx-effect: innershadow(gaussian, -fx-accent-color, 35, 0.4, 0, 0) !important;
+    -fx-border-color: -fx-accent-color !important;
+}
+
+.player-name {
+    -fx-text-fill: -fx-text-color !important;
+    -fx-fill: -fx-text-color !important;
+    -fx-font-weight: bold !important;
+}
+
+.player-level {
+    -fx-text-fill: #AAAAAA !important;
+    -fx-fill: #AAAAAA !important;
+}
+
+/* Queue Section */
+.queue-section {
+    -fx-background-color: -fx-secondary-color !important;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 8, 0, 0, 2) !important;
+}
+
+.queue-button {
+    -fx-background-color: -fx-accent-color !important;
+    -fx-text-fill: white !important;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.5), 4, 0, 0, 1) !important;
+}
+
+.queue-button:hover {
+    -fx-background-color: derive(-fx-accent-color, 10%) !important;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.7), 6, 0, 0, 2) !important;
+}
+
+.queue-status {
+    -fx-text-fill: #AAAAAA !important;
+    -fx-fill: #AAAAAA !important;
+}
+
+/* Main Separator */
+.main-separator {
+    -fx-background-color: #333333 !important;
+}
+
+/* Right Side Section - Search */
+.search-section {
+    -fx-background-color: #222222 !important;
+}
+
+.section-title {
+    -fx-text-fill: -fx-text-color !important;
+    -fx-fill: -fx-text-color !important;
+    -fx-font-weight: bold !important;
+}
+
+.find-player-section,
+.find-match-section,
+.public-matches-section {
+    -fx-background-color: -fx-secondary-color !important;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 8, 0, 0, 2) !important;
+}
+
+.search-button,
+.refresh-button {
+    -fx-background-color: -fx-accent-color !important;
+    -fx-text-fill: white !important;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 1) !important;
+}
+
+.search-button:hover,
+.refresh-button:hover {
+    -fx-background-color: derive(-fx-accent-color, 10%) !important;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 4, 0, 0, 1) !important;
+}
+
+.invite-button,
+.join-button {
+    -fx-background-color: -fx-success-color !important;
+    -fx-text-fill: white !important;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 2, 0, 0, 1) !important;
+}
+
+.invite-button:hover,
+.join-button:hover {
+    -fx-background-color: derive(-fx-success-color, 10%) !important;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 4, 0, 0, 1) !important;
+}
+
+.search-result {
+    -fx-text-fill: #AAAAAA !important;
+    -fx-fill: #AAAAAA !important;
+}
+
+/* Text Fields */
+.text-field {
+    -fx-background-color: #333333 !important;
+    -fx-border-color: #444444 !important;
+    -fx-text-fill: -fx-text-color !important;
+    -fx-prompt-text-fill: #999999 !important;
+}
+
+.text-field:focused {
+    -fx-border-color: -fx-accent-color !important;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 4, 0, 0, 0) !important;
+}
+
+/* Explicit targeting for TextField prompt text */
+.text-field .text {
+    -fx-fill: -fx-text-color !important;
+}
+
+/* List Views */
+.list-view {
+    -fx-background-color: #333333 !important;
+    -fx-border-color: #444444 !important;
+}
+
+.list-view .list-cell {
+    -fx-background-color: #333333 !important;
+    -fx-text-fill: -fx-text-color !important;
+}
+
+.list-view .list-cell:hover {
+    -fx-background-color: #444444 !important;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: derive(-fx-accent-color, -20%) !important;
+    -fx-text-fill: -fx-text-color !important;
+}
+
+/* Fix for list-cell text color */
+.list-view .list-cell .text {
+    -fx-fill: -fx-text-color !important;
+}
+
+/* Bottom Bar */
+.bottom-bar {
+    -fx-background-color: -fx-primary-color !important;
+    -fx-border-color: #333333 !important;
+    -fx-border-width: 1 0 0 0 !important;
+}
+
+.cancel-button {
+    -fx-background-color: -fx-danger-color !important;
+    -fx-text-fill: white !important;
+}
+
+.cancel-button:hover {
+    -fx-background-color: derive(-fx-danger-color, 10%) !important;
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.4), 4, 0, 0, 1) !important;
+}
+
+.rules-button {
+    -fx-background-color: -fx-warning-color !important;
+    -fx-text-fill: white !important;
+}
+
+.rules-button:hover {
+    -fx-background-color: derive(-fx-warning-color, 10%) !important;
+    -fx-effect: dropshadow(gaussian, rgba(245, 158, 11, 0.4), 4, 0, 0, 1) !important;
+}
+
+/* Progress Bar */
+.progress-bar {
+    -fx-background-color: #333333 !important;
+}
+
+.progress-bar .bar {
+    -fx-background-color: -fx-accent-color !important;
+}
+
+.progress-bar .track {
+    -fx-background-color: #333333 !important;
+}
+
+/* Scrollbars */
+.scroll-bar:horizontal,
+.scroll-bar:vertical {
+    -fx-background-color: transparent !important;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent !important;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #555555 !important;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #666666 !important;
+}
+
+/* Fix for prompt text in text fields */
+.text-input-prompt {
+    -fx-text-fill: #888888 !important;
+    -fx-fill: #888888 !important;
+}
+
+/* Fix for any other potential text elements */
+.text, .content, .rich-text, TextField, TextArea, .combo-box, ComboBox {
+    -fx-text-fill: -fx-text-color !important;
+    -fx-fill: -fx-text-color !important;
+}
+
+/* Fix for hyperlinks and other specific text components */
+.hyperlink {
+    -fx-text-fill: -fx-accent-color !important;
+}
+
+/* Additional fixes for prompt text */
+.text-field:empty .prompt-text {
+    -fx-text-fill: #999999 !important;
+    -fx-fill: #999999 !important;
+}
+
+/* Responsive adjustments from original CSS remain applicable */
+@media screen and (max-width: 1200px) {
+    .player-section,
+    .search-section {
+        -fx-spacing: 15px !important;
+        -fx-padding: 20px !important;
+    }
+
+    .player-card,
+    .queue-section,
+    .find-player-section,
+    .public-matches-section,
+    .find-match-section {
+        -fx-padding: 15px !important;
+        -fx-max-width: 300px !important;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .player-section,
+    .search-section {
+        -fx-spacing: 10px !important;
+        -fx-padding: 15px !important;
+    }
+
+    .player-card,
+    .queue-section,
+    .find-player-section,
+    .public-matches-section,
+    .find-match-section {
+        -fx-padding: 12px !important;
+        -fx-max-width: 280px !important;
+    }
+<<<<<<< HEAD
+}
+/* Game Controls Section - only fix text and background */
+.left-section .game-controls-section {
+    -fx-background-color: #222222 !important;
+}
+
+/* Ensure text in controls section is visible */
+.game-controls-section .section-title,
+.game-controls-section .label {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+/* Message board text visibility fix */
+.chat-messages {
+    -fx-control-inner-background: #333333 !important;
+    -fx-background-color: #333333 !important;
+    -fx-text-fill: white !important;
+}
+
+.chat-messages .content {
+    -fx-background-color: #333333 !important;
+}
+
+TextArea .content {
+    -fx-background-color: #333333 !important;
+}
+
+/* Match ID visibility fix */
+.match-id-label, .match-id-value {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+/* This preserves button colors but ensures text is visible */
+.control-button {
+    -fx-text-fill: #FFFFFF !important;
+}
+.left-section {
+    -fx-background-color: #808080 !important;
+    -fx-min-width: 220px;
+    -fx-pref-width: 250px;
+    -fx-max-width: 280px;
+    -fx-spacing: 15px;
+}
+/* Game Controls Section - enhanced contrast */
+.left-section .game-controls-section {
+    -fx-background-color: #222222 !important;
+    -fx-border-color: #444444 !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 5px !important;
+}
+
+/* Control buttons text visibility */
+.control-button {
+    -fx-text-fill: #FFFFFF !important;
+}
+
+/* Players Section - enhanced contrast */
+.left-section .players-section {
+    -fx-background-color: #222222 !important;
+    -fx-border-color: #444444 !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 5px !important;
+}
+
+/* Add contrast between player info cards and their container */
+.left-section .player-info {
+    -fx-background-color: #2A2A2A !important;
+    -fx-background-radius: 4px !important;
+}
+
+/* Add specific contrast to red player */
+.left-section .player-red-info {
+    -fx-border-color: #EF4444 !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 4px !important;
+}
+
+/* Add specific contrast to yellow player */
+.left-section .player-yellow-info {
+    -fx-border-color: #F59E0B !important;
+    -fx-border-width: 1px !important;
+    -fx-border-radius: 4px !important;
+}
+
+/* Match ID container with better contrast */
+.left-section .match-id-container {
+    -fx-background-color: #2A2A2A !important;
+    -fx-padding: 5px !important;
+    -fx-background-radius: 4px !important;
+}
+
+.right-section {
+    -fx-background-color: #808080 !important;
+    -fx-min-width: 220px;
+    -fx-pref-width: 250px;
+    -fx-max-width: 280px;
+    -fx-spacing: 15px;
+}
+/* Left Side Section - Player & Queue */
+.move-history-section {
+    -fx-background-color: #222222 !important;
+    -fx-background-radius: 0 !important;
+}
+.chat-section{
+    -fx-background-color: #222222 !important;
+    -fx-background-radius: 0 !important;
+}
+/* Force text visibility in these sections */
+.players-section .label,
+.players-section .text,
+.game-controls-section .label,
+.game-controls-section .text,
+.match-id-label,
+.match-id-value,
+.section-title {
+    -fx-text-fill: #FFFFFF !important;
+    -fx-fill: #FFFFFF !important;
+
+}
+/* Dark mode changes */
+.dark-theme .board-button.x {
+    -fx-text-fill: white !important;  /* X turns white in dark mode */
+}
+
+.dark-theme .board-button.o {
+    -fx-text-fill: white !important;  /* O turns white in dark mode */
+}
+
+.board-button:hover {
+    -fx-background-color: derive(-fx-primary-color, -3%);
+}
+
+/* Other specific styles for buttons to make them clearly visible */
+.board-button.x, .board-button.o {
+    -fx-background-color: black !important;
+    -fx-border-color: #777777;
+    -fx-border-radius: 0;
+    -fx-min-width: 80px;
+    -fx-min-height: 80px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 80px;
+    -fx-font-size: 40px;
+    -fx-font-weight: bold;
+    -fx-padding: 0;
+    -fx-alignment: center;
+}

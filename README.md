@@ -4,7 +4,7 @@ A multiplayer board game platform built with JavaFX.
 
 ## Prerequisites
 
-- Java 17 or higher
+- Java 23 or higher
 - Maven 3.6 or higher
 
 ## Getting Started
@@ -24,6 +24,8 @@ A multiplayer board game platform built with JavaFX.
    ```bash
    mvn javafx:run
    ```
+   Or:
+   Run the `BoardGamePlatformApp` class in the `src/java` directory
 
 ## Project Structure
 
@@ -66,3 +68,4 @@ The project uses:
 - JavaFX for the UI
 - Maven for build management
 - JUnit for testing
+

@@ -1,127 +1,190 @@
 package gamelogic.connectfour;
 
 import gamelogic.*;
+import gamelogic.pieces.Checker;
+import gamelogic.pieces.Colour;
+import statistics.ExperienceHandler;
 
-public class ConnectFour extends AbstractGame {
+import java.util.List;
 
-    private static final int ROWS = 6;
-    private static final int COLS = 7;
-    private static final int PLAYER_ONE_CHAR = '1';
-    private static final int PLAYER_TWO_CHAR = '2';
+import static gamelogic.connectfour.ConnectGrid.ROWS;
+import static gamelogic.connectfour.ConnectGrid.COLS;
 
+/**
+ * Connect Four game implementation
+ * Extends the base Game class with Connect Four specific logic
+ * Integrates ConnectGrid for board management
+ */
+public class ConnectFour extends Game {
 
-    // the board will be stored in a string in the following format:
-    // "oooooooooooooooooooooooooooooooooooooooooo"
-    // where the 42 'o's corresponds to the 7*6 grid of the connect four board
-    // these will be replaced by '1', for player 1, or '2' for player 2
-    // for example, the board:
-    // O O O O O O O
-    // O O O O 1 O O
-    // O O 2 2 2 O O
-    // O O 1 2 2 O O
-    // O O 1 1 2 1 O
-    // O 1 2 1 1 2 1
-    // would be stored as
-    // "ooooooooooo1oooo222oooo122oooo1121oo121121"
+    private static final char PLAYER_ONE_CHAR = '1';
+    private static final char PLAYER_TWO_CHAR = '2';
 
+    // The board represented as a string for UI compatibility
+    private String boardString;
+    
+    // The board represented using ConnectGrid for internal game logic
+    private ConnectGrid connectGrid;
 
-    // default constructor
-    public ConnectFour (Player player1, Player player2) {
-        this.board = "oooooooooooooooooooooooooooooooooooooooooo";
-        this.player1 = player1;
-        this.player2 = player2;
+    /**
+     * Default constructor for Connect Four game
+     * @param players List of players, should contain exactly 2 players
+     */
+    public ConnectFour(List<Player> players) {
+        super(GameType.CONNECT_FOUR, players, 21); // Average moves is about 21 for Connect Four
+        if (players.size() != 2) {
+            throw new IllegalArgumentException("Connect Four requires exactly 2 players");
+        }
+        this.boardString = "oooooooooooooooooooooooooooooooooooooooooo";
+        this.connectGrid = new ConnectGrid();
+        
+        // Setting initial turn holder
+        setTurnHolder(players.get(0));
     }
 
+    /**
+     * Get the current board state
+     * @return The board state as a string
+     */
+    public String getBoard() {
+        return this.boardString;
+    }
 
-    // for dropping a checker
-    // row will be a number 0-6 respectively corresponding to columns 1-7 on the gameboard
+    /**
+     * Drop a piece in the specified column
+     * @param player The player making the move
+     * @param column The column to drop the piece (0-6)
+     */
     public void drop(Player player, int column) {
-        // if the passed column is full or does not exist
-        if(column>COLS-1 || this.board.charAt(column)!='o'){
-            //throw new IllegalMoveExeption();
+        List<Player> players = getPlayers();
+        
+        // Check if the column exists and is not full
+        if (column < 0 || column >= COLS || this.boardString.charAt(column) != 'o') {
+            // Column is full or invalid, can't drop here
+            return;
         }
-        if(player!=player1 && player!=player2){
-            //throw new PlayerExeption();
+        
+        if (player != players.get(0) && player != players.get(1)) {
+            // Invalid player
+            return;
         }
-        // if no checker has been dropped in this column
-        if(this.board.charAt(((ROWS-1)*COLS)+column)=='o'){
-            if(player==player1){
-                this.board = this.board.substring(0, ((ROWS-1)*COLS)+column) + PLAYER_ONE_CHAR + this.board.substring(((ROWS-1)*COLS)+column+1);
-            } else {
-                this.board = this.board.substring(0, ((ROWS-1)*COLS)+column) + PLAYER_TWO_CHAR + this.board.substring(((ROWS-1)*COLS)+column+1);
+        
+        // Find the lowest empty position in the column
+        int lowestEmptyRow = -1;
+        for (int row = ROWS - 1; row >= 0; row--) {
+            int index = row * COLS + column;
+            if (this.boardString.charAt(index) == 'o') {
+                lowestEmptyRow = row;
+                break;
             }
         }
-        //searching all rows
-        for(int i=0; i<ROWS; i++){
-            //find the first taken row in the passed column
-            if(this.board.charAt(i*COLS+column)!='o') {
-                //place the char at the position above the found checker
-                if(player==player1){
-                    this.board = this.board.substring(0, (i-1)*COLS+column) + PLAYER_ONE_CHAR + this.board.substring((i-1)*COLS+column+1);
-                } else {
-                    this.board = this.board.substring(0, (i-1)*COLS+column) + PLAYER_TWO_CHAR + this.board.substring((i-1)*COLS+column+1);
-                }
+        
+        if (lowestEmptyRow >= 0) {
+            // Place the piece at the lowest empty position
+            int index = lowestEmptyRow * COLS + column;
+            char playerChar = (player == players.get(0)) ? PLAYER_ONE_CHAR : PLAYER_TWO_CHAR;
+            
+            // Update string representation
+            this.boardString = this.boardString.substring(0, index) + playerChar + this.boardString.substring(index + 1);
+            
+            // Update ConnectGrid representation
+            Colour checkerColor = (player == players.get(0)) ? Colour.YELLOW : Colour.RED;
+            Checker newChecker = new Checker(PieceType.CHECKER, false, checkerColor, false, lowestEmptyRow, column);
+            this.connectGrid.setPosition(column, lowestEmptyRow, newChecker);
+            
+            // Check if game is over
+            Player winner = checkWinner();
+
+            if (winner != null) {
+                super.setWinner(winner);
+                setWinner(winner);
+                super.endGame();
             }
+            
+            // Switch turn to next player
+            setTurnHolder(player == players.get(0) ? players.get(1) : players.get(0));
         }
     }
 
-    public Player getWinner(){
+    /**
+     * Check if a player has won
+     * @return The winning player, or null if no winner
+     */
+    private Player checkWinner() {
+        List<Player> players = getPlayers();
+        
+        // Using string representation for compatibility
         // looking for horizontal 4 in a row
-        for(int i=0; i<ROWS; i++){
-            // need 4 in a row, avoiding error: out of bounds
-            for(int j=0; j<COLS-3; j++){
-                if(this.board.charAt(i+j+1)==this.board.charAt(i+j) &&
-                   this.board.charAt(i+j+2)==this.board.charAt(i+j) &&
-                   this.board.charAt(i+j+3)==this.board.charAt(i+j)){
-                    if(this.board.charAt(i+j)==PLAYER_ONE_CHAR){
-                        return player1;
-                    } else if(this.board.charAt(i+j)==PLAYER_TWO_CHAR){
-                        return player2;
+        for(int row = 0; row < ROWS; row++){
+            for(int col = 0; col < COLS-3; col++){
+                int index = row * COLS + col;
+                char current = this.boardString.charAt(index);
+                if (current != 'o' && 
+                    current == this.boardString.charAt(index + 1) && 
+                    current == this.boardString.charAt(index + 2) && 
+                    current == this.boardString.charAt(index + 3)) {
+                    
+                    if(current == PLAYER_ONE_CHAR){
+                        return players.get(0);
+                    } else if(current == PLAYER_TWO_CHAR){
+                        return players.get(1);
                     }
                 }
             }
         }
 
         // looking for vertical 4 in a row
-        for(int i=0; i<ROWS-3; i++){// need 4 in a row, avoiding error: out of bounds
-            for(int j=0; j<COLS; j++){
-                if(this.board.charAt(i+j+COLS)==this.board.charAt(i+j) &&
-                        this.board.charAt(i+j+2*COLS)==this.board.charAt(i+j) &&
-                        this.board.charAt(i+j+3*COLS)==this.board.charAt(i+j)){
-                    if(this.board.charAt(i+j)==PLAYER_ONE_CHAR){
-                        return player1;
-                    } else if(this.board.charAt(i+j)==PLAYER_TWO_CHAR){
-                        return player2;
+        for(int row = 0; row < ROWS-3; row++){
+            for(int col = 0; col < COLS; col++){
+                int index = row * COLS + col;
+                char current = this.boardString.charAt(index);
+                if (current != 'o' && 
+                    current == this.boardString.charAt(index + COLS) && 
+                    current == this.boardString.charAt(index + (2 * COLS)) && 
+                    current == this.boardString.charAt(index + (3 * COLS))) {
+                    
+                    if(current == PLAYER_ONE_CHAR){
+                        return players.get(0);
+                    } else if(current == PLAYER_TWO_CHAR){
+                        return players.get(1);
                     }
                 }
             }
         }
 
         // looking for diagonally-right 4 in a row (\)
-        for(int i=0; i<ROWS-3; i++){// need 4 in a row, avoiding error: out of bounds
-            for(int j=0; j<COLS-3; j++){
-                if(this.board.charAt(i+j+1+COLS)  ==this.board.charAt(i+j) &&
-                   this.board.charAt(i+j+2+2*COLS)==this.board.charAt(i+j) &&
-                   this.board.charAt(i+j+3+3*COLS)==this.board.charAt(i+j)){
-                    if(this.board.charAt(i+j)==PLAYER_ONE_CHAR){
-                        return player1;
-                    } else if(this.board.charAt(i+j)==PLAYER_TWO_CHAR){
-                        return player2;
+        for(int row = 0; row < ROWS-3; row++){
+            for(int col = 0; col < COLS-3; col++){
+                int index = row * COLS + col;
+                char current = this.boardString.charAt(index);
+                if (current != 'o' && 
+                    current == this.boardString.charAt(index + COLS + 1) && 
+                    current == this.boardString.charAt(index + (2 * COLS) + 2) && 
+                    current == this.boardString.charAt(index + (3 * COLS) + 3)) {
+                    
+                    if(current == PLAYER_ONE_CHAR){
+                        return players.get(0);
+                    } else if(current == PLAYER_TWO_CHAR){
+                        return players.get(1);
                     }
                 }
             }
         }
 
         // looking for diagonally-left 4 in a row (/)
-        for(int i=0; i<ROWS-3; i++){// need 4 in a row, avoiding error: out of bounds
-            for(int j=3; j<COLS; j++){
-                if(this.board.charAt(i+j-1+COLS)  ==this.board.charAt(i+j) &&
-                        this.board.charAt(i+j-2+2*COLS)==this.board.charAt(i+j) &&
-                        this.board.charAt(i+j-3+3*COLS)==this.board.charAt(i+j)){
-                    if(this.board.charAt(i+j)==PLAYER_ONE_CHAR){
-                        return player1;
-                    } else if(this.board.charAt(i+j)==PLAYER_TWO_CHAR){
-                        return player2;
+        for(int row = 0; row < ROWS-3; row++){
+            for(int col = 3; col < COLS; col++){
+                int index = row * COLS + col;
+                char current = this.boardString.charAt(index);
+                if (current != 'o' && 
+                    current == this.boardString.charAt(index + COLS - 1) && 
+                    current == this.boardString.charAt(index + (2 * COLS) - 2) && 
+                    current == this.boardString.charAt(index + (3 * COLS) - 3)) {
+                    
+                    if(current == PLAYER_ONE_CHAR){
+                        return players.get(0);
+                    } else if(current == PLAYER_TWO_CHAR){
+                        return players.get(1);
                     }
                 }
             }
@@ -131,23 +194,37 @@ public class ConnectFour extends AbstractGame {
         return null;
     }
 
-
-    public boolean drew() {
-        // if there was a winner
-        if(this.getWinner()!=null){
+    /**
+     * Check if the game is a draw
+     * @return True if the game is a draw, false otherwise
+     */
+    public boolean isDrawn() {
+        // If there was a winner, it's not a draw
+        if (checkWinner() != null) {
             return false;
         }
-        // looking through all rows and columns
-        for(int i=0; i<ROWS; i++){
-            for(int j=0; j<COLS; j++){
-                // if there is an open place in the board
-                if(this.board.charAt(i+j)=='o'){
+        
+        // Check if the board is full
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
+                int index = row * COLS + col;
+                // If there is an empty cell, it's not a draw yet
+                if (this.boardString.charAt(index) == 'o') {
                     return false;
                 }
             }
         }
+        
+        // If no winner and the board is full, it's a draw
         return true;
     }
-
-
+    
+    /**
+     * Get the players in this game
+     * @return List of players
+     */
+    public List<Player> getPlayers() {
+        // Now we can use the getter from the Game class
+        return super.getPlayers();
+    }
 }

@@ -1,8 +1,11 @@
 package gamelogic.pieces;
 
+/**
+ * Colour enum for game pieces
+ */
 public enum Colour {
-    RED,
-    YELLOW,
+    WHITE,  // Used for white pieces in Checkers
+    YELLOW, // Used for Connect 4
     BLACK,
-    WHITE
+    RED     // Used for Connect 4
 }

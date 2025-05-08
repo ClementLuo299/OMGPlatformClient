@@ -8,10 +8,11 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Handles communication between the database and the program.
+ * Handles communication between the backend and the program.
  * Compatible with a web server.
  *
- * @author Clement Luo
+ * @authors Clement Luo,
+ * @date March 4, 2025
  */
 public class DatabaseIOHandlerHTTP {
     //URL of the web server

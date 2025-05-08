@@ -24,20 +24,32 @@ public class ScreenManager {
     private Map<String, Parent> screenCache = new HashMap<>();
     
     // Screen paths
+    public static final String OPENING_SCREEN = "fxml/Opening.fxml";
     public static final String LOGIN_SCREEN = "fxml/Login.fxml";
     public static final String DASHBOARD_SCREEN = "fxml/Dashboard.fxml";
     public static final String GAME_LIBRARY_SCREEN = "fxml/GameLibrary.fxml";
     public static final String LEADERBOARD_SCREEN = "fxml/Leaderboard.fxml";
     public static final String SETTINGS_SCREEN = "fxml/Setting.fxml";
     public static final String REGISTER_SCREEN = "fxml/Register.fxml";
+    public static final String TICTACTOE_SCREEN = "fxml/TicTacToe.fxml";
+    public static final String CONNECTFOUR_SCREEN = "fxml/ConnectFour.fxml";
+    public static final String CHECKERS_SCREEN = "fxml/Checkers.fxml";
+    public static final String WHIST_SCREEN = "fxml/Whist.fxml";
+    public static final String GAME_LOBBY_SCREEN = "fxml/GameLobby.fxml";
     
     // CSS paths
+    public static final String OPENING_CSS = "css/opening.css";
     public static final String LOGIN_CSS = "css/login.css";
     public static final String DASHBOARD_CSS = "css/dashboard.css";
     public static final String GAME_LIBRARY_CSS = "css/library.css";
     public static final String LEADERBOARD_CSS = "css/leaderboard.css";
     public static final String SETTINGS_CSS = "css/setting.css";
     public static final String REGISTER_CSS = "css/register.css";
+    public static final String TICTACTOE_CSS = "css/tictactoe.css";
+    public static final String CONNECTFOUR_CSS = "css/connectfour.css";
+    public static final String CHECKERS_CSS = "css/checkers.css";
+    public static final String WHIST_CSS = "css/whist.css";
+    public static final String GAME_LOBBY_CSS = "css/game_lobby.css";
     
     private ScreenManager() {
         mainContainer = new BorderPane();
@@ -67,8 +79,10 @@ public class ScreenManager {
      */
     private void setCssStylesheet(String cssPath) {
         mainScene.getStylesheets().clear();
-        String cssUrl = getClass().getClassLoader().getResource(cssPath).toExternalForm();
-        mainScene.getStylesheets().add(cssUrl);
+        if (cssPath != null) {
+            String cssUrl = getClass().getClassLoader().getResource(cssPath).toExternalForm();
+            mainScene.getStylesheets().add(cssUrl);
+        }
     }
     
     /**
@@ -81,7 +95,13 @@ public class ScreenManager {
         try {
             Parent root;
             Object controller = null;
-            
+
+            // Special case for the game lobby - always reload it
+            // This fixes the issue with game switching
+            if (fxmlPath.equals(GAME_LOBBY_SCREEN)) {
+                return reloadAndNavigateTo(fxmlPath, cssPath);
+            }
+
             if (!screenCache.containsKey(fxmlPath)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
                 root = loader.load();
@@ -91,10 +111,17 @@ public class ScreenManager {
                 root = screenCache.get(fxmlPath);
                 // We don't have the controller here when loading from cache
             }
-            
-            setCssStylesheet(cssPath);
+
+            if(cssPath!=null){
+                // Check if dark mode is enabled
+                if (ThemeManager.getInstance().isDarkTheme()) {
+                    setCssStylesheet("css/dark-theme.css");
+                } else {
+                    setCssStylesheet(cssPath);
+                }
+            }
             mainContainer.setCenter(root);
-            
+
             return controller;
         } catch (IOException e) {
             e.printStackTrace();
@@ -111,15 +138,32 @@ public class ScreenManager {
      */
     public Object reloadAndNavigateTo(String fxmlPath, String cssPath) {
         try {
+            // Remove from cache
             screenCache.remove(fxmlPath);
+
+            // Load fresh
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
             Parent root = loader.load();
             Object controller = loader.getController();
-            screenCache.put(fxmlPath, root);
-            
-            setCssStylesheet(cssPath);
+
+            // Only cache screens that aren't game-specific
+            if (!fxmlPath.equals(GAME_LOBBY_SCREEN) &&
+                    !fxmlPath.equals(TICTACTOE_SCREEN) &&
+                    !fxmlPath.equals(CONNECTFOUR_SCREEN) &&
+                    !fxmlPath.equals(CHECKERS_SCREEN) &&
+                    !fxmlPath.equals(WHIST_SCREEN)) {
+                screenCache.put(fxmlPath, root);
+            }
+
+            // Check if dark mode is enabled
+            if (ThemeManager.getInstance().isDarkTheme()) {
+                setCssStylesheet("css/dark-theme.css");
+            } else {
+                setCssStylesheet(cssPath);
+            }
+
             mainContainer.setCenter(root);
-            
+
             return controller;
         } catch (IOException e) {
             e.printStackTrace();
@@ -148,12 +192,14 @@ public class ScreenManager {
      */
     public void preloadCommonScreens() {
         try {
+            // Preload dashboard
             if (!screenCache.containsKey(DASHBOARD_SCREEN)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(DASHBOARD_SCREEN));
                 Parent root = loader.load();
                 screenCache.put(DASHBOARD_SCREEN, root);
             }
             
+            // Preload game library
             if (!screenCache.containsKey(GAME_LIBRARY_SCREEN)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(GAME_LIBRARY_SCREEN));
                 Parent root = loader.load();
@@ -161,7 +207,7 @@ public class ScreenManager {
             }
         } catch (IOException e) {
             e.printStackTrace();
-            // Non-fatal, just log the error
+            System.err.println("Failed to preload screens: " + e.getMessage());
         }
     }
 } 

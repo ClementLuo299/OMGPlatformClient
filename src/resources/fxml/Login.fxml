@@ -9,13 +9,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Line?>
 
-<StackPane xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
-    <AnchorPane prefHeight="800.0" prefWidth="1400">
+<StackPane xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.systems.LoginController">
+    <AnchorPane prefHeight="800.0" prefWidth="1500">
         <!-- Title - centered at top -->
         <Label layoutX="0" layoutY="80.0" prefHeight="32.0" styleClass="title" text="Online Multiplayer Board Game Platform" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" />
         
@@ -34,8 +33,9 @@
                 <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field" />
                 
                 <!-- Remember Me & Forgot Password -->
+                <!-- TODO: Add remember me and forgot password functionality -->
                 <HBox alignment="CENTER_LEFT" spacing="60">
-                    <CheckBox fx:id="rememberMe" styleClass="checkbox" text="Remember me" />
+                    <CheckBox fx:id="rememberMe" styleClass="checkbox" text="Remember me" visible="false" />
                     <Hyperlink fx:id="forgotPasswordLink" styleClass="link" text="Forgot password" />
                 </HBox>
                 
@@ -53,8 +53,7 @@
             <VBox alignment="TOP_CENTER" spacing="15" styleClass="login-form">
                 <Label styleClass="subtitle" text="Continue as Guest" />
                 <Label styleClass="input-label" text="Username" />
-                <TextField fx:id="usernameField1" promptText="Enter your username" styleClass="input-field" />
-                <Region prefHeight="95.0" /> <!-- Spacer to align the button with the other form -->
+                <TextField fx:id="usernameField1" promptText="Enter your username" styleClass="input-field" /> <!-- Spacer to align the button with the other form -->
                 <Button fx:id="loginButton1" styleClass="login-button" text="Sign in" />
             </VBox>
         </HBox>
