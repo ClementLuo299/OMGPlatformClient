@@ -1,6 +1,6 @@
 package networking.sessions;
 
-import networking.Backend;
+import networking.App;
 import networking.accounts.UserAccount;
 
 /**
@@ -15,7 +15,7 @@ public class UserSession {
     public UserSession(UserAccount account){
         this.account = account;
         active = true;
-        Backend.db().startUserSession(account);
+        App.db().startUserSession(account);
     }
 
     public UserAccount getAccount() {
@@ -24,6 +24,6 @@ public class UserSession {
 
     public void endSession() {
         active = false;
-        Backend.db().endUserSession(account);
+        App.db().endUserSession(account);
     }
 }

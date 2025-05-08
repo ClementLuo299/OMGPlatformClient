@@ -16,7 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import networking.Backend;
+import networking.App;
 
 public class SettingController {
     @FXML
@@ -87,7 +87,7 @@ public class SettingController {
         usernameField.setText(username);
 
         // Try to get and set the full name from database
-        String fullName = Backend.db().getUserFullName(username);
+        String fullName = App.db().getUserFullName(username);
         if (fullName != null && !fullName.isEmpty()) {
             nameField.setText(fullName);
         }
@@ -114,7 +114,7 @@ public class SettingController {
             // In a real implementation, validate password complexity
 
             // Update password in database
-            boolean success = Backend.db().updatePassword(currentUsername, "current_password", newPassword);
+            boolean success = App.db().updatePassword(currentUsername, "current_password", newPassword);
             if (success) {
                 showAlert(AlertType.INFORMATION, "Success", "Password updated successfully");
 

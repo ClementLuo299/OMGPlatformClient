@@ -1,7 +1,7 @@
 import gui.ScreenManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import networking.Backend;
+import networking.App;
 
 /**
  * Launches the Program!
@@ -12,7 +12,7 @@ public class BoardGamePlatformApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         try {
             //Startup backend
-            Backend.getInstance();
+            App.getInstance();
 
             // Initialize the ScreenManager with the primary stage
             ScreenManager screenManager = ScreenManager.getInstance();
@@ -42,7 +42,7 @@ public class BoardGamePlatformApp extends Application {
     @Override
     public void stop() {
         try {
-            Backend.db().saveDBData();
+            App.db().saveDBData();
         } catch (Exception e) {
             System.err.println("Error saving database data: " + e.getMessage());
             e.printStackTrace();

@@ -11,7 +11,7 @@ import networking.IO.GameIOHandler;
  * @authors Clement Luo,
  * @date March 27, 2025
  */
-public class Backend {
+public class App {
     // ATTRIBUTES
 
     //IO handlers
@@ -21,14 +21,14 @@ public class Backend {
     public static GameIOHandler gameHandler;
 
     //Universal backend instance
-    private static Backend instance;
+    private static App instance;
 
     // CONSTRUCTOR
 
     /**
      * Instantiates the backend.
      */
-    private Backend() {
+    private App() {
         //Activate IO handlers
         guiHandler = new GUIIOHandler();
         dbHandler = new DatabaseIOHandler();
@@ -39,9 +39,9 @@ public class Backend {
     /**
      * Retrieve the backend
      */
-    public static Backend getInstance() {
+    public static App getInstance() {
         if (instance == null) {
-            instance = new Backend();
+            instance = new App();
         }
         return instance;
     }

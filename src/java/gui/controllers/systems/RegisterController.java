@@ -1,18 +1,14 @@
 package gui.controllers.systems;
 
 import gui.ScreenManager;
-import networking.Backend;
+import networking.App;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 
 import java.time.LocalDate;
@@ -71,7 +67,7 @@ public class RegisterController {
             return;
         }
 
-        if (Backend.db().isAccountExists(username)) {
+        if (App.db().isAccountExists(username)) {
             showAlert("Registration Error", "Username already exists");
             return;
         }
@@ -80,7 +76,7 @@ public class RegisterController {
         String dobString = dob.format(DateTimeFormatter.ISO_LOCAL_DATE); // Format: YYYY-MM-DD
 
         // Register the account with full name and date of birth
-        Backend.db().RegisterAccount(username, password, fullName, dobString);
+        App.db().RegisterAccount(username, password, fullName, dobString);
         System.out.println("Account created successfully!");
 
         // Navigate back to login screen
