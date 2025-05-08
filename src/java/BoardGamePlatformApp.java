@@ -4,14 +4,20 @@ import javafx.stage.Stage;
 import networking.App;
 
 /**
- * Launches the Program!
+ * Main entry point of the BoardGamePlatform application.
+ * This class extends the JavaFX Application class and sets up the initial stage,
+ * backend services, and UI navigation for the platform.
  */
 public class BoardGamePlatformApp extends Application {
 
+    /**
+     * Initializes the primary stage and sets up the application environment.
+     * This method is called when the JavaFX application starts.
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         try {
-            //Startup backend
+            // Start up the backend system
             App.getInstance();
 
             // Initialize the ScreenManager with the primary stage
@@ -25,20 +31,26 @@ public class BoardGamePlatformApp extends Application {
             new Thread(() -> {
                 screenManager.preloadCommonScreens();
             }).start();
-            
-            primaryStage.setTitle("OMG Platform");
-            primaryStage.setWidth(1500);
-            primaryStage.setHeight(800);
-            primaryStage.setMinWidth(800);
-            primaryStage.setMinHeight(600);
-            primaryStage.show();
+
+            // Set the main stage properties (e.g., title, dimensions)
+            primaryStage.setTitle("OMG Platform"); //Set the title of the stage
+            primaryStage.setWidth(1500); // Set the window width to 1500px
+            primaryStage.setHeight(800); // Set the window height to 800px
+            primaryStage.setMinWidth(800); // Set the minimum width of the window
+            primaryStage.setMinHeight(600); // Set the minimum height of the window
+            primaryStage.show(); // Display the main stage
         } catch (Exception e) {
+            // Log any errors that occur during application startup
             System.err.println("Error starting Application: " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
     }
 
+    /**
+     * Saves the application data to the database before exiting.
+     * This method is called when the JavaFX application stops.
+     */
     @Override
     public void stop() {
         try {
@@ -49,6 +61,11 @@ public class BoardGamePlatformApp extends Application {
         }
     }
 
+    /**
+     * Main method to launch the BoardGamePlatform application.
+     * This method calls the launch() method of the Application class, which
+     * internally calls the start() method.
+     */
     public static void main(String[] args) {
         launch(args);
     }
