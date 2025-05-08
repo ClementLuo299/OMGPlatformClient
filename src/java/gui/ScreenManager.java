@@ -13,17 +13,18 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
- * ScreenManager handles efficient screen transitions using a single scene with content swapping.
- * This approach improves performance by avoiding complete scene rebuilds on every navigation.
+ * ScreenManager is responsible for managing screen transitions in the application.
+ * It uses a single scene with content swapping for performance, reducing the need to rebuild scenes
+ * on every navigation. It also handles caching of screens and preloading essential screens for smoother transitions.
  */
 public class ScreenManager {
-    private static ScreenManager instance;
-    private BorderPane mainContainer;
-    private Scene mainScene;
-    private Stage mainStage;
-    private Map<String, Parent> screenCache = new HashMap<>();
-    
-    // Screen paths
+    private static ScreenManager instance;  // Singleton instance of ScreenManager
+    private BorderPane mainContainer;  // Main container that holds the content (used for swapping scenes)
+    private Scene mainScene;  // The main scene that will be used for displaying the UI
+    private Stage mainStage;  // The primary stage for the JavaFX application
+    private Map<String, Parent> screenCache = new HashMap<>();  // Cache to store loaded screens by their FXML paths
+
+    // Paths to the FXML files for various screens
     public static final String OPENING_SCREEN = "fxml/Opening.fxml";
     public static final String LOGIN_SCREEN = "fxml/Login.fxml";
     public static final String DASHBOARD_SCREEN = "fxml/Dashboard.fxml";
@@ -36,8 +37,8 @@ public class ScreenManager {
     public static final String CHECKERS_SCREEN = "fxml/Checkers.fxml";
     public static final String WHIST_SCREEN = "fxml/Whist.fxml";
     public static final String GAME_LOBBY_SCREEN = "fxml/GameLobby.fxml";
-    
-    // CSS paths
+
+    // Paths to the corresponding CSS files for the screens
     public static final String OPENING_CSS = "css/opening.css";
     public static final String LOGIN_CSS = "css/login.css";
     public static final String DASHBOARD_CSS = "css/dashboard.css";
@@ -50,103 +51,120 @@ public class ScreenManager {
     public static final String CHECKERS_CSS = "css/checkers.css";
     public static final String WHIST_CSS = "css/whist.css";
     public static final String GAME_LOBBY_CSS = "css/game_lobby.css";
-    
+
+    // Private constructor to ensure singleton pattern
     private ScreenManager() {
         mainContainer = new BorderPane();
-        mainScene = new Scene(mainContainer, 1400, 800);
+        mainScene = new Scene(mainContainer, 1400, 800);  // Set the scene size to 1400x800
     }
-    
+
+    /**
+     * Returns the singleton instance of the ScreenManager.
+     * If the instance doesn't exist, a new one is created.
+     *
+     * @return The singleton instance of ScreenManager.
+     */
     public static ScreenManager getInstance() {
         if (instance == null) {
             instance = new ScreenManager();
         }
         return instance;
     }
-    
+
     /**
-     * Initializes the screen manager with a primary stage.
-     * @param stage The primary stage from the JavaFX application
+     * Initializes the ScreenManager with the primary stage.
+     * This method sets up the main scene and configures the title of the stage.
+     *
+     * @param stage The primary stage from the JavaFX application.
      */
     public void initialize(Stage stage) {
         this.mainStage = stage;
-        stage.setScene(mainScene);
-        stage.setTitle("OMG Platform");
+        stage.setScene(mainScene);  // Set the main scene
+        stage.setTitle("OMG Platform");  // Set the title of the application window
     }
-    
+
     /**
-     * Sets the scene's stylesheet for the current transition
-     * @param cssPath Path to the CSS file
+     * Sets the CSS stylesheet for the current scene transition.
+     * It clears the existing stylesheets and applies the specified one.
+     *
+     * @param cssPath The path to the CSS file to be applied.
      */
     private void setCssStylesheet(String cssPath) {
-        mainScene.getStylesheets().clear();
+        mainScene.getStylesheets().clear();  // Clear existing stylesheets
         if (cssPath != null) {
             String cssUrl = getClass().getClassLoader().getResource(cssPath).toExternalForm();
-            mainScene.getStylesheets().add(cssUrl);
+            mainScene.getStylesheets().add(cssUrl);  // Add the new CSS file
         }
     }
-    
+
     /**
-     * Navigates to a screen, loading it if not already cached
-     * @param fxmlPath The path to the FXML file
-     * @param cssPath The path to the CSS file
-     * @return The controller instance for the loaded screen
+     * Navigates to a new screen by loading the specified FXML file.
+     * If the screen is already cached, it reuses the cached version.
+     * This method also applies the appropriate CSS based on the theme.
+     *
+     * @param fxmlPath The path to the FXML file for the screen.
+     * @param cssPath The path to the CSS file for the screen.
+     * @return The controller instance of the loaded screen.
      */
     public Object navigateTo(String fxmlPath, String cssPath) {
         try {
             Parent root;
             Object controller = null;
 
-            // Special case for the game lobby - always reload it
-            // This fixes the issue with game switching
+            // Special case for the game lobby: always reload it
             if (fxmlPath.equals(GAME_LOBBY_SCREEN)) {
                 return reloadAndNavigateTo(fxmlPath, cssPath);
             }
 
+            // If the screen is not cached, load it
             if (!screenCache.containsKey(fxmlPath)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
                 root = loader.load();
                 controller = loader.getController();
-                screenCache.put(fxmlPath, root);
+                screenCache.put(fxmlPath, root);  // Cache the loaded screen
             } else {
-                root = screenCache.get(fxmlPath);
-                // We don't have the controller here when loading from cache
+                root = screenCache.get(fxmlPath);  // Use cached version
             }
 
-            if(cssPath!=null){
-                // Check if dark mode is enabled
+            // Apply the appropriate CSS based on the theme
+            if (cssPath != null) {
                 if (ThemeManager.getInstance().isDarkTheme()) {
                     setCssStylesheet("css/dark-theme.css");
                 } else {
                     setCssStylesheet(cssPath);
                 }
             }
+
+            // Set the loaded screen as the center of the main container
             mainContainer.setCenter(root);
 
-            return controller;
+            return controller;  // Return the controller of the loaded screen
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Navigation Error", "Could not navigate to screen: " + e.getMessage());
             return null;
         }
     }
-    
+
     /**
-     * Reloads a screen fresh (not from cache) and navigates to it
-     * @param fxmlPath The path to the FXML file
-     * @param cssPath The path to the CSS file
-     * @return The controller instance for the loaded screen
+     * Reloads the specified screen and navigates to it, bypassing the cache.
+     * This method is useful for screens that need to be reloaded, such as the game lobby.
+     *
+     * @param fxmlPath The path to the FXML file for the screen.
+     * @param cssPath The path to the CSS file for the screen.
+     * @return The controller instance of the loaded screen.
      */
     public Object reloadAndNavigateTo(String fxmlPath, String cssPath) {
         try {
-            // Remove from cache
+            // Remove the screen from cache to force reload
             screenCache.remove(fxmlPath);
 
-            // Load fresh
+            // Reload the screen and its controller
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
             Parent root = loader.load();
             Object controller = loader.getController();
 
-            // Only cache screens that aren't game-specific
+            // Cache the screen unless it's a game screen that needs to be reloaded every time
             if (!fxmlPath.equals(GAME_LOBBY_SCREEN) &&
                     !fxmlPath.equals(TICTACTOE_SCREEN) &&
                     !fxmlPath.equals(CONNECTFOUR_SCREEN) &&
@@ -155,7 +173,7 @@ public class ScreenManager {
                 screenCache.put(fxmlPath, root);
             }
 
-            // Check if dark mode is enabled
+            // Apply the appropriate CSS
             if (ThemeManager.getInstance().isDarkTheme()) {
                 setCssStylesheet("css/dark-theme.css");
             } else {
@@ -164,42 +182,44 @@ public class ScreenManager {
 
             mainContainer.setCenter(root);
 
-            return controller;
+            return controller;  // Return the controller of the reloaded screen
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Navigation Error", "Could not navigate to screen: " + e.getMessage());
             return null;
         }
     }
-    
+
     /**
-     * Shows an alert dialog
-     * @param type The alert type
-     * @param title The alert title
-     * @param message The alert message
+     * Shows an alert dialog to the user.
+     * This is typically used to display error or warning messages during navigation.
+     *
+     * @param type The type of alert (ERROR, WARNING, INFORMATION, etc.).
+     * @param title The title of the alert dialog.
+     * @param message The content/message of the alert.
      */
     private void showAlert(AlertType type, String title, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        alert.setHeaderText(null);  // No header text
+        alert.setContentText(message);  // Set the content message
+        alert.showAndWait();  // Show the alert and wait for user response
     }
-    
+
     /**
-     * Preloads common screens for faster navigation
-     * Only loads essential screens like Dashboard and Game Library
+     * Preloads commonly used screens for faster navigation later.
+     * This method preloads screens like the Dashboard and Game Library, which are accessed frequently.
      */
     public void preloadCommonScreens() {
         try {
-            // Preload dashboard
+            // Preload the Dashboard screen
             if (!screenCache.containsKey(DASHBOARD_SCREEN)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(DASHBOARD_SCREEN));
                 Parent root = loader.load();
                 screenCache.put(DASHBOARD_SCREEN, root);
             }
-            
-            // Preload game library
+
+            // Preload the Game Library screen
             if (!screenCache.containsKey(GAME_LIBRARY_SCREEN)) {
                 FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(GAME_LIBRARY_SCREEN));
                 Parent root = loader.load();
@@ -210,4 +230,4 @@ public class ScreenManager {
             System.err.println("Failed to preload screens: " + e.getMessage());
         }
     }
-} 
+}
