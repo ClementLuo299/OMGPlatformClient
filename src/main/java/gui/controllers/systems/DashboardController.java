@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
-import networking.App;
+import app.Services;
 
 public class DashboardController {
     @FXML
@@ -127,9 +127,9 @@ public class DashboardController {
             usernameLabel.setText(username);
 
             //Update stats
-            totalGames.setText(Integer.toString(App.db().getGamesPlayed(App.db().getUser(currentUsername))));
-            winRate.setText(String.format("%.2f%%",100 * App.db().getWinRate(App.db().getUser(currentUsername))));
-            currentRank.setText(Integer.toString(App.db().getRank(App.db().getUser(currentUsername))));
+            totalGames.setText(Integer.toString(Services.db().getGamesPlayed(Services.db().getUser(currentUsername))));
+            winRate.setText(String.format("%.2f%%",100 * Services.db().getWinRate(Services.db().getUser(currentUsername))));
+            currentRank.setText(Integer.toString(Services.db().getRank(Services.db().getUser(currentUsername))));
         }
     }
 

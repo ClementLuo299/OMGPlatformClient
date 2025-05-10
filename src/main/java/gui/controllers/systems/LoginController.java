@@ -5,7 +5,7 @@ import gui.ScreenManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import networking.App;
+import app.Services;
 
 public class LoginController {
 
@@ -59,7 +59,7 @@ public class LoginController {
             return;
         }
 
-        if (App.db().verifyCredentials(username, password)) {
+        if (Services.db().verifyCredentials(username, password)) {
             System.out.println("Login successful!");
             switchToDashboard(username, false);
         } else {
@@ -77,7 +77,7 @@ public class LoginController {
         }
         
         // Check if username already exists in database
-        if (App.db().isAccountExists(guestUsername)) {
+        if (Services.db().isAccountExists(guestUsername)) {
             showAlert("Guest Login Error", "This username is already taken. Please choose another one.");
             return;
         }

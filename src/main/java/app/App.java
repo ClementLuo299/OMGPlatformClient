@@ -1,14 +1,15 @@
+package app;
+
 import gui.ScreenManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
-import networking.App;
 
 /**
  * Main entry point of the BoardGamePlatform application.
  * This class extends the JavaFX Application class and sets up the initial stage,
  * backend services, and UI navigation for the platform.
  */
-public class BoardGamePlatformApp extends Application {
+public class App extends Application {
 
     /**
      * Initializes the primary stage and sets up the application environment.
@@ -18,15 +19,15 @@ public class BoardGamePlatformApp extends Application {
     public void start(Stage primaryStage) throws Exception {
         try {
             // Start up the backend system
-            App.getInstance();
+            Services.getInstance();
 
             // Initialize the ScreenManager with the primary stage
             ScreenManager screenManager = ScreenManager.getInstance();
             screenManager.initialize(primaryStage);
-            
+
             // Navigate to the opening screen (initial screen)
             screenManager.navigateTo(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS);
-            
+
             // Start preloading common screens in background for faster navigation
             new Thread(() -> {
                 screenManager.preloadCommonScreens();
@@ -54,7 +55,7 @@ public class BoardGamePlatformApp extends Application {
     @Override
     public void stop() {
         try {
-            App.db().saveDBData();
+            Services.db().saveDBData();
         } catch (Exception e) {
             System.err.println("Error saving database data: " + e.getMessage());
             e.printStackTrace();

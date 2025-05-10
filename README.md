@@ -25,7 +25,7 @@ A multiplayer board game platform built with JavaFX.
    mvn javafx:run
    ```
    Or:
-   Run the `BoardGamePlatformApp` class in the `src/java` directory
+   Run the `app.App` class in the `src/java` directory
 
 ## Project Structure
 

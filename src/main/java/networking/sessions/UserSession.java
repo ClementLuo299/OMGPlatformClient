@@ -1,6 +1,6 @@
 package networking.sessions;
 
-import networking.App;
+import app.Services;
 import networking.accounts.UserAccount;
 
 /**
@@ -15,7 +15,7 @@ public class UserSession {
     public UserSession(UserAccount account){
         this.account = account;
         active = true;
-        App.db().startUserSession(account);
+        Services.db().startUserSession(account);
     }
 
     public UserAccount getAccount() {
@@ -24,6 +24,6 @@ public class UserSession {
 
     public void endSession() {
         active = false;
-        App.db().endUserSession(account);
+        Services.db().endUserSession(account);
     }
 }

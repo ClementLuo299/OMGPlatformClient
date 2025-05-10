@@ -6,7 +6,7 @@ package networking.IO;
  * @authors Clement Luo,
  * @date March 25, 2025
  */
-public class GUIIOHandler {
+public class GUIEventHandler {
     // ATTRIBUTES
 
     // CONSTRUCTOR
@@ -14,7 +14,7 @@ public class GUIIOHandler {
     /**
      * Instantiates the GUI IO handler.
      */
-    public GUIIOHandler() {
+    public GUIEventHandler() {
         //
     }
 

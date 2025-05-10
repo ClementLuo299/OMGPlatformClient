@@ -1,36 +1,37 @@
-package networking;
+package app;
 
 import networking.IO.DatabaseIOHandler;
 import networking.IO.DatabaseIOHandlerHTTP;
-import networking.IO.GUIIOHandler;
+import networking.IO.GUIEventHandler;
 import networking.IO.GameIOHandler;
 
 /**
- * The backend of the program.
+ * Collection of services
  *
  * @authors Clement Luo,
  * @date March 27, 2025
  */
-public class App {
+public class Services {
+    //Universal backend instance
+    private static Services instance;
+
     // ATTRIBUTES
 
     //IO handlers
-    public static GUIIOHandler guiHandler;
+    public static GUIEventHandler guiHandler;
     public static DatabaseIOHandler dbHandler;
     public static DatabaseIOHandlerHTTP dbHandlerHTTP;
     public static GameIOHandler gameHandler;
 
-    //Universal backend instance
-    private static App instance;
 
     // CONSTRUCTOR
 
     /**
      * Instantiates the backend.
      */
-    private App() {
+    private Services() {
         //Activate IO handlers
-        guiHandler = new GUIIOHandler();
+        guiHandler = new GUIEventHandler();
         dbHandler = new DatabaseIOHandler();
         dbHandlerHTTP = new DatabaseIOHandlerHTTP();
         gameHandler = new GameIOHandler();
@@ -39,15 +40,15 @@ public class App {
     /**
      * Retrieve the backend
      */
-    public static App getInstance() {
+    public static Services getInstance() {
         if (instance == null) {
-            instance = new App();
+            instance = new Services();
         }
         return instance;
     }
 
     // GETTERS
-    public static GUIIOHandler gui(){
+    public static GUIEventHandler gui(){
         return guiHandler;
     }
 

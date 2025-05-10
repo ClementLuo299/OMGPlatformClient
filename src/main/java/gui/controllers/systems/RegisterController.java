@@ -1,7 +1,7 @@
 package gui.controllers.systems;
 
 import gui.ScreenManager;
-import networking.App;
+import app.Services;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -67,7 +67,7 @@ public class RegisterController {
             return;
         }
 
-        if (App.db().isAccountExists(username)) {
+        if (Services.db().isAccountExists(username)) {
             showAlert("Registration Error", "Username already exists");
             return;
         }
@@ -76,7 +76,7 @@ public class RegisterController {
         String dobString = dob.format(DateTimeFormatter.ISO_LOCAL_DATE); // Format: YYYY-MM-DD
 
         // Register the account with full name and date of birth
-        App.db().RegisterAccount(username, password, fullName, dobString);
+        Services.db().RegisterAccount(username, password, fullName, dobString);
         System.out.println("Account created successfully!");
 
         // Navigate back to login screen

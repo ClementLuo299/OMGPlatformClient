@@ -115,7 +115,7 @@
                         <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
                     
-                    <!-- Checkerboard will be created dynamically by the controller -->
+                    <!-- Checkerboard will be created dynamically by the app -->
                     
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="70" prefWidth="80" />
