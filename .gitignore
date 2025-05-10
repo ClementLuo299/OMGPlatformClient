@@ -3,7 +3,7 @@
 /SENG_Project.iml
 /target/
 /BoardGamePlatform.iml
-/src/resources/data/
+/src/main/resources/data/
 /.idea/
 # Default ignored files
 /shelf/

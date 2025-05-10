@@ -34,7 +34,7 @@ public class DatabaseStub {
     public DatabaseStub() {
         schema = DatabaseSchema.getInstance();
         //Add file paths - using relative path from resources
-        String dataDir = "src/resources/data";
+        String dataDir = "src/main/resources/data";
         //Get filenames from schema
         for(String i : schema.getTableNames()){
             paths.put(i, dataDir + "/" + i + ".txt");
@@ -159,7 +159,7 @@ public class DatabaseStub {
     public void populateDB() {
         // First check for users.txt file which has a different format
         try {
-            File userFile = new File("src/resources/data/users.txt");
+            File userFile = new File("src/main/resources/data/users.txt");
             if (userFile.exists()) {
                 System.out.println("DatabaseStub:\tLoading users from users.txt");
                 BufferedReader reader = new BufferedReader(new FileReader(userFile));
