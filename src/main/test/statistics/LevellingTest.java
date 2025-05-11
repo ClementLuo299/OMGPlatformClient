@@ -2,7 +2,7 @@ package statistics;
 
 import statistics.*;
 import gamelogic.Player;
-import com.networking.accounts.UserAccount;
+import com.models.accounts.UserAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

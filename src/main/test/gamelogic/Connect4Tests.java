@@ -1,6 +1,6 @@
 package gamelogic;
 import gamelogic.connectfour.ConnectFour;
-import com.networking.accounts.UserAccount;
+import com.models.accounts.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;
