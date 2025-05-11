@@ -13,7 +13,7 @@ import gamelogic.pieces.Card;
 
 import gamelogic.whist.StageType;
 import gamelogic.whist.WhistGame;
-import networking.accounts.UserAccount;
+import com.networking.accounts.UserAccount;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;

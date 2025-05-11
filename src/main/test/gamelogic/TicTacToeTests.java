@@ -1,7 +1,7 @@
 package gamelogic;
 
 import gamelogic.tictactoe.TicTacToeGame;
-import networking.accounts.UserAccount;
+import com.networking.accounts.UserAccount;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package networking;
+package com.networking;
 
 import org.junit.jupiter.api.Test;
 

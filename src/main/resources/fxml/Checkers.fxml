@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="mainContainer" prefHeight="800.0" prefWidth="1500.0" styleClass="main-container" stylesheets="@../css/checkers.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.games.CheckersGameController">
+<BorderPane fx:id="mainContainer" prefHeight="800.0" prefWidth="1500.0" styleClass="main-container" stylesheets="@../css/checkers.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui.controllers.games.CheckersGameController">
     <top>
         <HBox alignment="CENTER" spacing="10" styleClass="game-header">
             <padding>
@@ -115,7 +115,7 @@
                         <Insets bottom="10" left="10" right="10" top="10" />
                     </padding>
                     
-                    <!-- Checkerboard will be created dynamically by the app -->
+                    <!-- Checkerboard will be created dynamically by the com.app -->
                     
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="70" prefWidth="80" />

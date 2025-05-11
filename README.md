@@ -25,7 +25,7 @@ A multiplayer board game platform built with JavaFX.
    mvn javafx:run
    ```
    Or:
-   Run the `app.App` class in the `src/java` directory
+   Run the `com.app.App` class in the `src/java` directory
 
 ## Project Structure
 
@@ -34,8 +34,8 @@ BoardGamePlatform/
 ├── src/
 │   ├── java/
 │   │   ├── gamelogic/         # Game logic codebase
-│   │   ├── gui/               # JavaFX UI codebase
-│   │   ├── networking/        # Networking and Authentication codebase
+│   │   ├── com.gui/               # JavaFX UI codebase
+│   │   ├── com.networking/        # Networking and Authentication codebase
 │   │   └── statistics/        # Matchmaking and Statistics codebase
 │   └── resources/
 │       ├── fxml/              # FXML files
@@ -43,8 +43,8 @@ BoardGamePlatform/
 │       └── data/              # Game data, user data
 ├── tests/
 │   ├── gamelogic/             # Game logic tests
-│   ├── gui/                   # JavaFX UI tests
-│   ├── networking/            # Networking and Authentication tests
+│   ├── com.gui/                   # JavaFX UI tests
+│   ├── com.networking/            # Networking and Authentication tests
 │   └── statistics/            # Matchmaking and Statistics tests              
 ├── docs/
 │   ├── critique-bravo-echo/   # Critiques to other teams

@@ -13,11 +13,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="800.0" prefWidth="1500" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.controllers.statistics.LeaderboardController">
+<BorderPane prefHeight="800.0" prefWidth="1500" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui.controllers.statistics.LeaderboardController">
     <left>
         <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
-            <!-- app.App Title with Toggle -->
-            <HBox styleClass="app-title">
+            <!-- com.app.App Title with Toggle -->
+            <HBox styleClass="com.app-title">
                 <ImageView fitHeight="24" fitWidth="24">
                     <Image url="@../icons/navigation/unknown.png" />
                 </ImageView>
