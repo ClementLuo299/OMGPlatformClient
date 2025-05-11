@@ -83,22 +83,6 @@ public class HTTPHandler {
     /**
      *
      */
-    public static List<User> getAllUsers() throws Exception {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("http://192.168.1.88:8080/getusers")) // Replace with your actual IP
-                .GET()
-                .build();
-
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        // Convert JSON array to List<com.network.IO.User>
-        User[] users = gson.fromJson(response.body(), User[].class);
-        return Arrays.asList(users);
-    }
-
-    /**
-     *
-     */
     public static String login(String username, String password) throws IOException {
         URL url = new URL(HTTPConfig.getLoginUrl());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
