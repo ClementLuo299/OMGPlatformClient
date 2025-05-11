@@ -1,6 +1,6 @@
 package com.network.sessions;
 
-import com.Services;
+import com.core.Services;
 import com.models.accounts.UserAccount;
 
 /**

@@ -1,7 +1,7 @@
 package com.controllers.systems;
 
-import com.ScreenManager;
-import com.Services;
+import com.core.ScreenManager;
+import com.core.Services;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

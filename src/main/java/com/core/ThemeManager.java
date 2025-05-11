@@ -1,4 +1,4 @@
-package com;
+package com.core;
 
 import javafx.scene.Scene;
 import java.util.HashSet;

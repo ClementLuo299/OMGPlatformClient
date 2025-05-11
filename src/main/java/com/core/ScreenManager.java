@@ -1,4 +1,4 @@
-package com;
+package com.core;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -32,10 +32,6 @@ public class ScreenManager {
     public static final String LEADERBOARD_SCREEN = "fxml/Leaderboard.fxml";
     public static final String SETTINGS_SCREEN = "fxml/Setting.fxml";
     public static final String REGISTER_SCREEN = "fxml/Register.fxml";
-    public static final String TICTACTOE_SCREEN = "fxml/TicTacToe.fxml";
-    public static final String CONNECTFOUR_SCREEN = "fxml/ConnectFour.fxml";
-    public static final String CHECKERS_SCREEN = "fxml/Checkers.fxml";
-    public static final String WHIST_SCREEN = "fxml/Whist.fxml";
     public static final String GAME_LOBBY_SCREEN = "fxml/GameLobby.fxml";
 
     // Paths to the corresponding CSS files for the screens
@@ -46,10 +42,6 @@ public class ScreenManager {
     public static final String LEADERBOARD_CSS = "css/leaderboard.css";
     public static final String SETTINGS_CSS = "css/setting.css";
     public static final String REGISTER_CSS = "css/register.css";
-    public static final String TICTACTOE_CSS = "css/tictactoe.css";
-    public static final String CONNECTFOUR_CSS = "css/connectfour.css";
-    public static final String CHECKERS_CSS = "css/checkers.css";
-    public static final String WHIST_CSS = "css/whist.css";
     public static final String GAME_LOBBY_CSS = "css/game_lobby.css";
 
     // Private constructor to ensure singleton pattern
@@ -165,6 +157,7 @@ public class ScreenManager {
             Object controller = loader.getController();
 
             // Cache the screen unless it's a game screen that needs to be reloaded every time
+            /*
             if (!fxmlPath.equals(GAME_LOBBY_SCREEN) &&
                     !fxmlPath.equals(TICTACTOE_SCREEN) &&
                     !fxmlPath.equals(CONNECTFOUR_SCREEN) &&
@@ -172,6 +165,7 @@ public class ScreenManager {
                     !fxmlPath.equals(WHIST_SCREEN)) {
                 screenCache.put(fxmlPath, root);
             }
+             */
 
             // Apply the appropriate CSS
             if (ThemeManager.getInstance().isDarkTheme()) {

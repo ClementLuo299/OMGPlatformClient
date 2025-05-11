@@ -1,11 +1,11 @@
 package com.controllers.systems;
 
-import com.ScreenManager;
+import com.core.ScreenManager;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import com.Services;
+import com.core.Services;
 
 public class LoginController {
 

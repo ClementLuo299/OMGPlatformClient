@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="800.0" prefWidth="1500" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui.controllers.games.GameLibraryController">
+<BorderPane prefHeight="800.0" prefWidth="1500" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.GameLibraryController">
     <left>
         <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
             <!-- com.App Title -->
@@ -113,7 +113,7 @@
                     </HBox>
                     <Label styleClass="game-description" text="Classic strategy game where players drop colored discs to connect four in a row." wrapText="true" />
                     <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
-                    <Button fx:id="connect4Button" onAction="#playConnect4" styleClass="game-card-button" text="Play Now" />
+                    <Button fx:id="connect4Button" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
                 <!-- Checkers Card (Second) -->
@@ -128,7 +128,7 @@
                     </HBox>
                     <Label styleClass="game-description" text="Traditional board game where players move diagonally and try to capture all opponent's pieces." wrapText="true" />
                     <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
-                    <Button fx:id="checkersButton" onAction="#playCheckers" styleClass="game-card-button" text="Play Now" />
+                    <Button fx:id="checkersButton" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
                 <!-- Whist Card Game (Third) -->
@@ -143,7 +143,7 @@
                     </HBox>
                     <Label styleClass="game-description" text="Classic trick-taking card game played with a standard deck of 52 playing cards." wrapText="true" />
                     <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
-                    <Button fx:id="whistButton" onAction="#playWhist" styleClass="game-card-button" text="Play Now" />
+                    <Button fx:id="whistButton" styleClass="game-card-button" text="Play Now" />
                 </VBox>
                 
                 <!-- Tic Tac Toe Card (Fourth) -->
@@ -158,7 +158,7 @@
                     </HBox>
                     <Label styleClass="game-description" text="Classic game where players take turns marking X and O in a 3x3 grid to get three in a row." wrapText="true" />
                     <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
-                    <Button fx:id="ticTacToeButton" onAction="#playTicTacToe" styleClass="game-card-button" text="Play Now" />
+                    <Button fx:id="ticTacToeButton" styleClass="game-card-button" text="Play Now" />
                 </VBox>
             </HBox>
             

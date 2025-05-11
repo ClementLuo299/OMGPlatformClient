@@ -1,10 +1,10 @@
 package com.controllers.systems;
 
-import com.ThemeManager;
+import com.core.ThemeManager;
 import com.controllers.GameLobbyController;
 import com.controllers.GameLibraryController;
 import com.controllers.statistics.LeaderboardController;
-import com.ScreenManager;
+import com.core.ScreenManager;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -13,7 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
-import com.Services;
+import com.core.Services;
 
 public class DashboardController {
     @FXML

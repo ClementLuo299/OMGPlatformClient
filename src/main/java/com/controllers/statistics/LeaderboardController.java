@@ -1,6 +1,6 @@
 package com.controllers.statistics;
 
-import com.ScreenManager;
+import com.core.ScreenManager;
 import com.controllers.GameLibraryController;
 import com.controllers.systems.DashboardController;
 import com.controllers.systems.SettingController;

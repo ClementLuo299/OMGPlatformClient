@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.web.WebView;
 import javafx.scene.web.WebEngine;
 import java.net.URL;
-import com.ScreenManager;
+import com.core.ScreenManager;
 
 /**
  * Controller for the Opening screen that displays a START button

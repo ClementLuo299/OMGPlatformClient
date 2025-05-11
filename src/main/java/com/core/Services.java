@@ -1,4 +1,4 @@
-package com;
+package com.core;
 
 import com.network.IO.DatabaseIOHandler;
 import com.network.IO.DatabaseIOHandlerHTTP;

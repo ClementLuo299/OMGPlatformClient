@@ -4,8 +4,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Random;
 
-import com.ScreenManager;
-import com.ThemeManager;
+import com.core.ScreenManager;
+import com.core.ThemeManager;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;

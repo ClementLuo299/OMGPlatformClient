@@ -1,7 +1,7 @@
 package com.controllers.systems;
 
-import com.ScreenManager;
-import com.ThemeManager;
+import com.core.ScreenManager;
+import com.core.ThemeManager;
 import com.controllers.GameLibraryController;
 import com.controllers.statistics.LeaderboardController;
 
@@ -16,7 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import com.Services;
+import com.core.Services;
 
 public class SettingController {
     @FXML
