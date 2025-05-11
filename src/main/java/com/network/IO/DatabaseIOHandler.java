@@ -4,7 +4,7 @@ package com.network.IO;
 //import gamelogic.GameType;
 import com.network.DatabaseStub;
 import com.models.accounts.GameRecord;
-import com.models.accounts.UserAccount;
+import com.models.UserAccount;
 import com.network.sessions.GameSession;
 
 import java.time.LocalDateTime;

@@ -1,5 +1,6 @@
 package com.models.accounts;
 import com.core.Services;
+import com.models.UserAccount;
 import com.network.DatabaseStub;
 import java.util.Random;
 

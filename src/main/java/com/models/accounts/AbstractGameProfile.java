@@ -1,6 +1,8 @@
 package com.models.accounts;
 
 //import gamelogic.GameType;
+import com.models.UserAccount;
+
 import java.util.ArrayList;
 import java.util.List;
 

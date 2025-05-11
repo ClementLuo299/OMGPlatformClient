@@ -51,7 +51,7 @@ public class LeaderboardController {
     @FXML private TableView<LeaderboardEntry> whistBestTable;
     @FXML private TableView<LeaderboardEntry> whistMostGamesTable;
     
-    // User info
+    // com.network.IO.User info
     private String currentUsername;
     private boolean isGuest;
 

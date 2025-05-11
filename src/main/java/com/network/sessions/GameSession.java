@@ -4,7 +4,7 @@ package com.network.sessions;
 //import gamelogic.GameType;
 //import gamelogic.Player;
 import com.models.accounts.GameRecord;
-import com.models.accounts.UserAccount;
+import com.models.UserAccount;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

@@ -1,6 +1,6 @@
 package com.models.records;
 
-import com.models.accounts.UserAccount;
+import com.models.UserAccount;
 
 /**
  * Stores user data for a game.

@@ -86,7 +86,7 @@ public class GameLibraryController {
     @FXML
     private VBox whistCard;
     
-    // User info
+    // com.network.IO.User info
     private String currentUsername;
     private boolean isGuest;
     

@@ -1,7 +1,7 @@
 package com.core;
 
 import com.network.IO.DatabaseIOHandler;
-import com.network.IO.DatabaseIOHandlerHTTP;
+import com.network.IO.HTTPHandler;
 import com.network.IO.GUIEventHandler;
 import com.network.IO.GameIOHandler;
 
@@ -20,7 +20,7 @@ public class Services {
     //IO handlers
     public static GUIEventHandler guiHandler;
     public static DatabaseIOHandler dbHandler;
-    public static DatabaseIOHandlerHTTP dbHandlerHTTP;
+    public static HTTPHandler dbHandlerHTTP;
     public static GameIOHandler gameHandler;
 
 
@@ -33,7 +33,7 @@ public class Services {
         //Activate IO handlers
         guiHandler = new GUIEventHandler();
         dbHandler = new DatabaseIOHandler();
-        dbHandlerHTTP = new DatabaseIOHandlerHTTP();
+        dbHandlerHTTP = new HTTPHandler();
         gameHandler = new GameIOHandler();
     }
 
@@ -56,7 +56,7 @@ public class Services {
         return dbHandler;
     }
 
-    public static DatabaseIOHandlerHTTP dbHTTP(){
+    public static HTTPHandler dbHTTP(){
         return dbHandlerHTTP;
     }
 

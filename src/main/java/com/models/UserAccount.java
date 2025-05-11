@@ -1,4 +1,4 @@
-package com.models.accounts;
+package com.models;
 
 import java.time.LocalDate;
 
@@ -106,14 +106,14 @@ public class UserAccount {
 
     public void setSessionIntensityLevel(float sessionIntensityLevel) {this.sessionIntensityLevel = sessionIntensityLevel;}
     /**
-     * Sets the Online status of this User to true
+     * Sets the Online status of this com.network.IO.User to true
      */
     public void logIn() {
         this.online = true;
     }
 
     /**
-     * Sets the Online status of this User to false
+     * Sets the Online status of this com.network.IO.User to false
      */
     public void logOff() {
         this.online = false;

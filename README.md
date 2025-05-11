@@ -56,10 +56,10 @@ BoardGamePlatform/
 
 ## Features
 
-- User authentication
+- com.network.IO.User authentication
 - Multiplayer game support
 - Real-time game updates
-- User statistics tracking
+- com.network.IO.User statistics tracking
 - Modern UI with JavaFX
 
 ## Development

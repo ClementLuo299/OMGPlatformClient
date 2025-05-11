@@ -1,0 +1,30 @@
+package com.config;
+
+/**
+ * Stores the URL's of the server endpoints
+ *
+ * @authors Clement Luo,
+ * @date May 10, 2025
+ */
+public class HTTPConfig {
+    //URL of the server
+    private static final String SERVER_URL = "http://192.168.1.88:8080";
+
+    //User account endpoints
+    private static final String USERS_URL = "/users";
+    private static final String REGISTRATION_ENDPOINT = "/adduser";
+
+    /**
+     *
+     */
+    public static String getServerUrl() {
+        return SERVER_URL;
+    }
+
+    /**
+     *
+     */
+    public static String getRegistrationUrl() {
+        return SERVER_URL + USERS_URL +  REGISTRATION_ENDPOINT;
+    }
+}

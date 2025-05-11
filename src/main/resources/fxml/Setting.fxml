@@ -113,7 +113,7 @@
                     <!-- Name Field -->
                     <VBox styleClass="form-group-compact" HBox.hgrow="ALWAYS">
                         <Label styleClass="field-label" text="Name" />
-                        <TextField fx:id="nameField" editable="false" focusTraversable="false" promptText="Your Name" styleClass="password-mask" text="User Name" />
+                        <TextField fx:id="nameField" editable="false" focusTraversable="false" promptText="Your Name" styleClass="password-mask" text="com.network.IO.User Name" />
                     </VBox>
                     
                     <!-- Username Field -->

@@ -108,7 +108,7 @@ public class DatabaseSchema {
         );
         columns.put("gameRecords", gameRecords);
 
-        //User sessions table
+        //com.network.IO.User sessions table
         List<String> userSessions = List.of(
                 "id",
                 "username",

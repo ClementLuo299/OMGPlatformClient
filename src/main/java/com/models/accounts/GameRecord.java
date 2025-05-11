@@ -2,6 +2,8 @@ package com.models.accounts;
 
 //import gamelogic.GameType;
 
+import com.models.UserAccount;
+
 /**
  * A class representing a record of a single game, including details about the game type,
  * opponent, result, and score.
