@@ -9,6 +9,7 @@ import java.util.List;
 import com.config.HTTPConfig;
 import com.google.gson.Gson;
 import com.models.UserAccount;
+import javafx.application.Platform;
 
 /**
  * Handles HTTP communication between the program and the server
@@ -37,9 +38,39 @@ public class HTTPHandler {
                 .timeout(Duration.ofSeconds(10))
                 .build();
 
-        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println("Response code: " + response.statusCode());
-        System.out.println("Response body: " + response.body());
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                        .thenAccept(response -> {
+                            int status = response.statusCode();
+                            String body = response.body();
+
+                            Platform.runLater(() -> {
+                                if(status == 201) {
+                                    //Show success dialog
+                                    System.out.println("Success");
+                                }
+                                else {
+                                    //Show error
+                                    System.out.println("Fail " + body);
+                                }
+                            });
+                        })
+                        .exceptionally(e -> {
+                            Platform.runLater(() -> {
+                                if(e.getCause() instanceof java.net.ConnectException) {
+                                    //Show error dialog
+                                    System.out.println("Unable to connect to server.");
+                                }
+                                else if(e.getCause() instanceof java.net.http.HttpTimeoutException) {
+                                    //Show error dialog
+                                    System.out.println("Request timed out");
+                                }
+                                else {
+                                    //Show error dialog
+                                    System.out.println("Unexpected error: " + e.getMessage());
+                                }
+                            });
+                            return null;
+                        });
     }
 
     /**
@@ -59,6 +90,6 @@ public class HTTPHandler {
     }
 
     public static void main(String[] args) throws Exception {
-        addUser("bob5","");
+        addUser("bob5","pass");
     }
 }
