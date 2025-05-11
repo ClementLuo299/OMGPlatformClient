@@ -12,7 +12,8 @@ public class HTTPConfig {
 
     //User account endpoints
     private static final String USERS_URL = "/users";
-    private static final String REGISTRATION_ENDPOINT = "/adduser";
+    private static final String REGISTRATION_ENDPOINT = "/register";
+    private static final String LOGIN_ENDPOINT = "/login";
 
     /**
      *
@@ -26,5 +27,12 @@ public class HTTPConfig {
      */
     public static String getRegistrationUrl() {
         return SERVER_URL + USERS_URL +  REGISTRATION_ENDPOINT;
+    }
+
+    /**
+     *
+     */
+    public static String getLoginUrl() {
+        return SERVER_URL + USERS_URL + LOGIN_ENDPOINT;
     }
 }
