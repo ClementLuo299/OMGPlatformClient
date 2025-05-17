@@ -1,63 +1,59 @@
 package com.controllers.systems;
 
 import com.core.ScreenManager;
+import com.core.Services;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import com.core.Services;
 
+/**
+ * GUI controller for login screen
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
+ * @date March 17, 2025
+ */
 public class LoginController {
 
     @FXML
-    private TextField usernameField;
+    private TextField usernameField; // Username text field
 
     @FXML
-    private PasswordField passwordField;
+    private PasswordField passwordField; // Password text field
 
     @FXML
-    private CheckBox rememberMe;
+    private CheckBox rememberMe; // "Remember Me" checkbox
 
     @FXML
-    private Hyperlink forgotPasswordLink;
+    private Hyperlink forgotPasswordLink; // "Forgot Password" link
 
     @FXML
-    private Button loginButton;
+    private Button loginButton; // Login button
 
     @FXML
-    private Button createAccountButton;
+    private Button createAccountButton; // Create account button
     
     @FXML
-    private TextField usernameField1; // Guest username field
+    private TextField guestUsernameField; // Guest username field
     
     @FXML
-    private Button loginButton1; // Guest login button
+    private Button guestLoginButton; // Guest login button
     
     // Screen manager for navigation
     private ScreenManager screenManager = ScreenManager.getInstance();
 
     @FXML
     public void initialize() {
-        // Initialize your components here if needed
-
         // Set up event handlers
-        loginButton.setOnAction(this::handleLogin);
-        createAccountButton.setOnAction(this::openRegisterScreen);
-        forgotPasswordLink.setOnAction(this::handleForgotPassword);
-        
-        // Set up guest login handler
-        loginButton1.setOnAction(this::handleGuestLogin);
+        loginButton.setOnAction(this::loginButtonPressed);
+        createAccountButton.setOnAction(this::createAccountButtonPressed);
+        forgotPasswordLink.setOnAction(this::forgotPasswordButtonPressed);
+        guestLoginButton.setOnAction(this::guestLoginButtonPressed);
     }
 
-    private void handleLogin(ActionEvent event) {
+    private void loginButtonPressed(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
-
-        // Simple validation
-        if (username.isEmpty() || password.isEmpty()) {
-            showAlert("Login Error", "Please enter both username and password");
-            return;
-        }
 
         if (Services.db().verifyCredentials(username, password)) {
             System.out.println("Login successful!");
@@ -67,8 +63,8 @@ public class LoginController {
         }
     }
     
-    private void handleGuestLogin(ActionEvent event) {
-        String guestUsername = usernameField1.getText();
+    private void guestLoginButtonPressed(ActionEvent event) {
+        String guestUsername = guestUsernameField.getText();
         
         // Validate guest username
         if (guestUsername.isEmpty()) {
@@ -86,7 +82,7 @@ public class LoginController {
         switchToDashboard(guestUsername, true);
     }
 
-    private void openRegisterScreen(ActionEvent event) {
+    private void createAccountButtonPressed(ActionEvent event) {
         try {
             // Use ScreenManager to navigate to register screen
             screenManager.navigateTo(ScreenManager.REGISTER_SCREEN, ScreenManager.REGISTER_CSS);
@@ -96,7 +92,7 @@ public class LoginController {
         }
     }
 
-    private void handleForgotPassword(ActionEvent event) {
+    private void forgotPasswordButtonPressed(ActionEvent event) {
         // Implement forgot password functionality
         showAlert("Info", "Forgot password functionality not implemented yet");
     }

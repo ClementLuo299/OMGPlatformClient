@@ -53,8 +53,8 @@
             <VBox alignment="TOP_CENTER" spacing="15" styleClass="login-form">
                 <Label styleClass="subtitle" text="Continue as Guest" />
                 <Label styleClass="input-label" text="Username" />
-                <TextField fx:id="usernameField1" promptText="Enter your username" styleClass="input-field" /> <!-- Spacer to align the button with the other form -->
-                <Button fx:id="loginButton1" styleClass="login-button" text="Sign in" />
+                <TextField fx:id="guestUsernameField" promptText="Enter your username" styleClass="input-field" /> <!-- Spacer to align the button with the other form -->
+                <Button fx:id="guestLoginButton" styleClass="login-button" text="Sign in" />
             </VBox>
         </HBox>
         
