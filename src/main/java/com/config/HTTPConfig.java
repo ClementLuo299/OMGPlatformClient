@@ -35,4 +35,10 @@ public class HTTPConfig {
     public static String getLoginUrl() {
         return SERVER_URL + USERS_URL + LOGIN_ENDPOINT;
     }
+
+    //Timeout duration of HTTP client (in secoonds)
+    public static final int HTTP_TIMEOUT = 5;
+
+    //Timeout duration of HTTP request (in seconds)
+    public static final int HTTP_REQUEST_TIMEOUT = 10;
 }

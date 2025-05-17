@@ -25,33 +25,36 @@ import javafx.application.Platform;
  * @date March 4, 2025
  */
 public class HTTPHandler {
-    //HTTP client (Times out after 5 seconds)
-    private static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
+    //HTTP client
+    private static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(HTTPConfig.HTTP_TIMEOUT)).build();
 
     //JSON parser
     private static final Gson gson = new Gson();
 
     /**
-     *
+     * Registers an user account on the server.
      */
-    public static void register(String username, String password) throws Exception {
+    public static void register(String username, String password){
+        //Create user account object and convert to json
         UserAccount user = new UserAccount(username, password);
         String json = gson.toJson(user);
 
+        //Build HTTP request object
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(HTTPConfig.getRegistrationUrl()))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json))
-                .timeout(Duration.ofSeconds(10))
+                .timeout(Duration.ofSeconds(HTTPConfig.HTTP_REQUEST_TIMEOUT))
                 .build();
 
+        //Send HTTP request asynchronously
         client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                         .thenAccept(response -> {
                             int status = response.statusCode();
                             String body = response.body();
 
                             Platform.runLater(() -> {
-                                if(status == 201) {
+                                if(status == HttpURLConnection.HTTP_CREATED) {
                                     //Show success dialog
                                     System.out.println("Success");
                                 }
@@ -63,11 +66,12 @@ public class HTTPHandler {
                         })
                         .exceptionally(e -> {
                             Platform.runLater(() -> {
-                                if(e.getCause() instanceof java.net.ConnectException) {
+                                Throwable cause = e.getCause();
+                                if(cause instanceof java.net.ConnectException) {
                                     //Show error dialog
                                     System.out.println("Unable to connect to server.");
                                 }
-                                else if(e.getCause() instanceof java.net.http.HttpTimeoutException) {
+                                else if(cause instanceof java.net.http.HttpTimeoutException) {
                                     //Show error dialog
                                     System.out.println("Request timed out");
                                 }
