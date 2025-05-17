@@ -7,11 +7,12 @@ package com.controllers.systems;
  * @date May 17, 2025
  */
 public class LoginService {
-    public void login(String username, String password) {
+    public boolean login(String username, String password) {
         // Simple validation
         if (username.isEmpty() || password.isEmpty()) {
             //
         }
+        return false;
     }
 
     public void guestLogin(String username) {

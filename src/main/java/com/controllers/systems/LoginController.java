@@ -42,8 +42,15 @@ public class LoginController {
     // Screen manager for navigation
     private ScreenManager screenManager = ScreenManager.getInstance();
 
+    // View model
+    private final LoginViewModel viewModel = new LoginViewModel();
+
     @FXML
     public void initialize() {
+        //Bind UI components to view model
+        viewModel.usernameProperty().bindBidirectional(usernameField.textProperty());
+        viewModel.passwordProperty().bindBidirectional(passwordField.textProperty());
+
         // Set up event handlers
         loginButton.setOnAction(this::loginButtonPressed);
         createAccountButton.setOnAction(this::createAccountButtonPressed);
@@ -52,8 +59,7 @@ public class LoginController {
     }
 
     private void loginButtonPressed(ActionEvent event) {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+        viewModel.login();
 
         if (Services.db().verifyCredentials(username, password)) {
             System.out.println("Login successful!");
