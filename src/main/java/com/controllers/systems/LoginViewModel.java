@@ -1,5 +1,6 @@
 package com.controllers.systems;
 
+import com.google.common.eventbus.EventBus;
 import javafx.beans.property.*;
 
 /**
@@ -12,12 +13,27 @@ public class LoginViewModel {
 
     private final StringProperty username = new SimpleStringProperty();
     private final StringProperty password = new SimpleStringProperty();
+    private final StringProperty guestUsername = new SimpleStringProperty();
     private final StringProperty message = new SimpleStringProperty();
 
-    private final LoginService loginService = new LoginService();
+    private final LoginService loginService;
+    private final EventBus eventBus;
 
+    public LoginViewModel(LoginService loginService, EventBus eventBus) {
+        this.loginService = loginService;
+        this.eventBus = eventBus;
+    }
+
+    public StringProperty usernameProperty() { return username; }
+    public StringProperty passwordProperty() { return password; }
+    public StringProperty guestUsernameProperty() { return guestUsername; }
+    public StringProperty messageProperty() { return message; }
+
+    /**
+     *
+     */
     public void login() {
-        if(loginService.login(username.get(), password.get())) {
+        if(loginService.authenticate(username.get(), password.get())) {
             message.set("Login Successful!");
         }
         else {
@@ -25,7 +41,10 @@ public class LoginViewModel {
         }
     }
 
-    public StringProperty usernameProperty() { return username; }
-    public StringProperty passwordProperty() { return password; }
-    public StringProperty messageProperty() { return message; }
+    /**
+     *
+     */
+    public void guestLogin() {
+        //
+    }
 }

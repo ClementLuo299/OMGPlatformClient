@@ -1,8 +1,10 @@
 package com.core;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,10 +21,12 @@ import javafx.stage.Stage;
  */
 public class ScreenManager {
     private static ScreenManager instance;  // Singleton instance of ScreenManager
-    private BorderPane mainContainer;  // Main container that holds the content (used for swapping scenes)
-    private Scene mainScene;  // The main scene that will be used for displaying the UI
+    private final BorderPane mainContainer = new BorderPane();  // Main container that holds the content (used for swapping scenes)
+    private Scene mainScene = new Scene(mainContainer, 1400, 800); // The main scene that will be used for displaying the UI
     private Stage mainStage;  // The primary stage for the JavaFX application
     private Map<String, Parent> screenCache = new HashMap<>();  // Cache to store loaded screens by their FXML paths
+
+    // === FXML and CSS Constants ===
 
     // Paths to the FXML files for various screens
     public static final String OPENING_SCREEN = "fxml/Opening.fxml";
@@ -45,10 +49,7 @@ public class ScreenManager {
     public static final String GAME_LOBBY_CSS = "css/game_lobby.css";
 
     // Private constructor to ensure singleton pattern
-    private ScreenManager() {
-        mainContainer = new BorderPane();
-        mainScene = new Scene(mainContainer, 1400, 800);  // Set the scene size to 1400x800
-    }
+    private ScreenManager() { }
 
     /**
      * Returns the singleton instance of the ScreenManager.
@@ -84,7 +85,9 @@ public class ScreenManager {
     private void setCssStylesheet(String cssPath) {
         mainScene.getStylesheets().clear();  // Clear existing stylesheets
         if (cssPath != null) {
-            String cssUrl = getClass().getClassLoader().getResource(cssPath).toExternalForm();
+            String cssUrl = getClass().getClassLoader()
+                    .getResource(ThemeManager.getInstance().isDarkTheme() ? "css/dark-theme.css" : cssPath)
+                    .toExternalForm();
             mainScene.getStylesheets().add(cssUrl);  // Add the new CSS file
         }
     }
@@ -116,16 +119,12 @@ public class ScreenManager {
                 screenCache.put(fxmlPath, root);  // Cache the loaded screen
             } else {
                 root = screenCache.get(fxmlPath);  // Use cached version
+                FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
+                loader.setRoot(root);
+                controller = loader.getController();
             }
 
-            // Apply the appropriate CSS based on the theme
-            if (cssPath != null) {
-                if (ThemeManager.getInstance().isDarkTheme()) {
-                    setCssStylesheet("css/dark-theme.css");
-                } else {
-                    setCssStylesheet(cssPath);
-                }
-            }
+            setCssStylesheet(cssPath);
 
             // Set the loaded screen as the center of the main container
             mainContainer.setCenter(root);
@@ -134,6 +133,58 @@ public class ScreenManager {
         } catch (IOException e) {
             e.printStackTrace();
             showAlert(AlertType.ERROR, "Navigation Error", "Could not navigate to screen: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     *
+     */
+    public <T, V> T navigateToWithViewModel(String fxmlPath, String cssPath, V viewModel) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
+            Parent root = loader.load();
+            T controller = loader.getController();
+
+            // Try to call setViewModel if the method exists
+            if (controller != null && viewModel != null) {
+                Method setViewModelMethod = controller.getClass().getMethod("setViewModel", viewModel.getClass());
+                setViewModelMethod.invoke(controller, viewModel);
+            }
+
+            setCssStylesheet(cssPath);
+            mainContainer.setCenter(root);
+            return (T) controller;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Navigation Error", "Could not load screen: " + e.getMessage());
+        } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Injection Error", "Failed to inject ViewModel: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     *
+     */
+    public <T> T navigateToWithSetup(String fxmlPath, String cssPath, Consumer<T> setup) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
+            Parent root = loader.load();
+            T controller = loader.getController();
+
+            if (controller != null && setup != null) {
+                setup.accept(controller);
+            }
+
+            setCssStylesheet(cssPath);
+            mainContainer.setCenter(root);
+            return controller;
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert(AlertType.ERROR, "Setup Error", "Could not load screen: " + e.getMessage());
             return null;
         }
     }
@@ -156,23 +207,8 @@ public class ScreenManager {
             Parent root = loader.load();
             Object controller = loader.getController();
 
-            // Cache the screen unless it's a game screen that needs to be reloaded every time
-            /*
-            if (!fxmlPath.equals(GAME_LOBBY_SCREEN) &&
-                    !fxmlPath.equals(TICTACTOE_SCREEN) &&
-                    !fxmlPath.equals(CONNECTFOUR_SCREEN) &&
-                    !fxmlPath.equals(CHECKERS_SCREEN) &&
-                    !fxmlPath.equals(WHIST_SCREEN)) {
-                screenCache.put(fxmlPath, root);
-            }
-             */
-
             // Apply the appropriate CSS
-            if (ThemeManager.getInstance().isDarkTheme()) {
-                setCssStylesheet("css/dark-theme.css");
-            } else {
-                setCssStylesheet(cssPath);
-            }
+            setCssStylesheet(cssPath);
 
             mainContainer.setCenter(root);
 

@@ -1,7 +1,11 @@
 package com;
 
+import com.controllers.systems.LoginController;
+import com.controllers.systems.LoginService;
+import com.controllers.systems.LoginViewModel;
 import com.core.ScreenManager;
 import com.core.Services;
+import com.google.common.eventbus.EventBus;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -12,13 +16,21 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
+    private final EventBus eventBus = new EventBus();
+
     /**
      * Initializes the primary stage and sets up the application environment.
      * This method is called when the JavaFX application starts.
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         try {
+            eventBus.register(this);
+
+            //Could move capability to services
+            LoginService loginService = new LoginService();
+            LoginViewModel viewModel = new LoginViewModel(loginService, eventBus);
+
             // Start up the backend system
             Services.getInstance();
 
@@ -27,7 +39,9 @@ public class App extends Application {
             screenManager.initialize(primaryStage);
 
             // Navigate to the opening screen (initial screen)
-            screenManager.navigateTo(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS);
+            screenManager.navigateToWithSetup(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS,
+                    controller -> {controller.setViewModel(viewModel);
+            });
 
             // Start preloading common screens in background for faster navigation
             new Thread(() -> {

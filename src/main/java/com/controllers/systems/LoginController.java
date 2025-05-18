@@ -15,58 +15,56 @@ import javafx.scene.control.*;
  */
 public class LoginController {
 
-    @FXML
-    private TextField usernameField; // Username text field
+    @FXML private TextField usernameField; // Username text field
 
-    @FXML
-    private PasswordField passwordField; // Password text field
+    @FXML private PasswordField passwordField; // Password text field
 
-    @FXML
-    private CheckBox rememberMe; // "Remember Me" checkbox
+    @FXML private CheckBox rememberMe; // "Remember Me" checkbox
 
-    @FXML
-    private Hyperlink forgotPasswordLink; // "Forgot Password" link
+    @FXML private Hyperlink forgotPasswordLink; // "Forgot Password" link
 
-    @FXML
-    private Button loginButton; // Login button
+    @FXML private Button loginButton; // Login button
 
-    @FXML
-    private Button createAccountButton; // Create account button
-    
-    @FXML
-    private TextField guestUsernameField; // Guest username field
-    
-    @FXML
-    private Button guestLoginButton; // Guest login button
-    
-    // Screen manager for navigation
-    private ScreenManager screenManager = ScreenManager.getInstance();
+    @FXML private Button createAccountButton; // Create account button
 
-    // View model
-    private final LoginViewModel viewModel = new LoginViewModel();
+    @FXML private TextField guestUsernameField; // Guest username field
+
+    @FXML private Button guestLoginButton; // Guest login button
+
+    private ScreenManager screenManager = ScreenManager.getInstance();  // Screen manager for navigation
+
+    private LoginViewModel viewModel;  // View model
 
     @FXML
     public void initialize() {
-        //Bind UI components to view model
-        viewModel.usernameProperty().bindBidirectional(usernameField.textProperty());
-        viewModel.passwordProperty().bindBidirectional(passwordField.textProperty());
 
         // Set up event handlers
-        loginButton.setOnAction(this::loginButtonPressed);
+        loginButton.setOnAction(e -> viewModel.login());
         createAccountButton.setOnAction(this::createAccountButtonPressed);
         forgotPasswordLink.setOnAction(this::forgotPasswordButtonPressed);
         guestLoginButton.setOnAction(this::guestLoginButtonPressed);
     }
 
-    private void loginButtonPressed(ActionEvent event) {
-        viewModel.login();
+    /**
+     *
+     */
+    public void setViewModel(LoginViewModel viewModel) {
+        this.viewModel = viewModel;
+        bindViewModel();
+    }
 
-        if (Services.db().verifyCredentials(username, password)) {
-            System.out.println("Login successful!");
-            switchToDashboard(username, false);
-        } else {
-            showAlert("Login Error", "Invalid username or password");
-        }
+    /**
+     *
+     */
+    private void bindViewModel() {
+        if(viewModel == null) return;
+
+        //Bind UI components to view model
+        viewModel.usernameProperty().bindBidirectional(usernameField.textProperty());
+        viewModel.passwordProperty().bindBidirectional(passwordField.textProperty());
+
+        // Set up event handlers
+        loginButton.setOnAction(e -> viewModel.login());
     }
     
     private void guestLoginButtonPressed(ActionEvent event) {
