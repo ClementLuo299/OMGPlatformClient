@@ -53,6 +53,9 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
         viewModel.guestUsernameProperty().bindBidirectional(guestUsernameField.textProperty());
     }
 
+    /**
+     *
+     */
     @FXML
     private void onGuestLoginClicked() {
         viewModel.guestLogin(
@@ -64,6 +67,9 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
         );
     }
 
+    /**
+     *
+     */
     @FXML
     private void onLoginClicked() {
         System.out.println("Login button clicked");
@@ -79,11 +85,17 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
         );
     }
 
+    /**
+     *
+     */
     @FXML
     private void onCreateAccountClicked() {
         System.out.println("create account button clicked");
     }
 
+    /**
+     *
+     */
     @FXML
     private void onForgotPasswordClicked() {
         System.out.println("forgot password clicked");
