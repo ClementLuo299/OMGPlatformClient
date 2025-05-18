@@ -16,7 +16,7 @@ public class LoginService {
         if (username.isEmpty() || password.isEmpty()) {
             //
         }
-        return false;
+        return true;
     }
 
     /**

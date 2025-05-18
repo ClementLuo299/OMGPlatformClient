@@ -4,6 +4,7 @@ import com.viewmodels.LoginViewModel;
 import com.core.ScreenManager;
 import com.core.ViewModelInjectable;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -57,7 +58,7 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
         viewModel.guestLogin(
                 username -> {
                     System.out.println("Guest login successful!");
-                    switchToDashboard(username, true);
+                    goToDashboard(username, true);
                 },
                 errorMessage -> showAlert("Guest Login Error", errorMessage)
         );
@@ -66,6 +67,16 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
     @FXML
     private void onLoginClicked() {
         System.out.println("Login button clicked");
+
+        viewModel.login(
+                onSuccess -> Platform.runLater(() -> {
+                    System.out.println("Login successful for: " + onSuccess);
+                    goToDashboard(viewModel.usernameProperty().get(), false); // e.g., load the dashboard
+                }),
+                onError -> Platform.runLater(() -> {
+                    showAlert("Login error", onError);
+                })
+        );
     }
 
     @FXML
@@ -93,7 +104,7 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
         showAlert("Info", "Forgot password functionality not implemented yet");
     }
 
-    private void switchToDashboard(String username, boolean isGuest) {
+    private void goToDashboard(String username, boolean isGuest) {
         try {
             // Always reload dashboard to ensure it's fresh for the new user
             DashboardController controller = (DashboardController)

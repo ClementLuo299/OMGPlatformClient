@@ -39,9 +39,11 @@ public class LoginViewModel {
     public void login(Consumer<String> onSuccess, Consumer<String> onError) {
         if(loginService.login(username.get(), password.get())) {
             message.set("Login Successful!");
+            onSuccess.accept(username.get());
         }
         else {
             message.set("Login Failed!");
+            onError.accept("Guest login failed");
         }
     }
 
