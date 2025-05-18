@@ -1,4 +1,4 @@
-package com.controllers;
+package com.gui_controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.web.WebView;

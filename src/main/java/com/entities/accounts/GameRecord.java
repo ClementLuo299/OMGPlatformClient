@@ -1,8 +1,8 @@
-package com.models.accounts;
+package com.entities.accounts;
 
 //import gamelogic.GameType;
 
-import com.models.UserAccount;
+import com.entities.UserAccount;
 
 /**
  * A class representing a record of a single game, including details about the game type,

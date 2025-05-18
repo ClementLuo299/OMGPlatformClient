@@ -1,4 +1,4 @@
-package com.controllers.systems;
+package com.gui_controllers;
 
 import com.core.ScreenManager;
 import com.core.Services;

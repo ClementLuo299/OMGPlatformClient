@@ -1,7 +1,7 @@
 package com.network.sessions;
 
 import com.core.Services;
-import com.models.UserAccount;
+import com.entities.UserAccount;
 
 /**
  * A user's login session.

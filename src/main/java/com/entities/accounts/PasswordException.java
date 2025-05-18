@@ -1,4 +1,4 @@
-package com.models.accounts;
+package com.entities.accounts;
 
 /**
  * Invalid password exception, thrown when password does not meet complexity requirements.

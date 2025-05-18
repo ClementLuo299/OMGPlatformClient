@@ -1,8 +1,8 @@
 package com;
 
-import com.controllers.systems.LoginController;
-import com.controllers.systems.LoginService;
-import com.controllers.systems.LoginViewModel;
+import com.gui_controllers.LoginController;
+import com.services.LoginService;
+import com.viewmodels.LoginViewModel;
 import com.core.ScreenManager;
 import com.core.Services;
 import com.google.common.eventbus.EventBus;

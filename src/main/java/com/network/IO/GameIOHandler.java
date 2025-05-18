@@ -1,6 +1,6 @@
 package com.network.IO;
 
-import com.models.accounts.GameRecord;
+import com.entities.accounts.GameRecord;
 import com.network.sessions.GameSession;
 
 /**

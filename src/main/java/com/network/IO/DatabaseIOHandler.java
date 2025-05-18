@@ -3,8 +3,8 @@ package com.network.IO;
 //import gamelogic.Game;
 //import gamelogic.GameType;
 import com.network.DatabaseStub;
-import com.models.accounts.GameRecord;
-import com.models.UserAccount;
+import com.entities.accounts.GameRecord;
+import com.entities.UserAccount;
 import com.network.sessions.GameSession;
 
 import java.time.LocalDateTime;

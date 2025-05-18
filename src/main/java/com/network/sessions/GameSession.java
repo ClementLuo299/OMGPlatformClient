@@ -3,8 +3,8 @@ package com.network.sessions;
 //import gamelogic.Game;
 //import gamelogic.GameType;
 //import gamelogic.Player;
-import com.models.accounts.GameRecord;
-import com.models.UserAccount;
+import com.entities.accounts.GameRecord;
+import com.entities.UserAccount;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

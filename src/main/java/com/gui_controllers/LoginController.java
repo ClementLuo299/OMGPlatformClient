@@ -1,9 +1,10 @@
-package com.controllers.systems;
+package com.gui_controllers;
 
+import com.viewmodels.LoginViewModel;
 import com.core.ScreenManager;
 import com.core.Services;
-
 import com.core.ViewModelInjectable;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -37,13 +38,7 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
     private LoginViewModel viewModel;  // View model
 
     @FXML
-    public void initialize() {
-
-        // Set up event handlers
-        createAccountButton.setOnAction(this::createAccountButtonPressed);
-        forgotPasswordLink.setOnAction(this::forgotPasswordButtonPressed);
-        guestLoginButton.setOnAction(this::guestLoginButtonPressed);
-    }
+    public void initialize() {}
 
     /**
      *
@@ -62,28 +57,18 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
         //Bind UI components to view model
         viewModel.usernameProperty().bindBidirectional(usernameField.textProperty());
         viewModel.passwordProperty().bindBidirectional(passwordField.textProperty());
-
-        // Set up event handlers
-        loginButton.setOnAction(e -> viewModel.login());
+        viewModel.guestUsernameProperty().bindBidirectional(guestUsernameField.textProperty());
     }
-    
-    private void guestLoginButtonPressed(ActionEvent event) {
-        String guestUsername = guestUsernameField.getText();
-        
-        // Validate guest username
-        if (guestUsername.isEmpty()) {
-            showAlert("Guest Login Error", "Please enter a guest username");
-            return;
-        }
-        
-        // Check if username already exists in database
-        if (Services.db().isAccountExists(guestUsername)) {
-            showAlert("Guest Login Error", "This username is already taken. Please choose another one.");
-            return;
-        }
-        
-        System.out.println("Guest login successful!");
-        switchToDashboard(guestUsername, true);
+
+    @FXML
+    private void onGuestLoginClicked() {
+        viewModel.guestLogin(
+                username -> {
+                    System.out.println("Guest login successful!");
+                    switchToDashboard(username, true);
+                },
+                errorMessage -> showAlert("Guest Login Error", errorMessage)
+        );
     }
 
     private void createAccountButtonPressed(ActionEvent event) {

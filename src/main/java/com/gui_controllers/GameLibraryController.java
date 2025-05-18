@@ -1,9 +1,6 @@
-package com.controllers;
+package com.gui_controllers;
 
 import com.core.ScreenManager;
-import com.controllers.statistics.LeaderboardController;
-import com.controllers.systems.DashboardController;
-import com.controllers.systems.SettingController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

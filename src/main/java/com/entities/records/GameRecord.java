@@ -1,4 +1,4 @@
-package com.models.records;
+package com.entities.records;
 
 /**
  * A record of a game played.

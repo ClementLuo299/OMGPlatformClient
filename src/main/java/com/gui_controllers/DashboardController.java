@@ -1,9 +1,6 @@
-package com.controllers.systems;
+package com.gui_controllers;
 
 import com.core.ThemeManager;
-import com.controllers.GameLobbyController;
-import com.controllers.GameLibraryController;
-import com.controllers.statistics.LeaderboardController;
 import com.core.ScreenManager;
 
 import javafx.fxml.FXML;

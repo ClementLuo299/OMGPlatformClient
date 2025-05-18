@@ -1,7 +1,7 @@
 package gamelogic;
 
 import gamelogic.checkers.CheckersGame;
-import com.models.accounts.UserAccount;
+import com.entities.accounts.UserAccount;
 import org.junit.Before;
 import org.junit.Test;
 

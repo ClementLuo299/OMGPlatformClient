@@ -1,7 +1,7 @@
-package com.models.accounts;
+package com.entities.accounts;
 
 //import gamelogic.GameType;
-import com.models.UserAccount;
+import com.entities.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;

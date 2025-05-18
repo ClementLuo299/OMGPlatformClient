@@ -1,6 +1,6 @@
-package com.models.records;
+package com.entities.records;
 
-import com.models.UserAccount;
+import com.entities.UserAccount;
 
 import java.util.ArrayList;
 import java.util.List;

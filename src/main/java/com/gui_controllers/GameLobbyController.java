@@ -1,4 +1,4 @@
-package com.controllers;
+package com.gui_controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;

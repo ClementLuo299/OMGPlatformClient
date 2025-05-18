@@ -1,5 +1,5 @@
 
-package com.models.accounts;
+package com.entities.accounts;
 
 import java.util.ArrayList;
 import java.util.List;

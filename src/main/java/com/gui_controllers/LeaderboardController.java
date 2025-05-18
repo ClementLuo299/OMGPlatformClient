@@ -1,9 +1,6 @@
-package com.controllers.statistics;
+package com.gui_controllers;
 
 import com.core.ScreenManager;
-import com.controllers.GameLibraryController;
-import com.controllers.systems.DashboardController;
-import com.controllers.systems.SettingController;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
