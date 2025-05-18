@@ -17,23 +17,16 @@ import javafx.scene.control.*;
 public class LoginController implements ViewModelInjectable<LoginViewModel> {
 
     @FXML private TextField usernameField; // Username text field
-
     @FXML private PasswordField passwordField; // Password text field
-
     @FXML private CheckBox rememberMe; // "Remember Me" checkbox
-
     @FXML private Hyperlink forgotPasswordLink; // "Forgot Password" link
-
     @FXML private Button loginButton; // Login button
-
     @FXML private Button createAccountButton; // Create account button
 
     @FXML private TextField guestUsernameField; // Guest username field
-
     @FXML private Button guestLoginButton; // Guest login button
 
     private ScreenManager screenManager = ScreenManager.getInstance();  // Screen manager for navigation
-
     private LoginViewModel viewModel;  // View model
 
     @FXML
