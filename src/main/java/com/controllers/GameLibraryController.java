@@ -18,6 +18,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
+ * @date March 27, 2025
+ */
 public class GameLibraryController {
     
     @FXML

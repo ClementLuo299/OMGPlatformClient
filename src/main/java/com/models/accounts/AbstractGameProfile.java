@@ -10,6 +10,9 @@ import java.util.List;
  * Abstract class representing a game profile, storing player information such as game history,
  * player status, win/loss records, and rankings. This class includes abstract methods for
  * subclasses to implement game-specific updates.
+ *
+ * @authors Clement Luo, Fatin Abrar Ankon
+ * @date April 10, 2025
  */
 public abstract class AbstractGameProfile {
 

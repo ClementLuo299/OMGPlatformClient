@@ -7,6 +7,9 @@ import javafx.scene.paint.Color;
 
 /**
  * Utility class for image manipulation in the UI.
+ *
+ * @authors Clement Luo, Fatin Abrar Ankon
+ * @date April 2, 2025
  */
 public class ImageUtils {
     

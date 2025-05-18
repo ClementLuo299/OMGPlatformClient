@@ -7,6 +7,9 @@ import com.models.UserAccount;
 /**
  * A class representing a record of a single game, including details about the game type,
  * opponent, result, and score.
+ *
+ * @authors Clement Luo
+ * @date April 10, 2025
  */
 public class GameRecord {
 

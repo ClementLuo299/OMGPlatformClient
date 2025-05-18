@@ -15,6 +15,7 @@ import java.util.List;
  * A gameplay session.
  *
  * @author Clement Luo
+ * @date March 3, 2025
  */
 public class GameSession {
 

@@ -9,6 +9,9 @@ import com.core.ScreenManager;
 /**
  * Controller for the Opening screen that displays a START button
  * which redirects to the login screen when clicked
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo
+ * @date April 9, 2025
  */
 public class OpeningController {
     

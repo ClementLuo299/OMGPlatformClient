@@ -3,6 +3,7 @@ package com.controllers.systems;
 import com.core.ScreenManager;
 import com.core.Services;
 
+import com.core.ViewModelInjectable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -13,7 +14,7 @@ import javafx.scene.control.*;
  * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
  * @date March 17, 2025
  */
-public class LoginController {
+public class LoginController implements ViewModelInjectable<LoginViewModel> {
 
     @FXML private TextField usernameField; // Username text field
 
@@ -39,7 +40,6 @@ public class LoginController {
     public void initialize() {
 
         // Set up event handlers
-        loginButton.setOnAction(e -> viewModel.login());
         createAccountButton.setOnAction(this::createAccountButtonPressed);
         forgotPasswordLink.setOnAction(this::forgotPasswordButtonPressed);
         guestLoginButton.setOnAction(this::guestLoginButtonPressed);

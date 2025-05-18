@@ -13,6 +13,9 @@ import javafx.stage.Stage;
  * Main entry point of the BoardGamePlatform application.
  * This class extends the JavaFX Application class and sets up the initial stage,
  * backend services, and UI navigation for the platform.
+ *
+ * @authors Clement Luo, Fatin Abrar Ankon, Dylan Shiels, Zaman Dogar
+ * @date March 17, 2025
  */
 public class App extends Application {
 
@@ -39,9 +42,7 @@ public class App extends Application {
             screenManager.initialize(primaryStage);
 
             // Navigate to the opening screen (initial screen)
-            screenManager.navigateToWithSetup(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS,
-                    controller -> {controller.setViewModel(viewModel);
-            });
+            screenManager.navigateToWithViewModel(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS, viewModel, LoginController.class);
 
             // Start preloading common screens in background for faster navigation
             new Thread(() -> {

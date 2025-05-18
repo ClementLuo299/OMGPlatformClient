@@ -8,8 +8,8 @@ import com.network.IO.GameIOHandler;
 /**
  * Collection of services
  *
- * @authors Clement Luo,
- * @date March 27, 2025
+ * @authors Clement Luo, Fatin Abrar Ankon, Dylan Shiels, Susmita Chakrabarty, Dominic Afuba, Scott Brown
+ * @date March 3, 2025
  */
 public class Services {
     //Universal backend instance

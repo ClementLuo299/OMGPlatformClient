@@ -18,6 +18,9 @@ import javafx.stage.Stage;
  * ScreenManager is responsible for managing screen transitions in the application.
  * It uses a single scene with content swapping for performance, reducing the need to rebuild scenes
  * on every navigation. It also handles caching of screens and preloading essential screens for smoother transitions.
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo, Scott Brown, Jason Bakajika
+ * @date March 28, 2025
  */
 public class ScreenManager {
     private static ScreenManager instance;  // Singleton instance of ScreenManager
@@ -140,30 +143,32 @@ public class ScreenManager {
     /**
      *
      */
-    public <T, V> T navigateToWithViewModel(String fxmlPath, String cssPath, V viewModel) {
+    public <T, V> T navigateToWithViewModel(String fxmlPath, String cssPath, V viewModel, Class<T> controllerClass) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fxmlPath));
             Parent root = loader.load();
-            T controller = loader.getController();
+            Object rawController = loader.getController();
 
-            // Try to call setViewModel if the method exists
-            if (controller != null && viewModel != null) {
-                Method setViewModelMethod = controller.getClass().getMethod("setViewModel", viewModel.getClass());
-                setViewModelMethod.invoke(controller, viewModel);
+            if (rawController == null || !controllerClass.isInstance(rawController)) {
+                throw new IllegalStateException("Controller not found or type mismatch.");
+            }
+
+            T controller = controllerClass.cast(rawController);
+
+            if (controller instanceof ViewModelInjectable<?>) {
+                ((ViewModelInjectable<V>) controller).setViewModel(viewModel);
+            } else {
+                throw new IllegalStateException("Controller does not implement ViewModelInjectable.");
             }
 
             setCssStylesheet(cssPath);
             mainContainer.setCenter(root);
-            return (T) controller;
-
-        } catch (IOException e) {
+            return controller;
+        } catch (Exception e) {
             e.printStackTrace();
-            showAlert(AlertType.ERROR, "Navigation Error", "Could not load screen: " + e.getMessage());
-        } catch (ReflectiveOperationException e) {
-            e.printStackTrace();
-            showAlert(AlertType.ERROR, "Injection Error", "Failed to inject ViewModel: " + e.getMessage());
+            showAlert(AlertType.ERROR, "Navigation Error", "Could not load or inject ViewModel: " + e.getMessage());
+            return null;
         }
-        return null;
     }
 
     /**

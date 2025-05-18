@@ -7,6 +7,9 @@ import java.util.List;
  * A class representing a Connect Four player profile. This class extends AbstractGameProfile
  * and provides functionality specific to managing game records, player status, and rankings
  * in Connect Four.
+ *
+ * @authors Clement Luo
+ * @date April 10, 2025
  */
 public class ConnectFourProfile extends AbstractGameProfile {
 

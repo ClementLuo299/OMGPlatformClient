@@ -7,6 +7,7 @@ import com.models.UserAccount;
  * A user's login session.
  *
  * @author Clement Luo
+ * @date March 3, 2025
  */
 public class UserSession {
     private UserAccount account;

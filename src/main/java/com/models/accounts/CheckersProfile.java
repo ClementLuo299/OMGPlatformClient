@@ -8,6 +8,9 @@ import java.util.List;
  * A class representing a Checkers profile. This class extends AbstractGameProfile
  * and provides functionality specific to managing game records, player status, and rankings
  * in Checkers.
+ *
+ * @authors Clement Luo, Matin Rezaei
+ * @date April 10, 2025
  */
 public class CheckersProfile extends AbstractGameProfile {
 

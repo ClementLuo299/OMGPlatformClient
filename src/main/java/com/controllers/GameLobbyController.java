@@ -21,6 +21,9 @@ import javafx.collections.ObservableList;
 /**
  * Controller for the universal game lobby screen that provides game queuing
  * and player searching options for any game in the platform.
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels, Jason Bakajika
+ * @date April 2, 2025
  */
 public class GameLobbyController implements Initializable {
     

@@ -15,6 +15,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Alert;
 import com.core.Services;
 
+/**
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels, Jason Bakajika, Zaman Dogar
+ * @date March 18, 2025
+ */
 public class DashboardController {
     @FXML
     private VBox sidebar;

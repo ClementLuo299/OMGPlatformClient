@@ -18,6 +18,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import com.core.Services;
 
+/**
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
+ * @date March 17, 2025
+ */
 public class SettingController {
     @FXML
     private VBox sidebar;

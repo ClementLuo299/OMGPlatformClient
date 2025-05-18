@@ -14,6 +14,11 @@ import javafx.scene.control.Alert;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels,
+ * @date March 17, 2025
+ */
 public class RegisterController {
 
     @FXML

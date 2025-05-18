@@ -5,7 +5,7 @@ import java.time.LocalDate;
 /**
  * Represents a user account.
  *
- * @authors Clement Luo, Irith Irith, Dylan Shiels
+ * @authors Clement Luo, Irith Irith, Dylan Shiels, Fatin Abrar Ankon
  * @date March 4, 2025
  */
 public class UserAccount {

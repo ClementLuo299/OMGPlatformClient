@@ -8,6 +8,9 @@ import java.util.Set;
  * ThemeManager is a singleton class responsible for managing the application theme
  * (dark or light) and applying it to all registered scenes.
  * It ensures that the theme can be globally changed and that all scenes reflect this change.
+ *
+ * @authors Clement Luo, Jason Bakajika
+ * @date April 11, 2025
  */
 public class ThemeManager {
     private static ThemeManager instance;  // Singleton instance of ThemeManager

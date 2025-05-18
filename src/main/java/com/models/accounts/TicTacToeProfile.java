@@ -7,6 +7,9 @@ import java.util.List;
  * A class representing a Tic-Tac-Toe player profile. This class extends AbstractGameProfile
  * and provides functionality specific to managing game records, player status, and rankings
  * in Tic-Tac-Toe.
+ *
+ * @authors Clement Luo, Matin Rezaei
+ * @date April 10, 2025
  */
 public class TicTacToeProfile extends AbstractGameProfile {
 

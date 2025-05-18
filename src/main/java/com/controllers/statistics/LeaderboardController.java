@@ -14,6 +14,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 /**
  * Controller for the Leaderboard screen.
  * Handles displaying global and game-specific leaderboards.
+ *
+ * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
+ * @date March 28, 2025
  */
 public class LeaderboardController {
 
