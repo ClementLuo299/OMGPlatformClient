@@ -10,11 +10,10 @@ StackPane {
 
 /* Title */
 .title {
-    -fx-font-size: 22px;
+    -fx-font-size: 32px;
     -fx-font-weight: bold;
-    -fx-text-fill: #000000;
-    -fx-alignment: center;
-    -fx-text-alignment: center;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 10 0 20 0;
 }
 
 /* Subtitle */

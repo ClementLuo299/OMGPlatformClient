@@ -11,7 +11,7 @@ public class LoginService {
     /**
      *
      */
-    public boolean authenticate(String username, String password) {
+    public boolean login(String username, String password) {
         // Simple validation
         if (username.isEmpty() || password.isEmpty()) {
             //
@@ -22,7 +22,21 @@ public class LoginService {
     /**
      *
      */
-    public void guestLogin(String username) {
-        //
+    public boolean guestLogin(String username) {
+        return false;
+    }
+
+    /**
+     *
+     */
+    public boolean register(String username) {
+        return true;
+    }
+
+    /**
+     *
+     */
+    public boolean forgotPassword(String username) {
+        return true;
     }
 }

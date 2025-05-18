@@ -36,8 +36,8 @@ public class LoginViewModel {
     /**
      *
      */
-    public void login() {
-        if(loginService.authenticate(username.get(), password.get())) {
+    public void login(Consumer<String> onSuccess, Consumer<String> onError) {
+        if(loginService.login(username.get(), password.get())) {
             message.set("Login Successful!");
         }
         else {
@@ -49,35 +49,26 @@ public class LoginViewModel {
      *
      */
     public void guestLogin(Consumer<String> onSuccess, Consumer<String> onError) {
-        String guestUsername = guestUsernameProperty().get();
-
-        // Validate guest username
-        if (guestUsername.isEmpty()) {
-            onError.accept("Guest Login Error, Please enter a guest username");
-            return;
+        if(loginService.guestLogin(guestUsername.get())){
+            System.out.println("Guest login successful!");
+            onSuccess.accept(guestUsername.get());
         }
-
-        // Check if username already exists in database
-        if (Services.db().isAccountExists(guestUsername)) {
-            onError.accept("Guest Login Error This username is already taken. Please choose another one.");
-            return;
+        else {
+            onError.accept("Guest login failed");
         }
-
-        System.out.println("Guest login successful!");
-        onSuccess.accept(guestUsername);
     }
 
     /**
      *
      */
-    public void register() {
+    public void register(Consumer<String> onSuccess, Consumer<String> onError) {
         //
     }
 
     /**
      *
      */
-    public void forgotPassword() {
+    public void forgotPassword(Consumer<String> onSuccess, Consumer<String> onError) {
         //
     }
 }

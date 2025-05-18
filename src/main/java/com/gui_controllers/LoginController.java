@@ -2,7 +2,6 @@ package com.gui_controllers;
 
 import com.viewmodels.LoginViewModel;
 import com.core.ScreenManager;
-import com.core.Services;
 import com.core.ViewModelInjectable;
 
 import javafx.event.ActionEvent;
@@ -71,7 +70,22 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
         );
     }
 
-    private void createAccountButtonPressed(ActionEvent event) {
+    @FXML
+    private void onLoginClicked() {
+        System.out.println("Login button clicked");
+    }
+
+    @FXML
+    private void onCreateAccountClicked() {
+        System.out.println("create account button clicked");
+    }
+
+    @FXML
+    private void onForgotPasswordClicked() {
+        System.out.println("forgot password clicked");
+    }
+
+    private void onCreateAccountClickedOld(ActionEvent event) {
         try {
             // Use ScreenManager to navigate to register screen
             screenManager.navigateTo(ScreenManager.REGISTER_SCREEN, ScreenManager.REGISTER_CSS);
