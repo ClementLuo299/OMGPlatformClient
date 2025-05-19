@@ -1,7 +1,7 @@
 package com.config;
 
 /**
- * Stores the URL's of the server endpoints
+ * Stores the URL of the server endpoints
  *
  * @authors Clement Luo,
  * @date May 10, 2025
