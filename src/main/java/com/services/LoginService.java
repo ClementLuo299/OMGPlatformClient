@@ -31,7 +31,7 @@ public class LoginService {
      *
      * @param username Desired guest username
      * @return true if guest access is granted, false otherwise
-     * @throws IllegalArgumentException if username is null or empty
+     * @throws IllegalArgumentException if the username is null or empty
      */
     public boolean guestLogin(String username) {
         return false;
@@ -42,7 +42,7 @@ public class LoginService {
      *
      * @param username Desired username for the new account
      * @return true if registration is successful, false if username is taken
-     * @throws IllegalArgumentException if username is null or empty
+     * @throws IllegalArgumentException if the username is null or empty
      */
     public boolean register(String username) {
         return false;
@@ -52,8 +52,8 @@ public class LoginService {
      * Initiates the password recovery process for a user.
      *
      * @param username Username of the account to recover
-     * @return true if recovery process started successfully, false if user not found
-     * @throws IllegalArgumentException if username is null or empty
+     * @return true if the recovery process started successfully, false if user not found
+     * @throws IllegalArgumentException if the username is null or empty
      */
     public boolean forgotPassword(String username) {
         return false;
