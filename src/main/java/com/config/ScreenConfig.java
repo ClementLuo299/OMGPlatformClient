@@ -15,6 +15,7 @@ import java.util.Set;
  * @date May 18, 2025
  */
 public class ScreenConfig {
+
     /**
      * Set of screens that should be preloaded when the application starts.
      * These screens are loaded into memory during initialization to reduce
@@ -35,6 +36,11 @@ public class ScreenConfig {
      * When false, screens are reloaded from the disk each time they are accessed.
      */
     private final boolean enableCaching;
+
+    /** GETTERS */
+    public Set<Screen> getPreloadScreens() { return preloadScreens; }
+    public int getCacheSize() { return cacheSize; }
+    public boolean isEnableCaching() { return enableCaching; }
 
 
     /**
