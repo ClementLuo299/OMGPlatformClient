@@ -36,7 +36,7 @@ public class HTTPConfig {
         return SERVER_URL + USERS_URL + LOGIN_ENDPOINT;
     }
 
-    //Timeout duration of HTTP client (in secoonds)
+    //Timeout duration of HTTP client (in seconds)
     public static final int HTTP_TIMEOUT = 5;
 
     //Timeout duration of HTTP request (in seconds)
