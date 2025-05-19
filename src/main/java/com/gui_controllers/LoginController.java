@@ -1,11 +1,8 @@
 package com.gui_controllers;
 
 import com.viewmodels.LoginViewModel;
-import com.core.ScreenManager;
 import com.core.ViewModelInjectable;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -17,6 +14,7 @@ import javafx.scene.control.*;
  */
 public class LoginController implements ViewModelInjectable<LoginViewModel> {
 
+    //Regular login form
     @FXML private TextField usernameField; // Username text field
     @FXML private PasswordField passwordField; // Password text field
     @FXML private CheckBox rememberMe; // "Remember Me" checkbox
@@ -24,17 +22,19 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
     @FXML private Button loginButton; // Login button
     @FXML private Button createAccountButton; // Create account button
 
+    //Guest login form
     @FXML private TextField guestUsernameField; // Guest username field
     @FXML private Button guestLoginButton; // Guest login button
 
-    private ScreenManager screenManager = ScreenManager.getInstance();  // Screen manager for navigation
     private LoginViewModel viewModel;  // View model
 
     @FXML
     public void initialize() {}
 
     /**
+     * Sets the viewmodel for the page
      *
+     * @param viewModel the viewmodel
      */
     public void setViewModel(LoginViewModel viewModel) {
         this.viewModel = viewModel;
@@ -42,9 +42,10 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
     }
 
     /**
-     *
+     * Binds UI parts to the viewmodel
      */
     private void bindViewModel() {
+        //Stop if there is no viewmodel
         if(viewModel == null) return;
 
         //Bind UI components to view model
@@ -54,89 +55,10 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
     }
 
     /**
-     *
+     * Connect event handlers
      */
-    @FXML
-    private void onGuestLoginClicked() {
-        viewModel.guestLogin(
-                username -> {
-                    System.out.println("Guest login successful!");
-                    goToDashboard(username, true);
-                },
-                errorMessage -> showAlert("Guest Login Error", errorMessage)
-        );
-    }
-
-    /**
-     *
-     */
-    @FXML
-    private void onLoginClicked() {
-        System.out.println("Login button clicked");
-
-        viewModel.login(
-                onSuccess -> Platform.runLater(() -> {
-                    System.out.println("Login successful for: " + onSuccess);
-                    goToDashboard(viewModel.usernameProperty().get(), false); // e.g., load the dashboard
-                }),
-                onError -> Platform.runLater(() -> {
-                    showAlert("Login error", onError);
-                })
-        );
-    }
-
-    /**
-     *
-     */
-    @FXML
-    private void onCreateAccountClicked() {
-        System.out.println("create account button clicked");
-    }
-
-    /**
-     *
-     */
-    @FXML
-    private void onForgotPasswordClicked() {
-        System.out.println("forgot password clicked");
-    }
-
-    private void onCreateAccountClickedOld(ActionEvent event) {
-        try {
-            // Use ScreenManager to navigate to register screen
-            screenManager.navigateTo(ScreenManager.REGISTER_SCREEN, ScreenManager.REGISTER_CSS);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Error", "Could not open register screen: " + e.getMessage());
-        }
-    }
-
-    private void forgotPasswordButtonPressed(ActionEvent event) {
-        // Implement forgot password functionality
-        showAlert("Info", "Forgot password functionality not implemented yet");
-    }
-
-    private void goToDashboard(String username, boolean isGuest) {
-        try {
-            // Always reload dashboard to ensure it's fresh for the new user
-            DashboardController controller = (DashboardController)
-                    screenManager.reloadAndNavigateTo(ScreenManager.DASHBOARD_SCREEN, ScreenManager.DASHBOARD_CSS);
-            
-            // Set the current user in the controller
-            if (controller != null) {
-                controller.setCurrentUser(username, isGuest);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Error", "Could not open dashboard: " + e.getMessage());
-        }
-    }
-
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
+    @FXML private void onGuestLoginClicked() { viewModel.handleGuestLogin(); }
+    @FXML private void onLoginClicked() { viewModel.handleLogin(); }
+    @FXML private void onCreateAccountClicked() { viewModel.handleCreateAccount(); }
+    @FXML private void onForgotPasswordClicked() { viewModel.handleForgotPassword(); }
 }
