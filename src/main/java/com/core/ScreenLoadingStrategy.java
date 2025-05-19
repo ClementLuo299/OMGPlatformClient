@@ -21,4 +21,5 @@ public interface ScreenLoadingStrategy {
      * @throws IllegalArgumentException if the screen or controllerType is null
      */
     <T> ScreenLoadResult<T> loadScreen(Screen screen, Class<T> controllerType);
+    void clearCache();
 }

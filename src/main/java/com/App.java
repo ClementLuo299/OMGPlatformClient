@@ -1,5 +1,8 @@
 package com;
 
+import com.config.GUISceneConfig;
+import com.config.ScreenConfig;
+import com.core.Screen;
 import com.gui_controllers.LoginController;
 import com.services.AlertService;
 import com.services.LoginService;
@@ -25,39 +28,55 @@ public class App extends Application {
      * This method is called when the JavaFX application starts.
      */
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
         try {
-            // Start up the backend system
             Services.getInstance();
 
-            // Initialize the ScreenManager with the primary stage
-            ScreenManager screenManager = ScreenManager.getInstance();
-            screenManager.initialize(primaryStage);
+            ScreenConfig config = new ScreenConfig.Builder()
+                    .addPreloadScreen(Screen.DASHBOARD)
+                    .addPreloadScreen(Screen.GAME_LIBRARY)
+                    .setCacheSize(10)
+                    .setEnableCaching(true)
+                    .build();
 
-            //Could move capability to services
+            ScreenManager.initializeInstance(primaryStage, config);
+
             LoginService loginService = new LoginService();
             AlertService alertService = new AlertService();
-            LoginViewModel viewModel = new LoginViewModel(loginService, screenManager, alertService);
+            LoginViewModel viewModel = new LoginViewModel(loginService, ScreenManager.getInstance(), alertService);
 
-            // Navigate to the opening screen (initial screen)
-            screenManager.navigateToWithViewModel(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS, viewModel, LoginController.class);
+            ScreenManager.getInstance().navigateToWithViewModel(
+                    Screen.LOGIN,
+                    viewModel,
+                    LoginController.class
+            );
 
-            // Start preloading common screens in background for faster navigation
-            new Thread(screenManager::preloadCommonScreens).start();
-
-            // Set the main stage properties (e.g., title, dimensions)
-            primaryStage.setTitle("OMG Platform"); //Set the title of the stage
-            primaryStage.setWidth(1500); // Set the window width to 1500px
-            primaryStage.setHeight(800); // Set the window height to 800px
-            primaryStage.setMinWidth(800); // Set the minimum width of the window
-            primaryStage.setMinHeight(600); // Set the minimum height of the window
-            primaryStage.show(); // Display the main stage
+            configureStage(primaryStage);
+            primaryStage.show();
         } catch (Exception e) {
-            // Log any errors that occur during application startup
-            System.err.println("Error starting Application: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
+            handleStartupError(e);
         }
+
+    }
+
+    /**
+     *
+     */
+    private void configureStage(Stage primaryStage) {
+        primaryStage.setTitle(GUISceneConfig.getAppTitle());
+        primaryStage.setWidth(GUISceneConfig.getWindowWidth());
+        primaryStage.setHeight(GUISceneConfig.getWindowHeight());
+        primaryStage.setMinWidth(GUISceneConfig.getMinWindowWidth());
+        primaryStage.setMinHeight(GUISceneConfig.getMinWindowHeight());
+    }
+
+    /**
+     *
+     */
+    private void handleStartupError(Exception e) throws Exception {
+        System.err.println("Error starting Application: " + e.getMessage());
+        e.printStackTrace();
+        throw e;
     }
 
     /**
