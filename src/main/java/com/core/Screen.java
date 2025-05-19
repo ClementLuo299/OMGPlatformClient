@@ -10,22 +10,16 @@ public class Screen {
 
     private final String fxmlPath;
     private final String cssPath;
+    private final boolean cacheable;
     private final Class<?> controllerType;
     private final Class<?> viewModelType;
 
-    public Screen(String fxmlPath, String cssPath, Class<?> controllerType, Class<?> viewModelType) {
-        this.fxmlPath = fxmlPath;
-        this.cssPath = cssPath;
-        this.controllerType = controllerType;
-        this.viewModelType = viewModelType;
-    }
-
-    public Screen(String fxmlPath, String cssPath, Class<?> controllerType){
-        this(fxmlPath, cssPath, controllerType, null);
-    }
-
-    public Screen(String fxmlPath, Class<?> controllerType){
-        this(fxmlPath, null, controllerType, null);
+    private Screen(Builder builder) {
+        this.fxmlPath = builder.fxmlPath;
+        this.cssPath = builder.cssPath;
+        this.controllerType = builder.controllerType;
+        this.viewModelType = builder.viewModelType;
+        this.cacheable = builder.cacheable;
     }
 
     public String getFxmlPath() { return fxmlPath; }
@@ -39,4 +33,40 @@ public class Screen {
     public boolean hasViewModel() { return viewModelType != null; }
 
     public boolean hasCss() { return cssPath != null; }
+
+    public boolean isCacheable() { return cacheable; }
+
+    // Builder for the Screen class
+    public static class Builder {
+        private final String fxmlPath;
+        private final Class<?> controllerType;
+
+        private String cssPath = null; // Optional
+        private Class<?> viewModelType = null; // Optional
+        private boolean cacheable = true; // Default to true
+
+        public Builder(String fxmlPath, Class<?> controllerType) {
+            this.fxmlPath = fxmlPath;
+            this.controllerType = controllerType;
+        }
+
+        public Builder withCssPath(String cssPath) {
+            this.cssPath = cssPath;
+            return this;
+        }
+
+        public Builder withViewModelType(Class<?> viewModelType) {
+            this.viewModelType = viewModelType;
+            return this;
+        }
+
+        public Builder cacheable(boolean cacheable) {
+            this.cacheable = cacheable;
+            return this;
+        }
+
+        public Screen build() {
+            return new Screen(this);
+        }
+    }
 }

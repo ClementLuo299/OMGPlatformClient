@@ -13,13 +13,12 @@ import com.viewmodels.LoginViewModel;
  * @author Clement Luo
  * @date May 19, 2025
  */
-public final class GUILocations {
+public final class Screens {
 
     // Map of screen names to screen configurations
-    public static final Screen LOGIN = new Screen(
-        "fxml/Login.fxml", 
-        "css/login.css", 
-        LoginController.class,
-        LoginViewModel.class
-    );
+    public static final Screen LOGIN = new Screen.Builder("fxml/login.fxml", LoginController.class)
+            .withCssPath("css/login.css")
+            .withViewModelType(LoginViewModel.class)
+            .cacheable(true)
+            .build();
 }
