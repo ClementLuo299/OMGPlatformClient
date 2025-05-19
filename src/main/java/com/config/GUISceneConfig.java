@@ -33,7 +33,7 @@ public class GUISceneConfig {
     /** CSS file path for the initial screen */
     private static final String INITIAL_SCREEN_CSS = ScreenManager.LOGIN_CSS;
 
-    // GETTERS
+    /** GETTERS */
     public static String getAppTitle() { return APP_TITLE; }
     public static int getWindowWidth() { return WINDOW_WIDTH; }
     public static int getWindowHeight() { return WINDOW_HEIGHT; }
