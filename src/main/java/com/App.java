@@ -1,11 +1,12 @@
 package com;
 
 import com.gui_controllers.LoginController;
+import com.services.AlertService;
 import com.services.LoginService;
 import com.viewmodels.LoginViewModel;
 import com.core.ScreenManager;
 import com.core.Services;
-import com.google.common.eventbus.EventBus;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -19,8 +20,6 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-    private final EventBus eventBus = new EventBus();
-
     /**
      * Initializes the primary stage and sets up the application environment.
      * This method is called when the JavaFX application starts.
@@ -28,12 +27,6 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-            eventBus.register(this);
-
-            //Could move capability to services
-            LoginService loginService = new LoginService();
-            LoginViewModel viewModel = new LoginViewModel(loginService, eventBus);
-
             // Start up the backend system
             Services.getInstance();
 
@@ -41,13 +34,16 @@ public class App extends Application {
             ScreenManager screenManager = ScreenManager.getInstance();
             screenManager.initialize(primaryStage);
 
+            //Could move capability to services
+            LoginService loginService = new LoginService();
+            AlertService alertService = new AlertService();
+            LoginViewModel viewModel = new LoginViewModel(loginService, screenManager, alertService);
+
             // Navigate to the opening screen (initial screen)
             screenManager.navigateToWithViewModel(ScreenManager.LOGIN_SCREEN, ScreenManager.LOGIN_CSS, viewModel, LoginController.class);
 
             // Start preloading common screens in background for faster navigation
-            new Thread(() -> {
-                screenManager.preloadCommonScreens();
-            }).start();
+            new Thread(screenManager::preloadCommonScreens).start();
 
             // Set the main stage properties (e.g., title, dimensions)
             primaryStage.setTitle("OMG Platform"); //Set the title of the stage
