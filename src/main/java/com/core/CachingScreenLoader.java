@@ -12,6 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A utility class for loading and caching GUI screens to optimize performance.
+ * Ensures that frequently used screens are preloaded and reused, reducing the overhead
+ * of re-initializing FXML views and controllers.
+ *
+ * Features:
+ * - Loads screens dynamically via FXML.
+ * - Caches screens for quick access.
+ * - Handles screen invalidation for managing memory efficiently.
+ *
+ * Use in conjunction with the ScreenManager to streamline navigation.
  *
  * @authors Clement Luo,
  * @date May 18, 2025

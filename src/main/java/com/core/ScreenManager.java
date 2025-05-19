@@ -18,7 +18,24 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
- * Manages screen transitions and caching in the application
+ * Manages screen transitions, loading, and caching in the application.
+ * This class provides a centralized system for controlling navigation between
+ * different screens while optimizing performance using strategies like screen caching.
+ *
+ * Features:
+ * - Singleton pattern to ensure a single instance throughout the application.
+ * - Supports dynamic navigation between screens with or without viewmodels.
+ * - Preloads and caches screens based on configuration to reduce loading times.
+ * - Handles CSS theming and error management during navigation.
+ *
+ * Usage:
+ * 1. Initialize the `ScreenManager` instance during application startup.
+ * 2. Use `navigateTo` methods to switch between screens, optionally injecting viewmodels or custom setups.
+ *
+ * Associated Classes:
+ * - `Screen`: Defines all available screens with their FXML paths, CSS paths, and cacheability.
+ * - `ScreenLoadingStrategy`: Interface for implementing different screen-loading strategies.
+ * - `CachingScreenLoader`: Default implementation of `ScreenLoadingStrategy` for caching screens.
  *
  * @authors Fatin Abrar Ankon, Clement Luo, Scott Brown, Jason Bakajika
  * @date March 28, 2025

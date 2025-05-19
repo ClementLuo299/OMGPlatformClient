@@ -5,52 +5,67 @@ import com.config.ScreenConfig;
 import com.services.AlertService;
 import com.services.LoginService;
 import com.viewmodels.LoginViewModel;
+
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+
+import java.util.logging.Logger;
 
 /**
  * Handles application initialization, stage setup, and error handling.
+ * 
+ * @authors Clement Luo
+ * @date May 18, 2025
  */
 public class LifecycleManager {
-
-    /**
-     * Handles the entire application initialization process, including screen setup and navigation.
-     *
-     * @param primaryStage The primary stage of the application.
-     * @throws Exception If initialization fails.
-     */
-    public static void onAppStart(Stage primaryStage) throws Exception {
-        // Build screen configuration
-        ScreenConfig config = buildScreenConfig();
-
-        // Initialize screen manager
-        ScreenManager.initializeInstance(primaryStage, config);
-
-        // Initialize services and viewmodels
-        LoginService loginService = new LoginService();
-        AlertService alertService = new AlertService();
-        LoginViewModel viewModel = new LoginViewModel(
-            loginService,
-            ScreenManager.getInstance(),
-            alertService
-        );
-
-        // Navigate to the login screen
-        ScreenManager
-            .getInstance()
-            .navigateToWithViewModel(Screen.LOGIN, viewModel, com.gui_controllers.LoginController.class);
-    }
 
     public static void start(Stage primaryStage) {
         try {
             // Initialize application (Screen configuration, services, navigation)
-            LifecycleManager.onAppStart(primaryStage);
+            initializeScreenManager(primaryStage);
+            initializeServices();
+            initializeUI();
 
             // Configure and display the primary stage
-            LifecycleManager.configureStage(primaryStage);
+            configureStage(primaryStage);
             primaryStage.show();
         } catch (Exception e) {
-            LifecycleManager.handleStartupError(e);
+            handleStartupError(e);
         }
+    }
+
+    /**
+     * Performs cleanup and saves the database before exiting the application.
+     */
+    public static void stop() {
+        try {
+            Services.db().saveDBData();
+        } catch (Exception e) {
+            System.err.println("Error saving data on exit: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // Splitting logic into smaller methods
+    private static void initializeScreenManager(Stage primaryStage) throws Exception {
+        ScreenConfig config = buildScreenConfig();
+        ScreenManager.initializeInstance(primaryStage, config);
+    }
+
+    private static void initializeServices() { ServiceManager.initializeCoreServices(); }
+
+    private static void initializeUI() throws Exception {
+        LoginViewModel viewModel = new LoginViewModel(
+                new LoginService(),
+                ScreenManager.getInstance(),
+                new AlertService()
+        );
+        ScreenManager.getInstance().navigateToWithViewModel(
+                Screen.LOGIN,
+                viewModel,
+                com.gui_controllers.LoginController.class
+        );
     }
 
     /**
@@ -59,12 +74,16 @@ public class LifecycleManager {
      * @return ScreenConfig configured with preloaded screens and caching.
      */
     private static ScreenConfig buildScreenConfig() {
-        return new ScreenConfig.Builder()
-                .addPreloadScreen(Screen.DASHBOARD)
-                .addPreloadScreen(Screen.GAME_LIBRARY)
-                .setCacheSize(10)
-                .setEnableCaching(true)
-                .build();
+        ScreenConfig.Builder builder = new ScreenConfig.Builder()
+                .setCacheSize(GUIConfig.getScreenCacheSize())
+                .setEnableCaching(GUIConfig.isEnableCaching());
+
+        //Add preloaded screens from config
+        for(Screen screen : GUIConfig.getPreloadScreens()) {
+            builder.addPreloadScreen(screen);
+        }
+
+        return builder.build();
     }
 
     /**
@@ -87,20 +106,19 @@ public class LifecycleManager {
      * @throws RuntimeException Rethrows the startup error.
      */
     public static void handleStartupError(Exception e) {
-        System.err.println("Error during startup: " + e.getMessage());
-        e.printStackTrace();
-        throw new RuntimeException("Application failed to start.", e);
-    }
+        // Log the error with appropriate severity
+        Logger logger = Logger.getLogger(LifecycleManager.class.getName());
+        logger.severe("Error during startup: " + e.getMessage());
 
-    /**
-     * Performs cleanup and saves the database before exiting the application.
-     */
-    public static void stop() {
-        try {
-            Services.db().saveDBData();
-        } catch (Exception e) {
-            System.err.println("Error saving data on exit: " + e.getMessage());
-            e.printStackTrace();
-        }
+        // Optional: Display user-friendly error message or UI dialog
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Application Error");
+        alert.setHeaderText("Failed to start the application.");
+        alert.setContentText(e.getMessage());
+        alert.showAndWait();
+
+        // Exit the application after logging and informing the user
+        Platform.exit();
+        System.exit(1);
     }
 }
