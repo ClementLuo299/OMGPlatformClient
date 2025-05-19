@@ -11,6 +11,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * @authors Clement Luo,
+ * @date May 18, 2025
+ */
 public class CachingScreenLoader implements ScreenLoadingStrategy {
     private final Map<Screen, Parent> screenCache = new HashMap<>();
     private final ScreenConfig config;

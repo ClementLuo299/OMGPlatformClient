@@ -1,7 +1,7 @@
 package com.viewmodels;
 
 import com.core.ScreenManager;
-import com.gui_controllers.DashboardController;
+//import com.gui_controllers.DashboardController;
 import com.services.AlertService;
 import com.services.LoginService;
 import javafx.beans.property.*;
@@ -82,7 +82,7 @@ public class LoginViewModel {
         guestLogin(
                 username -> {
                     System.out.println("Guest login successful!");
-                    navigateToDashboard(username, true);
+                    //navigateToDashboard(username, true);
                 },
                 errorMessage -> showError("Guest Login Error", errorMessage)
         );
@@ -92,7 +92,7 @@ public class LoginViewModel {
         login(
                 username -> {
                     System.out.println("Login successful for: " + username);
-                    navigateToDashboard(username, false);
+                    //navigateToDashboard(username, false);
                 },
                 errorMessage -> showError("Login Error", errorMessage)
         );
@@ -100,7 +100,7 @@ public class LoginViewModel {
 
     public void handleCreateAccount() {
         try {
-            screenManager.navigateTo(ScreenManager.REGISTER_SCREEN, ScreenManager.REGISTER_CSS);
+            //screenManager.navigateTo(ScreenManager.REGISTER_SCREEN, ScreenManager.REGISTER_CSS);
         } catch (Exception e) {
             showError("Error", "Could not open register screen: " + e.getMessage());
         }
@@ -110,6 +110,7 @@ public class LoginViewModel {
         showInfo("Info", "Forgot password functionality not implemented yet");
     }
 
+    /*
     private void navigateToDashboard(String username, boolean isGuest) {
         try {
             DashboardController controller = (DashboardController)
@@ -122,6 +123,8 @@ public class LoginViewModel {
             showError("Error", "Could not open dashboard: " + e.getMessage());
         }
     }
+
+     */
 
     private void showError(String title, String message) {
         alertService.showError(title, message);

@@ -13,7 +13,7 @@
 <HBox maxHeight="800.0" prefHeight="800.0" prefWidth="1500" styleClass="root-container" stylesheets="@../css/setting.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.SettingController">
     <!-- Left Sidebar Navigation - Exactly the same as Dashboard and GameLibrary -->
     <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
-        <!-- com.App Title -->
+        <!-- com.MainApplication Title -->
         <HBox styleClass="com.app-title">
             <ImageView fitHeight="24" fitWidth="24">
                 <Image url="@../icons/navigation/unknown.png" />

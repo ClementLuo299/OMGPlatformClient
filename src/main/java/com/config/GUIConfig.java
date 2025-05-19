@@ -1,6 +1,6 @@
 package com.config;
 
-import com.core.ScreenManager;
+import com.core.Screen;
 
 /**
  * Configuration class for the JavaFX GUI window and initial scene settings.
@@ -11,7 +11,7 @@ import com.core.ScreenManager;
  * @authors Clement Luo,
  * @date May 18, 2025
  */
-public class GUISceneConfig {
+public class GUIConfig {
     /** Application window title */
     private static final String APP_TITLE = "OMG Platform";
 
@@ -27,11 +27,8 @@ public class GUISceneConfig {
     /** Minimum allowed window height (in pixels) */
     private static final int MIN_WINDOW_HEIGHT = 600;
 
-    /** FXML file path for the initial screen */
-    private static final String INITIAL_SCREEN = ScreenManager.LOGIN_SCREEN;
-
-    /** CSS file path for the initial screen */
-    private static final String INITIAL_SCREEN_CSS = ScreenManager.LOGIN_CSS;
+    /** Initial screen */
+    private static final Screen INITIAL_SCREEN = Screen.LOGIN;
 
     /** GETTERS */
     public static String getAppTitle() { return APP_TITLE; }
@@ -39,7 +36,6 @@ public class GUISceneConfig {
     public static int getWindowHeight() { return WINDOW_HEIGHT; }
     public static int getMinWindowWidth() { return MIN_WINDOW_WIDTH; }
     public static int getMinWindowHeight() { return MIN_WINDOW_HEIGHT; }
-    public static String getInitialScreen() { return INITIAL_SCREEN; }
-    public static String getInitialScreenCSS() { return INITIAL_SCREEN_CSS; }
+    public static Screen getInitialScreen() { return INITIAL_SCREEN; }
 
 }

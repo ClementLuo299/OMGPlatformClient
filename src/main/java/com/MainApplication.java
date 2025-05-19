@@ -10,7 +10,7 @@ import javafx.stage.Stage;
  * @authors Clement Luo, Fatin Abrar Ankon, Dylan Shiels, Zaman Dogar
  * @date March 17, 2025
  */
-public class App extends Application {
+public class MainApplication extends Application {
 
     @Override public void start(Stage primaryStage) { LifecycleManager.start(primaryStage); }
 
