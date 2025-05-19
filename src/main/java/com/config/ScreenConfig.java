@@ -15,10 +15,34 @@ import java.util.Set;
  * @date May 18, 2025
  */
 public class ScreenConfig {
+    /**
+     * Set of screens that should be preloaded when the application starts.
+     * These screens are loaded into memory during initialization to reduce
+     * loading times when they are first accessed.
+     */
     private final Set<Screen> preloadScreens;
+
+    /**
+     * Maximum number of screens that can be cached in memory at once.
+     * When this limit is reached, least recently used screens will be
+     * removed from the cache to make room for new ones.
+     */
     private final int cacheSize;
+
+    /**
+     * Flag indicating whether screen caching is enabled.
+     * When true, screens are cached in memory after being loaded.
+     * When false, screens are reloaded from the disk each time they are accessed.
+     */
     private final boolean enableCaching;
 
+
+    /**
+     * Private constructor used by the Builder.
+     * Creates an immutable ScreenConfig instance.
+     *
+     * @param builder The builder containing configuration settings
+     */
     private ScreenConfig(Builder builder) {
         this.preloadScreens = Collections.unmodifiableSet(new HashSet<>(builder.preloadScreens));
         this.cacheSize = builder.cacheSize;
@@ -30,8 +54,22 @@ public class ScreenConfig {
      * Provides a fluent interface for setting configuration options.
      */
     public static class Builder {
+        /**
+         * Set of screens to be preloaded, initialized empty.
+         * Screens added to this set will be loaded during application startup.
+         */
         private Set<Screen> preloadScreens = new HashSet<>();
+
+        /**
+         * Default cache size set to 10 screens.
+         * This value can be modified using {@link #setCacheSize(int)}.
+         */
         private int cacheSize = 10;
+
+        /**
+         * Screen caching enabled by default.
+         * Can be modified using {@link #setEnableCaching(boolean)}.
+         */
         private boolean enableCaching = true;
 
         /**
@@ -39,7 +77,7 @@ public class ScreenConfig {
          *
          * @param screen The screen to preload
          * @return this builder instance for method chaining
-         * @throws IllegalArgumentException if screen is null
+         * @throws IllegalArgumentException if the screen is null
          */
         public Builder addPreloadScreen(Screen screen) {
             preloadScreens.add(screen);
@@ -51,18 +89,30 @@ public class ScreenConfig {
          *
          * @param size The maximum cache size (must be positive)
          * @return this builder instance for method chaining
-         * @throws IllegalArgumentException if size is less than 1
+         * @throws IllegalArgumentException if the size is less than 1
          */
         public Builder setCacheSize(int size) {
             this.cacheSize = size;
             return this;
         }
 
+        /**
+         * Enables or disables screen caching globally.
+         * When disabled, screens will be reloaded every time they are accessed.
+         *
+         * @param enable true to enable caching, false to disable
+         * @return this builder instance for method chaining
+         */
         public Builder setEnableCaching(boolean enable) {
             this.enableCaching = enable;
             return this;
         }
 
+        /**
+         * Creates a new immutable ScreenConfig instance with the current settings.
+         *
+         * @return A new ScreenConfig instance
+         */
         public ScreenConfig build() {
             return new ScreenConfig(this);
         }
