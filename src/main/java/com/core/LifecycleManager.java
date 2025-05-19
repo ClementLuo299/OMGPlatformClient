@@ -1,7 +1,7 @@
 package com.core;
 
 import com.config.GUIConfig;
-import com.config.ScreenConfig;
+import com.config.ScreenManagementConfig;
 import com.services.AlertService;
 import com.services.LoginService;
 import com.viewmodels.LoginViewModel;
@@ -49,7 +49,7 @@ public class LifecycleManager {
 
     // Splitting logic into smaller methods
     private static void initializeScreenManager(Stage primaryStage) throws Exception {
-        ScreenConfig config = buildScreenConfig();
+        ScreenManagementConfig config = buildScreenConfig();
         ScreenManager.initializeInstance(primaryStage, config);
     }
 
@@ -62,7 +62,7 @@ public class LifecycleManager {
                 new AlertService()
         );
         ScreenManager.getInstance().navigateToWithViewModel(
-                Screen.LOGIN,
+                ScreenView.LOGIN,
                 viewModel,
                 com.gui_controllers.LoginController.class
         );
@@ -73,14 +73,14 @@ public class LifecycleManager {
      *
      * @return ScreenConfig configured with preloaded screens and caching.
      */
-    private static ScreenConfig buildScreenConfig() {
-        ScreenConfig.Builder builder = new ScreenConfig.Builder()
+    private static ScreenManagementConfig buildScreenConfig() {
+        ScreenManagementConfig.Builder builder = new ScreenManagementConfig.Builder()
                 .setCacheSize(GUIConfig.getScreenCacheSize())
                 .setEnableCaching(GUIConfig.isEnableCaching());
 
         //Add preloaded screens from config
-        for(Screen screen : GUIConfig.getPreloadScreens()) {
-            builder.addPreloadScreen(screen);
+        for(ScreenView screenView : GUIConfig.getPreloadScreens()) {
+            builder.addPreloadScreen(screenView);
         }
 
         return builder.build();

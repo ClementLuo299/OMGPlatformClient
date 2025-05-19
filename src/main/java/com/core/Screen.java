@@ -1,76 +1,42 @@
 package com.core;
 
 /**
- * Defines all available screens in the application and their associated resources.
- * This enum provides a centralized registry of screens with their FXML layouts
- * and CSS styling files. It also controls whether individual screens can be cached.
+ * Maps fxml, css, controllers, and viemodels. Css and viewmodels are optional.
  *
  * @author Clement Luo
- * @date May 18, 2025
+ * @date May 19, 2025
  */
-public enum Screen {
-    /** Opening screen - Initial splash screen with animated start button */
-    OPENING("fxml/Opening.fxml", "css/opening.css"),
+public class Screen {
 
-    /** Login screen - Entry point for user authentication */
-    LOGIN("fxml/Login.fxml", "css/login.css"),
-
-    /** Dashboard screen - Main user interface after login */
-    DASHBOARD("fxml/Dashboard.fxml", "css/dashboard.css"),
-
-    /** Game library screen - Shows available games */
-    GAME_LIBRARY("fxml/GameLibrary.fxml", "css/library.css"),
-
-    /** Leaderboard screen - Displays player rankings */
-    LEADERBOARD("fxml/Leaderboard.fxml", "css/leaderboard.css"),
-
-    /** Settings screen - User preferences and configuration */
-    SETTINGS("fxml/Setting.fxml", "css/setting.css"),
-
-    /** Registration screen - New user account creation */
-    REGISTER("fxml/Register.fxml", "css/register.css"),
-
-    /** Game lobby screen - Pre-game setup and matchmaking (not cached) */
-    GAME_LOBBY("fxml/GameLobby.fxml", "css/game_lobby.css", false);
-
-
-    /** Path to the FXML layout file for this screen */
     private final String fxmlPath;
-
-    /** Path to the CSS stylesheet for this screen */
     private final String cssPath;
+    private final Class<?> controllerType;
+    private final Class<?> viewModelType;
 
-    /** Flag indicating whether this screen can be cached */
-    private final boolean cacheable;
-
-
-    /**
-     * Creates a new screen with the specified FXML and CSS paths.
-     * Screen will be cacheable by default.
-     *
-     * @param fxmlPath Path to the screen's FXML layout file
-     * @param cssPath Path to the screen's CSS stylesheet
-     */
-    Screen(String fxmlPath, String cssPath) {
-        this(fxmlPath, cssPath, true);
-    }
-
-    /**
-     * Creates a new screen with the specified FXML and CSS paths,
-     * and caching behavior.
-     *
-     * @param fxmlPath Path to the screen's FXML layout file
-     * @param cssPath Path to the screen's CSS stylesheet
-     * @param cacheable Whether this screen can be cached in memory
-     */
-    Screen(String fxmlPath, String cssPath, boolean cacheable) {
+    public Screen(String fxmlPath, String cssPath, Class<?> controllerType, Class<?> viewModelType) {
         this.fxmlPath = fxmlPath;
         this.cssPath = cssPath;
-        this.cacheable = cacheable;
+        this.controllerType = controllerType;
+        this.viewModelType = viewModelType;
     }
 
-    /** GETTERS */
+    public Screen(String fxmlPath, String cssPath, Class<?> controllerType){
+        this(fxmlPath, cssPath, controllerType, null);
+    }
+
+    public Screen(String fxmlPath, Class<?> controllerType){
+        this(fxmlPath, null, controllerType, null);
+    }
+
     public String getFxmlPath() { return fxmlPath; }
+
     public String getCssPath() { return cssPath; }
-    public boolean isCacheable() { return cacheable; }
+
+    public Class<?> getControllerType() { return controllerType; }
+
+    public Class<?> getViewModelType() { return viewModelType; }
+
+    public boolean hasViewModel() { return viewModelType != null; }
+
+    public boolean hasCss() { return cssPath != null; }
 }

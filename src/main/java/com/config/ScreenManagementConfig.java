@@ -1,6 +1,6 @@
 package com.config;
 
-import com.core.Screen;
+import com.core.ScreenView;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,14 +14,14 @@ import java.util.Set;
  * @authors Clement Luo
  * @date May 18, 2025
  */
-public class ScreenConfig {
+public class ScreenManagementConfig {
 
     /**
      * Set of screens that should be preloaded when the application starts.
      * These screens are loaded into memory during initialization to reduce
      * loading times when they are first accessed.
      */
-    private final Set<Screen> preloadScreens;
+    private final Set<ScreenView> preloadScreenViews;
 
     /**
      * Maximum number of screens that can be cached in memory at once.
@@ -38,7 +38,7 @@ public class ScreenConfig {
     private final boolean enableCaching;
 
     /** GETTERS */
-    public Set<Screen> getPreloadScreens() { return preloadScreens; }
+    public Set<ScreenView> getPreloadScreens() { return preloadScreenViews; }
     public int getCacheSize() { return cacheSize; }
     public boolean isEnableCaching() { return enableCaching; }
 
@@ -49,8 +49,8 @@ public class ScreenConfig {
      *
      * @param builder The builder containing configuration settings
      */
-    private ScreenConfig(Builder builder) {
-        this.preloadScreens = Collections.unmodifiableSet(new HashSet<>(builder.preloadScreens));
+    private ScreenManagementConfig(Builder builder) {
+        this.preloadScreenViews = Collections.unmodifiableSet(new HashSet<>(builder.preloadScreenViews));
         this.cacheSize = builder.cacheSize;
         this.enableCaching = builder.enableCaching;
     }
@@ -64,7 +64,7 @@ public class ScreenConfig {
          * Set of screens to be preloaded, initialized empty.
          * Screens added to this set will be loaded during application startup.
          */
-        private Set<Screen> preloadScreens = new HashSet<>();
+        private Set<ScreenView> preloadScreenViews = new HashSet<>();
 
         /**
          * Default cache size set to 10 screens.
@@ -81,12 +81,12 @@ public class ScreenConfig {
         /**
          * Adds a screen to be preloaded when the application starts.
          *
-         * @param screen The screen to preload
+         * @param screenView The screen to preload
          * @return this builder instance for method chaining
          * @throws IllegalArgumentException if the screen is null
          */
-        public Builder addPreloadScreen(Screen screen) {
-            preloadScreens.add(screen);
+        public Builder addPreloadScreen(ScreenView screenView) {
+            preloadScreenViews.add(screenView);
             return this;
         }
 
@@ -119,8 +119,8 @@ public class ScreenConfig {
          *
          * @return A new ScreenConfig instance
          */
-        public ScreenConfig build() {
-            return new ScreenConfig(this);
+        public ScreenManagementConfig build() {
+            return new ScreenManagementConfig(this);
         }
     }
 }

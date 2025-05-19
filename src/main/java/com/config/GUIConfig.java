@@ -1,6 +1,6 @@
 package com.config;
 
-import com.core.Screen;
+import com.core.ScreenView;
 
 import java.util.List;
 
@@ -30,15 +30,15 @@ public class GUIConfig {
     private static final int MIN_WINDOW_HEIGHT = 600;
 
     /** Initial screen */
-    private static final Screen INITIAL_SCREEN = Screen.LOGIN;
+    private static final ScreenView INITIAL_SCREEN_VIEW = ScreenView.LOGIN;
 
     private static final int SCREEN_CACHE_SIZE = 10;
 
     private static final boolean ENABLE_CACHING = true;
 
-    public static final List<Screen> PRELOAD_SCREENS = List.of(
-            Screen.DASHBOARD,
-            Screen.GAME_LIBRARY
+    public static final List<ScreenView> PRELOAD_SCREEN_VIEWS = List.of(
+            ScreenView.DASHBOARD,
+            ScreenView.GAME_LIBRARY
     );
 
     /** GETTERS */
@@ -47,9 +47,9 @@ public class GUIConfig {
     public static int getWindowHeight() { return WINDOW_HEIGHT; }
     public static int getMinWindowWidth() { return MIN_WINDOW_WIDTH; }
     public static int getMinWindowHeight() { return MIN_WINDOW_HEIGHT; }
-    public static Screen getInitialScreen() { return INITIAL_SCREEN; }
+    public static ScreenView getInitialScreen() { return INITIAL_SCREEN_VIEW; }
     public static int getScreenCacheSize() { return SCREEN_CACHE_SIZE; }
     public static boolean isEnableCaching() { return ENABLE_CACHING; }
-    public static List<Screen> getPreloadScreens() { return PRELOAD_SCREENS; }
+    public static List<ScreenView> getPreloadScreens() { return PRELOAD_SCREEN_VIEWS; }
 
 }

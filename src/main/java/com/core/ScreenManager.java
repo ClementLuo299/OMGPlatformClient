@@ -1,19 +1,12 @@
 package com.core;
 
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import com.config.ScreenConfig;
+import com.config.ScreenManagementConfig;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -46,9 +39,9 @@ public class ScreenManager {
     private final Scene mainScene;
     private final Stage mainStage;
     private final ScreenLoadingStrategy loadingStrategy;
-    private final ScreenConfig config;
+    private final ScreenManagementConfig config;
 
-    private ScreenManager(Stage stage, ScreenConfig config) {
+    private ScreenManager(Stage stage, ScreenManagementConfig config) {
         this.mainContainer = new BorderPane();
         this.mainScene = new Scene(mainContainer, 1400, 800);
         this.mainStage = stage;
@@ -57,7 +50,7 @@ public class ScreenManager {
         initialize();
     }
 
-    public static void initializeInstance(Stage stage, ScreenConfig config) {
+    public static void initializeInstance(Stage stage, ScreenManagementConfig config) {
         if (instance == null) {
             instance = new ScreenManager(stage, config);
         }
@@ -70,26 +63,26 @@ public class ScreenManager {
         return instance;
     }
 
-    public <T> T navigateTo(Screen screen) {
-        return navigateToWithSetup(screen, null);
+    public <T> T navigateTo(ScreenView screenView) {
+        return navigateToWithSetup(screenView, null);
     }
 
-    public <T, V> T navigateToWithViewModel(Screen screen, V viewModel, Class<T> controllerClass) {
-        return navigateToWithSetup(screen, controller -> {
+    public <T, V> T navigateToWithViewModel(ScreenView screenView, V viewModel, Class<T> controllerClass) {
+        return navigateToWithSetup(screenView, controller -> {
             if (controller instanceof ViewModelInjectable<?>) {
                 ((ViewModelInjectable<V>) controller).setViewModel(viewModel);
             }
         });
     }
 
-    public <T> T navigateToWithSetup(Screen screen, Consumer<T> setup) {
+    public <T> T navigateToWithSetup(ScreenView screenView, Consumer<T> setup) {
         try {
-            ScreenLoadResult<T> result = loadingStrategy.loadScreen(screen, null);
+            ScreenLoadResult<T> result = loadingStrategy.loadScreen(screenView, null);
             if (setup != null && result.controller() != null) {
                 setup.accept(result.controller());
             }
             
-            applyCssTheme(screen.getCssPath());
+            applyCssTheme(screenView.getCssPath());
             mainContainer.setCenter(result.root());
             return result.controller();
         } catch (Exception e) {
@@ -107,9 +100,9 @@ public class ScreenManager {
 
     private void preloadScreens() {
         CompletableFuture.runAsync(() -> {
-            for (Screen screen : config.getPreloadScreens()) {
-                if (screen.isCacheable()) {
-                    loadingStrategy.loadScreen(screen, null);
+            for (ScreenView screenView : config.getPreloadScreens()) {
+                if (screenView.isCacheable()) {
+                    loadingStrategy.loadScreen(screenView, null);
                 }
             }
         });
@@ -140,17 +133,17 @@ public class ScreenManager {
 
     // Add compatibility methods for existing code
     public Object navigateTo(String fxmlPath, String cssPath) {
-        Screen screen = Screen.valueOf(fxmlPath.replace("fxml/", "")
+        ScreenView screenView = ScreenView.valueOf(fxmlPath.replace("fxml/", "")
                 .replace(".fxml", "")
                 .toUpperCase());
-        return navigateTo(screen);
+        return navigateTo(screenView);
     }
 
     public <T> T navigateToWithViewModel(String fxmlPath, String cssPath, Object viewModel, Class<T> controllerClass) {
-        Screen screen = Screen.valueOf(fxmlPath.replace("fxml/", "")
+        ScreenView screenView = ScreenView.valueOf(fxmlPath.replace("fxml/", "")
                 .replace(".fxml", "")
                 .toUpperCase());
-        return navigateToWithViewModel(screen, viewModel, controllerClass);
+        return navigateToWithViewModel(screenView, viewModel, controllerClass);
     }
 
 }
