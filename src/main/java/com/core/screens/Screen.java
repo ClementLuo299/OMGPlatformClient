@@ -1,4 +1,4 @@
-package com.core;
+package com.core.screens;
 
 /**
  * Maps fxml, css, controllers, and viemodels. Css and viewmodels are optional.

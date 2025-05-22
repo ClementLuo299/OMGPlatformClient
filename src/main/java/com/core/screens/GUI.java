@@ -1,5 +1,6 @@
-package com.core;
+package com.core.screens;
 
+import com.core.ViewModelInjectable;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

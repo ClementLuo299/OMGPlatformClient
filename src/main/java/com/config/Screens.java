@@ -1,6 +1,6 @@
 package com.config;
 
-import com.core.Screen;
+import com.core.screens.Screen;
 import com.gui_controllers.LoginController;
 import com.viewmodels.LoginViewModel;
 

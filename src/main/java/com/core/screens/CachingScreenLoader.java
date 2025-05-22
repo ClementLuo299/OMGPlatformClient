@@ -1,4 +1,4 @@
-package com.core;
+package com.core.screens;
 
 import com.config.ScreenManagementConfig;
 import javafx.fxml.FXMLLoader;

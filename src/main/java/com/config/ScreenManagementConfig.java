@@ -1,6 +1,6 @@
 package com.config;
 
-import com.core.ScreenView;
+import com.core.screens.ScreenView;
 
 import java.util.Collections;
 import java.util.HashSet;

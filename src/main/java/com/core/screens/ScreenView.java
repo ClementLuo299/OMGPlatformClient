@@ -1,4 +1,4 @@
-package com.core;
+package com.core.screens;
 
 /**
  * Defines all available screens in the application and their associated resources.

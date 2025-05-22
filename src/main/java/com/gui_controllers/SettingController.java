@@ -1,6 +1,6 @@
 //package com.gui_controllers;
 //
-//import com.core.ScreenManager;
+//import com.core.screens.ScreenManager;
 //import com.core.ThemeManager;
 //
 //import javafx.fxml.FXML;

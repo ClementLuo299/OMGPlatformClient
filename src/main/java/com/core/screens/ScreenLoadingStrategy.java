@@ -1,4 +1,4 @@
-package com.core;
+package com.core.screens;
 
 /**
  * Strategy interface for loading application screens.

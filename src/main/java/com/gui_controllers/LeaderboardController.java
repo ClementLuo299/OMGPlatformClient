@@ -1,6 +1,6 @@
 //package com.gui_controllers;
 //
-//import com.core.ScreenManager;
+//import com.core.screens.ScreenManager;
 //import javafx.fxml.FXML;
 //import javafx.scene.control.*;
 //import javafx.scene.layout.VBox;

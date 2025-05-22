@@ -2,6 +2,8 @@ package com.core;
 
 import com.config.GUIConfig;
 import com.config.ScreenManagementConfig;
+import com.core.screens.ScreenManager;
+import com.core.screens.ScreenView;
 import com.services.AlertService;
 import com.services.LoginService;
 import com.viewmodels.LoginViewModel;

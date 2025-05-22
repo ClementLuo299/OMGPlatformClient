@@ -1,9 +1,11 @@
-package com.core;
+package com.core.screens;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 import com.config.ScreenManagementConfig;
+import com.core.ThemeManager;
+import com.core.ViewModelInjectable;
 import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;

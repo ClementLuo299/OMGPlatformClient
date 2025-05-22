@@ -4,7 +4,7 @@
 //import java.util.ResourceBundle;
 //import java.util.Random;
 //
-//import com.core.ScreenManager;
+//import com.core.screens.ScreenManager;
 //import com.core.ThemeManager;
 //import javafx.fxml.FXML;
 //import javafx.fxml.Initializable;

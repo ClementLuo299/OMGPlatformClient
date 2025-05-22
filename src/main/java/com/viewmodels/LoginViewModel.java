@@ -1,6 +1,6 @@
 package com.viewmodels;
 
-import com.core.ScreenManager;
+import com.core.screens.ScreenManager;
 //import com.gui_controllers.DashboardController;
 import com.services.AlertService;
 import com.services.LoginService;
