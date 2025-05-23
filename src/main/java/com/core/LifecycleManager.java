@@ -15,19 +15,22 @@ import javafx.stage.Stage;
 import java.util.logging.Logger;
 
 /**
- * Handles application initialization, stage setup, and error handling.
+ * Manages the lifecycle of the application, handling initialization, startup,
+ * and cleanup processes. This class is responsible for configuring core components,
+ * managing application screens, and ensuring proper shutdown procedures.
  * 
  * @authors Clement Luo
  * @date May 18, 2025
  */
 public class LifecycleManager {
 
+    /*--------------------------Lifecycle functions--------------------------------*/
+
     public static void start(Stage primaryStage) {
         try {
-            // Initialize application (Screen configuration, services, navigation)
-            initializeScreenManager(primaryStage);
-            initializeServices();
-            initializeUI();
+            initializeScreenManager(primaryStage); //Start screen manager
+            initializeServices(); //Start services
+            initializeUI(); //Initialize UI
 
             // Configure and display the primary stage
             configureStage(primaryStage);
@@ -49,6 +52,8 @@ public class LifecycleManager {
         }
     }
 
+    /*--------------------------Helper functions--------------------------------*/
+
     // Splitting logic into smaller methods
     private static void initializeScreenManager(Stage primaryStage) throws Exception {
         ScreenManagementConfig config = buildScreenConfig();
@@ -57,6 +62,7 @@ public class LifecycleManager {
 
     private static void initializeServices() { ServiceManager.initializeCoreServices(); }
 
+    //Navigate to the first page
     private static void initializeUI() throws Exception {
         LoginViewModel viewModel = new LoginViewModel(
                 new LoginService(),
