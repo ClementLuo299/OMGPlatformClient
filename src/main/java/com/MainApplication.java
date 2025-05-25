@@ -1,6 +1,6 @@
 package com;
 
-import com.core.LifecycleManager;
+import com.core.lifecycle.LifecycleManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

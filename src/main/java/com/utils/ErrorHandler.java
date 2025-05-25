@@ -35,6 +35,9 @@ public class ErrorHandler {
         safelyExit();
     }
 
+    /**
+     * Displays an alert to the user.
+     */
     private static void showAlert(String header, String content, Alert.AlertType alertType) {
         Platform.runLater(() -> {
             Alert alert = new Alert(alertType);
@@ -45,6 +48,9 @@ public class ErrorHandler {
         });
     }
 
+    /**
+     * Exits the application safely.
+     */
     private static void safelyExit() {
         Platform.exit();
         System.exit(1);
