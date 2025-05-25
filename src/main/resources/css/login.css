@@ -1,5 +1,5 @@
 /* Root container */
-AnchorPane {
+.root {
     -fx-background-color: #ffffff;
 }
 

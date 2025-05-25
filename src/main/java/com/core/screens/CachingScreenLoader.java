@@ -1,10 +1,13 @@
 package com.core.screens;
 
 import com.config.ScreenManagementConfig;
+import com.config.Screens;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,45 +27,47 @@ import java.util.Map;
  * @date May 18, 2025
  */
 public class CachingScreenLoader implements ScreenLoadingStrategy {
-    private final Map<ScreenView, Parent> screenCache = new HashMap<>();
+    private final Map<ScreenTemplate, Parent> screenCache = new HashMap<>();
     private final ScreenManagementConfig config;
 
-    public CachingScreenLoader(ScreenManagementConfig config) {
-        this.config = config;
-    }
+    public CachingScreenLoader(ScreenManagementConfig config) { this.config = config; }
 
     @Override
-    public <T> ScreenLoadResult<T> loadScreen(ScreenView screenView, Class<T> controllerType) {
+    public <T> ScreenLoadResult<T> loadScreen(ScreenTemplate screen) {
         try {
-            if (!screenView.isCacheable() || !config.isEnableCaching()) {
-                return loadFreshScreen(screenView, controllerType);
+            // Debug output
+            System.out.println("Loading screen: " + screen.getFxmlPath());
+            URL location = getClass().getResource(screen.getFxmlPath());
+            System.out.println("Resource URL: " + location);
+
+            if (location == null) {
+                throw new IOException("Could not find resource: " + screen.getFxmlPath());
             }
 
-            Parent root = screenCache.get(screenView);
-            if (root == null) {
-                ScreenLoadResult<T> result = loadFreshScreen(screenView, controllerType);
-                screenCache.put(screenView, result.root());
-                return result;
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(screenView.getFxmlPath()));
-            loader.setRoot(root);
+            FXMLLoader loader = new FXMLLoader(location);
+            Parent root = loader.load();
             T controller = loader.getController();
+
+            System.out.println("Successfully loaded FXML");
+            System.out.println("Root node type: " + root.getClass());
+            System.out.println("Root size: " + root.getBoundsInLocal());
+            System.out.println("Controller: " + (controller != null ? controller.getClass() : "null"));
+
             return new ScreenLoadResult<>(root, controller);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load screen: " + screenView, e);
+        } catch (Exception e) {
+            System.err.println("Error loading screen: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Failed to load screen: " + screen.getFxmlPath(), e);
         }
+
     }
 
-    private <T> ScreenLoadResult<T> loadFreshScreen(ScreenView screenView, Class<T> controllerType) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(screenView.getFxmlPath()));
+    private <T> ScreenLoadResult<T> loadFreshScreen(ScreenTemplate screen) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(screen.getFxmlPath()));
         Parent root = loader.load();
         T controller = loader.getController();
         return new ScreenLoadResult<>(root, controller);
     }
 
-    @Override
-    public void clearCache() {
-        screenCache.clear();
-    }
+    public void clearCache() { screenCache.clear(); }
 }

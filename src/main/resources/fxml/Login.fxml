@@ -5,12 +5,20 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<StackPane xmlns="http://javafx.com/javafx/17.0.12"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="com.gui_controllers.LoginController">
-    <AnchorPane prefHeight="800.0" prefWidth="1500.0">
+<StackPane     xmlns="http://javafx.com/javafx/17.0.12"
+               xmlns:fx="http://javafx.com/fxml/1"
+               fx:controller="com.gui_controllers.LoginController"
+               minWidth="0.0"
+               minHeight="0.0"
+               prefWidth="1400.0"
+               prefHeight="800.0"
+               maxWidth="Infinity"
+               maxHeight="Infinity">
 
-        <!-- App Title -->
+<AnchorPane prefHeight="800.0" prefWidth="1400.0"
+                maxWidth="Infinity" maxHeight="Infinity">
+
+    <!-- App Title -->
         <Label text="Online Multiplayer Board Game Platform"
                styleClass="title"
                maxWidth="Infinity"
@@ -76,10 +84,10 @@
                         onAction="#onGuestLoginClicked"/>
             </VBox>
         </HBox>
-
-        <!-- CSS Stylesheet -->
-        <stylesheets>
-            <URL value="@../css/login.css"/>
-        </stylesheets>
     </AnchorPane>
+
+    <!-- CSS Stylesheet -->
+    <stylesheets>
+        <URL value="@/css/login.css"/>
+    </stylesheets>
 </StackPane>

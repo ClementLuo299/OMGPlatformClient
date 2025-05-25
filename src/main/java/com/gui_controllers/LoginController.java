@@ -29,7 +29,8 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
     private LoginViewModel viewModel;  // View model
 
     @FXML
-    public void initialize() {}
+    public void initialize() { System.out.println("Login screen controller initialized!");
+    }
 
     /**
      * Sets the viewmodel for the page

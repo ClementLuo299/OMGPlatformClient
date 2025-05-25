@@ -31,6 +31,12 @@ public class LoginViewModel {
         this.screenManager = screenManager;
     }
 
+    public LoginViewModel() {
+        this.loginService = null;
+        this.alertService = null;
+        this.screenManager = null;
+    }
+
     public StringProperty usernameProperty() { return username; }
     public StringProperty passwordProperty() { return password; }
     public StringProperty guestUsernameProperty() { return guestUsername; }

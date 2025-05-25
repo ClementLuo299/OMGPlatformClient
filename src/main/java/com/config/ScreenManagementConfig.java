@@ -1,15 +1,14 @@
 package com.config;
 
-import com.core.screens.ScreenView;
+import com.core.screens.ScreenLoadResult;
+import com.core.screens.ScreenTemplate;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Configuration class for managing screen loading and caching behavior in the application.
- * This class uses the Builder pattern to create immutable configuration objects
- * that control how screens are preloaded and cached during runtime.
+ * Configuration class for the screen manager.
  *
  * @authors Clement Luo
  * @date May 18, 2025
@@ -21,7 +20,7 @@ public class ScreenManagementConfig {
      * These screens are loaded into memory during initialization to reduce
      * loading times when they are first accessed.
      */
-    private final Set<ScreenView> preloadScreenViews;
+    private final Set<ScreenTemplate> preloadScreenViews;
 
     /**
      * Maximum number of screens that can be cached in memory at once.
@@ -38,7 +37,7 @@ public class ScreenManagementConfig {
     private final boolean enableCaching;
 
     /** GETTERS */
-    public Set<ScreenView> getPreloadScreens() { return preloadScreenViews; }
+    public Set<ScreenTemplate> getPreloadScreens() { return preloadScreenViews; }
     public int getCacheSize() { return cacheSize; }
     public boolean isEnableCaching() { return enableCaching; }
 
@@ -50,7 +49,7 @@ public class ScreenManagementConfig {
      * @param builder The builder containing configuration settings
      */
     private ScreenManagementConfig(Builder builder) {
-        this.preloadScreenViews = Collections.unmodifiableSet(new HashSet<>(builder.preloadScreenViews));
+        this.preloadScreenViews = Set.copyOf(builder.preloadScreenViews);
         this.cacheSize = builder.cacheSize;
         this.enableCaching = builder.enableCaching;
     }
@@ -64,7 +63,7 @@ public class ScreenManagementConfig {
          * Set of screens to be preloaded, initialized empty.
          * Screens added to this set will be loaded during application startup.
          */
-        private Set<ScreenView> preloadScreenViews = new HashSet<>();
+        private Set<ScreenTemplate> preloadScreenViews = new HashSet<>();
 
         /**
          * Default cache size set to 10 screens.
@@ -81,12 +80,12 @@ public class ScreenManagementConfig {
         /**
          * Adds a screen to be preloaded when the application starts.
          *
-         * @param screenView The screen to preload
+         * @param screen The screen to preload
          * @return this builder instance for method chaining
          * @throws IllegalArgumentException if the screen is null
          */
-        public Builder addPreloadScreen(ScreenView screenView) {
-            preloadScreenViews.add(screenView);
+        public Builder addPreloadScreen(ScreenTemplate screen) {
+            preloadScreenViews.add(screen);
             return this;
         }
 
@@ -119,8 +118,6 @@ public class ScreenManagementConfig {
          *
          * @return A new ScreenConfig instance
          */
-        public ScreenManagementConfig build() {
-            return new ScreenManagementConfig(this);
-        }
+        public ScreenManagementConfig build() { return new ScreenManagementConfig(this); }
     }
 }

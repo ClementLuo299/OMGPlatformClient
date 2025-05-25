@@ -3,7 +3,8 @@ package com.core.lifecycle.start;
 import com.config.GUIConfig;
 import com.config.ScreenManagementConfig;
 import com.core.screens.ScreenManager;
-import com.core.screens.ScreenView;
+import com.core.screens.ScreenTemplate;
+
 import javafx.stage.Stage;
 
 /**
@@ -27,13 +28,15 @@ public class ScreenManagement {
      * @return ScreenConfig configured with preloaded screens and caching.
      */
     private static ScreenManagementConfig buildScreenConfig() {
+
+        //Set caching config
         ScreenManagementConfig.Builder builder = new ScreenManagementConfig.Builder()
                 .setCacheSize(GUIConfig.getScreenCacheSize())
                 .setEnableCaching(GUIConfig.isEnableCaching());
 
         //Add preloaded screens from config
-        for(ScreenView screenView : GUIConfig.getPreloadScreens()) {
-            builder.addPreloadScreen(screenView);
+        for(ScreenTemplate screen : GUIConfig.getPreloadScreens()) {
+            builder.addPreloadScreen(screen);
         }
 
         return builder.build();

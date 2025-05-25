@@ -1,11 +1,13 @@
 package com.core.lifecycle;
 
+import com.config.GUIConfig;
 import com.core.Services;
 import com.core.lifecycle.start.ServiceManagement;
 import com.core.lifecycle.start.UIManagement;
 import com.core.lifecycle.start.ScreenManagement;
 import com.utils.ErrorHandler;
 
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
 /**
@@ -23,17 +25,29 @@ public class LifecycleManager {
      */
     public static void start(Stage primaryStage) {
         try {
-            ScreenManagement.initialize(primaryStage); // Start screen manager
-            ServiceManagement.initialize(); // Start services
-            UIManagement.initialize(); // Initialize UI
+            System.out.println("Starting application lifecycle...");
 
-            // Configure and display the primary stage
+            // Configure stage first
             UIManagement.configureStage(primaryStage);
-            primaryStage.show();
+
+            // Initialize core components
+            ScreenManagement.initialize(primaryStage);
+            ServiceManagement.initialize();
+
+            // Initialize UI (this will set the root scene)
+            UIManagement.initialize();
+
+            // Show the stage last
+            System.out.println("Showing primary stage...");
+            if (!primaryStage.isShowing()) {
+                primaryStage.show();
+            }
+            System.out.println("Primary stage shown");
 
         } catch (Exception e) {
             ErrorHandler.handleCriticalError(e, "Critical error occurred during startup");
         }
+
     }
 
     /**
@@ -41,7 +55,7 @@ public class LifecycleManager {
      */
     public static void stop() {
         try {
-            Services.db().saveDBData();
+            //Services.db().saveDBData();
         } catch (Exception e) {
             System.err.println("Error saving data on exit: " + e.getMessage());
             e.printStackTrace();

@@ -1,6 +1,6 @@
 package com.config;
 
-import com.core.screens.ScreenView;
+import com.core.screens.ScreenTemplate;
 
 import java.util.List;
 
@@ -29,16 +29,20 @@ public class GUIConfig {
     /** Minimum allowed window height (in pixels) */
     private static final int MIN_WINDOW_HEIGHT = 600;
 
+    /** Main Scene */
+    private static final int MAIN_SCENE_WIDTH = 1400;
+    private static final int MAIN_SCENE_HEIGHT = 800;
+
     /** Initial screen */
-    private static final ScreenView INITIAL_SCREEN_VIEW = ScreenView.LOGIN;
+    private static final ScreenTemplate INITIAL_SCREEN = Screens.LOGIN;
 
     private static final int SCREEN_CACHE_SIZE = 10;
 
     private static final boolean ENABLE_CACHING = true;
 
-    public static final List<ScreenView> PRELOAD_SCREEN_VIEWS = List.of(
-            ScreenView.DASHBOARD,
-            ScreenView.GAME_LIBRARY
+    public static final List<ScreenTemplate> PRELOAD_SCREEN_VIEWS = List.of(
+            //ScreenView.DASHBOARD,
+            //ScreenView.GAME_LIBRARY
     );
 
     /** GETTERS */
@@ -47,9 +51,11 @@ public class GUIConfig {
     public static int getWindowHeight() { return WINDOW_HEIGHT; }
     public static int getMinWindowWidth() { return MIN_WINDOW_WIDTH; }
     public static int getMinWindowHeight() { return MIN_WINDOW_HEIGHT; }
-    public static ScreenView getInitialScreen() { return INITIAL_SCREEN_VIEW; }
+    public static ScreenTemplate getInitialScreen() { return INITIAL_SCREEN; }
     public static int getScreenCacheSize() { return SCREEN_CACHE_SIZE; }
     public static boolean isEnableCaching() { return ENABLE_CACHING; }
-    public static List<ScreenView> getPreloadScreens() { return PRELOAD_SCREEN_VIEWS; }
+    public static List<ScreenTemplate> getPreloadScreens() { return PRELOAD_SCREEN_VIEWS; }
+    public static int getMainSceneWidth() { return MAIN_SCENE_WIDTH; }
+    public static int getMainSceneHeight() { return MAIN_SCENE_HEIGHT; }
 
 }
