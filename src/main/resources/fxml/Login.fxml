@@ -1,57 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--
+    Login screen layout for the Online Multiplayer Board Game Platform.
+-->
+
 <?import java.net.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
+<!--
+    Root container: StackPane lets you stack child nodes on top of each other.
+    The fx:controller attribute links this FXML to its Java controller class.
+-->
 <StackPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.LoginController">
 
-<AnchorPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="800.0" prefWidth="1400.0">
+    <!--
+        AnchorPane allows absolute positioning of children via anchor properties.
+        Main background/content holder, sized to 1400x800.
+    -->
+    <AnchorPane maxHeight="Infinity" maxWidth="Infinity" prefHeight="800.0" prefWidth="1400.0">
 
-    <!-- App Title -->
-        <Label alignment="CENTER" maxWidth="Infinity" styleClass="title" text="Online Multiplayer Board Game Platform" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="80.0" />
+        <!--
+            Title Label centered near the top of the window.
+            Styled with the "title" CSS class.
+        -->
+        <Label
+            alignment="CENTER"
+            maxWidth="Infinity"
+            styleClass="title"
+            text="Online Multiplayer Board Game Platform"
+            AnchorPane.leftAnchor="0"
+            AnchorPane.rightAnchor="0"
+            AnchorPane.topAnchor="80.0"
+        />
 
-        <!-- Login Forms Container -->
-        <HBox alignment="CENTER" spacing="60" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="190.0">
+        <!--
+            HBox holds the two login forms (normal and guest) side by side,
+            as well as the dividing Line between them.
+            Anchored below the title label.
+        -->
+        <HBox
+            alignment="CENTER"
+            spacing="60"
+            AnchorPane.leftAnchor="0"
+            AnchorPane.rightAnchor="0"
+            AnchorPane.topAnchor="190.0"
+        >
 
-            <!-- Standard Login Form -->
+            <!--
+                VBox for standard user login.
+                Contains username, password inputs, options, and action buttons.
+                Styled with "login-form" CSS class.
+            -->
             <VBox alignment="TOP_CENTER" spacing="15" styleClass="login-form">
+                <!-- Section subtitle -->
                 <Label styleClass="subtitle" text="Welcome! Please enter your details." />
 
-                <!-- Username -->
+                <!-- Username input -->
                 <Label styleClass="input-label" text="Username" labelFor="$usernameField"/>
                 <TextField fx:id="usernameField" promptText="Enter your username" styleClass="input-field" />
 
-                <!-- Password -->
+                <!-- Password input -->
                 <Label styleClass="input-label" text="Password" labelFor="$passwordField"/>
                 <PasswordField fx:id="passwordField" promptText="Enter your password" styleClass="input-field" />
 
-                <!-- Options: Remember Me + Forgot Password -->
+                <!--
+                    HBox for: "Remember me" checkbox and "Forgot password" link.
+                    Laid out horizontally.
+                -->
                 <HBox alignment="CENTER_LEFT" spacing="60">
                     <CheckBox fx:id="rememberMe" styleClass="checkbox" text="Remember me" />
                     <Hyperlink fx:id="forgotPasswordLink" onAction="#onForgotPasswordClicked" styleClass="link" text="Forgot password" />
                 </HBox>
 
-                <!-- Login & Register -->
+                <!-- Login and "Create Account" buttons -->
                 <Button fx:id="loginButton" onAction="#onLoginClicked" styleClass="login-button" text="Sign in" />
                 <Button fx:id="createAccountButton" onAction="#onCreateAccountClicked" styleClass="create-account-button" text="Create an Account" />
             </VBox>
 
-            <!-- Divider -->
+            <!--
+                Vertical dividing line between the two forms.
+                Styled via "divider-line".
+            -->
             <Line endY="300" styleClass="divider-line" />
 
-            <!-- Guest Login Form -->
+            <!--
+                VBox for guest login.
+                Contains guest username input and login button.
+                Styled with "login-form" CSS class.
+            -->
             <VBox alignment="TOP_CENTER" spacing="15" styleClass="login-form">
                 <Label styleClass="subtitle" text="Continue as Guest" />
+
                 <Label styleClass="input-label" text="Username" labelFor="$guestUsernameField"/>
                 <TextField fx:id="guestUsernameField" promptText="Enter your username" styleClass="input-field" />
+
                 <Button fx:id="guestLoginButton" onAction="#onGuestLoginClicked" styleClass="login-button" text="Sign in" />
             </VBox>
         </HBox>
     </AnchorPane>
 
-    <!-- CSS Stylesheet -->
+    <!--
+        Stylesheets: Link to external CSS to style all components
+        (colors, fonts, spacing, etc).
+    -->
     <stylesheets>
         <URL value="@/css/login.css" />
     </stylesheets>
