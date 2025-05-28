@@ -5,6 +5,7 @@ import com.core.ViewModelInjectable;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 
 /**
  * GUI controller for login screen
@@ -14,10 +15,12 @@ import javafx.scene.control.*;
  */
 public class LoginController implements ViewModelInjectable<LoginViewModel> {
 
+    public VBox mainForm;
     //Regular login form
     @FXML private TextField usernameField; // Username text field
     @FXML private PasswordField passwordField; // Password text field
-    @FXML private CheckBox rememberMe; // "Remember Me" checkbox
+    @FXML
+    private CheckBox rememberMe; // "Remember Me" checkbox
     @FXML private Hyperlink forgotPasswordLink; // "Forgot Password" link
     @FXML private Button loginButton; // Login button
     @FXML private Button createAccountButton; // Create account button
