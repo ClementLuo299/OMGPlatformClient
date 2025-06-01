@@ -79,20 +79,20 @@
                 Styled with "login-form" CSS class.
             -->
             <VBox alignment="TOP_CENTER" spacing="15" styleClass="login-form">
+
+                <!-- Section subtitle -->
                 <Label styleClass="subtitle" text="Continue as Guest" />
 
+                <!-- Username input -->
                 <Label styleClass="input-label" text="Username" labelFor="$guestUsernameField"/>
                 <TextField fx:id="guestUsernameField" promptText="Enter your username" styleClass="input-field" />
 
+                <!-- Login button -->
                 <Button fx:id="guestLoginButton" onAction="#onGuestLoginClicked" styleClass="login-button" text="Sign in" />
             </VBox>
         </HBox>
     </VBox>
 
-    <!--
-        Stylesheets: Link to external CSS to style all components
-        (colors, fonts, spacing, etc).
-    -->
     <stylesheets>
         <URL value="@/css/login.css" />
     </stylesheets>
