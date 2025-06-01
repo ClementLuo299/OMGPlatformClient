@@ -14,6 +14,8 @@ import javafx.stage.Stage;
  * 
  * @authors Clement Luo
  * @date May 18, 2025
+ * @edited May 31, 2025
+ * @since 1.0
  */
 public class LifecycleManager {
 
@@ -22,15 +24,13 @@ public class LifecycleManager {
      */
     public static void start(Stage primaryStage) {
         try {
-            // Configure stage first
-            UIManagement.configureStage(primaryStage);
-
             // Initialize core components
             ScreenManagement.initialize(primaryStage);
             ServiceManagement.initialize();
 
-            // Initialize UI (this will set the root scene)
+            // Initialize UI (this will configure the root scene)
             UIManagement.initialize();
+            UIManagement.configureStage(primaryStage);
 
             // Show the stage last
             primaryStage.show();
@@ -42,14 +42,13 @@ public class LifecycleManager {
     }
 
     /**
-     * Performs cleanup and saves the database before exiting the application.
+     * Performs cleanup and saves necessary data before exiting the application.
      */
     public static void stop() {
         try {
             //Services.db().saveDBData();
         } catch (Exception e) {
-            System.err.println("Error saving data on exit: " + e.getMessage());
-            e.printStackTrace();
+            ErrorHandler.handleCriticalError(e, "Critical error occurred during shutdown");
         }
     }
 }

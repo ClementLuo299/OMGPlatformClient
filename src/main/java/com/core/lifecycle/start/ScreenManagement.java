@@ -8,9 +8,12 @@ import com.core.screens.ScreenTemplate;
 import javafx.stage.Stage;
 
 /**
+ * Boots up and configures the application's screen manager.
  *
  * @authors Clement Luo
  * @date May 24, 2025
+ * @edited May 31, 2025
+ * @since 1.0
  */
 public class ScreenManagement {
 
@@ -28,7 +31,6 @@ public class ScreenManagement {
      * @return ScreenConfig configured with preloaded screens and caching.
      */
     private static ScreenManagementConfig buildScreenConfig() {
-
         //Set caching config
         ScreenManagementConfig.Builder builder = new ScreenManagementConfig.Builder()
                 .setCacheSize(GUIConfig.getScreenCacheSize())
@@ -39,6 +41,7 @@ public class ScreenManagement {
             builder.addPreloadScreen(screen);
         }
 
+        //Return built config
         return builder.build();
     }
 }
