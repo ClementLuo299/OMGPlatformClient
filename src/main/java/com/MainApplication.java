@@ -11,6 +11,8 @@ import java.io.IOException;
  *
  * @authors Clement Luo, Fatin Abrar Ankon, Dylan Shiels, Zaman Dogar
  * @date March 17, 2025
+ * @edited May 31, 2025
+ * @since 1.0 SNAPSHOT
  */
 public class MainApplication extends Application {
 
