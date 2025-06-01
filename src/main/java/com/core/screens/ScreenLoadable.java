@@ -1,14 +1,17 @@
 package com.core.screens;
 
 import java.net.URL;
+import java.util.function.Supplier;
 
 /**
  * Maps fxml, css, controllers, and viemodels. Css and viewmodels are optional.
  *
  * @author Clement Luo
  * @date May 19, 2025
+ * @edited June 1, 2025
+ * @since 1.0
  */
-public class ScreenTemplate {
+public class ScreenLoadable {
 
     private final String fxmlPath;
     private final String cssPath;
@@ -16,12 +19,15 @@ public class ScreenTemplate {
     private final Class<?> controllerType;
     private final Class<?> viewModelType;
 
-    private ScreenTemplate(Builder builder) {
+    private final Supplier<?> viewModelSupplier; // Services
+
+    private ScreenLoadable(Builder builder) {
         this.fxmlPath = builder.fxmlPath;
         this.cssPath = builder.cssPath;
         this.controllerType = builder.controllerType;
         this.viewModelType = builder.viewModelType;
         this.cacheable = builder.cacheable;
+        this.viewModelSupplier = builder.viewModelSupplier;
     }
 
     public String getFxmlPath() { return fxmlPath; }
@@ -31,6 +37,8 @@ public class ScreenTemplate {
     public Class<?> getControllerType() { return controllerType; }
 
     public Class<?> getViewModelType() { return viewModelType; }
+
+    public Supplier<?> getViewModelSupplier() { return viewModelSupplier; }
 
     public boolean hasViewModel() { return viewModelType != null; }
 
@@ -46,6 +54,7 @@ public class ScreenTemplate {
         private String cssPath = null; // Optional
         private Class<?> viewModelType = null; // Optional
         private boolean cacheable = true; // Default to true
+        private Supplier<?> viewModelSupplier = null;
 
         public Builder(String fxmlPath, Class<?> controllerType) {
             this.fxmlPath = fxmlPath;
@@ -62,28 +71,27 @@ public class ScreenTemplate {
             return this;
         }
 
+        public Builder withViewModelSupplier(Supplier<?> viewModelSupplier) {
+            this.viewModelSupplier = viewModelSupplier;
+            return this;
+        }
+
         public Builder cacheable(boolean cacheable) {
             this.cacheable = cacheable;
             return this;
         }
 
-        public ScreenTemplate build() {
-            // Add debug logging
-            System.out.println("Building ScreenTemplate:");
-            System.out.println("FXML Path: " + fxmlPath);
+        public ScreenLoadable build() {
 
             // Check if resource exists
             URL fxmlResource = getClass().getResource(fxmlPath);
-            System.out.println("FXML Resource URL: " + fxmlResource);
 
             if (fxmlResource == null) {
                 // Try alternative class loaders
                 fxmlResource = Thread.currentThread().getContextClassLoader().getResource(fxmlPath);
-                System.out.println("FXML Resource URL (context loader): " + fxmlResource);
 
                 if (fxmlResource == null) {
                     fxmlResource = ClassLoader.getSystemResource(fxmlPath);
-                    System.out.println("FXML Resource URL (system loader): " + fxmlResource);
                 }
             }
 
@@ -91,7 +99,11 @@ public class ScreenTemplate {
                 throw new IllegalStateException("Cannot find FXML resource: " + fxmlPath);
             }
 
-            return new ScreenTemplate(this);
+            if (viewModelType != null && viewModelSupplier != null) {
+                throw new IllegalStateException("Specify either viewModelType OR viewModelSupplier, not both");
+            }
+
+            return new ScreenLoadable(this);
         }
 
     }

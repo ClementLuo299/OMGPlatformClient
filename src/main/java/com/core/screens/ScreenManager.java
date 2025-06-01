@@ -1,11 +1,12 @@
 package com.core.screens;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 import com.config.GUIConfig;
 import com.config.ScreenManagementConfig;
-import javafx.scene.Node;
+import com.utils.ErrorHandler;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -16,46 +17,44 @@ import javafx.stage.Stage;
  * This class provides a centralized system for controlling navigation between
  * different screens while optimizing performance using strategies like screen caching.
  *
- *
  * @authors Fatin Abrar Ankon, Clement Luo, Scott Brown, Jason Bakajika
  * @date March 28, 2025
+ * @edited June 1, 2025
+ * @since 1.0
  */
 public class ScreenManager {
-    private static ScreenManager instance;
-    private final BorderPane mainContainer;
-    private Scene scene;
-    private final Stage mainStage;
-    private final ScreenLoadingStrategy loader;
-    private final ScreenManagementConfig config;
+    private static ScreenManager instance; // Singleton instance
+    private final BorderPane mainContainer; // Outer container for every screen
+    private Scene scene; // The main scene
+    private final Stage mainStage; // Primary application window
+    private final IScreenLoader loader; // Screen loader
+    private final ScreenManagementConfig config; // Screen management configuration
 
+    /**
+     * Private to enforce the singleton pattern.
+     */
     private ScreenManager(Stage stage, ScreenManagementConfig config) {
         this.mainContainer = new BorderPane();
-        this.scene = new Scene(mainContainer, GUIConfig.getMainSceneWidth(), GUIConfig.getMainSceneHeight());
+
+        this.scene = new Scene(
+                mainContainer,
+                GUIConfig.getMainSceneWidth(),
+                GUIConfig.getMainSceneHeight()
+        );
+
         this.mainStage = stage;
         this.config = config;
         this.loader = new CachingScreenLoader(config);
     }
 
-    public static void initializeInstance(Stage stage, ScreenManagementConfig config) {
-        if (stage == null) {
-            throw new IllegalArgumentException("Stage cannot be null");
-        }
+    /**
+     * Initialize the instance of the ScreenManager.
+     */
+    public static void initializeInstance(Stage stage, ScreenManagementConfig config) { instance = new ScreenManager(stage, config); }
 
-        System.out.println("Initializing ScreenManager with stage: " + stage);
-
-        instance = new ScreenManager(stage, config);
-
-        // Configure stage
-        stage.setX(100);
-        stage.setY(100);
-        stage.setWidth(1400);
-        stage.setHeight(800);
-
-
-        System.out.println("ScreenManager initialized successfully");
-
-    }
-
+    /**
+     * Retrieve the instance of the ScreenManager.
+     */
     public static ScreenManager getInstance() {
         if (instance == null) {
             throw new IllegalStateException("ScreenManager must be initialized first");
@@ -63,34 +62,60 @@ public class ScreenManager {
         return instance;
     }
 
-    public <T> T navigateTo(ScreenTemplate screen) {
+    /**
+     * Load the screen when no additional controller setup is required.
+     *
+     * @return Controller instance for the requested screen.
+     */
+    public <T> T navigateTo(ScreenLoadable screen) {
         return navigateToWithSetup(screen, null);
     }
 
-    public <T> T navigateToWithSetup(ScreenTemplate screen, Consumer<T> setupAction) {
+    /**
+     * Loads a screen, optionally configures its controller, applies CSS and
+     * ViewModel declarations, and finally displays it.
+     *
+     * @param screen      Screen descriptor (contains path to FXML, etc.).
+     * @param setupAction Optional lambda that receives the freshly-created
+     *                    controller. Caller can inject dependencies or state
+     *                    before the UI becomes visible. May be {@code null}.
+     * @param <T>         Controller type inferred from FXML.
+     *
+     * @return The controller instance for further interaction.
+     */
+    public <T> T navigateToWithSetup(ScreenLoadable screen, Consumer<T> setupAction) {
+        //Load the FXML and controller
         ScreenLoadResult<T> loadResult = loader.loadScreen(screen);
         T controller = loadResult.controller();
 
+        //Perform extra initialization for the controller
         if (setupAction != null) {
             setupAction.accept(controller);
         }
 
+        //Attach style sheet if it exists
         if (screen.hasCss()) {
             loadCss(screen.getCssPath());
         }
 
-        if (screen.hasViewModel()) {
-            initializeViewModel(controller, screen.getViewModelType());
+        //Attach ViewModel if it exists
+        if (screen.hasViewModel() || screen.getViewModelSupplier() != null) {
+            initializeViewModel(controller, screen);
         }
 
+        //Display the screen
         displayScreen(loadResult.root());
         return controller;
     }
 
+    /**
+     * Replaces the current stylesheet(s) with the one located at
+     * {@code cssPath}. No-op if the Scene has not yet been set on the Stage.
+     */
     private void loadCss(String cssPath) {
         Scene scene = mainStage.getScene();
         if (scene != null) {
-            scene.getStylesheets().clear();
+            scene.getStylesheets().clear(); // Remove previous styles
             var resource = getClass().getClassLoader().getResource(cssPath);
             System.out.println("Trying to load CSS: " + cssPath + " => " + resource);
             if (resource == null) {
@@ -103,77 +128,71 @@ public class ScreenManager {
 
     }
 
-    private <T> void initializeViewModel(T controller, Class<?> viewModelType) {
+    /**
+     * Uses reflection to call a <code>setViewModel(&lt;VM&gt;)</code> method on
+     * the given controller. A fresh ViewModel instance is created via the
+     * default constructor.
+     */
+    private void initializeViewModel(Object controller, ScreenLoadable screen) {
         try {
-            Object viewModel = viewModelType.getDeclaredConstructor().newInstance();
-            Method initMethod = controller.getClass().getMethod("setViewModel", viewModelType);
-            initMethod.invoke(controller, viewModel);
+            // 1. obtain a ViewModel instance
+            Object vm;
+            if (screen.getViewModelSupplier() != null) {
+                vm = screen.getViewModelSupplier().get();
+            } else {
+                Class<?> vmType = screen.getViewModelType();
+                if (vmType == null) {
+                    // nothing to inject
+                    return;
+                }
+                vm = vmType.getDeclaredConstructor().newInstance();
+            }
+
+            // 2. look for a method  setViewModel(<VM super-type>)
+            //    (use declared parameter to avoid concrete-class mismatch)
+            Method setter = Arrays.stream(controller.getClass().getMethods())
+                    .filter(m -> m.getName().equals("setViewModel")
+                            && m.getParameterCount() == 1
+                            && m.getParameterTypes()[0]
+                            .isAssignableFrom(vm.getClass()))
+                    .findFirst()
+                    .orElseThrow(() ->
+                            new NoSuchMethodException(
+                                    "setViewModel(...) not found in "
+                                            + controller.getClass().getSimpleName()));
+
+            // 3. call it on *the controller instance*
+            setter.invoke(controller, vm);
+
         } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize ViewModel for controller: " + controller.getClass(), e);
+            throw new RuntimeException("Failed to initialise ViewModel", e);
         }
     }
 
+
+    /**
+     * Shows the supplied root node in the main window. If no Scene exists yet,
+     * one is created; otherwise we simply swap the root to enable smooth and
+     * resource-friendly screen transitions.
+     */
     private void displayScreen(Parent root) {
         try {
             if (mainStage == null) {
                 throw new IllegalStateException("Stage is not initialized");
             }
 
-            System.out.println("Displaying screen...");
-            System.out.println("Root node: " + root);
-            System.out.println("Root visible: " + root.isVisible());
-            System.out.println("Root dimensions: " + root.getBoundsInLocal());
 
             if (scene == null) {
-                System.out.println("Creating new Scene");
                 scene = new Scene(root);
                 mainStage.setScene(scene);
             } else {
-                System.out.println("Updating existing Scene");
                 scene.setRoot(root);
             }
-
-            // Force a white background on the scene:
-            scene.setFill(javafx.scene.paint.Color.WHITE);
-
-            // Ensure root node fills scene
-            if (root instanceof javafx.scene.layout.Region region) {
-                region.minWidthProperty().bind(scene.widthProperty());
-                region.minHeightProperty().bind(scene.heightProperty());
-                region.prefWidthProperty().bind(scene.widthProperty());
-                region.prefHeightProperty().bind(scene.heightProperty());
-                region.setMaxWidth(Double.MAX_VALUE);
-                region.setMaxHeight(Double.MAX_VALUE);
-            }
-
-            // Force layout pass
-            root.applyCss();
-            root.layout();
-
-            System.out.println("Root class: " + root.getClass());
-            System.out.println("Scene size: " + scene.getWidth() + "x" + scene.getHeight());
-
-            System.out.println(scene.getStylesheets());
-
-            System.out.println("Root node children: " + (scene.getRoot()).getChildrenUnmodifiable());
-
-            for (Node n : scene.getRoot().getChildrenUnmodifiable()) {
-                System.out.println(n + " bounds: " + n.getBoundsInParent());
-            }
-
-
-
-            System.out.println("Stage showing: " + mainStage.isShowing());
-            System.out.println("Scene dimensions: " + scene.getWidth() + "x" + scene.getHeight());
 
             mainStage.setScene(scene);
 
         } catch (Exception e) {
-            System.err.println("Error displaying screen:");
-            e.printStackTrace();
-            throw new RuntimeException("Failed to display screen", e);
+            ErrorHandler.handleCriticalError(e, "Critical error occurred during screen display");
         }
     }
-
-
 }

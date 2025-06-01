@@ -12,6 +12,8 @@ import javafx.scene.layout.VBox;
  *
  * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
  * @date March 17, 2025
+ * @edited June 1, 2025
+ * @since 1.0
  */
 public class LoginController implements ViewModelInjectable<LoginViewModel> {
 
@@ -32,8 +34,7 @@ public class LoginController implements ViewModelInjectable<LoginViewModel> {
     private LoginViewModel viewModel;  // View model
 
     @FXML
-    public void initialize() { System.out.println("Login screen controller initialized!");
-    }
+    public void initialize() {}
 
     /**
      * Sets the viewmodel for the page

@@ -1,5 +1,6 @@
 package com.core.screens;
 
+import com.utils.ErrorHandler;
 import javafx.scene.Parent;
 
 /**
@@ -11,6 +12,8 @@ import javafx.scene.Parent;
  * @param controller The controller instance for the loaded screen
  * @author Clement Luo
  * @date May 18, 2025
+ * @edited June 1, 2025
+ * @since 1.0
  */
 public record ScreenLoadResult<T>(Parent root, T controller) {
 
@@ -23,7 +26,7 @@ public record ScreenLoadResult<T>(Parent root, T controller) {
      */
     public ScreenLoadResult {
         if (root == null || controller == null) {
-            throw new IllegalArgumentException("Root and controller must not be null");
+            ErrorHandler.handleCriticalError(new IllegalArgumentException("ScreenLoadResult cannot be null"), "ScreenLoadResult cannot be null");
         }
     }
 
@@ -43,7 +46,5 @@ public record ScreenLoadResult<T>(Parent root, T controller) {
      * @return The controller instance of type T
      */
     @Override
-    public T controller() {
-        return controller;
-    }
+    public T controller() { return controller; }
 }

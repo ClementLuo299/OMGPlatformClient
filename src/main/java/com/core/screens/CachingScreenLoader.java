@@ -1,12 +1,10 @@
 package com.core.screens;
 
 import com.config.ScreenManagementConfig;
-import com.config.Screens;
+import com.utils.ErrorHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,49 +23,107 @@ import java.util.Map;
  *
  * @authors Clement Luo,
  * @date May 18, 2025
+ * @edited May 31, 2025
+ * @since 1.0
  */
-public class CachingScreenLoader implements ScreenLoadingStrategy {
-    private final Map<ScreenTemplate, Parent> screenCache = new HashMap<>();
-    private final ScreenManagementConfig config;
+public class CachingScreenLoader implements IScreenLoader {
+    /** Stores already-parsed screens; key = template, value = immutable result. */
+    private final Map<ScreenLoadable, ScreenLoadResult<?>> screenCache = new HashMap<>();
 
-    public CachingScreenLoader(ScreenManagementConfig config) { this.config = config; }
+    /**
+     * Constructs a {@code CachingScreenLoader} and eagerly pre-loads the set of
+     * screens specified by the supplied {@link ScreenManagementConfig}.
+     *
+     *
+     * @param config the immutable configuration object that defines which
+     *               screens to preload and general caching behaviour;
+     *               must not be {@code null}.
+     *
+     * @throws NullPointerException if {@code config} is {@code null}.
+     */
+    public CachingScreenLoader(ScreenManagementConfig config) {
+        for(ScreenLoadable screen : config.getPreloadScreens()) {
+            screenCache.put(screen, loadScreenFresh(screen));
+        }
+    }
 
+    /**
+     * Loads a screen, returning a cached copy when available.
+     *
+     * @param screen the template that describes where to find the FXML, CSS and
+     *               optional ViewModel information.
+     * @param <T>    the concrete controller type declared inside the requested
+     *               FXML document.
+     *
+     * @return an immutable {@link ScreenLoadResult} bundling the root node and
+     *         its controller.
+     *
+     * @throws IllegalArgumentException if {@code screen} is {@code null} or the
+     *                                  resource path is invalid.
+     */
     @Override
-    public <T> ScreenLoadResult<T> loadScreen(ScreenTemplate screen) {
-        try {
-            // Debug output
-            System.out.println("Loading screen: " + screen.getFxmlPath());
-            URL location = getClass().getResource(screen.getFxmlPath());
-            System.out.println("Resource URL: " + location);
-
-            if (location == null) {
-                throw new IOException("Could not find resource: " + screen.getFxmlPath());
+    @SuppressWarnings("unchecked")
+    public <T> ScreenLoadResult<T> loadScreen(ScreenLoadable screen) {
+        //Check if the screen is cached
+        if(screen.isCacheable()) {
+            //Get a cached screen and return
+            ScreenLoadResult<?> cachedScreen = screenCache.get(screen);
+            if(cachedScreen != null) {
+                return (ScreenLoadResult<T>) cachedScreen;
             }
+        }
 
+        //Load fresh if not cached
+        try {
+            //Get FXML path
+            URL location = getClass().getResource(screen.getFxmlPath());
+
+            //Parse FXML and get controller
             FXMLLoader loader = new FXMLLoader(location);
             Parent root = loader.load();
             T controller = loader.getController();
 
-            System.out.println("Successfully loaded FXML");
-            System.out.println("Root node type: " + root.getClass());
-            System.out.println("Root size: " + root.getBoundsInLocal());
-            System.out.println("Controller: " + (controller != null ? controller.getClass() : "null"));
-
+            //Return screen load result
             return new ScreenLoadResult<>(root, controller);
         } catch (Exception e) {
-            System.err.println("Error loading screen: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("Failed to load screen: " + screen.getFxmlPath(), e);
+            ErrorHandler.handleCriticalError(e, "Critical error occurred during screen loading");
         }
-
+        return null;
     }
 
-    private <T> ScreenLoadResult<T> loadFreshScreen(ScreenTemplate screen) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(screen.getFxmlPath()));
-        Parent root = loader.load();
-        T controller = loader.getController();
-        return new ScreenLoadResult<>(root, controller);
+    /**
+     * Loads a screen completely fresh, bypassing the cache.
+     * @param screen the template describing FXML, CSS and related metadata;
+     *               must not be {@code null}.
+     * @param <T>    the concrete controller type declared inside the FXML file.
+     *
+     * @return a brand-new {@code ScreenLoadResult} containing the freshly
+     *         constructed root node and controller, or {@code null} if a fatal
+     *         error occurs (the error will have been forwarded to
+     *         {@link com.utils.ErrorHandler}).
+     *
+     * @throws IllegalArgumentException if the FXML resource cannot be resolved.
+     */
+    public <T> ScreenLoadResult<T> loadScreenFresh(ScreenLoadable screen) {
+        try {
+            //Get FXML path
+            URL location = getClass().getResource(screen.getFxmlPath());
+
+            //Parse FXML and get controller
+            FXMLLoader loader = new FXMLLoader(location);
+            Parent root = loader.load();
+            T controller = loader.getController();
+
+            //Return screen load result
+            return new ScreenLoadResult<>(root, controller);
+        } catch (Exception e) {
+            ErrorHandler.handleCriticalError(e, "Critical error occurred during screen loading");
+        }
+        return null;
     }
 
+    /**
+     * Clears the screen cache.
+     */
     public void clearCache() { screenCache.clear(); }
 }

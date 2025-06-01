@@ -2,7 +2,7 @@ package com.core.lifecycle.start;
 
 import com.config.GUIConfig;
 import com.core.screens.ScreenManager;
-import com.core.screens.ScreenTemplate;
+import com.core.screens.ScreenLoadable;
 
 import javafx.stage.Stage;
 
@@ -22,7 +22,7 @@ public class UIManagement {
     public static void initialize() throws Exception {
         try {
             // Get initial screen
-            ScreenTemplate initialScreen = GUIConfig.getInitialScreen();
+            ScreenLoadable initialScreen = GUIConfig.getInitialScreen();
 
             // Navigate to initial screen
             ScreenManager manager = ScreenManager.getInstance();

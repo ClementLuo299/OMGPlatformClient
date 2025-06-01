@@ -1,11 +1,11 @@
 package com.config;
 
-import com.core.screens.ScreenTemplate;
+import com.core.ServiceManager;
+import com.core.screens.ScreenLoadable;
+import com.core.screens.ScreenManager;
 import com.gui_controllers.LoginController;
 import com.viewmodels.LoginViewModel;
 
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,15 +18,21 @@ import java.util.stream.Collectors;
  *
  * @author Clement Luo
  * @date May 19, 2025
+ * @edited June 1, 2025
+ * @since 1.0
  */
 public final class Screens {
 
     // Map of screen names to screen configurations
-    public static final ScreenTemplate LOGIN = new ScreenTemplate.Builder(
+    public static final ScreenLoadable LOGIN = new ScreenLoadable.Builder(
             "/fxml/Login.fxml",
                     LoginController.class)
             .withCssPath("/css/login.css")
-            .withViewModelType(LoginViewModel.class)
+            .withViewModelSupplier(() ->
+                    new LoginViewModel(
+                            ServiceManager.getLoginService(),
+                            ScreenManager.getInstance(),
+                            ServiceManager.getAlertService()))
             .cacheable(true)
             .build();
 
@@ -36,52 +42,19 @@ public final class Screens {
      *
      * @return List of all screen templates
      */
-    public static List<ScreenTemplate> getAllScreens() {
+    public static List<ScreenLoadable> getAllScreens() {
         return Arrays.stream(Screens.class.getDeclaredFields())
-                .filter(field -> field.getType() == ScreenTemplate.class)
+                .filter(field -> field.getType() == ScreenLoadable.class)
                 .filter(field -> java.lang.reflect.Modifier.isStatic(field.getModifiers()))
                 .filter(field -> java.lang.reflect.Modifier.isFinal(field.getModifiers()))
                 .filter(field -> java.lang.reflect.Modifier.isPublic(field.getModifiers()))
                 .map(field -> {
                     try {
-                        return (ScreenTemplate) field.get(null);
+                        return (ScreenLoadable) field.get(null);
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException("Failed to access screen template field: " + field.getName(), e);
                     }
                 })
                 .collect(Collectors.toList());
     }
-
-    /**
-     * Validates that all screen resources are accessible.
-     * Call this during application startup to catch resource issues early.
-     */
-    public static void validateResources() {
-        for (ScreenTemplate screen : getAllScreens()) {
-            try {
-                // Check FXML
-                URL fxmlUrl = Screens.class.getResource(screen.getFxmlPath());
-                if (fxmlUrl == null) {
-                    throw new IllegalStateException("FXML not found: " + screen.getFxmlPath());
-                }
-
-                // Check CSS if present
-                if (screen.hasCss()) {
-                    URL cssUrl = Screens.class.getResource(screen.getCssPath());
-                    if (cssUrl == null) {
-                        throw new IllegalStateException("CSS not found: " + screen.getCssPath());
-                    }
-                }
-
-                // Verify controller can be instantiated
-                screen.getControllerType().getDeclaredConstructor().newInstance();
-
-                System.out.println("✓ Validated screen resources for: " + screen.getFxmlPath());
-            } catch (Exception e) {
-                System.err.println("Failed to validate screen: " + screen.getFxmlPath());
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

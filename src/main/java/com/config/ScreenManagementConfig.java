@@ -1,9 +1,7 @@
 package com.config;
 
-import com.core.screens.ScreenLoadResult;
-import com.core.screens.ScreenTemplate;
+import com.core.screens.ScreenLoadable;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,7 +18,7 @@ public class ScreenManagementConfig {
      * These screens are loaded into memory during initialization to reduce
      * loading times when they are first accessed.
      */
-    private final Set<ScreenTemplate> preloadScreenViews;
+    private final Set<ScreenLoadable> preloadScreenViews;
 
     /**
      * Maximum number of screens that can be cached in memory at once.
@@ -37,7 +35,7 @@ public class ScreenManagementConfig {
     private final boolean enableCaching;
 
     /** GETTERS */
-    public Set<ScreenTemplate> getPreloadScreens() { return preloadScreenViews; }
+    public Set<ScreenLoadable> getPreloadScreens() { return preloadScreenViews; }
     public int getCacheSize() { return cacheSize; }
     public boolean isEnableCaching() { return enableCaching; }
 
@@ -63,7 +61,7 @@ public class ScreenManagementConfig {
          * Set of screens to be preloaded, initialized empty.
          * Screens added to this set will be loaded during application startup.
          */
-        private Set<ScreenTemplate> preloadScreenViews = new HashSet<>();
+        private Set<ScreenLoadable> preloadScreenViews = new HashSet<>();
 
         /**
          * Default cache size set to 10 screens.
@@ -84,7 +82,7 @@ public class ScreenManagementConfig {
          * @return this builder instance for method chaining
          * @throws IllegalArgumentException if the screen is null
          */
-        public Builder addPreloadScreen(ScreenTemplate screen) {
+        public Builder addPreloadScreen(ScreenLoadable screen) {
             preloadScreenViews.add(screen);
             return this;
         }
