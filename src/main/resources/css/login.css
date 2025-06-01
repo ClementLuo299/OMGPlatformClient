@@ -1,8 +1,3 @@
-/* Root container */
-.root {
-    -fx-background-color: #ffffff;
-}
-
 /* StackPane ensures content stays centered */
 StackPane {
     -fx-background-color: #ffffff;
@@ -86,11 +81,6 @@ StackPane {
 
 .create-account-button:hover {
     -fx-background-color: #f1f1f1;
-}
-
-/* Entire form content */
-.form {
-    padding-top: 300px;
 }
 
 /* Login form containers */
