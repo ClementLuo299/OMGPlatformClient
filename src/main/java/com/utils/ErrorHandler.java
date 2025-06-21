@@ -42,6 +42,7 @@ public final class ErrorHandler {
      * </ul>
      */
     private static final Logger logger = Logger.getLogger(ErrorHandler.class.getName());
+
     /**
      * Global error handler that will be notified of all errors processed by this ErrorHandler.
      * Can be set using {@link #setGlobalErrorHandler(Consumer)} to implement custom error

@@ -5,6 +5,7 @@
 /BoardGamePlatform.iml
 /src/main/resources/data/
 /.idea/
+/.vscode/
 # Default ignored files
 /shelf/
 /workspace.xml
