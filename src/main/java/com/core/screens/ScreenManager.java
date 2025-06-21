@@ -27,7 +27,7 @@ public class ScreenManager {
     private final BorderPane mainContainer; // Outer container for every screen
     private Scene scene; // The main scene
     private final Stage mainStage; // Primary application window
-    private final IScreenLoader loader; // Screen loader
+    private final CachingScreenLoader loader; // Screen loader
     private final ScreenManagementConfig config; // Screen management configuration
 
     /**

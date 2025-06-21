@@ -26,7 +26,7 @@ import java.util.Map;
  * @edited May 31, 2025
  * @since 1.0
  */
-public class CachingScreenLoader implements IScreenLoader {
+public class CachingScreenLoader {
     /** Stores already-parsed screens; key = template, value = immutable result. */
     private final Map<ScreenLoadable, ScreenLoadResult<?>> screenCache = new HashMap<>();
 
@@ -61,7 +61,6 @@ public class CachingScreenLoader implements IScreenLoader {
      * @throws IllegalArgumentException if {@code screen} is {@code null} or the
      *                                  resource path is invalid.
      */
-    @Override
     @SuppressWarnings("unchecked")
     public <T> ScreenLoadResult<T> loadScreen(ScreenLoadable screen) {
         //Check if the screen is cached
