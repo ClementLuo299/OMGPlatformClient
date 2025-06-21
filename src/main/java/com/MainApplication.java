@@ -1,13 +1,9 @@
 package com;
 
 import com.core.lifecycle.LifecycleManager;
-import com.utils.ErrorHandler;
+
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Main entry point of the application.

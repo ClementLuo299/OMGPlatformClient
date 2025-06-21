@@ -12,53 +12,35 @@ import java.io.StringWriter;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Error handling utility for error management across the application.
- * Provides methods for handling errors with various levels of logging,
- * user feedback, and recovery options.
+ * Error handling utility for the application.
+ * Provides methods for handling errors with various levels of logging and user feedback.
  * 
  * @authors Clement Luo
  * @date May 22, 2025
- * @edited June 20, 2025
+ * @edited June 21, 2025
  * @since 1.0
- * @version 2.0
+ * @version 1.0
  */
 public final class ErrorHandler {
 
-    //region Constants and Fields
+    //region ==================== CONSTANTS AND FIELDS ====================
+
     /**
-     * Logger instance used for all error and debug logging within this class.
+     * Logger instance used for logging errors and warnings.
      */
     private static final Logger logger = Logger.getLogger(ErrorHandler.class.getName());
 
     /**
-     * Global error handler that will be notified of all errors processed by this ErrorHandler.
-     */
-    private static volatile Consumer<Throwable> globalErrorHandler = null;
-    
-    /**
-     * Strategy for recovering from errors before they cause the application to exit.
-     * When set, this function will be called for critical errors before the application
-     * terminates. If it returns true, the application will continue running; if false,
-     * the application will exit. 
-     */
-    private static volatile Function<Throwable, Boolean> errorRecoveryStrategy = null;
-
-    /**
-     * Flag to prevent recursive error handling during shutdown.
+     * Tells the error handler that the application is shutting down.
+     * Stops the application from handling errors during shutdown.
      */
     private static final AtomicBoolean isShuttingDown = new AtomicBoolean(false);
 
-    /**
-     * Maximum length for error messages displayed to users.
-     */
-    private static final int MAX_USER_MESSAGE_LENGTH = 500;
     //endregion
 
     /**
@@ -66,7 +48,8 @@ public final class ErrorHandler {
      */
     private ErrorHandler() { throw new UnsupportedOperationException("Utility class cannot be instantiated"); }
 
-    //region Logging Methods
+    //region ==================== LOGGING METHODS ====================
+
     /**
      * Logs a debug message. Only visible when debug logging is enabled.
      *
@@ -118,12 +101,14 @@ public final class ErrorHandler {
      * @param throwable the throwable to log
      */
     public static void error(String message, Throwable throwable) { logger.log(Level.SEVERE, message, throwable); }
+
     //endregion
 
-    //region Core Error Handling Methods
+    //region ==================== CORE ERROR HANDLING METHODS ====================
+
     /**
      * Handles a non-critical error that doesn't require application termination.
-     * Logs the error, shows a warning dialog to the user, and notifies the global error handler.
+     * Logs the error, shows a warning dialog to the user.
      *
      * @param throwable the exception that occurred
      * @param userMessage a user-friendly message describing the error
@@ -136,54 +121,24 @@ public final class ErrorHandler {
 
         logError(Level.WARNING, throwable, userMessage);
         showAlert("Warning", userMessage, throwable, Alert.AlertType.WARNING);
-        notifyGlobalHandler(throwable);
     }
 
     /**
-     * Handles a critical error that may require application termination.
-     * Logs the error, shows an error dialog, and optionally exits the application
-     * based on the error recovery strategy.
+     * Handles a critical error that requires immediate application termination.
+     * This method exits the application.
      *
      * @param throwable the exception that occurred
      * @param userMessage a user-friendly message describing the error
      */
     public static void handleCriticalError(Throwable throwable, String userMessage) {
-        if (isShuttingDown.get()) {
-            logger.log(Level.SEVERE, "Critical error during shutdown: " + userMessage, throwable);
-            return;
-        }
-
-        logError(Level.SEVERE, throwable, userMessage);
-        boolean shouldExit = true;
-
-        if (errorRecoveryStrategy != null) {
-            try {
-                shouldExit = !errorRecoveryStrategy.apply(throwable);
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, "Error in recovery strategy", e);
-                shouldExit = true;
-            }
-        }
-
-        if (shouldExit) {
-            showAlertAndExit("Critical Error", userMessage, throwable);
-        }
-    }
-
-    /**
-     * Handles a fatal error that requires immediate application termination.
-     * This method bypasses recovery strategies and always exits the application.
-     *
-     * @param throwable the exception that occurred
-     * @param userMessage a user-friendly message describing the error
-     */
-    public static void handleFatalError(Throwable throwable, String userMessage) {
         logError(Level.SEVERE, throwable, "FATAL: " + userMessage);
         showAlertAndExit("Fatal Error", userMessage, throwable);
     }
+
     //endregion
 
-    //region Safe Execution Methods
+    //region ==================== SAFE EXECUTION METHODS ====================
+    
     /**
      * Executes a task safely, handling any exceptions that occur.
      * If an exception occurs, it's handled as a non-critical error and null is returned.
@@ -274,44 +229,7 @@ public final class ErrorHandler {
     }
     //endregion
 
-    //region Configuration Methods
-    /**
-     * Sets a global error handler that will be notified of all errors processed by this ErrorHandler.
-     * The handler should be non-blocking and thread-safe as it may be called from any thread.
-     *
-     * @param handler the global error handler to set
-     */
-    public static void setGlobalErrorHandler(Consumer<Throwable> handler) {
-        globalErrorHandler = handler;
-    }
-
-    /**
-     * Sets an error recovery strategy for critical errors.
-     * The strategy function should return true if the application should continue running,
-     * or false if it should exit.
-     *
-     * @param strategy the error recovery strategy to set
-     */
-    public static void setErrorRecoveryStrategy(Function<Throwable, Boolean> strategy) {
-        errorRecoveryStrategy = strategy;
-    }
-
-    /**
-     * Clears the global error handler.
-     */
-    public static void clearGlobalErrorHandler() {
-        globalErrorHandler = null;
-    }
-
-    /**
-     * Clears the error recovery strategy.
-     */
-    public static void clearErrorRecoveryStrategy() {
-        errorRecoveryStrategy = null;
-    }
-    //endregion
-
-    //region Alert and Dialog Utilities
+    //region ==================== ALERT AND DIALOG UTILITIES ====================
     /**
      * Shows a confirmation dialog and returns the user's choice.
      * Must be called on the JavaFX Application Thread.
@@ -329,7 +247,7 @@ public final class ErrorHandler {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(truncateMessage(message));
+        alert.setContentText(message);
 
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == ButtonType.OK;
@@ -354,7 +272,7 @@ public final class ErrorHandler {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(truncateMessage(message));
+        alert.setContentText(message);
 
         ButtonType confirmButton = new ButtonType(confirmText);
         ButtonType cancelButton = new ButtonType(cancelText);
@@ -365,7 +283,7 @@ public final class ErrorHandler {
     }
     //endregion
 
-    //region Private Utility Methods
+    //region ==================== PRIVATE UTILITY METHODS ====================
     /**
      * Shows an alert dialog with the specified parameters.
      * Handles thread safety by ensuring the dialog is shown on the JavaFX Application Thread.
@@ -397,8 +315,8 @@ public final class ErrorHandler {
     private static void showAlertOnFxThread(String title, String header, Throwable e, Alert.AlertType type, boolean exitAfter) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(truncateMessage(header));
-        alert.setContentText(e != null ? truncateMessage(e.getMessage()) : "No error details available");
+        alert.setHeaderText(header);
+        alert.setContentText(e != null ? e.getMessage() : "No error details available");
 
         if (e != null) {
             StringWriter sw = new StringWriter();
@@ -437,21 +355,6 @@ public final class ErrorHandler {
      */
     private static void logError(Level level, Throwable e, String message) {
         logger.log(level, message, e);
-        notifyGlobalHandler(e);
-    }
-
-    /**
-     * Notifies the global error handler if one is set.
-     * Handles exceptions in the global handler to prevent cascading failures.
-     */
-    private static void notifyGlobalHandler(Throwable e) {
-        if (globalErrorHandler != null) {
-            try {
-                globalErrorHandler.accept(e);
-            } catch (Exception ex) {
-                logger.log(Level.SEVERE, "Error in global error handler", ex);
-            }
-        }
     }
 
     /**
@@ -469,19 +372,6 @@ public final class ErrorHandler {
     }
 
     /**
-     * Truncates a message to the maximum allowed length for user display.
-     */
-    private static String truncateMessage(String message) {
-        if (message == null) {
-            return "No message available";
-        }
-        if (message.length() <= MAX_USER_MESSAGE_LENGTH) {
-            return message;
-        }
-        return message.substring(0, MAX_USER_MESSAGE_LENGTH - 3) + "...";
-    }
-
-    /**
      * Rethrows a checked exception as an unchecked exception.
      * This is a utility method for converting checked exceptions to unchecked ones.
      *
@@ -496,7 +386,7 @@ public final class ErrorHandler {
     }
     //endregion
 
-    //region Functional Interfaces
+    //region ==================== FUNCTIONAL INTERFACES ====================
     /**
      * A functional interface for suppliers that may throw checked exceptions.
      * This allows for cleaner exception handling in lambda expressions.
