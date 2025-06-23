@@ -17,7 +17,7 @@ public final class LogUtils {
 
     /**
      * SLF4J Logger instance used for all logging operations.
-     * This logger is configured to use the AppLogger class name as the logger name,
+     * This logger is configured to use the LogUtils class name as the logger name,
      * which helps in identifying the source of log messages.
      */
     private static final Logger logger = LoggerFactory.getLogger(LogUtils.class);
@@ -103,9 +103,7 @@ public final class LogUtils {
      *
      * @param message the fatal message to log
      */
-    public static void fatal(String message) { 
-        logger.error("FATAL: " + message); 
-    }
+    public static void fatal(String message) { logger.error("FATAL: " + message); }
     
     /**
      * Logs a fatal message with an associated throwable.
@@ -113,16 +111,15 @@ public final class LogUtils {
      * @param message the fatal message to log
      * @param throwable the throwable to log
      */
-    public static void fatal(String message, Throwable throwable) { 
-        logger.error("FATAL: " + message, throwable); 
-    }
+    public static void fatal(String message, Throwable throwable) { logger.error("FATAL: " + message, throwable); }
 
     /**
      * Logs with context information (useful for debugging).
+     * 
+     * @param message the message to log
+     * @param context the context to log
      */
-    public static void debugWithContext(String message, String context) {
-        logger.debug("[{}] {}", context, message);
-    }
+    public static void debugWithContext(String message, String context) { logger.debug("[{}] {}", context, message); }
 
     //endregion
 
