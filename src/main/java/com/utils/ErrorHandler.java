@@ -13,8 +13,8 @@ import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Error handling utility for the application.
@@ -33,7 +33,7 @@ public final class ErrorHandler {
     /**
      * Logger instance used for logging errors and warnings.
      */
-    private static final Logger logger = Logger.getLogger(ErrorHandler.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
     /**
      * Tells the error handler that the application is shutting down.
