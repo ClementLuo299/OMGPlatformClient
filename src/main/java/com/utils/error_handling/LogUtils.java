@@ -126,22 +126,18 @@ public final class LogUtils {
     //region ==================== METHOD LOGGING METHODS ====================
 
     /**
-     * Logs method entry/exit for debugging.
+     * Logs method entry for debugging.
      * 
      * @param methodName the name of the method to log
      */
-    public static void enterMethod(String methodName) {
-        logger.debug("Entering method: {}", methodName);
-    }
+    public static void enterMethod(String methodName) { logger.debug("Entering method: {}", methodName); }
 
     /**
      * Logs method exit for debugging.
      * 
      * @param methodName the name of the method to log
      */
-    public static void exitMethod(String methodName) {
-        logger.debug("Exiting method: {}", methodName);
-    }
+    public static void exitMethod(String methodName) { logger.debug("Exiting method: {}", methodName); }
 
     //endregion
 
@@ -153,9 +149,7 @@ public final class LogUtils {
      * @param operation the name of the operation to log
      * @param durationMs the duration of the operation in milliseconds
      */
-    public static void logPerformance(String operation, long durationMs) {
-        logger.info("Performance: {} took {}ms", operation, durationMs);
-    }
+    public static void logPerformance(String operation, long durationMs) { logger.info("Performance: {} took {}ms", operation, durationMs); }
 
     /**
      * Logs an object state for debugging.
@@ -163,9 +157,7 @@ public final class LogUtils {
      * @param objectName the name of the object
      * @param state the state information
      */
-    public static void logObjectState(String objectName, String state) {
-        logger.debug("OBJECT: {} - {}", objectName, state);
-    }
+    public static void logObjectState(String objectName, String state) { logger.debug("OBJECT: {} - {}", objectName, state); }
 
     //endregion
 
@@ -177,9 +169,7 @@ public final class LogUtils {
      * @param event the name of the event to log
      * @param details the details of the event to log
      */
-    public static void logBusinessEvent(String event, String details) {
-        logger.info("BUSINESS: {} - {}", event, details);
-    }
+    public static void logBusinessEvent(String event, String details) { logger.info("BUSINESS: {} - {}", event, details); }
 
     /**
      * Logs a security event.
@@ -187,9 +177,7 @@ public final class LogUtils {
      * @param event the name of the event to log
      * @param user the user associated with the event
      */
-    public static void logSecurityEvent(String event, String user) {
-        logger.warn("SECURITY: {} by user: {}", event, user);
-    }
+    public static void logSecurityEvent(String event, String user) { logger.warn("SECURITY: {} by user: {}", event, user); }
 
     /**
      * Logs a validation error.
@@ -198,9 +186,7 @@ public final class LogUtils {
      * @param value the value that failed validation
      * @param reason the reason for the validation failure
      */
-    public static void logValidationError(String field, String value, String reason) {
-        logger.warn("VALIDATION: Field '{}' with value '{}' failed: {}", field, value, reason);
-    }
+    public static void logValidationError(String field, String value, String reason) { logger.warn("VALIDATION: Field '{}' with value '{}' failed: {}", field, value, reason); }
 
     //endregion
 
@@ -213,9 +199,7 @@ public final class LogUtils {
      * @param method the method of the API call
      * @param statusCode the status code of the API call
      */
-    public static void logApiCall(String endpoint, String method, int statusCode) {
-        logger.info("API: {} {} -> {}", method, endpoint, statusCode);
-    }
+    public static void logApiCall(String endpoint, String method, int statusCode) { logger.info("API: {} {} -> {}", method, endpoint, statusCode); }
 
     /**
      * Logs an API call with duration.
@@ -225,9 +209,7 @@ public final class LogUtils {
      * @param statusCode the status code of the API call
      * @param durationMs the duration of the API call in milliseconds
      */
-    public static void logApiCall(String endpoint, String method, int statusCode, long durationMs) {
-        logger.info("API: {} {} -> {} ({}ms)", method, endpoint, statusCode, durationMs);
-    }
+    public static void logApiCall(String endpoint, String method, int statusCode, long durationMs) { logger.info("API: {} {} -> {} ({}ms)", method, endpoint, statusCode, durationMs); }
 
     //endregion
 
@@ -240,9 +222,7 @@ public final class LogUtils {
      * @param action the action performed
      * @param details additional details about the action
      */
-    public static void logUserAction(String userId, String action, String details) {
-        logger.info("USER: {} performed {} - {}", userId, action, details);
-    }
+    public static void logUserAction(String userId, String action, String details) { logger.info("USER: {} performed {} - {}", userId, action, details); }
 
     /**
      * Logs a file operation.
