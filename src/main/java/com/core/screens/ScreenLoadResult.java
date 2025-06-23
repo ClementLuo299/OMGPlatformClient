@@ -1,6 +1,7 @@
 package com.core.screens;
 
-import com.utils.ErrorHandler;
+import com.utils.error_handling.ErrorHandler;
+
 import javafx.scene.Parent;
 
 /**

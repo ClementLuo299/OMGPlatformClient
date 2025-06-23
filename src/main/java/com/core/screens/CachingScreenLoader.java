@@ -1,7 +1,8 @@
 package com.core.screens;
 
 import com.config.ScreenManagementConfig;
-import com.utils.ErrorHandler;
+import com.utils.error_handling.ErrorHandler;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 
@@ -99,7 +100,7 @@ public class CachingScreenLoader {
      * @return a brand-new {@code ScreenLoadResult} containing the freshly
      *         constructed root node and controller, or {@code null} if a fatal
      *         error occurs (the error will have been forwarded to
-     *         {@link com.utils.ErrorHandler}).
+     *         {@link com.utils.error_handling.ErrorHandler}).
      *
      * @throws IllegalArgumentException if the FXML resource cannot be resolved.
      */

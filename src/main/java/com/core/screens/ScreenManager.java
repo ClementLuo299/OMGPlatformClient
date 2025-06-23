@@ -6,7 +6,8 @@ import java.util.function.Consumer;
 
 import com.config.GUIConfig;
 import com.config.ScreenManagementConfig;
-import com.utils.ErrorHandler;
+import com.utils.error_handling.ErrorHandler;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;

@@ -1,4 +1,4 @@
-package com.utils;
+package com.utils.error_handling;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;

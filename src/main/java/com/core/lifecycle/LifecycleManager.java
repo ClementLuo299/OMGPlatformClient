@@ -2,8 +2,8 @@ package com.core.lifecycle;
 
 import com.core.lifecycle.start.ServiceManagement;
 import com.core.lifecycle.start.UIManagement;
+import com.utils.error_handling.ErrorHandler;
 import com.core.lifecycle.start.ScreenManagement;
-import com.utils.ErrorHandler;
 
 import javafx.stage.Stage;
 
