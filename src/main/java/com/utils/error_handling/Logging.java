@@ -9,25 +9,25 @@ import org.slf4j.LoggerFactory;
  * 
  * @authors Clement Luo
  * @date June 22, 2025
- * @edited June 23, 2025
+ * @edited June 24, 2025
  * @since 1.0
  * @version 1.0
  */
-public final class LogUtils {
+public final class Logging {
 
     /**
      * SLF4J Logger instance used for all logging operations.
      * This logger is configured to use the LogUtils class name as the logger name,
      * which helps in identifying the source of log messages.
      */
-    private static final Logger logger = LoggerFactory.getLogger(LogUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(Logging.class);
 
     /**
      * Private constructor to prevent instantiation of this utility class.
      * 
      * @throws UnsupportedOperationException if instantiation is attempted
      */
-    private LogUtils() { throw new UnsupportedOperationException("Utility class cannot be instantiated"); }
+    private Logging() { throw new UnsupportedOperationException("Utility class cannot be instantiated"); }
     
     //region ==================== MESSAGE LOGGING METHODS ====================
 
