@@ -1,6 +1,7 @@
 package com.config;
 
 import com.core.screens.ScreenLoadable;
+
 import lombok.experimental.UtilityClass;
 
 import java.util.List;

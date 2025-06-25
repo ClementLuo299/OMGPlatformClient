@@ -3,6 +3,7 @@ package com.config;
 import com.core.ServiceManager;
 import com.core.screens.ScreenLoadable;
 import com.core.screens.ScreenManager;
+
 import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
