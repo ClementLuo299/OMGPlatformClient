@@ -19,6 +19,7 @@ public enum ErrorCategory {
     CONFIGURATION("Configuration Error"),
     RESOURCE("Resource Error"),
     TIMEOUT("Timeout Error"),
+    SYSTEM("System Error"),
     UNKNOWN("Unknown Error");
 
     private final String displayName;
