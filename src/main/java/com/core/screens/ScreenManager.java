@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import com.config.GUIConfig;
-import com.config.ScreenManagementConfig;
+import com.core.screens.ScreenManagerConfig;
 import com.utils.error_handling.ErrorHandler;
+import com.utils.error_handling.ErrorCategory;
+import com.utils.error_handling.ErrorSeverity;
+import com.utils.error_handling.Logging;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,7 +23,7 @@ import javafx.stage.Stage;
  *
  * @authors Fatin Abrar Ankon, Clement Luo, Scott Brown, Jason Bakajika
  * @date March 28, 2025
- * @edited June 1, 2025
+ * @edited June 25, 2025
  * @since 1.0
  */
 public class ScreenManager {
@@ -29,29 +32,27 @@ public class ScreenManager {
     private Scene scene; // The main scene
     private final Stage mainStage; // Primary application window
     private final CachingScreenLoader loader; // Screen loader
-    private final ScreenManagementConfig config; // Screen management configuration
+    private final ScreenManagerConfig config; // Screen management configuration
 
     /**
      * Private to enforce the singleton pattern.
      */
-    private ScreenManager(Stage stage, ScreenManagementConfig config) {
+    private ScreenManager(Stage stage, ScreenManagerConfig config) {
         this.mainContainer = new BorderPane();
-
-        this.scene = new Scene(
-                mainContainer,
-                GUIConfig.getMainSceneWidth(),
-                GUIConfig.getMainSceneHeight()
-        );
-
         this.mainStage = stage;
-        this.config = config;
         this.loader = new CachingScreenLoader(config);
+        this.config = config;
+
+        // Set up the main scene with the specified dimensions
+        this.scene = new Scene(this.mainContainer, 
+                GUIConfig.MAIN_SCENE_WIDTH,
+                GUIConfig.MAIN_SCENE_HEIGHT);
     }
 
     /**
      * Initialize the instance of the ScreenManager.
      */
-    public static void initializeInstance(Stage stage, ScreenManagementConfig config) { instance = new ScreenManager(stage, config); }
+    public static void initializeInstance(Stage stage, ScreenManagerConfig config) { instance = new ScreenManager(stage, config); }
 
     /**
      * Retrieve the instance of the ScreenManager.

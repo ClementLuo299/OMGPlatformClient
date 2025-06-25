@@ -1,6 +1,6 @@
 package com.core.screens;
 
-import com.config.ScreenManagementConfig;
+import com.core.screens.ScreenManagerConfig;
 import com.utils.error_handling.ErrorHandler;
 
 import javafx.fxml.FXMLLoader;
@@ -11,20 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A utility class for loading and caching GUI screens to optimize performance.
- * Ensures that frequently used screens are preloaded and reused, reducing the overhead
- * of re-initializing FXML views and controllers.
+ * A screen loader that caches loaded screens in memory for faster subsequent access.
+ * This loader preloads a set of screens specified by the supplied {@link ScreenManagerConfig}.
  *
- * Features:
- * - Loads screens dynamically via FXML.
- * - Caches screens for quick access.
- * - Handles screen invalidation for managing memory efficiently.
- *
- * Use in conjunction with the ScreenManager to streamline navigation.
- *
- * @authors Clement Luo,
+ * @authors Clement Luo
  * @date May 18, 2025
- * @edited May 31, 2025
+ * @edited June 25, 2025
  * @since 1.0
  */
 public class CachingScreenLoader {
@@ -32,17 +24,18 @@ public class CachingScreenLoader {
     private final Map<ScreenLoadable, ScreenLoadResult<?>> screenCache = new HashMap<>();
 
     /**
-     * Constructs a {@code CachingScreenLoader} and eagerly pre-loads the set of
-     * screens specified by the supplied {@link ScreenManagementConfig}.
-     *
-     *
-     * @param config the immutable configuration object that defines which
-     *               screens to preload and general caching behaviour;
-     *               must not be {@code null}.
-     *
-     * @throws NullPointerException if {@code config} is {@code null}.
+     * The configuration for this screen loader.
+     * Contains settings for caching and preloading.
      */
-    public CachingScreenLoader(ScreenManagementConfig config) {
+    private final ScreenManagerConfig config;
+
+    /**
+     * Constructs a new CachingScreenLoader with the specified configuration.
+     *
+     * @param config The configuration for this screen loader
+     */
+    public CachingScreenLoader(ScreenManagerConfig config) {
+        this.config = config;
         for(ScreenLoadable screen : config.getPreloadScreens()) {
             screenCache.put(screen, loadScreenFresh(screen));
         }

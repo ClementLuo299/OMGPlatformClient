@@ -21,7 +21,7 @@ public class ServiceManagement {
         Logging.info("Initializing application services...");
         
         // Initialize ServiceManager
-        ServiceManager.initializeCoreServices();
+        ServiceManager.initializeServices();
         
         Logging.info("Application services initialized successfully");
     }

@@ -1,14 +1,16 @@
 package com.core.lifecycle.start;
 
 import com.config.GUIConfig;
-import com.config.ScreenManagementConfig;
+import com.core.screens.ScreenManagerConfig;
 import com.core.screens.ScreenManager;
-import com.core.screens.ScreenLoadable;
+import com.utils.error_handling.ErrorHandler;
+import com.utils.error_handling.ErrorCategory;
+import com.utils.error_handling.ErrorSeverity;
 import com.utils.error_handling.Logging;
 import javafx.stage.Stage;
 
 /**
- * Boots up and configures the application's screen manager.
+ * Manages the initialization of screen management components.
  *
  * @authors Clement Luo
  * @date May 24, 2025
@@ -18,40 +20,40 @@ import javafx.stage.Stage;
 public class ScreenManagement {
 
     /**
-     * Initializes the ScreenManager before any startup tasks run.
-     * This ensures ScreenManager is fully ready when UIManagement tries to navigate.
-     * 
+     * Initializes the ScreenManager with configuration.
+     * This method is called directly by LifecycleManager.
+     *
      * @param primaryStage the primary stage
      */
-    public static void initializeScreenManager(Stage primaryStage) {
+    public static void initialize(Stage primaryStage) {
         Logging.info("Initializing ScreenManager...");
         
-        // Build configuration with caching settings and preloaded screens
-        ScreenManagementConfig config = buildScreenConfig();
-        
-        // Initialize the ScreenManager singleton with stage and config
-        ScreenManager.initializeInstance(primaryStage, config);
-        
-        Logging.info("ScreenManager initialized successfully");
+        try {
+            ScreenManagerConfig config = buildScreenConfig();
+            ScreenManager.initializeInstance(primaryStage, config);
+            Logging.info("ScreenManager initialized successfully");
+            
+        } catch (Exception e) {
+            ErrorHandler.handleCriticalError(e, "Failed to initialize ScreenManager", 
+                                           ErrorCategory.SYSTEM, ErrorSeverity.HIGH);
+        }
     }
 
     /**
-     * Builds and returns the `ScreenConfig` object for the application.
+     * Builds and returns the `ScreenManagerConfig` object for the application.
      *
-     * @return ScreenConfig configured with preloaded screens and caching.
+     * @return ScreenManagerConfig configured with preloaded screens and caching.
      */
-    private static ScreenManagementConfig buildScreenConfig() {
+    private static ScreenManagerConfig buildScreenConfig() {
         // Set caching config
-        ScreenManagementConfig.Builder builder = new ScreenManagementConfig.Builder()
-                .setCacheSize(GUIConfig.getScreenCacheSize())
-                .setEnableCaching(GUIConfig.isEnableCaching());
+        ScreenManagerConfig.Builder builder = new ScreenManagerConfig.Builder()
+                .setCacheSize(GUIConfig.SCREEN_CACHE_SIZE);
 
         // Add preloaded screens from config
-        for(ScreenLoadable screen : GUIConfig.getPreloadScreens()) {
+        for (var screen : GUIConfig.PRELOAD_SCREENS) {
             builder.addPreloadScreen(screen);
         }
 
-        // Return built config
         return builder.build();
     }
 }

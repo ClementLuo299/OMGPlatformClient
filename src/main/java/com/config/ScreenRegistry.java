@@ -3,47 +3,50 @@ package com.config;
 import com.core.ServiceManager;
 import com.core.screens.ScreenLoadable;
 import com.core.screens.ScreenManager;
-import com.gui_controllers.LoginController;
-import com.viewmodels.LoginViewModel;
+import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * A centralized class that holds the paths to FXML and CSS files,
- * along with references to the controllers and viewmodels for all screens in the application.
+ * A centralized registry that holds the definitions for all screens in the application.
+ * Each screen definition includes paths to FXML and CSS files, along with references 
+ * to the controllers and view models.
  *
- * This class allows easy maintenance and updating of GUI-related resources in one place.
+ * This registry allows easy maintenance and updating of GUI-related resources in one place.
+ * Currently only contains the login screen - additional screens can be added as needed.
  *
  * @author Clement Luo
  * @date May 19, 2025
- * @edited June 1, 2025
+ * @edited June 25, 2025
  * @since 1.0
  */
-public final class Screens {
+@UtilityClass
+public class ScreenRegistry {
 
-    // Map of screen names to screen configurations
+    /** Login screen - entry point for authenticated users */
     public static final ScreenLoadable LOGIN = new ScreenLoadable.Builder(
             "/fxml/Login.fxml",
-                    LoginController.class)
+            com.gui_controllers.LoginController.class)
             .withCssPath("/css/login.css")
             .withViewModelSupplier(() ->
-                    new LoginViewModel(
+                    new com.viewmodels.LoginViewModel(
                             ServiceManager.getLoginService(),
-                            ScreenManager.getInstance(), // Now safe - ScreenManager is initialized first
-                            ServiceManager.getAlertService()))
+                            ScreenManager.getInstance()))
             .cacheable(true)
             .build();
 
+    // ==================== UTILITY METHODS ====================
+    
     /**
-     * Returns a list of all screen templates defined in this class.
-     * Uses reflection to find all public static final ScreenTemplate fields.
+     * Returns a list of all screen definitions registered in this class.
+     * Uses reflection to find all public static final ScreenLoadable fields.
      *
-     * @return List of all screen templates
+     * @return List of all registered screen definitions
      */
     public static List<ScreenLoadable> getAllScreens() {
-        return Arrays.stream(Screens.class.getDeclaredFields())
+        return Arrays.stream(ScreenRegistry.class.getDeclaredFields())
                 .filter(field -> field.getType() == ScreenLoadable.class)
                 .filter(field -> java.lang.reflect.Modifier.isStatic(field.getModifiers()))
                 .filter(field -> java.lang.reflect.Modifier.isFinal(field.getModifiers()))
@@ -52,9 +55,9 @@ public final class Screens {
                     try {
                         return (ScreenLoadable) field.get(null);
                     } catch (IllegalAccessException e) {
-                        throw new RuntimeException("Failed to access screen template field: " + field.getName(), e);
+                        throw new RuntimeException("Failed to access screen definition field: " + field.getName(), e);
                     }
                 })
                 .collect(Collectors.toList());
     }
-}
+} 

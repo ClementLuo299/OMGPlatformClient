@@ -1,51 +1,43 @@
 package com.core;
 
-import com.services.AlertService;
 import com.services.LoginService;
 
 /**
- * A utility class for managing and providing centralized access to shared services
- * within the application. Facilitates lazy initialization and singleton-like
- * behavior for service instances.
- *
- * Features:
- * - Manages core shared services like `LoginService` and `AlertService`.
- * - Supports lazy initialization to optimize resource usage.
- * - Provides a single access point for global service instances.
- *
- * Usage:
- * - Call `getLoginService()` or `getAlertService()` to retrieve and use services as needed.
- * - Use `initializeCoreServices()` at application startup for eager initialization of all services.
- *
- * Associated Services:
- * - `LoginService`: Handles user authentication and session management.
- * - `AlertService`: Provides tools for displaying alerts across the application.
- *
- * @authors Clement Luo,
+ * Central service manager for the application.
+ * 
+ * This class provides access to core services that are shared across the application.
+ * - Manages core shared services like `LoginService`.
+ * - Ensures services are properly initialized before use.
+ * - Call `getLoginService()` to retrieve and use services as needed.
+ * 
+ * Services managed:
+ * - `LoginService`: Handles user authentication and login operations.
+ * 
+ * @authors Clement Luo
  * @date May 18, 2025
+ * @edited June 25, 2025
+ * @since 1.0
  */
 public class ServiceManager {
 
     private static LoginService loginService;
-    private static AlertService alertService;
 
+    /**
+     * Gets the LoginService instance, initializing it if necessary.
+     *
+     * @return the LoginService instance
+     */
     public static LoginService getLoginService() {
         if (loginService == null) {
-            loginService = new LoginService(); // Lazy initialization
+            loginService = new LoginService();
         }
         return loginService;
     }
 
-    public static AlertService getAlertService() {
-        if (alertService == null) {
-            alertService = new AlertService();
-        }
-        return alertService;
-    }
-
-    public static void initializeCoreServices() {
-        // Initialize other shared services here, if needed
+    /**
+     * Initializes all services. Call this during application startup.
+     */
+    public static void initializeServices() {
         loginService = new LoginService();
-        alertService = new AlertService();
     }
 }

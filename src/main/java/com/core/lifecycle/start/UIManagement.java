@@ -26,7 +26,7 @@ public class UIManagement {
     private static Stage primaryStage;
 
     /**
-     * Initializes the UI and navigates to the initial screen.
+     * Initializes the UI, navigates to the initial screen, and configures the stage.
      * This method is called directly by LifecycleManager.
      */
     public static void initialize(Stage stage) throws Exception {
@@ -35,11 +35,14 @@ public class UIManagement {
         
         try {
             // Get initial screen
-            ScreenLoadable initialScreen = GUIConfig.getInitialScreen();
+            ScreenLoadable initialScreen = GUIConfig.INITIAL_SCREEN;
 
             // Navigate to initial screen
             ScreenManager manager = ScreenManager.getInstance();
             manager.navigateTo(initialScreen);
+            
+            // Configure the stage with title, dimensions, and constraints
+            configureStage(stage);
             
             Logging.info("UI initialized successfully");
             
@@ -55,13 +58,13 @@ public class UIManagement {
      *
      * @param stage The primary stage of the application.
      */
-    public static void configureStage(Stage stage) {
+    private static void configureStage(Stage stage) {
         try {
-            stage.setTitle(GUIConfig.getAppTitle());
-            stage.setWidth(GUIConfig.getWindowWidth());
-            stage.setHeight(GUIConfig.getWindowHeight());
-            stage.setMinWidth(GUIConfig.getMinWindowWidth());
-            stage.setMinHeight(GUIConfig.getMinWindowHeight());
+            stage.setTitle(GUIConfig.APP_TITLE);
+            stage.setWidth(GUIConfig.WINDOW_WIDTH);
+            stage.setHeight(GUIConfig.WINDOW_HEIGHT);
+            stage.setMinWidth(GUIConfig.MIN_WINDOW_WIDTH);
+            stage.setMinHeight(GUIConfig.MIN_WINDOW_HEIGHT);
             stage.centerOnScreen(); // Center the window
             
         } catch (Exception e) {

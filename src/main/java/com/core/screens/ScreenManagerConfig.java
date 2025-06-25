@@ -1,17 +1,18 @@
-package com.config;
-
-import com.core.screens.ScreenLoadable;
+package com.core.screens;
 
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Configuration class for the screen manager.
+ * Configuration data structure for the ScreenManager.
+ * Uses builder pattern to create immutable configuration instances.
  *
  * @authors Clement Luo
  * @date May 18, 2025
+ * @edited June 25, 2025
+ * @since 1.0
  */
-public class ScreenManagementConfig {
+public class ScreenManagerConfig {
 
     /**
      * Set of screens that should be preloaded when the application starts.
@@ -39,21 +40,20 @@ public class ScreenManagementConfig {
     public int getCacheSize() { return cacheSize; }
     public boolean isEnableCaching() { return enableCaching; }
 
-
     /**
      * Private constructor used by the Builder.
-     * Creates an immutable ScreenConfig instance.
+     * Creates an immutable ScreenManagerConfig instance.
      *
      * @param builder The builder containing configuration settings
      */
-    private ScreenManagementConfig(Builder builder) {
+    private ScreenManagerConfig(Builder builder) {
         this.preloadScreenViews = Set.copyOf(builder.preloadScreenViews);
         this.cacheSize = builder.cacheSize;
         this.enableCaching = builder.enableCaching;
     }
 
     /**
-     * Builder class for creating ScreenConfig instances.
+     * Builder class for creating ScreenManagerConfig instances.
      * Provides a fluent interface for setting configuration options.
      */
     public static class Builder {
@@ -112,10 +112,10 @@ public class ScreenManagementConfig {
         }
 
         /**
-         * Creates a new immutable ScreenConfig instance with the current settings.
+         * Creates a new immutable ScreenManagerConfig instance with the current settings.
          *
-         * @return A new ScreenConfig instance
+         * @return A new ScreenManagerConfig instance
          */
-        public ScreenManagementConfig build() { return new ScreenManagementConfig(this); }
+        public ScreenManagerConfig build() { return new ScreenManagerConfig(this); }
     }
-}
+} 

@@ -1,8 +1,5 @@
 package com.core.lifecycle;
 
-import com.core.lifecycle.start.ServiceManagement;
-import com.core.lifecycle.start.UIManagement;
-import com.core.lifecycle.start.ScreenManagement;
 import com.utils.error_handling.ErrorHandler;
 import com.utils.error_handling.ErrorCategory;
 import com.utils.error_handling.ErrorSeverity;
@@ -32,12 +29,11 @@ public class LifecycleManager {
             Logging.info("Application startup initiated");
             
             // Initialize core components in order
-            ScreenManagement.initializeScreenManager(primaryStage);
-            ServiceManagement.initialize();
-            UIManagement.initialize(primaryStage);
+            com.core.lifecycle.start.ScreenManagement.initialize(primaryStage);
+            com.core.lifecycle.start.ServiceManagement.initialize();
+            com.core.lifecycle.start.UIManagement.initialize(primaryStage);
             
-            // Configure and show the stage
-            UIManagement.configureStage(primaryStage);
+            // Show the stage
             primaryStage.show();
             
             Logging.info("Application started successfully");

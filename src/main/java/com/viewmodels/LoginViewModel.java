@@ -2,8 +2,8 @@ package com.viewmodels;
 
 import com.core.screens.ScreenManager;
 //import com.gui_controllers.DashboardController;
-import com.services.AlertService;
 import com.services.LoginService;
+import com.utils.error_handling.Dialog;
 import javafx.beans.property.*;
 
 import java.util.function.Consumer;
@@ -13,6 +13,8 @@ import java.util.function.Consumer;
  *
  * @authors Clement Luo
  * @date May 17, 2025
+ * @edited June 25, 2025
+ * @since 1.0
  */
 public class LoginViewModel {
 
@@ -22,18 +24,15 @@ public class LoginViewModel {
     private final StringProperty message = new SimpleStringProperty();
 
     private final LoginService loginService;
-    private final AlertService alertService;
     private final ScreenManager screenManager;
 
-    public LoginViewModel(LoginService loginService, ScreenManager screenManager, AlertService alertService) {
+    public LoginViewModel(LoginService loginService, ScreenManager screenManager) {
         this.loginService = loginService;
-        this.alertService = alertService;
         this.screenManager = screenManager;
     }
 
     public LoginViewModel() {
         this.loginService = null;
-        this.alertService = null;
         this.screenManager = null;
     }
 
@@ -133,11 +132,11 @@ public class LoginViewModel {
      */
 
     private void showError(String title, String message) {
-        alertService.showError(title, message);
+        Dialog.showError(title, message, null);
     }
 
     private void showInfo(String title, String message) {
-        alertService.showInfo(title, message);
+        Dialog.showInfo(title, message);
     }
 
 }
