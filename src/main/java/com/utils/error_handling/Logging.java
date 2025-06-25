@@ -2,6 +2,11 @@ package com.utils.error_handling;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 /**
  * Logging utility for the application.
@@ -234,6 +239,196 @@ public final class Logging {
     public static void logFileOperation(String operation, String filePath, boolean success) {
         String status = success ? "SUCCESS" : "FAILED";
         logger.debug("FILE: {} {} - {}", operation, filePath, status);
+    }
+
+    //endregion
+
+    //region ==================== MDC (MAPPED DIAGNOSTIC CONTEXT) METHODS ====================
+
+    /**
+     * Sets a key-value pair in the MDC context.
+     * This context information will be automatically included in all subsequent log messages.
+     *
+     * @param key the context key
+     * @param value the context value
+     */
+    public static void setMDC(String key, String value) { MDC.put(key, value); }
+
+    /**
+     * Sets multiple key-value pairs in the MDC context.
+     *
+     * @param context the map of context key-value pairs
+     */
+    public static void setMDC(Map<String, String> context) {
+        if (context != null) {
+            context.forEach(MDC::put);
+        }
+    }
+
+    /**
+     * Gets a value from the MDC context.
+     *
+     * @param key the context key
+     * @return the context value, or null if not found
+     */
+    public static String getMDC(String key) { return MDC.get(key); }
+
+    /**
+     * Gets a copy of the current MDC context.
+     *
+     * @return a copy of the current MDC context map
+     */
+    public static Map<String, String> getMDC() { return MDC.getCopyOfContextMap(); }
+
+    /**
+     * Removes a key from the MDC context.
+     *
+     * @param key the context key to remove
+     */
+    public static void removeMDC(String key) { MDC.remove(key); }
+
+    /**
+     * Clears all MDC context.
+     */
+    public static void clearMDC() { MDC.clear(); }
+
+    /**
+     * Executes a task with MDC context that is automatically cleaned up afterward.
+     * This ensures that MDC context doesn't leak between different operations.
+     *
+     * @param <T> the return type of the task
+     * @param context the MDC context to set for the task execution
+     * @param task the task to execute
+     * @return the result of the task
+     * @throws Exception if the task throws an exception
+     */
+    public static <T> T executeWithMDC(Map<String, String> context, Callable<T> task) throws Exception {
+        // Store the original context to restore later
+        Map<String, String> originalContext = MDC.getCopyOfContextMap();
+        
+        try {
+            // Set the new context
+            if (context != null) {
+                context.forEach(MDC::put);
+            }
+            
+            // Execute the task
+            return task.call();
+        } finally {
+            // Restore the original context
+            MDC.clear();
+            if (originalContext != null) {
+                originalContext.forEach(MDC::put);
+            }
+        }
+    }
+
+    /**
+     * Executes a task with MDC context that is automatically cleaned up afterward.
+     * This ensures that MDC context doesn't leak between different operations.
+     *
+     * @param context the MDC context to set for the task execution
+     * @param task the task to execute
+     * @throws Exception if the task throws an exception
+     */
+    public static void executeWithMDC(Map<String, String> context, Runnable task) throws Exception {
+        executeWithMDC(context, () -> {
+            task.run();
+            return null;
+        });
+    }
+
+    /**
+     * Executes a task with a single MDC key-value pair.
+     *
+     * @param <T> the return type of the task
+     * @param key the MDC key
+     * @param value the MDC value
+     * @param task the task to execute
+     * @return the result of the task
+     * @throws Exception if the task throws an exception
+     */
+    public static <T> T executeWithMDC(String key, String value, Callable<T> task) throws Exception {
+        return executeWithMDC(Map.of(key, value), task);
+    }
+
+    /**
+     * Executes a task with a single MDC key-value pair.
+     *
+     * @param key the MDC key
+     * @param value the MDC value
+     * @param task the task to execute
+     * @throws Exception if the task throws an exception
+     */
+    public static void executeWithMDC(String key, String value, Runnable task) throws Exception {
+        executeWithMDC(Map.of(key, value), task);
+    }
+
+    /**
+     * Logs a message with current MDC context information.
+     *
+     * @param level the logging level (DEBUG, INFO, WARN, ERROR)
+     * @param message the message to log
+     */
+    public static void logWithMDC(String level, String message) {
+        Map<String, String> context = MDC.getCopyOfContextMap();
+        String contextInfo = context != null && !context.isEmpty() 
+            ? " [MDC: " + context + "]" 
+            : "";
+        
+        switch (level.toUpperCase()) {
+            case "TRACE":
+                logger.trace(message + contextInfo);
+                break;
+            case "DEBUG":
+                logger.debug(message + contextInfo);
+                break;
+            case "INFO":
+                logger.info(message + contextInfo);
+                break;
+            case "WARN":
+                logger.warn(message + contextInfo);
+                break;
+            case "ERROR":
+                logger.error(message + contextInfo);
+                break;
+            default:
+                logger.info(message + contextInfo);
+        }
+    }
+
+    /**
+     * Logs a message with current MDC context information and throwable.
+     *
+     * @param level the logging level (DEBUG, INFO, WARN, ERROR)
+     * @param message the message to log
+     * @param throwable the throwable to log
+     */
+    public static void logWithMDC(String level, String message, Throwable throwable) {
+        Map<String, String> context = MDC.getCopyOfContextMap();
+        String contextInfo = context != null && !context.isEmpty() 
+            ? " [MDC: " + context + "]" 
+            : "";
+        
+        switch (level.toUpperCase()) {
+            case "TRACE":
+                logger.trace(message + contextInfo, throwable);
+                break;
+            case "DEBUG":
+                logger.debug(message + contextInfo, throwable);
+                break;
+            case "INFO":
+                logger.info(message + contextInfo, throwable);
+                break;
+            case "WARN":
+                logger.warn(message + contextInfo, throwable);
+                break;
+            case "ERROR":
+                logger.error(message + contextInfo, throwable);
+                break;
+            default:
+                logger.info(message + contextInfo, throwable);
+        }
     }
 
     //endregion
