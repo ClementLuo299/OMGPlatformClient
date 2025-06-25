@@ -26,27 +26,6 @@ public class UIManagement {
     private static Stage primaryStage;
 
     /**
-     * Initializes the UI and navigates to the initial screen.
-     * This method is called directly by LifecycleManager for backward compatibility.
-     */
-    public static void initialize(Stage stage) throws Exception {
-        primaryStage = stage;
-        try {
-            // Get initial screen
-            ScreenLoadable initialScreen = GUIConfig.getInitialScreen();
-
-            // Navigate to initial screen
-            ScreenManager manager = ScreenManager.getInstance();
-            manager.navigateTo(initialScreen);
-            
-        } catch (Exception e) {
-            ErrorHandler.handleCriticalError(e, "Failed to navigate to initial screen", 
-                                           ErrorCategory.CONFIGURATION, ErrorSeverity.HIGH);
-            throw e; // Re-throw to let LifecycleManager handle it
-        }
-    }
-
-    /**
      * Registers UI management as a startup task.
      * Should be called before startup begins.
      * 
@@ -68,6 +47,11 @@ public class UIManagement {
             @Override
             public String getName() {
                 return "UIManagement";
+            }
+            
+            @Override
+            public boolean needsJavaFXThread() {
+                return true; // This is the only task that needs JavaFX thread
             }
         });
     }

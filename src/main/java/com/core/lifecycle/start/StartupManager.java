@@ -5,9 +5,12 @@ import com.utils.error_handling.ErrorCategory;
 import com.utils.error_handling.ErrorSeverity;
 import com.utils.error_handling.Logging;
 
+import javafx.application.Platform;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -90,6 +93,7 @@ public class StartupManager {
 
     /**
      * Executes all registered startup tasks.
+     * UI tasks run on JavaFX thread, others run on background thread.
      * Each task runs with timeout protection and error handling.
      * Stops execution if any critical task fails.
      */
@@ -108,17 +112,12 @@ public class StartupManager {
             try {
                 Logging.info("Executing startup task " + (i + 1) + ": " + task.getName());
                 
-                // Execute task with timeout - wraps checked exceptions
-                CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-                    try {
-                        task.execute();
-                    } catch (Exception e) {
-                        // Convert checked exception to runtime for CompletableFuture
-                        throw new RuntimeException(e);
-                    }
-                });
-                // Wait for task completion with timeout
-                future.get(STARTUP_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+                // Check if this is a UI task that needs to run on JavaFX thread
+                if (isUITask(task)) {
+                    executeUITask(task);
+                } else {
+                    executeNonUITask(task);
+                }
                 
                 Logging.info("Startup task completed: " + task.getName());
                 
@@ -130,6 +129,71 @@ public class StartupManager {
                 throw new RuntimeException("Startup failed at task: " + task.getName(), e);
             }
         }
+    }
+
+    /**
+     * Determines if a task is a UI task that needs to run on the JavaFX thread.
+     * 
+     * @param task the startup task to check
+     * @return true if the task is a UI task
+     */
+    private static boolean isUITask(StartupTask task) {
+        String taskName = task.getName().toLowerCase();
+        // Only UIManagement is a true UI task
+        return taskName.equals("uimanagement");
+    }
+
+    /**
+     * Executes a UI task on the JavaFX Application Thread.
+     * 
+     * @param task the UI task to execute
+     * @throws Exception if the task fails
+     */
+    private static void executeUITask(StartupTask task) throws Exception {
+        // Use CountDownLatch to wait for UI task completion
+        CountDownLatch latch = new CountDownLatch(1);
+        Exception[] exceptionHolder = new Exception[1];
+        
+        // Schedule task on JavaFX thread
+        Platform.runLater(() -> {
+            try {
+                task.execute();
+            } catch (Exception e) {
+                exceptionHolder[0] = e;
+            } finally {
+                latch.countDown();
+            }
+        });
+        
+        // Wait for task completion with timeout
+        if (!latch.await(STARTUP_TIMEOUT_MS, TimeUnit.MILLISECONDS)) {
+            throw new RuntimeException("UI task timed out: " + task.getName());
+        }
+        
+        // Check if task threw an exception
+        if (exceptionHolder[0] != null) {
+            throw exceptionHolder[0];
+        }
+    }
+
+    /**
+     * Executes a non-UI task on a background thread.
+     * 
+     * @param task the non-UI task to execute
+     * @throws Exception if the task fails
+     */
+    private static void executeNonUITask(StartupTask task) throws Exception {
+        // Execute task with timeout - wraps checked exceptions
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            try {
+                task.execute();
+            } catch (Exception e) {
+                // Convert checked exception to runtime for CompletableFuture
+                throw new RuntimeException(e);
+            }
+        });
+        // Wait for task completion with timeout
+        future.get(STARTUP_TIMEOUT_MS, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -182,5 +246,5 @@ public class StartupManager {
      * 
      * @return the number of startup tasks
      */
-    public static int getStartupTaskCount() { return startupTasks.size();}
+    public static int getStartupTaskCount() { return startupTasks.size(); }
 } 

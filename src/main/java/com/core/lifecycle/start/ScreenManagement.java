@@ -24,27 +24,22 @@ public class ScreenManagement {
     private static Stage primaryStage;
 
     /**
-     * Initializes the screen manager.
-     * This method is called directly by LifecycleManager for backward compatibility.
-     */
-    public static void initialize(Stage stage) throws Exception {
-        primaryStage = stage;
-        ScreenManagementConfig config = buildScreenConfig();
-        ScreenManager.initializeInstance(primaryStage, config);
-    }
-
-    /**
      * Registers screen management as a startup task.
      * Should be called before startup begins.
      * 
      * @param stage the primary stage
      */
     public static void registerAsStartupTask(Stage stage) {
+        // Store stage reference for use in startup task
         primaryStage = stage;
+        
         StartupManager.registerStartupTask(new StartupTask() {
             @Override
             public void execute() throws Exception {
+                // Build configuration with caching settings and preloaded screens
                 ScreenManagementConfig config = buildScreenConfig();
+                
+                // Initialize the ScreenManager singleton with stage and config
                 ScreenManager.initializeInstance(primaryStage, config);
             }
             

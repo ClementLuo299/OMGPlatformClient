@@ -14,14 +14,6 @@ import com.core.ServiceManager;
 public class ServiceManagement {
 
     /**
-     * Initializes the core services.
-     * This method is called directly by LifecycleManager for backward compatibility.
-     */
-    public static void initialize() { 
-        ServiceManager.initializeCoreServices(); 
-    }
-
-    /**
      * Registers service management as a startup task.
      * Should be called before startup begins.
      */
