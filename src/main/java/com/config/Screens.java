@@ -31,7 +31,7 @@ public final class Screens {
             .withViewModelSupplier(() ->
                     new LoginViewModel(
                             ServiceManager.getLoginService(),
-                            ScreenManager.getInstance(),
+                            ScreenManager.getInstance(), // Now safe - ScreenManager is initialized first
                             ServiceManager.getAlertService()))
             .cacheable(true)
             .build();

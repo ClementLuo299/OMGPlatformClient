@@ -1,10 +1,10 @@
 package com.core.lifecycle.start;
 
 import com.core.ServiceManager;
+import com.utils.error_handling.Logging;
 
 /**
- * Initializes the core services (networking, logic, etc.).
- * Registers itself as a startup task for coordinated initialization.
+ * Manages the initialization of application services.
  *
  * @authors Clement Luo
  * @date May 24, 2025
@@ -14,20 +14,15 @@ import com.core.ServiceManager;
 public class ServiceManagement {
 
     /**
-     * Registers service management as a startup task.
-     * Should be called before startup begins.
+     * Initializes all application services.
+     * This method is called directly by LifecycleManager.
      */
-    public static void registerAsStartupTask() {
-        StartupManager.registerStartupTask(new StartupTask() {
-            @Override
-            public void execute() throws Exception {
-                ServiceManager.initializeCoreServices();
-            }
-            
-            @Override
-            public String getName() {
-                return "ServiceManagement";
-            }
-        });
+    public static void initialize() {
+        Logging.info("Initializing application services...");
+        
+        // Initialize ServiceManager
+        ServiceManager.initializeCoreServices();
+        
+        Logging.info("Application services initialized successfully");
     }
 }

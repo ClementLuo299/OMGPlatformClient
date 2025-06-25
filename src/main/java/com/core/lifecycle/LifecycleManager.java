@@ -2,9 +2,7 @@ package com.core.lifecycle;
 
 import com.core.lifecycle.start.ServiceManagement;
 import com.core.lifecycle.start.UIManagement;
-import com.core.lifecycle.stop.ShutdownManager;
 import com.core.lifecycle.start.ScreenManagement;
-import com.core.lifecycle.start.StartupManager;
 import com.utils.error_handling.ErrorHandler;
 import com.utils.error_handling.ErrorCategory;
 import com.utils.error_handling.ErrorSeverity;
@@ -25,20 +23,7 @@ import javafx.stage.Stage;
 public class LifecycleManager {
 
     /**
-     * Registers all startup tasks with the StartupManager.
-     * 
-     * @param primaryStage the primary stage
-     */
-    private static void registerStartupTasks(Stage primaryStage) {
-        // Register startup tasks in order
-        ScreenManagement.registerAsStartupTask(primaryStage);
-        ServiceManagement.registerAsStartupTask();
-        UIManagement.registerAsStartupTask(primaryStage);
-    }
-
-    /**
      * Initializes the application and starts the primary stage.
-     * Uses the new StartupManager for coordinated startup.
      * 
      * @param primaryStage the primary JavaFX stage
      */
@@ -46,11 +31,10 @@ public class LifecycleManager {
         try {
             Logging.info("Application startup initiated");
             
-            // Register startup tasks
-            registerStartupTasks(primaryStage);
-            
-            // Execute startup using StartupManager
-            StartupManager.startup();
+            // Initialize core components in order
+            ScreenManagement.initializeScreenManager(primaryStage);
+            ServiceManagement.initialize();
+            UIManagement.initialize(primaryStage);
             
             // Configure and show the stage
             UIManagement.configureStage(primaryStage);
@@ -71,8 +55,10 @@ public class LifecycleManager {
         try {
             Logging.info("Application shutdown initiated");
             
-            // Perform shutdown using ShutdownManager
-            ShutdownManager.shutdown();
+            // Perform shutdown operations in reverse order using fully qualified names
+            com.core.lifecycle.stop.UIManagement.shutdown();
+            com.core.lifecycle.stop.ServiceManagement.shutdown();
+            com.core.lifecycle.stop.ScreenManagement.shutdown();
             
             Logging.info("Application shutdown completed");
             

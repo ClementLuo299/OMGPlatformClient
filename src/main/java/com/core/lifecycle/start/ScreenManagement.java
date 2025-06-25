@@ -4,12 +4,11 @@ import com.config.GUIConfig;
 import com.config.ScreenManagementConfig;
 import com.core.screens.ScreenManager;
 import com.core.screens.ScreenLoadable;
-
+import com.utils.error_handling.Logging;
 import javafx.stage.Stage;
 
 /**
  * Boots up and configures the application's screen manager.
- * Registers itself as a startup task for coordinated initialization.
  *
  * @authors Clement Luo
  * @date May 24, 2025
@@ -19,35 +18,21 @@ import javafx.stage.Stage;
 public class ScreenManagement {
 
     /**
-     * The primary stage for screen management.
-     */
-    private static Stage primaryStage;
-
-    /**
-     * Registers screen management as a startup task.
-     * Should be called before startup begins.
+     * Initializes the ScreenManager before any startup tasks run.
+     * This ensures ScreenManager is fully ready when UIManagement tries to navigate.
      * 
-     * @param stage the primary stage
+     * @param primaryStage the primary stage
      */
-    public static void registerAsStartupTask(Stage stage) {
-        // Store stage reference for use in startup task
-        primaryStage = stage;
+    public static void initializeScreenManager(Stage primaryStage) {
+        Logging.info("Initializing ScreenManager...");
         
-        StartupManager.registerStartupTask(new StartupTask() {
-            @Override
-            public void execute() throws Exception {
-                // Build configuration with caching settings and preloaded screens
-                ScreenManagementConfig config = buildScreenConfig();
-                
-                // Initialize the ScreenManager singleton with stage and config
-                ScreenManager.initializeInstance(primaryStage, config);
-            }
-            
-            @Override
-            public String getName() {
-                return "ScreenManagement";
-            }
-        });
+        // Build configuration with caching settings and preloaded screens
+        ScreenManagementConfig config = buildScreenConfig();
+        
+        // Initialize the ScreenManager singleton with stage and config
+        ScreenManager.initializeInstance(primaryStage, config);
+        
+        Logging.info("ScreenManager initialized successfully");
     }
 
     /**

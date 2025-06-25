@@ -6,12 +6,12 @@ import com.core.screens.ScreenLoadable;
 import com.utils.error_handling.ErrorHandler;
 import com.utils.error_handling.ErrorCategory;
 import com.utils.error_handling.ErrorSeverity;
+import com.utils.error_handling.Logging;
 
 import javafx.stage.Stage;
 
 /**
  * Manages the initialization and configuration of the application's UI.
- * Registers itself as a startup task for coordinated initialization.
  *
  * @authors Clement Luo
  * @date May 24, 2025
@@ -26,34 +26,28 @@ public class UIManagement {
     private static Stage primaryStage;
 
     /**
-     * Registers UI management as a startup task.
-     * Should be called before startup begins.
-     * 
-     * @param stage the primary stage
+     * Initializes the UI and navigates to the initial screen.
+     * This method is called directly by LifecycleManager.
      */
-    public static void registerAsStartupTask(Stage stage) {
+    public static void initialize(Stage stage) throws Exception {
         primaryStage = stage;
-        StartupManager.registerStartupTask(new StartupTask() {
-            @Override
-            public void execute() throws Exception {
-                // Get initial screen
-                ScreenLoadable initialScreen = GUIConfig.getInitialScreen();
+        Logging.info("Initializing UI...");
+        
+        try {
+            // Get initial screen
+            ScreenLoadable initialScreen = GUIConfig.getInitialScreen();
 
-                // Navigate to initial screen
-                ScreenManager manager = ScreenManager.getInstance();
-                manager.navigateTo(initialScreen);
-            }
+            // Navigate to initial screen
+            ScreenManager manager = ScreenManager.getInstance();
+            manager.navigateTo(initialScreen);
             
-            @Override
-            public String getName() {
-                return "UIManagement";
-            }
+            Logging.info("UI initialized successfully");
             
-            @Override
-            public boolean needsJavaFXThread() {
-                return true; // This is the only task that needs JavaFX thread
-            }
-        });
+        } catch (Exception e) {
+            ErrorHandler.handleCriticalError(e, "Failed to navigate to initial screen", 
+                                           ErrorCategory.CONFIGURATION, ErrorSeverity.HIGH);
+            throw e; // Re-throw to let LifecycleManager handle it
+        }
     }
 
     /**
