@@ -34,7 +34,6 @@ public class ScreenRegistry {
                     new com.viewmodels.LoginViewModel(
                             ServiceManager.getLoginService(),
                             ScreenManager.getInstance()))
-            .cacheable(true)
             .build();
 
     // ==================== UTILITY METHODS ====================
@@ -46,11 +45,17 @@ public class ScreenRegistry {
      * @return List of all registered screen definitions
      */
     public static List<ScreenLoadable> getAllScreens() {
+        // Get all declared fields from this class
         return Arrays.stream(ScreenRegistry.class.getDeclaredFields())
+                // Filter for ScreenLoadable type fields
                 .filter(field -> field.getType() == ScreenLoadable.class)
+                // Filter for static fields
                 .filter(field -> java.lang.reflect.Modifier.isStatic(field.getModifiers()))
+                // Filter for final fields
                 .filter(field -> java.lang.reflect.Modifier.isFinal(field.getModifiers()))
+                // Filter for public fields
                 .filter(field -> java.lang.reflect.Modifier.isPublic(field.getModifiers()))
+                // Extract the actual ScreenLoadable instances
                 .map(field -> {
                     try {
                         return (ScreenLoadable) field.get(null);
@@ -58,6 +63,7 @@ public class ScreenRegistry {
                         throw new RuntimeException("Failed to access screen definition field: " + field.getName(), e);
                     }
                 })
+                // Collect into a list
                 .collect(Collectors.toList());
     }
 } 
