@@ -6,7 +6,7 @@ package com.core.lifecycle.start;
  * 
  * @authors Clement Luo
  * @date June 24, 2025
- * @edited June 24, 2025
+ * @edited June 25, 2025
  * @since 1.0
  */
 @FunctionalInterface
@@ -27,4 +27,11 @@ public interface StartupTask {
      * @return the name of the startup task
      */
     default String getName() { return this.getClass().getSimpleName(); }
+
+    /**
+     * Indicates if this task needs to run on the JavaFX Application Thread.
+     * 
+     * @return true if the task needs JavaFX thread, false otherwise
+     */
+    default boolean needsJavaFXThread() { return false; }
 } 
