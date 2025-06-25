@@ -7,6 +7,7 @@ import com.utils.error_handling.ErrorHandler;
 import com.utils.error_handling.ErrorCategory;
 import com.utils.error_handling.ErrorSeverity;
 import com.utils.error_handling.Logging;
+
 import javafx.stage.Stage;
 
 /**

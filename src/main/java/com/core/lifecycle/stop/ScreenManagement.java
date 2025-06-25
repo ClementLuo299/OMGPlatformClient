@@ -11,6 +11,7 @@ import com.utils.error_handling.Logging;
  *
  * @authors Clement Luo
  * @date June 25, 2025
+ * @edited June 25, 2025
  * @since 1.0
  */
 public class ScreenManagement {

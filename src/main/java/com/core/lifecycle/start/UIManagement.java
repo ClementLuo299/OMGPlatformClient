@@ -21,16 +21,10 @@ import javafx.stage.Stage;
 public class UIManagement {
 
     /**
-     * The primary stage for UI configuration.
-     */
-    private static Stage primaryStage;
-
-    /**
      * Initializes the UI, navigates to the initial screen, and configures the stage.
      * This method is called directly by LifecycleManager.
      */
     public static void initialize(Stage stage) throws Exception {
-        primaryStage = stage;
         Logging.info("Initializing UI...");
         
         try {
