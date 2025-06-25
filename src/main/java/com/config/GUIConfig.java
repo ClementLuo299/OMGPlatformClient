@@ -12,6 +12,8 @@ import java.util.List;
  *
  * @authors Clement Luo,
  * @date May 18, 2025
+ * @edited June 25, 2025
+ * @since 1.0
  */
 public class GUIConfig {
     /** Application window title */
@@ -36,10 +38,10 @@ public class GUIConfig {
     /** Initial screen */
     private static final ScreenLoadable INITIAL_SCREEN = Screens.LOGIN;
 
+    /** Screen cache size */
     private static final int SCREEN_CACHE_SIZE = 10;
 
-    private static final boolean ENABLE_CACHING = true;
-
+    /** Preloaded screens - empty by default */
     public static final List<ScreenLoadable> PRELOAD_SCREEN_VIEWS = List.of(
             //ScreenView.DASHBOARD,
             //ScreenView.GAME_LIBRARY
@@ -53,7 +55,6 @@ public class GUIConfig {
     public static int getMinWindowHeight() { return MIN_WINDOW_HEIGHT; }
     public static ScreenLoadable getInitialScreen() { return INITIAL_SCREEN; }
     public static int getScreenCacheSize() { return SCREEN_CACHE_SIZE; }
-    public static boolean isEnableCaching() { return ENABLE_CACHING; }
     public static List<ScreenLoadable> getPreloadScreens() { return PRELOAD_SCREEN_VIEWS; }
     public static int getMainSceneWidth() { return MAIN_SCENE_WIDTH; }
     public static int getMainSceneHeight() { return MAIN_SCENE_HEIGHT; }
