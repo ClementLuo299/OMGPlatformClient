@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 import com.config.GUIConfig;
-import com.core.screens.ScreenManagerConfig;
+import com.core.screens.ScreenCacheConfig;
 import com.utils.error_handling.ErrorHandler;
 import com.utils.error_handling.ErrorCategory;
 import com.utils.error_handling.ErrorSeverity;
@@ -31,16 +31,16 @@ public class ScreenManager {
     private final BorderPane mainContainer; // Outer container for every screen
     private Scene scene; // The main scene
     private final Stage mainStage; // Primary application window
-    private final CachingScreenLoader loader; // Screen loader
-    private final ScreenManagerConfig config; // Screen management configuration
+    private final ScreenLoader loader; // Screen loader
+    private final ScreenCacheConfig config; // Screen cache configuration
 
     /**
      * Private to enforce the singleton pattern.
      */
-    private ScreenManager(Stage stage, ScreenManagerConfig config) {
+    private ScreenManager(Stage stage, ScreenCacheConfig config) {
         this.mainContainer = new BorderPane();
         this.mainStage = stage;
-        this.loader = new CachingScreenLoader(config);
+        this.loader = new ScreenLoader(config);
         this.config = config;
 
         // Set up the main scene with the specified dimensions
@@ -52,7 +52,7 @@ public class ScreenManager {
     /**
      * Initialize the instance of the ScreenManager.
      */
-    public static void initializeInstance(Stage stage, ScreenManagerConfig config) { instance = new ScreenManager(stage, config); }
+    public static void initializeInstance(Stage stage, ScreenCacheConfig config) { instance = new ScreenManager(stage, config); }
 
     /**
      * Retrieve the instance of the ScreenManager.

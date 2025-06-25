@@ -34,10 +34,8 @@ public class GUIConfig {
     // Screen management settings
     public static final ScreenLoadable INITIAL_SCREEN = ScreenRegistry.LOGIN;
     public static final int SCREEN_CACHE_SIZE = 10;
+    public static final boolean ENABLE_SCREEN_CACHING = true;
 
-    // Preloaded screens - empty by default
-    public static final List<ScreenLoadable> PRELOAD_SCREENS = List.of(
-            //ScreenRegistry.DASHBOARD,
-            //ScreenRegistry.GAME_LIBRARY
-    );
+    // Preloaded screens - empty for now since login is the initial screen
+    public static final List<ScreenLoadable> PRELOAD_SCREENS = List.of();
 }

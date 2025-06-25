@@ -1,6 +1,6 @@
 package com.core.screens;
 
-import com.core.screens.ScreenManagerConfig;
+import com.config.GUIConfig;
 import com.utils.error_handling.ErrorHandler;
 
 import javafx.fxml.FXMLLoader;
@@ -12,30 +12,24 @@ import java.util.Map;
 
 /**
  * A screen loader that caches loaded screens in memory for faster subsequent access.
- * This loader preloads a set of screens specified by the supplied {@link ScreenManagerConfig}.
+ * This loader preloads a set of screens specified by the supplied configuration.
  *
  * @authors Clement Luo
  * @date May 18, 2025
  * @edited June 25, 2025
  * @since 1.0
  */
-public class CachingScreenLoader {
+public class ScreenLoader {
     /** Stores already-parsed screens; key = template, value = immutable result. */
     private final Map<ScreenLoadable, ScreenLoadResult<?>> screenCache = new HashMap<>();
 
     /**
-     * The configuration for this screen loader.
-     * Contains settings for caching and preloading.
-     */
-    private final ScreenManagerConfig config;
-
-    /**
-     * Constructs a new CachingScreenLoader with the specified configuration.
+     * Constructs a new ScreenLoader with the specified configuration.
      *
      * @param config The configuration for this screen loader
      */
-    public CachingScreenLoader(ScreenManagerConfig config) {
-        this.config = config;
+    public ScreenLoader(ScreenCacheConfig config) {
+        // Preload screens specified in the configuration
         for(ScreenLoadable screen : config.getPreloadScreens()) {
             screenCache.put(screen, loadScreenFresh(screen));
         }
@@ -57,27 +51,33 @@ public class CachingScreenLoader {
      */
     @SuppressWarnings("unchecked")
     public <T> ScreenLoadResult<T> loadScreen(ScreenLoadable screen) {
-        //Check if the screen is cached
-        if(screen.isCacheable()) {
-            //Get a cached screen and return
+        // Check if caching is enabled and screen is cached
+        if (GUIConfig.ENABLE_SCREEN_CACHING) {
             ScreenLoadResult<?> cachedScreen = screenCache.get(screen);
             if(cachedScreen != null) {
                 return (ScreenLoadResult<T>) cachedScreen;
             }
         }
 
-        //Load fresh if not cached
+        // Load fresh if not cached or caching disabled
         try {
-            //Get FXML path
+            // Get FXML path
             URL location = getClass().getResource(screen.getFxmlPath());
 
-            //Parse FXML and get controller
+            // Parse FXML and get controller
             FXMLLoader loader = new FXMLLoader(location);
             Parent root = loader.load();
             T controller = loader.getController();
 
-            //Return screen load result
-            return new ScreenLoadResult<>(root, controller);
+            // Cache the result for future use if caching is enabled
+            if (GUIConfig.ENABLE_SCREEN_CACHING) {
+                ScreenLoadResult<T> result = new ScreenLoadResult<>(root, controller);
+                screenCache.put(screen, result);
+                return result;
+            } else {
+                // Return without caching if caching is disabled
+                return new ScreenLoadResult<>(root, controller);
+            }
         } catch (Exception e) {
             ErrorHandler.handleCriticalError(e, "Critical error occurred during screen loading");
         }

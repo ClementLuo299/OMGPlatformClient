@@ -1,7 +1,7 @@
 package com.core.lifecycle.start;
 
 import com.config.GUIConfig;
-import com.core.screens.ScreenManagerConfig;
+import com.core.screens.ScreenCacheConfig;
 import com.core.screens.ScreenManager;
 import com.utils.error_handling.ErrorHandler;
 import com.utils.error_handling.ErrorCategory;
@@ -30,7 +30,7 @@ public class ScreenManagement {
         Logging.info("Initializing ScreenManager...");
         
         try {
-            ScreenManagerConfig config = buildScreenConfig();
+            ScreenCacheConfig config = buildScreenConfig();
             ScreenManager.initializeInstance(primaryStage, config);
             Logging.info("ScreenManager initialized successfully");
             
@@ -41,14 +41,13 @@ public class ScreenManagement {
     }
 
     /**
-     * Builds and returns the `ScreenManagerConfig` object for the application.
+     * Builds and returns the `ScreenCacheConfig` object for the application.
      *
-     * @return ScreenManagerConfig configured with preloaded screens and caching.
+     * @return ScreenCacheConfig configured with preloaded screens.
      */
-    private static ScreenManagerConfig buildScreenConfig() {
-        // Set caching config
-        ScreenManagerConfig.Builder builder = new ScreenManagerConfig.Builder()
-                .setCacheSize(GUIConfig.SCREEN_CACHE_SIZE);
+    private static ScreenCacheConfig buildScreenConfig() {
+        // Create builder for screen cache configuration
+        ScreenCacheConfig.Builder builder = new ScreenCacheConfig.Builder();
 
         // Add preloaded screens from config
         for (var screen : GUIConfig.PRELOAD_SCREENS) {

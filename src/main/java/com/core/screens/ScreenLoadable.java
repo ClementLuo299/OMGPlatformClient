@@ -4,21 +4,19 @@ import java.net.URL;
 import java.util.function.Supplier;
 
 /**
- * Maps fxml, css, controllers, and viemodels. Css and viewmodels are optional.
+ * Maps fxml, css, controllers, and viewmodels. Css and viewmodels are optional.
  *
  * @author Clement Luo
  * @date May 19, 2025
- * @edited June 1, 2025
+ * @edited June 25, 2025
  * @since 1.0
  */
 public class ScreenLoadable {
 
     private final String fxmlPath;
     private final String cssPath;
-    private final boolean cacheable;
     private final Class<?> controllerType;
     private final Class<?> viewModelType;
-
     private final Supplier<?> viewModelSupplier; // Services
 
     private ScreenLoadable(Builder builder) {
@@ -26,25 +24,16 @@ public class ScreenLoadable {
         this.cssPath = builder.cssPath;
         this.controllerType = builder.controllerType;
         this.viewModelType = builder.viewModelType;
-        this.cacheable = builder.cacheable;
         this.viewModelSupplier = builder.viewModelSupplier;
     }
 
     public String getFxmlPath() { return fxmlPath; }
-
     public String getCssPath() { return cssPath; }
-
     public Class<?> getControllerType() { return controllerType; }
-
     public Class<?> getViewModelType() { return viewModelType; }
-
     public Supplier<?> getViewModelSupplier() { return viewModelSupplier; }
-
     public boolean hasViewModel() { return viewModelType != null; }
-
     public boolean hasCss() { return cssPath != null; }
-
-    public boolean isCacheable() { return cacheable; }
 
     // Builder for the Screen class
     public static class Builder {
@@ -53,7 +42,6 @@ public class ScreenLoadable {
 
         private String cssPath = null; // Optional
         private Class<?> viewModelType = null; // Optional
-        private boolean cacheable = true; // Default to true
         private Supplier<?> viewModelSupplier = null;
 
         public Builder(String fxmlPath, Class<?> controllerType) {
@@ -76,13 +64,7 @@ public class ScreenLoadable {
             return this;
         }
 
-        public Builder cacheable(boolean cacheable) {
-            this.cacheable = cacheable;
-            return this;
-        }
-
         public ScreenLoadable build() {
-
             // Check if resource exists
             URL fxmlResource = getClass().getResource(fxmlPath);
 
@@ -105,6 +87,5 @@ public class ScreenLoadable {
 
             return new ScreenLoadable(this);
         }
-
     }
 }
