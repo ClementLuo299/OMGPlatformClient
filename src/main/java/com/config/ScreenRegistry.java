@@ -32,7 +32,17 @@ public class ScreenRegistry {
             com.gui_controllers.LoginController.class,
             "/css/login.css",
             () -> new com.viewmodels.LoginViewModel(
-                    ServiceManager.getLoginService(),
+                    ServiceManager.getInstance(),
+                    ScreenManager.getInstance())
+    );
+
+    /** Register screen - for new user registration */
+    public static final ScreenLoadable REGISTER = ScreenLoadable.of(
+            "/fxml/Register.fxml",
+            com.gui_controllers.RegisterController.class,
+            "/css/register.css",
+            () -> new com.viewmodels.RegisterViewModel(
+                    ServiceManager.getInstance(),
                     ScreenManager.getInstance())
     );
 

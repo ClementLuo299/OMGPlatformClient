@@ -38,11 +38,11 @@
         <DatePicker fx:id="dobPicker" prefHeight="42.0" prefWidth="289.0" styleClass="date-picker" />
 
         <!-- Create Account Button -->
-        <Button fx:id="createAccountButton" styleClass="register-button" text="Create Account" />
+        <Button fx:id="createAccountButton" onAction="#handleRegistration" styleClass="register-button" text="Create Account" />
 
         <!-- Already have an account? -->
         <Label styleClass="login-text" text="Already have an account?" />
-        <Button fx:id="loginButton" prefHeight="17.0" prefWidth="61.0" styleClass="sign-in-button" text="Sign in" />
+        <Button fx:id="loginButton" onAction="#backToLogin" prefHeight="17.0" prefWidth="61.0" styleClass="sign-in-button" text="Sign in" />
 
     </VBox>
     <stylesheets>

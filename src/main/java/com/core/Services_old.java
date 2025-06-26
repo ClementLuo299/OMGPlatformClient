@@ -11,9 +11,9 @@ import com.network.IO.GameIOHandler;
  * @authors Clement Luo, Fatin Abrar Ankon, Dylan Shiels, Susmita Chakrabarty, Dominic Afuba, Scott Brown
  * @date March 3, 2025
  */
-public class Services {
+public class Services_old {
     //Universal backend instance
-    private static Services instance;
+    private static Services_old instance;
 
     // ATTRIBUTES
 
@@ -29,7 +29,7 @@ public class Services {
     /**
      * Instantiates the backend.
      */
-    private Services() {
+    private Services_old() {
         //Activate IO handlers
         guiHandler = new GUIEventHandler();
         dbHandler = new DatabaseIOHandler();
@@ -40,9 +40,9 @@ public class Services {
     /**
      * Retrieve the backend
      */
-    public static Services getInstance() {
+    public static Services_old getInstance() {
         if (instance == null) {
-            instance = new Services();
+            instance = new Services_old();
         }
         return instance;
     }

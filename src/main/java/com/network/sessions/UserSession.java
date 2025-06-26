@@ -1,6 +1,6 @@
 package com.network.sessions;
 
-import com.core.Services;
+import com.core.Services_old;
 import com.entities.UserAccount;
 
 /**
@@ -16,7 +16,7 @@ public class UserSession {
     public UserSession(UserAccount account){
         this.account = account;
         active = true;
-        Services.db().startUserSession(account);
+        Services_old.db().startUserSession(account);
     }
 
     public UserAccount getAccount() {
@@ -25,6 +25,6 @@ public class UserSession {
 
     public void endSession() {
         active = false;
-        Services.db().endUserSession(account);
+        Services_old.db().endUserSession(account);
     }
 }

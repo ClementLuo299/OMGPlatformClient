@@ -370,11 +370,10 @@ public final class Dialog {
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(header);
-        // Set content text from exception message or default text
-        alert.setContentText(e != null ? e.getMessage() : "No error details available");
-
-        // Add expandable exception details if throwable is provided
+        // Only set content text and expandable details if Throwable is provided
         if (e != null) {
+            alert.setContentText(e.getMessage());
+
             // Convert exception stack trace to string
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -398,15 +397,12 @@ public final class Dialog {
             // Add expandable content to dialog
             alert.getDialogPane().setExpandableContent(expContent);
         }
-
         // Set up exit behavior if requested
         if (exitAfter) {
             alert.setOnCloseRequest(event -> safelyExit());
         }
-
         // Show dialog and wait for user response
         alert.showAndWait();
-        
         // Exit application if requested and dialog was closed
         if (exitAfter) {
             safelyExit();

@@ -20,8 +20,8 @@ public class ServiceManagement {
     public static void initialize() {
         Logging.info("Initializing application services...");
         
-        // Initialize ServiceManager
-        ServiceManager.initializeServices();
+        // Initialize ServiceManager (singleton pattern handles initialization)
+        ServiceManager.getInstance();
         
         Logging.info("Application services initialized successfully");
     }

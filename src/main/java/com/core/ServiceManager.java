@@ -8,7 +8,7 @@ import com.services.LoginService;
  * This class provides access to core services that are shared across the application.
  * - Manages core shared services like `LoginService`.
  * - Ensures services are properly initialized before use.
- * - Call `getLoginService()` to retrieve and use services as needed.
+ * - Use `getInstance()` to get the singleton instance, then call service methods.
  * 
  * Services managed:
  * - `LoginService`: Handles user authentication and login operations.
@@ -20,24 +20,38 @@ import com.services.LoginService;
  */
 public class ServiceManager {
 
-    private static LoginService loginService;
+    private static ServiceManager instance;
+    private LoginService loginService;
+
+    private ServiceManager() {
+        initializeServices();
+    }
 
     /**
-     * Gets the LoginService instance, initializing it if necessary.
+     * Gets the singleton instance of ServiceManager.
+     *
+     * @return the ServiceManager instance
+     */
+    public static ServiceManager getInstance() {
+        if (instance == null) {
+            instance = new ServiceManager();
+        }
+        return instance;
+    }
+
+    /**
+     * Gets the LoginService instance.
      *
      * @return the LoginService instance
      */
-    public static LoginService getLoginService() {
-        if (loginService == null) {
-            loginService = new LoginService();
-        }
+    public LoginService getLoginService() {
         return loginService;
     }
 
     /**
-     * Initializes all services. Call this during application startup.
+     * Initializes all services. Called automatically during construction.
      */
-    public static void initializeServices() {
+    private void initializeServices() {
         loginService = new LoginService();
     }
 }

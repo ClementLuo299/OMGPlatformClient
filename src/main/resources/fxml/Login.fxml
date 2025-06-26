@@ -58,7 +58,8 @@
                     Laid out horizontally.
                 -->
                 <HBox alignment="CENTER_LEFT" spacing="60">
-                    <CheckBox fx:id="rememberMe" styleClass="checkbox" text="Remember me" />
+                    <CheckBox fx:id="rememberMe" text="Remember me" styleClass="checkbox" onAction="#onRememberMeClicked" 
+                              style="-fx-font-size: 14px; -fx-text-fill: #333333;" />
                     <Hyperlink fx:id="forgotPasswordLink" onAction="#onForgotPasswordClicked" styleClass="link" text="Forgot password" />
                 </HBox>
 

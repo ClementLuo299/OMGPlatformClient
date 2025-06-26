@@ -42,6 +42,34 @@ StackPane {
 /* Remember Me Checkbox */
 .checkbox {
     -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.checkbox .box {
+    -fx-background-color: white;
+    -fx-border-color: #333333;
+    -fx-border-width: 1px;
+    -fx-min-width: 16px;
+    -fx-min-height: 16px;
+    -fx-max-width: 16px;
+    -fx-max-height: 16px;
+}
+
+.checkbox:selected .box {
+    -fx-background-color: #000000 !important;
+    -fx-border-color: #000000 !important;
+}
+
+.checkbox:checked .box {
+    -fx-background-color: #000000 !important;
+    -fx-border-color: #000000 !important;
+}
+
+.checkbox .box:checked .mark {
+    -fx-background-color: #ffffff !important;
+    -fx-shape: "M 2 6 L 6 10 L 14 2" !important;
+    -fx-translate-x: 1 !important;
+    -fx-translate-y: 1 !important;
 }
 
 /* Hyperlink (Forgot Password, Sign Up) */
