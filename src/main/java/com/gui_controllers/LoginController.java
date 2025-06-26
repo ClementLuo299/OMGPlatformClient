@@ -59,22 +59,12 @@ public class LoginController {
         viewModel.usernameProperty().bindBidirectional(usernameField.textProperty());
         viewModel.passwordProperty().bindBidirectional(passwordField.textProperty());
         viewModel.guestUsernameProperty().bindBidirectional(guestUsernameField.textProperty());
-        // No rememberMe binding
-    }
-
-    public boolean isRememberMeSelected() {
-        if (rememberMe == null) {
-            Logging.warning("RememberMe checkbox is null when checking selection");
-            return false;
-        }
-        boolean selected = rememberMe.isSelected();
-        Logging.info("RememberMe checkbox selected: " + selected);
-        return selected;
+        viewModel.rememberMeProperty().bindBidirectional(rememberMe.selectedProperty());
     }
 
     // Event handlers - delegate to ViewModel
     @FXML private void onGuestLoginClicked() { viewModel.handleGuestLogin(); }
-    @FXML private void onLoginClicked() { viewModel.handleLogin(isRememberMeSelected()); }
+    @FXML private void onLoginClicked() { viewModel.handleLogin(); }
     @FXML private void onCreateAccountClicked() { viewModel.handleCreateAccount(); }
     @FXML private void onForgotPasswordClicked() { viewModel.handleForgotPassword(); }
     @FXML private void onRememberMeClicked() { 

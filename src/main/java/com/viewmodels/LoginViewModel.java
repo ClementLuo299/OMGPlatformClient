@@ -25,6 +25,7 @@ public class LoginViewModel {
     private final StringProperty password = new SimpleStringProperty();
     private final StringProperty guestUsername = new SimpleStringProperty();
     private final StringProperty message = new SimpleStringProperty();
+    private final BooleanProperty rememberMe = new SimpleBooleanProperty(false);
 
     // ==================== DEPENDENCIES ====================
     
@@ -44,15 +45,17 @@ public class LoginViewModel {
     public StringProperty passwordProperty() { return password; }
     public StringProperty guestUsernameProperty() { return guestUsername; }
     public StringProperty messageProperty() { return message; }
+    public BooleanProperty rememberMeProperty() { return rememberMe; }
 
     // ==================== PUBLIC ACTION HANDLERS ====================
     
     /**
      * Handles regular user login attempt
      */
-    public void handleLogin(boolean rememberMeValue) {
+    public void handleLogin() {
         String usernameValue = username.get();
         String passwordValue = password.get();
+        boolean rememberMeValue = rememberMe.get();
         
         if (usernameValue == null || usernameValue.trim().isEmpty()) {
             showError("Login Error", "Username is required");
