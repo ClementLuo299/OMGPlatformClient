@@ -28,6 +28,9 @@ public class UIManagement {
         Logging.info("Initializing UI...");
         
         try {
+            // Configure the stage first (before showing any content)
+            configureStage(stage);
+            
             // Get initial screen
             ScreenLoadable initialScreen = GUIConfig.INITIAL_SCREEN;
 
@@ -35,8 +38,8 @@ public class UIManagement {
             ScreenManager manager = ScreenManager.getInstance();
             manager.navigateTo(initialScreen);
             
-            // Configure the stage with title, dimensions, and constraints
-            configureStage(stage);
+            // Show the stage explicitly
+            stage.show();
             
             Logging.info("UI initialized successfully");
             

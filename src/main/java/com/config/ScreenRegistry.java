@@ -27,15 +27,14 @@ import java.util.stream.Collectors;
 public class ScreenRegistry {
 
     /** Login screen - entry point for authenticated users */
-    public static final ScreenLoadable LOGIN = new ScreenLoadable.Builder(
+    public static final ScreenLoadable LOGIN = ScreenLoadable.of(
             "/fxml/Login.fxml",
-            com.gui_controllers.LoginController.class)
-            .withCssPath("/css/login.css")
-            .withViewModelSupplier(() ->
-                    new com.viewmodels.LoginViewModel(
-                            ServiceManager.getLoginService(),
-                            ScreenManager.getInstance()))
-            .build();
+            com.gui_controllers.LoginController.class,
+            "/css/login.css",
+            () -> new com.viewmodels.LoginViewModel(
+                    ServiceManager.getLoginService(),
+                    ScreenManager.getInstance())
+    );
 
     // ==================== UTILITY METHODS ====================
     
