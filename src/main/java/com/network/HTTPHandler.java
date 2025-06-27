@@ -1,4 +1,4 @@
-package com.network.IO;
+package com.network;
 
 import java.io.IOException;
 import java.io.InputStream;
