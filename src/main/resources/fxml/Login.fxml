@@ -58,14 +58,14 @@
                     Laid out horizontally.
                 -->
                 <HBox alignment="CENTER_LEFT" spacing="60">
-                    <CheckBox fx:id="rememberMe" text="Remember me" styleClass="checkbox" onAction="#onRememberMeClicked" 
+                    <CheckBox fx:id="rememberMe" text="Remember me" styleClass="checkbox" 
                               style="-fx-font-size: 14px; -fx-text-fill: #333333;" />
-                    <Hyperlink fx:id="forgotPasswordLink" onAction="#onForgotPasswordClicked" styleClass="link" text="Forgot password" />
+                    <Hyperlink fx:id="forgotPasswordLink" styleClass="link" text="Forgot password" />
                 </HBox>
 
                 <!-- Login and "Create Account" buttons -->
-                <Button fx:id="loginButton" onAction="#onLoginClicked" styleClass="login-button" text="Sign in" />
-                <Button fx:id="createAccountButton" onAction="#onCreateAccountClicked" styleClass="create-account-button" text="Create an Account" />
+                <Button fx:id="loginButton" styleClass="login-button" text="Sign in" />
+                <Button fx:id="createAccountButton" styleClass="create-account-button" text="Create an Account" />
             </VBox>
 
             <!--
@@ -89,7 +89,7 @@
                 <TextField fx:id="guestUsernameField" promptText="Enter your username" styleClass="input-field" />
 
                 <!-- Login button -->
-                <Button fx:id="guestLoginButton" onAction="#onGuestLoginClicked" styleClass="login-button" text="Sign in" />
+                <Button fx:id="guestLoginButton" styleClass="login-button" text="Sign in" />
             </VBox>
         </HBox>
     </VBox>

@@ -57,7 +57,23 @@ public final class Dialog {
             Logging.warning("Ignoring warning dialog during shutdown: " + message);
             return;
         }
-        showAlert(title, message, throwable, Alert.AlertType.WARNING);
+        showAlert(title, message, throwable, Alert.AlertType.WARNING, false);
+    }
+
+    /**
+     * Shows a compact warning dialog with the specified parameters.
+     * Handles thread safety by ensuring the dialog is shown on the JavaFX Application Thread.
+     *
+     * @param title the dialog title
+     * @param message the warning message
+     * @param throwable the throwable to display (can be null)
+     */
+    public static void showWarningCompact(String title, String message, Throwable throwable) {
+        if (isShuttingDown.get()) {
+            Logging.warning("Ignoring warning dialog during shutdown: " + message);
+            return;
+        }
+        showAlert(title, message, throwable, Alert.AlertType.WARNING, true);
     }
 
     /**
@@ -73,7 +89,23 @@ public final class Dialog {
             Logging.warning("Ignoring error dialog during shutdown: " + message);
             return;
         }
-        showAlert(title, message, throwable, Alert.AlertType.ERROR);
+        showAlert(title, message, throwable, Alert.AlertType.ERROR, false);
+    }
+
+    /**
+     * Shows a compact error dialog with the specified parameters.
+     * Handles thread safety by ensuring the dialog is shown on the JavaFX Application Thread.
+     *
+     * @param title the dialog title
+     * @param message the error message
+     * @param throwable the throwable to display (can be null)
+     */
+    public static void showErrorCompact(String title, String message, Throwable throwable) {
+        if (isShuttingDown.get()) {
+            Logging.warning("Ignoring error dialog during shutdown: " + message);
+            return;
+        }
+        showAlert(title, message, throwable, Alert.AlertType.ERROR, true);
     }
 
     /**
@@ -100,7 +132,51 @@ public final class Dialog {
             Logging.warning("Ignoring info dialog during shutdown: " + message);
             return;
         }
-        showAlert(title, message, null, Alert.AlertType.INFORMATION);
+        showAlert(title, message, null, Alert.AlertType.INFORMATION, false);
+    }
+
+    /**
+     * Shows a compact error dialog with just a message (no throwable).
+     * Handles thread safety by ensuring the dialog is shown on the JavaFX Application Thread.
+     *
+     * @param title the dialog title
+     * @param message the error message
+     */
+    public static void showErrorCompact(String title, String message) {
+        if (isShuttingDown.get()) {
+            Logging.warning("Ignoring error dialog during shutdown: " + message);
+            return;
+        }
+        
+        // Check if already on JavaFX thread
+        if (Platform.isFxApplicationThread()) {
+            showCompactAlertOnFxThread(title, message, Alert.AlertType.ERROR);
+        } else {
+            // Schedule dialog to run on JavaFX thread
+            Platform.runLater(() -> showCompactAlertOnFxThread(title, message, Alert.AlertType.ERROR));
+        }
+    }
+
+    /**
+     * Shows a compact warning dialog with just a message (no throwable).
+     * Handles thread safety by ensuring the dialog is shown on the JavaFX Application Thread.
+     *
+     * @param title the dialog title
+     * @param message the warning message
+     */
+    public static void showWarningCompact(String title, String message) {
+        if (isShuttingDown.get()) {
+            Logging.warning("Ignoring warning dialog during shutdown: " + message);
+            return;
+        }
+        
+        // Check if already on JavaFX thread
+        if (Platform.isFxApplicationThread()) {
+            showCompactAlertOnFxThread(title, message, Alert.AlertType.WARNING);
+        } else {
+            // Schedule dialog to run on JavaFX thread
+            Platform.runLater(() -> showCompactAlertOnFxThread(title, message, Alert.AlertType.WARNING));
+        }
     }
 
     //endregion
@@ -325,14 +401,14 @@ public final class Dialog {
      * @param e the throwable to display (can be null)
      * @param type the alert type
      */
-    private static void showAlert(String title, String header, Throwable e, Alert.AlertType type) {
+    private static void showAlert(String title, String header, Throwable e, Alert.AlertType type, boolean compact) {
         // Check if already on JavaFX thread
         if (Platform.isFxApplicationThread()) {
             // Show dialog directly on current thread
-            showAlertOnFxThread(title, header, e, type, false);
+            showAlertOnFxThread(title, header, e, type, false, compact);
         } else {
             // Schedule dialog to run on JavaFX thread
-            Platform.runLater(() -> showAlertOnFxThread(title, header, e, type, false));
+            Platform.runLater(() -> showAlertOnFxThread(title, header, e, type, false, compact));
         }
     }
 
@@ -348,10 +424,10 @@ public final class Dialog {
         // Check if already on JavaFX thread
         if (Platform.isFxApplicationThread()) {
             // Show dialog directly on current thread with exit flag
-            showAlertOnFxThread(title, header, e, Alert.AlertType.ERROR, true);
+            showAlertOnFxThread(title, header, e, Alert.AlertType.ERROR, true, false);
         } else {
             // Schedule dialog to run on JavaFX thread with exit flag
-            Platform.runLater(() -> showAlertOnFxThread(title, header, e, Alert.AlertType.ERROR, true));
+            Platform.runLater(() -> showAlertOnFxThread(title, header, e, Alert.AlertType.ERROR, true, false));
         }
     }
 
@@ -364,14 +440,17 @@ public final class Dialog {
      * @param e the throwable to display (can be null)
      * @param type the alert type
      * @param exitAfter true if the application should exit after the dialog is closed, false otherwise
+     * @param compact true if the dialog should be compact (no expandable content), false otherwise
      */
-    private static void showAlertOnFxThread(String title, String header, Throwable e, Alert.AlertType type, boolean exitAfter) {
+    private static void showAlertOnFxThread(String title, String header, Throwable e, Alert.AlertType type, boolean exitAfter, boolean compact) {
         // Create alert dialog with specified type
         Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(header);
-        // Only set content text and expandable details if Throwable is provided
-        if (e != null) {
+        
+        // Handle content text based on whether throwable is provided
+        if (e != null && !compact) {
+            // Full dialog with expandable stack trace
             alert.setContentText(e.getMessage());
 
             // Convert exception stack trace to string
@@ -396,7 +475,17 @@ public final class Dialog {
 
             // Add expandable content to dialog
             alert.getDialogPane().setExpandableContent(expContent);
+        } else if (e != null && compact) {
+            // Compact dialog with just exception message
+            alert.setContentText(e.getMessage());
+        } else {
+            // No throwable - use header as content text to avoid empty expandable area
+            if (header != null && !header.isEmpty()) {
+                alert.setContentText(header);
+                alert.setHeaderText(null); // Remove header to avoid duplication
+            }
         }
+        
         // Set up exit behavior if requested
         if (exitAfter) {
             alert.setOnCloseRequest(event -> safelyExit());
@@ -431,6 +520,28 @@ public final class Dialog {
                 System.exit(1);
             }
         }
+    }
+
+    /**
+     * Shows a compact alert dialog on the JavaFX Application Thread.
+     * This method ensures only one section is shown with no expandable content.
+     * 
+     * @param title the dialog title
+     * @param message the dialog message
+     * @param type the alert type
+     */
+    private static void showCompactAlertOnFxThread(String title, String message, Alert.AlertType type) {
+        // Create alert dialog with specified type
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null); // No header to avoid extra section
+        alert.setContentText(message); // Set message as content text
+        
+        // Ensure no expandable content is created
+        alert.getDialogPane().setExpandableContent(null);
+        
+        // Show dialog and wait for user response
+        alert.showAndWait();
     }
 
     //endregion
