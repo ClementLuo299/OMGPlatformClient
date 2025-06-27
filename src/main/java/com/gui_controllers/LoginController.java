@@ -1,7 +1,6 @@
 package com.gui_controllers;
 
 import com.viewmodels.LoginViewModel;
-import com.utils.error_handling.Logging;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -11,63 +10,44 @@ import javafx.scene.layout.VBox;
  *
  * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
  * @date March 17, 2025
- * @edited June 25, 2025
+ * @edited June 26, 2025
  * @since 1.0
  */
 public class LoginController {
 
     @FXML private VBox mainForm;
-    
-    // Regular login form
-    @FXML private TextField usernameField;
+    @FXML private TextField usernameField, guestUsernameField;
     @FXML private PasswordField passwordField;
     @FXML private CheckBox rememberMe;
     @FXML private Hyperlink forgotPasswordLink;
-    @FXML private Button loginButton;
-    @FXML private Button createAccountButton;
-
-    // Guest login form
-    @FXML private TextField guestUsernameField;
-    @FXML private Button guestLoginButton;
-
-    private LoginViewModel viewModel;
-
-    @FXML
-    public void initialize() {
-        Logging.info("LoginController initialized");
-        if (rememberMe != null) {
-            Logging.info("RememberMe checkbox found and initialized");
-        } else {
-            Logging.warning("RememberMe checkbox is null during initialization");
-        }
-    }
+    @FXML private Button loginButton, createAccountButton, guestLoginButton;
 
     /**
-     * Sets the view model and binds UI components
+     * Sets the view model and binds all UI components
      */
     public void setViewModel(LoginViewModel viewModel) {
-        this.viewModel = viewModel;
-        if (viewModel != null) {
-            bindViewModel();
+        if (viewModel == null) {
+            return;
         }
-    }
-
-    /**
-     * Binds UI components to the view model
-     */
-    private void bindViewModel() {
+        
+        // Bind properties and actions
         viewModel.usernameProperty().bindBidirectional(usernameField.textProperty());
         viewModel.passwordProperty().bindBidirectional(passwordField.textProperty());
         viewModel.guestUsernameProperty().bindBidirectional(guestUsernameField.textProperty());
         viewModel.rememberMeProperty().bindBidirectional(rememberMe.selectedProperty());
-    }
-
-    // Event handlers - delegate to ViewModel
-    @FXML private void onGuestLoginClicked() { viewModel.handleGuestLogin(); }
-    @FXML private void onLoginClicked() { viewModel.handleLogin(); }
-    @FXML private void onCreateAccountClicked() { viewModel.handleCreateAccount(); }
-    @FXML private void onForgotPasswordClicked() { viewModel.handleForgotPassword(); }
-    @FXML private void onRememberMeClicked() { 
-        Logging.info("RememberMe checkbox clicked, selected: " + rememberMe.isSelected());
+        
+        // Set up action handlers
+        loginButton.setOnAction(e -> viewModel.handleLogin());
+        guestLoginButton.setOnAction(e -> viewModel.handleGuestLogin());
+        createAccountButton.setOnAction(e -> viewModel.handleCreateAccount());
+        forgotPasswordLink.setOnAction(e -> viewModel.handleForgotPassword());
+        
+        // Ensure text fields lose focus when clicking outside
+        mainForm.setOnMouseClicked(e -> mainForm.requestFocus());
+        
+        // Set up field focus logging
+        usernameField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Username", newVal));
+        passwordField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Password", newVal));
+        guestUsernameField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Guest username", newVal));
     }
 }
