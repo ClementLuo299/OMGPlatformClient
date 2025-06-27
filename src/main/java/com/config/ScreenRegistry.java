@@ -46,6 +46,16 @@ public class ScreenRegistry {
                     ScreenManager.getInstance())
     );
 
+    /** Dashboard screen - main user hub after login */
+    public static final ScreenLoadable DASHBOARD = ScreenLoadable.of(
+            "/fxml/Dashboard.fxml",
+            com.gui_controllers.DashboardController.class,
+            "/css/dashboard.css",
+            () -> new com.viewmodels.DashboardViewModel(
+                    ServiceManager.getInstance(),
+                    ScreenManager.getInstance())
+    );
+
     // ==================== UTILITY METHODS ====================
     
     /**
