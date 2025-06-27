@@ -4,9 +4,9 @@ import com.config.ScreenRegistry;
 import com.core.ServiceManager;
 import com.core.screens.ScreenManager;
 //import com.gui_controllers.DashboardController;
-import com.services.LoginService;
 import com.utils.error_handling.Dialog;
 import com.utils.error_handling.Logging;
+
 import javafx.beans.property.*;
 
 /**
@@ -14,7 +14,7 @@ import javafx.beans.property.*;
  *
  * @authors Clement Luo
  * @date May 17, 2025
- * @edited June 25, 2025
+ * @edited June 26, 2025
  * @since 1.0
  */
 public class LoginViewModel {
@@ -24,7 +24,6 @@ public class LoginViewModel {
     private final StringProperty username = new SimpleStringProperty();
     private final StringProperty password = new SimpleStringProperty();
     private final StringProperty guestUsername = new SimpleStringProperty();
-    private final StringProperty message = new SimpleStringProperty();
     private final BooleanProperty rememberMe = new SimpleBooleanProperty(false);
 
     // ==================== DEPENDENCIES ====================
@@ -44,7 +43,6 @@ public class LoginViewModel {
     public StringProperty usernameProperty() { return username; }
     public StringProperty passwordProperty() { return password; }
     public StringProperty guestUsernameProperty() { return guestUsername; }
-    public StringProperty messageProperty() { return message; }
     public BooleanProperty rememberMeProperty() { return rememberMe; }
 
     // ==================== PUBLIC ACTION HANDLERS ====================
@@ -53,35 +51,21 @@ public class LoginViewModel {
      * Handles regular user login attempt
      */
     public void handleLogin() {
+        Logging.info("Login button clicked");
+        
+        // Get values from UI components
         String usernameValue = username.get();
         String passwordValue = password.get();
         boolean rememberMeValue = rememberMe.get();
         
-        if (usernameValue == null || usernameValue.trim().isEmpty()) {
-            showError("Login Error", "Username is required");
-            return;
-        }
-        
-        if (passwordValue == null || passwordValue.trim().isEmpty()) {
-            showError("Login Error", "Password is required");
-            return;
-        }
-        
-        LoginService loginService = serviceManager.getLoginService();
-        if (loginService.login(usernameValue, passwordValue)) {
-            message.set("Login successful!");
-            Logging.info("User logged in successfully: " + usernameValue + " (Remember me: " + rememberMeValue + ")");
-            
+        // Attempt login using LoginService (handles all validation, error dialogs, and logging internally)
+        if (serviceManager.getLoginService().login(usernameValue, passwordValue)) {
             // Handle remember me functionality
             if (rememberMeValue) {
-                Logging.info("Remember me enabled for user: " + usernameValue);
                 // TODO: Implement remember me functionality (save credentials securely)
             }
             
-            navigateToDashboard(usernameValue, false);
-        } else {
-            message.set("Login failed!");
-            showError("Login Error", "Invalid username or password");
+            navigateToDashboard();
         }
     }
 
@@ -89,21 +73,13 @@ public class LoginViewModel {
      * Handles guest login attempt
      */
     public void handleGuestLogin() {
+        Logging.info("Guest login button clicked");
+        
         String guestUsernameValue = guestUsername.get();
         
-        if (guestUsernameValue == null || guestUsernameValue.trim().isEmpty()) {
-            showError("Guest Login Error", "Guest username is required");
-            return;
-        }
-        
-        LoginService loginService = serviceManager.getLoginService();
-        if (loginService.guestLogin(guestUsernameValue)) {
-            message.set("Guest login successful!");
-            Logging.info("Guest logged in successfully: " + guestUsernameValue);
-            navigateToDashboard(guestUsernameValue, true);
-        } else {
-            message.set("Guest login failed!");
-            showError("Guest Login Error", "Guest login failed");
+        // Attempt guest login using LoginService (handles all validation, error dialogs, and logging internally)
+        if (serviceManager.getLoginService().guestLogin(guestUsernameValue)) {
+            navigateToDashboard();
         }
     }
 
@@ -111,6 +87,8 @@ public class LoginViewModel {
      * Handles navigation to registration screen
      */
     public void handleCreateAccount() {
+        Logging.info("Create account button clicked");
+        
         try {
             screenManager.navigateTo(ScreenRegistry.REGISTER);
         } catch (Exception e) {
@@ -122,7 +100,9 @@ public class LoginViewModel {
      * Handles forgot password functionality
      */
     public void handleForgotPassword() {
-        showInfo("Info", "Forgot password functionality not implemented yet");
+        Logging.info("Forgot password button clicked");
+        
+        Dialog.showInfo("Info", "Forgot password functionality not implemented yet");
     }
 
     // ==================== PRIVATE HELPER METHODS ====================
@@ -130,28 +110,29 @@ public class LoginViewModel {
     /**
      * Navigates to the dashboard screen
      */
-    private void navigateToDashboard(String username, boolean isGuest) {
+    private void navigateToDashboard() {
         try {
             // TODO: Navigate to dashboard when available
-            Logging.info("Would navigate to dashboard for user: " + username + " (guest: " + isGuest + ")");
-            showInfo("Success", "Login successful! Dashboard navigation not implemented yet.");
+            // User session will contain all user information (username, guest status, etc.)
+            Dialog.showInfo("Success", "Login successful! Dashboard navigation not implemented yet.");
         } catch (Exception e) {
             Dialog.showError("Error", "Could not open dashboard: " + e.getMessage(), e);
         }
     }
 
+    // ==================== UI LOGGING METHODS ====================
+    
     /**
-     * Shows an error dialog
+     * Handles field focus events
      */
-    private void showError(String title, String message) {
-        Dialog.showError(title, message, null);
+    public void onFieldFocus(String fieldName, boolean focused) {
+        Logging.info(fieldName + " field " + (focused ? "focused" : "lost focus"));
     }
-
+    
     /**
-     * Shows an info dialog
+     * Handles checkbox change events
      */
-    private void showInfo(String title, String message) {
-        Dialog.showInfo(title, message);
+    public void onCheckboxChange(String checkboxName, boolean selected) {
+        Logging.info(checkboxName + " checkbox " + (selected ? "selected" : "deselected"));
     }
-
 }

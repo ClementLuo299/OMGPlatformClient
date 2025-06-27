@@ -1,6 +1,7 @@
 package com.gui_controllers;
 
 import com.viewmodels.LoginViewModel;
+import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -21,6 +22,12 @@ public class LoginController {
     @FXML private CheckBox rememberMe;
     @FXML private Hyperlink forgotPasswordLink;
     @FXML private Button loginButton, createAccountButton, guestLoginButton;
+    
+    // Store listeners to prevent duplicates
+    private ChangeListener<Boolean> usernameFocusListener;
+    private ChangeListener<Boolean> passwordFocusListener;
+    private ChangeListener<Boolean> guestUsernameFocusListener;
+    private ChangeListener<Boolean> rememberMeListener;
 
     /**
      * Sets the view model and binds all UI components
@@ -29,6 +36,9 @@ public class LoginController {
         if (viewModel == null) {
             return;
         }
+        
+        // Clear existing listeners to prevent duplicates
+        clearListeners();
         
         // Bind properties and actions
         viewModel.usernameProperty().bindBidirectional(usernameField.textProperty());
@@ -46,11 +56,32 @@ public class LoginController {
         mainForm.setOnMouseClicked(e -> mainForm.requestFocus());
         
         // Set up field focus logging
-        usernameField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Username", newVal));
-        passwordField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Password", newVal));
-        guestUsernameField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Guest username", newVal));
+        usernameFocusListener = (obs, oldVal, newVal) -> viewModel.onFieldFocus("Username", newVal);
+        passwordFocusListener = (obs, oldVal, newVal) -> viewModel.onFieldFocus("Password", newVal);
+        guestUsernameFocusListener = (obs, oldVal, newVal) -> viewModel.onFieldFocus("Guest username", newVal);
+        rememberMeListener = (obs, oldVal, newVal) -> viewModel.onCheckboxChange("Remember me", newVal);
         
-        // Set up checkbox logging
-        rememberMe.selectedProperty().addListener((obs, oldVal, newVal) -> viewModel.onCheckboxChange("Remember me", newVal));
+        usernameField.focusedProperty().addListener(usernameFocusListener);
+        passwordField.focusedProperty().addListener(passwordFocusListener);
+        guestUsernameField.focusedProperty().addListener(guestUsernameFocusListener);
+        rememberMe.selectedProperty().addListener(rememberMeListener);
+    }
+    
+    /**
+     * Clears existing listeners to prevent duplicate logging
+     */
+    private void clearListeners() {
+        if (usernameFocusListener != null) {
+            usernameField.focusedProperty().removeListener(usernameFocusListener);
+        }
+        if (passwordFocusListener != null) {
+            passwordField.focusedProperty().removeListener(passwordFocusListener);
+        }
+        if (guestUsernameFocusListener != null) {
+            guestUsernameField.focusedProperty().removeListener(guestUsernameFocusListener);
+        }
+        if (rememberMeListener != null) {
+            rememberMe.selectedProperty().removeListener(rememberMeListener);
+        }
     }
 }

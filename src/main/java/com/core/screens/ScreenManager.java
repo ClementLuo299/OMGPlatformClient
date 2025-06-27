@@ -7,10 +7,10 @@ import com.config.GUIConfig;
 import com.utils.error_handling.ErrorHandler;
 import com.utils.error_handling.ErrorCategory;
 import com.utils.error_handling.ErrorSeverity;
+import com.utils.error_handling.Logging;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 /**
@@ -20,7 +20,7 @@ import javafx.stage.Stage;
  *
  * @authors Fatin Abrar Ankon, Clement Luo, Scott Brown, Jason Bakajika
  * @date March 28, 2025
- * @edited June 25, 2025
+ * @edited June 26, 2025
  * @since 1.0
  */
 public class ScreenManager {
@@ -31,7 +31,6 @@ public class ScreenManager {
     
     // ==================== INSTANCE FIELDS ====================
     
-    private final BorderPane mainContainer; // Outer container for every screen
     private final Stage mainStage; // Primary application window
     private final ScreenLoader loader; // Screen loader
     private Scene scene; // The main scene
@@ -43,23 +42,22 @@ public class ScreenManager {
      */
     private ScreenManager(Stage stage) {
         try {
+            Logging.info("Initializing ScreenManager...");
+            
+            // Validate input parameter
             if (stage == null) {
                 throw new IllegalArgumentException("Stage cannot be null");
             }
             
-            this.mainContainer = new BorderPane();
+            // Initialize core components
             this.mainStage = stage;
             this.loader = new ScreenLoader();
 
-            // Set up the main scene with the specified dimensions
-            this.scene = new Scene(this.mainContainer, 
-                    GUIConfig.MAIN_SCENE_WIDTH,
-                    GUIConfig.MAIN_SCENE_HEIGHT);
-            
-            // Set the scene on the stage so it's visible
-            this.mainStage.setScene(this.scene);
+            Logging.info("ScreenManager initialized successfully with scene dimensions: " + 
+                        GUIConfig.MAIN_SCENE_WIDTH + "x" + GUIConfig.MAIN_SCENE_HEIGHT);
                     
         } catch (Exception e) {
+            Logging.error("Failed to initialize ScreenManager: " + e.getMessage(), e);
             ErrorHandler.handleCriticalError(e, "Failed to initialize ScreenManager");
             throw e;
         }
@@ -72,7 +70,11 @@ public class ScreenManager {
      */
     public static void initializeInstance(Stage stage) { 
         try {
+            Logging.info("Initializing ScreenManager instance...");
+            
+            // Prevent duplicate initialization
             if (instance != null) {
+                Logging.warning("ScreenManager already initialized, ignoring duplicate initialization");
                 ErrorHandler.handleNonCriticalError(
                     new IllegalStateException("ScreenManager already initialized"),
                     "ScreenManager initialization",
@@ -81,8 +83,12 @@ public class ScreenManager {
                 );
                 return;
             }
+            
+            // Create singleton instance
             instance = new ScreenManager(stage);
+            Logging.info("ScreenManager instance initialized successfully");
         } catch (Exception e) {
+            Logging.error("Failed to initialize ScreenManager instance: " + e.getMessage(), e);
             ErrorHandler.handleCriticalError(e, "Failed to initialize ScreenManager instance");
             throw e;
         }
@@ -94,6 +100,7 @@ public class ScreenManager {
     public static ScreenManager getInstance() {
         if (instance == null) {
             String errorMsg = "ScreenManager must be initialized first";
+            Logging.error(errorMsg);
             ErrorHandler.handleNonCriticalError(
                 new IllegalStateException(errorMsg),
                 "ScreenManager access",
@@ -117,13 +124,17 @@ public class ScreenManager {
      */
     public <T> T navigateTo(ScreenLoadable screen) {
         try {
+            Logging.info("Navigating to screen: " + (screen != null ? screen.getFxmlPath() : "null"));
+            
             // Validate input parameters
             validateScreen(screen);
             
             // Load the FXML and controller
+            Logging.info("Loading screen: " + screen.getFxmlPath());
             ScreenLoadResult<T> loadResult = loader.loadScreen(screen);
             if (loadResult == null) {
                 String errorMsg = "Failed to load screen: " + screen.getFxmlPath();
+                Logging.error(errorMsg);
                 ErrorHandler.handleCriticalError(
                     new RuntimeException(errorMsg),
                     "Screen navigation failed"
@@ -134,6 +145,7 @@ public class ScreenManager {
             // Validate load result
             if (!loadResult.isValid()) {
                 String errorMsg = "Invalid screen load result for: " + screen.getFxmlPath();
+                Logging.error(errorMsg);
                 ErrorHandler.handleCriticalError(
                     new IllegalStateException(errorMsg),
                     "Screen navigation failed"
@@ -142,24 +154,31 @@ public class ScreenManager {
             }
             
             T controller = loadResult.controller();
+            Logging.info("Screen loaded successfully: " + screen.getFxmlPath());
 
-            // Attach style sheet if it exists
+            // Apply styling if CSS is specified
             if (screen.hasCss()) {
+                Logging.info("Loading CSS for screen: " + screen.getCssPath());
                 loadCss(screen.getCssPath());
             }
 
-            // Attach ViewModel if it exists
+            // Initialize ViewModel if specified
             if (screen.hasViewModel()) {
+                Logging.info("Initializing ViewModel for screen: " + screen.getFxmlPath());
                 initializeViewModel(controller, screen);
             }
 
-            // Display the screen
+            // Display the screen to user
+            Logging.info("Displaying screen: " + screen.getFxmlPath());
             displayScreen(loadResult.root());
+            
+            Logging.info("Successfully navigated to screen: " + screen.getFxmlPath());
             return controller;
             
         } catch (Exception e) {
             String errorMsg = "Failed to navigate to screen: " + 
                             (screen != null ? screen.getFxmlPath() : "null");
+            Logging.error(errorMsg + ": " + e.getMessage(), e);
             ErrorHandler.handleCriticalError(e, errorMsg);
             throw e;
         }
@@ -173,6 +192,7 @@ public class ScreenManager {
     private void validateScreen(ScreenLoadable screen) {
         if (screen == null) {
             String errorMsg = "Screen cannot be null";
+            Logging.error(errorMsg);
             ErrorHandler.handleNonCriticalError(
                 new IllegalArgumentException(errorMsg),
                 "Screen validation failed",
@@ -181,6 +201,7 @@ public class ScreenManager {
             );
             throw new IllegalArgumentException(errorMsg);
         }
+        Logging.info("Screen validation passed: " + screen.getFxmlPath());
     }
     
     /**
@@ -189,7 +210,11 @@ public class ScreenManager {
      */
     private void loadCss(String cssPath) {
         try {
+            Logging.info("Loading CSS: " + cssPath);
+            
+            // Validate CSS path
             if (cssPath == null || cssPath.trim().isEmpty()) {
+                Logging.warning("CSS path is null or empty, skipping CSS loading");
                 ErrorHandler.handleNonCriticalError(
                     new IllegalArgumentException("CSS path cannot be null or empty"),
                     "CSS loading failed",
@@ -199,16 +224,19 @@ public class ScreenManager {
                 return;
             }
             
+            // Get current scene
             Scene scene = mainStage.getScene();
             if (scene != null) {
-                // Remove previous styles and add new CSS
+                // Clear existing stylesheets
                 scene.getStylesheets().clear();
                 
-                // Remove leading slash for classloader resource loading
+                // Prepare resource path for classloader
                 String resourcePath = cssPath.startsWith("/") ? cssPath.substring(1) : cssPath;
                 var resource = getClass().getClassLoader().getResource(resourcePath);
                 
+                // Validate resource exists
                 if (resource == null) {
+                    Logging.error("CSS not found: " + cssPath);
                     ErrorHandler.handleNonCriticalError(
                         new RuntimeException("CSS not found: " + cssPath),
                         "Failed to load CSS stylesheet",
@@ -218,9 +246,14 @@ public class ScreenManager {
                     return;
                 }
                 
+                // Apply CSS to scene
                 scene.getStylesheets().add(resource.toExternalForm());
+                Logging.info("CSS loaded successfully: " + cssPath);
+            } else {
+                Logging.warning("Scene is null, cannot load CSS: " + cssPath);
             }
         } catch (Exception e) {
+            Logging.error("Failed to load CSS: " + cssPath + " - " + e.getMessage(), e);
             ErrorHandler.handleNonCriticalError(e, 
                 "Failed to load CSS: " + cssPath,
                 ErrorCategory.RESOURCE,
@@ -234,10 +267,9 @@ public class ScreenManager {
      */
     private void initializeViewModel(Object controller, ScreenLoadable screen) {
         try {
-            if (controller == null) {
-                throw new IllegalArgumentException("Controller cannot be null");
-            }
-            
+            Logging.info("Initializing ViewModel for controller: " + controller.getClass().getSimpleName());
+        
+            // Validate ViewModel supplier exists
             if (screen.getViewModelSupplier() == null) {
                 throw new IllegalStateException("ViewModel supplier is null");
             }
@@ -257,11 +289,13 @@ public class ScreenManager {
                     .orElseThrow(() -> new NoSuchMethodException(
                             "setViewModel(...) not found in " + controller.getClass().getSimpleName()));
 
-            // Call setViewModel on the controller instance
+            // Inject ViewModel into controller
             setter.invoke(controller, vm);
+            Logging.info("ViewModel initialized successfully for: " + controller.getClass().getSimpleName());
 
         } catch (Exception e) {
             String errorMsg = "Failed to initialize ViewModel for screen: " + screen.getFxmlPath();
+            Logging.error(errorMsg + " - " + e.getMessage(), e);
             ErrorHandler.handleNonCriticalError(e, 
                 errorMsg,
                 ErrorCategory.CONFIGURATION,
@@ -277,24 +311,27 @@ public class ScreenManager {
      */
     private void displayScreen(Parent root) {
         try {
-            if (root == null) {
-                throw new IllegalArgumentException("Root node cannot be null");
-            }
+            Logging.info("Displaying screen with root: " + root.getClass().getSimpleName());
             
+            // Validate stage is initialized
             if (mainStage == null) {
                 throw new IllegalStateException("Stage is not initialized");
             }
 
+            // Create new scene or reuse existing one
             if (scene == null) {
-                // Create new scene if none exists
-                scene = new Scene(root);
+                Logging.info("Creating new scene for screen display");
+                scene = new Scene(root, GUIConfig.MAIN_SCENE_WIDTH, GUIConfig.MAIN_SCENE_HEIGHT);
                 mainStage.setScene(scene);
             } else {
-                // Swap root for existing scene
+                Logging.info("Reusing existing scene, updating root");
                 scene.setRoot(root);
             }
+            
+            Logging.info("Screen displayed successfully");
 
         } catch (Exception e) {
+            Logging.error("Critical error occurred during screen display: " + e.getMessage(), e);
             ErrorHandler.handleCriticalError(e, "Critical error occurred during screen display");
             throw e;
         }
