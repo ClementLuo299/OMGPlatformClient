@@ -78,8 +78,7 @@ public class DashboardViewModel {
         Logging.info("Leaderboard button clicked");
         
         try {
-            // TODO: Add LEADERBOARD to ScreenRegistry
-            Logging.info("Leaderboard navigation not yet implemented");
+            screenManager.navigateTo(ScreenRegistry.LEADERBOARD);
         } catch (Exception e) {
             Dialog.showError("Error", "Could not open leaderboard: " + e.getMessage(), e);
         }
@@ -92,8 +91,7 @@ public class DashboardViewModel {
         Logging.info("Settings button clicked");
         
         try {
-            // TODO: Add SETTINGS to ScreenRegistry
-            Logging.info("Settings navigation not yet implemented");
+            screenManager.navigateTo(ScreenRegistry.SETTINGS);
         } catch (Exception e) {
             Dialog.showError("Error", "Could not open settings: " + e.getMessage(), e);
         }

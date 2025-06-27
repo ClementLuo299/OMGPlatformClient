@@ -28,13 +28,30 @@ public class LeaderboardViewModel {
     // ... add more ObservableLists for each leaderboard table as needed
 
     // ==================== DEPENDENCIES ====================
-    private final ScreenManager screenManager;
+    private ScreenManager screenManager; // Lazy initialization to avoid circular dependencies
 
     // ==================== CONSTRUCTOR ====================
     public LeaderboardViewModel() {
         Logging.info("Initializing LeaderboardViewModel");
-        this.screenManager = ScreenManager.getInstance();
         Logging.info("LeaderboardViewModel initialized successfully");
+    }
+
+    // ==================== PRIVATE HELPER METHODS ====================
+    
+    /**
+     * Gets the ScreenManager instance with lazy initialization.
+     */
+    private ScreenManager getScreenManager() {
+        if (screenManager == null) {
+            try {
+                screenManager = ScreenManager.getInstance();
+            } catch (IllegalStateException e) {
+                // ScreenManager not yet initialized (during preloading)
+                Logging.warning("ScreenManager not yet initialized, navigation will be delayed");
+                return null;
+            }
+        }
+        return screenManager;
     }
 
     // ==================== PROPERTY ACCESSORS ====================
@@ -50,8 +67,13 @@ public class LeaderboardViewModel {
     public void navigateToDashboard() {
         try {
             Logging.info("Navigating to dashboard from leaderboard");
-            screenManager.navigateTo(ScreenRegistry.DASHBOARD);
-            Logging.info("Successfully navigated to dashboard");
+            ScreenManager sm = getScreenManager();
+            if (sm != null) {
+                sm.navigateTo(ScreenRegistry.DASHBOARD);
+                Logging.info("Successfully navigated to dashboard");
+            } else {
+                Logging.warning("Navigation delayed - ScreenManager not yet initialized");
+            }
         } catch (Exception e) {
             Logging.error("Failed to navigate to dashboard: " + e.getMessage(), e);
             throw e;
@@ -60,8 +82,13 @@ public class LeaderboardViewModel {
     public void navigateToGames() {
         try {
             Logging.info("Navigating to games from leaderboard");
-            screenManager.navigateTo(ScreenRegistry.GAME_LIBRARY);
-            Logging.info("Successfully navigated to games");
+            ScreenManager sm = getScreenManager();
+            if (sm != null) {
+                sm.navigateTo(ScreenRegistry.GAME_LIBRARY);
+                Logging.info("Successfully navigated to games");
+            } else {
+                Logging.warning("Navigation delayed - ScreenManager not yet initialized");
+            }
         } catch (Exception e) {
             Logging.error("Failed to navigate to games: " + e.getMessage(), e);
             throw e;
@@ -74,8 +101,13 @@ public class LeaderboardViewModel {
         }
         try {
             Logging.info("Navigating to settings from leaderboard");
-            // TODO: Add SETTINGS to ScreenRegistry
-            Logging.info("Settings navigation not yet implemented");
+            ScreenManager sm = getScreenManager();
+            if (sm != null) {
+                sm.navigateTo(ScreenRegistry.SETTINGS);
+                Logging.info("Successfully navigated to settings");
+            } else {
+                Logging.warning("Navigation delayed - ScreenManager not yet initialized");
+            }
         } catch (Exception e) {
             Logging.error("Failed to navigate to settings: " + e.getMessage(), e);
             throw e;
@@ -84,8 +116,13 @@ public class LeaderboardViewModel {
     public void signOut() {
         try {
             Logging.info("Signing out from leaderboard");
-            screenManager.navigateTo(ScreenRegistry.LOGIN);
-            Logging.info("Successfully signed out");
+            ScreenManager sm = getScreenManager();
+            if (sm != null) {
+                sm.navigateTo(ScreenRegistry.LOGIN);
+                Logging.info("Successfully signed out");
+            } else {
+                Logging.warning("Navigation delayed - ScreenManager not yet initialized");
+            }
         } catch (Exception e) {
             Logging.error("Failed to sign out: " + e.getMessage(), e);
             throw e;

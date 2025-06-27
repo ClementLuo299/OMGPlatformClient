@@ -64,6 +64,22 @@ public class ScreenRegistry {
             () -> new com.viewmodels.GameLibraryViewModel()
     );
 
+    /** Leaderboard screen - displays player rankings */
+    public static final ScreenLoadable LEADERBOARD = ScreenLoadable.of(
+            "/fxml/Leaderboard.fxml",
+            com.gui_controllers.LeaderboardController.class,
+            "/css/leaderboard.css",
+            () -> new com.viewmodels.LeaderboardViewModel()
+    );
+
+    /** Settings screen - user preferences and profile */
+    public static final ScreenLoadable SETTINGS = ScreenLoadable.of(
+            "/fxml/Setting.fxml",
+            com.gui_controllers.SettingController.class,
+            "/css/setting.css",
+            () -> new com.viewmodels.SettingViewModel()
+    );
+
     // ==================== UTILITY METHODS ====================
     
     /**

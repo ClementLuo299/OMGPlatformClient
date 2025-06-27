@@ -68,7 +68,7 @@
         </VBox>
 
         <!-- Sign Out Button (at bottom) -->
-        <Button fx:id="signOutBtn" onAction="#signOut" styleClass="nav-button,sign-out">
+        <Button fx:id="signOutBtn" styleClass="nav-button,sign-out">
             <graphic>
                 <HBox styleClass="nav-button-content">
                     <ImageView fitHeight="20" fitWidth="20">
@@ -150,7 +150,7 @@
                             <Label styleClass="game-details" text="Level 12 • 72% Win Rate" />
                         </VBox>
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Button onAction="#playConnect4" styleClass="play-button" text="Play" />
+                        <Button fx:id="playConnect4Btn" styleClass="play-button" text="Play" />
                     </HBox>
                 </VBox>
 
@@ -165,7 +165,7 @@
                             <Label styleClass="game-details" text="Level 8 • 47% Win Rate" />
                         </VBox>
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Button onAction="#playCheckers" styleClass="play-button" text="Play" />
+                        <Button fx:id="playCheckersBtn" styleClass="play-button" text="Play" />
                     </HBox>
                 </VBox>
 
@@ -180,7 +180,7 @@
                             <Label styleClass="game-details" text="Level 5 • 50% Win Rate" />
                         </VBox>
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Button onAction="#playWhist" styleClass="play-button" text="Play" />
+                        <Button fx:id="playWhistBtn" styleClass="play-button" text="Play" />
                     </HBox>
                 </VBox>
                 
@@ -195,7 +195,7 @@
                             <Label styleClass="game-details" text="Level 7 • 65% Win Rate" />
                         </VBox>
                         <Pane HBox.hgrow="ALWAYS" />
-                        <Button onAction="#playTicTacToe" styleClass="play-button" text="Play" />
+                        <Button fx:id="playTicTacToeBtn" styleClass="play-button" text="Play" />
                     </HBox>
                 </VBox>
             </VBox>

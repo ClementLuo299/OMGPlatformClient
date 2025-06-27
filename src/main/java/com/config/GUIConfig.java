@@ -37,5 +37,10 @@ public class GUIConfig {
     public static final boolean ENABLE_SCREEN_CACHING = true;
 
     // Preloaded screens - empty for now since login is the initial screen
-    public static final List<ScreenLoadable> PRELOAD_SCREENS = List.of();
+    public static final List<ScreenLoadable> PRELOAD_SCREENS = List.of(
+        ScreenRegistry.DASHBOARD,
+        ScreenRegistry.GAME_LIBRARY,
+        ScreenRegistry.LEADERBOARD,
+        ScreenRegistry.SETTINGS
+    );
 }

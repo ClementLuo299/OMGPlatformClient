@@ -172,10 +172,11 @@ public class ScreenLoader {
             
             for (ScreenLoadable screen : GUIConfig.PRELOAD_SCREENS) {
                 try {
-                    // Validate screen before preloading
-                    screen.validate();
+                    // Only validate resources during preloading to avoid circular dependencies
+                    screen.validateResources();
                     
-                    ScreenLoadResult<?> result = loadScreenFresh(screen);
+                    // Load FXML and controller without ViewModel initialization
+                    ScreenLoadResult<?> result = loadScreenWithoutViewModel(screen);
                     if (result != null) {
                         screenCache.put(screen, result);
                     }
@@ -194,6 +195,56 @@ public class ScreenLoader {
                 "Failed to initialize screen preloading",
                 ErrorCategory.SYSTEM,
                 ErrorSeverity.MEDIUM);
+        }
+    }
+    
+    /**
+     * Loads a screen without ViewModel initialization for preloading purposes.
+     */
+    private <T> ScreenLoadResult<T> loadScreenWithoutViewModel(ScreenLoadable screen) {
+        try {
+            validateScreen(screen);
+            
+            // Get FXML resource location
+            URL location = getFxmlResource(screen.getFxmlPath());
+            
+            // Parse FXML and get controller
+            FXMLLoader loader = new FXMLLoader(location);
+            Parent root = loader.load();
+            T controller = loader.getController();
+            
+            // Validate controller was loaded
+            if (controller == null) {
+                String errorMsg = "Controller not found in FXML: " + screen.getFxmlPath();
+                ErrorHandler.handleNonCriticalError(
+                    new IllegalStateException(errorMsg),
+                    "Screen loading failed",
+                    ErrorCategory.RESOURCE,
+                    ErrorSeverity.HIGH
+                );
+                throw new IllegalStateException(errorMsg);
+            }
+            
+            // Validate root was loaded
+            if (root == null) {
+                String errorMsg = "Root node not found in FXML: " + screen.getFxmlPath();
+                ErrorHandler.handleNonCriticalError(
+                    new IllegalStateException(errorMsg),
+                    "Screen loading failed",
+                    ErrorCategory.RESOURCE,
+                    ErrorSeverity.HIGH
+                );
+                throw new IllegalStateException(errorMsg);
+            }
+            
+            // Return screen load result (without ViewModel initialization)
+            return new ScreenLoadResult<>(root, controller);
+            
+        } catch (Exception e) {
+            String errorMsg = "Critical error occurred during screen loading: " + 
+                            (screen != null ? screen.getFxmlPath() : "null");
+            ErrorHandler.handleCriticalError(e, errorMsg);
+            return null;
         }
     }
     

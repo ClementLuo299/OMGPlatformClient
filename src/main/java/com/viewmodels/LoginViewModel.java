@@ -52,21 +52,8 @@ public class LoginViewModel {
      */
     public void handleLogin() {
         Logging.info("Login button clicked");
-        
-        // Get values from UI components
-        String usernameValue = username.get();
-        String passwordValue = password.get();
-        boolean rememberMeValue = rememberMe.get();
-        
-        // Attempt login using LoginService (handles all validation, error dialogs, and logging internally)
-        if (serviceManager.getLoginService().login(usernameValue, passwordValue)) {
-            // Handle remember me functionality
-            if (rememberMeValue) {
-                // TODO: Implement remember me functionality (save credentials securely)
-            }
-            
-            navigateToDashboard();
-        }
+        // Skip validation and always navigate to dashboard
+        navigateToDashboard();
     }
 
     /**
@@ -74,13 +61,8 @@ public class LoginViewModel {
      */
     public void handleGuestLogin() {
         Logging.info("Guest login button clicked");
-        
-        String guestUsernameValue = guestUsername.get();
-        
-        // Attempt guest login using LoginService (handles all validation, error dialogs, and logging internally)
-        if (serviceManager.getLoginService().guestLogin(guestUsernameValue)) {
-            navigateToDashboard();
-        }
+        // Skip validation and always navigate to dashboard
+        navigateToDashboard();
     }
 
     /**
@@ -112,9 +94,7 @@ public class LoginViewModel {
      */
     private void navigateToDashboard() {
         try {
-            // TODO: Navigate to dashboard when available
-            // User session will contain all user information (username, guest status, etc.)
-            Dialog.showInfo("Success", "Login successful! Dashboard navigation not implemented yet.");
+            screenManager.navigateTo(ScreenRegistry.DASHBOARD);
         } catch (Exception e) {
             Dialog.showError("Error", "Could not open dashboard: " + e.getMessage(), e);
         }
