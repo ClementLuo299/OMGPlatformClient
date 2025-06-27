@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="800.0" prefWidth="1500" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.GameLibraryController">
+<BorderPane fx:id="mainContainer" prefHeight="800.0" prefWidth="1500" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.GameLibraryController">
     <left>
         <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
             <!-- com.MainApplication Title -->

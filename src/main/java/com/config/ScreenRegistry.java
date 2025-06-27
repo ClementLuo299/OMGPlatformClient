@@ -56,6 +56,14 @@ public class ScreenRegistry {
                     ScreenManager.getInstance())
     );
 
+    /** Game Library screen - displays available games */
+    public static final ScreenLoadable GAME_LIBRARY = ScreenLoadable.of(
+            "/fxml/GameLibrary.fxml",
+            com.gui_controllers.GameLibraryController.class,
+            "/css/library.css",
+            () -> new com.viewmodels.GameLibraryViewModel()
+    );
+
     // ==================== UTILITY METHODS ====================
     
     /**
