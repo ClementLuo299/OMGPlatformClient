@@ -49,5 +49,8 @@ public class LoginController {
         usernameField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Username", newVal));
         passwordField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Password", newVal));
         guestUsernameField.focusedProperty().addListener((obs, oldVal, newVal) -> viewModel.onFieldFocus("Guest username", newVal));
+        
+        // Set up checkbox logging
+        rememberMe.selectedProperty().addListener((obs, oldVal, newVal) -> viewModel.onCheckboxChange("Remember me", newVal));
     }
 }
