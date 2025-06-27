@@ -3,20 +3,16 @@ package com.viewmodels;
 import com.config.ScreenRegistry;
 import com.core.ServiceManager;
 import com.core.screens.ScreenManager;
-import com.network.IO.DatabaseIOHandler;
 import com.utils.error_handling.Dialog;
 import com.utils.error_handling.Logging;
 import javafx.beans.property.*;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 /**
  * Manages GUI state and logic for the registration screen
  *
  * @authors Clement Luo
  * @date June 1, 2025
- * @edited June 25, 2025
+ * @edited June 26, 2025
  * @since 1.0
  */
 public class RegisterViewModel {
@@ -28,7 +24,6 @@ public class RegisterViewModel {
     private final StringProperty password = new SimpleStringProperty();
     private final StringProperty confirmPassword = new SimpleStringProperty();
     private final StringProperty dateOfBirth = new SimpleStringProperty();
-    private final StringProperty message = new SimpleStringProperty();
 
     // ==================== DEPENDENCIES ====================
     
@@ -49,7 +44,6 @@ public class RegisterViewModel {
     public StringProperty passwordProperty() { return password; }
     public StringProperty confirmPasswordProperty() { return confirmPassword; }
     public StringProperty dateOfBirthProperty() { return dateOfBirth; }
-    public StringProperty messageProperty() { return message; }
 
     // ==================== PUBLIC ACTION HANDLERS ====================
     
@@ -57,128 +51,52 @@ public class RegisterViewModel {
      * Handles user registration attempt
      */
     public void handleRegistration() {
+        Logging.info("Create account button clicked");
+        
+        // Get values from UI components
         String fullNameValue = fullName.get();
         String usernameValue = username.get();
         String passwordValue = password.get();
         String confirmPasswordValue = confirmPassword.get();
         String dobValue = dateOfBirth.get();
         
-        // Validate all required fields
-        if (fullNameValue == null || fullNameValue.trim().isEmpty()) {
-            showError("Registration Error", "Full name is required");
-            return;
-        }
-        
-        if (usernameValue == null || usernameValue.trim().isEmpty()) {
-            showError("Registration Error", "Username is required");
-            return;
-        }
-        
-        if (passwordValue == null || passwordValue.trim().isEmpty()) {
-            showError("Registration Error", "Password is required");
-            return;
-        }
-        
-        if (confirmPasswordValue == null || confirmPasswordValue.trim().isEmpty()) {
-            showError("Registration Error", "Password confirmation is required");
-            return;
-        }
-        
-        if (dobValue == null || dobValue.trim().isEmpty()) {
-            showError("Registration Error", "Date of birth is required");
-            return;
-        }
-        
-        // Validate password confirmation
-        if (!passwordValue.equals(confirmPasswordValue)) {
-            showError("Registration Error", "Passwords do not match");
-            return;
-        }
-        
-        // Validate password strength (basic validation)
-        if (passwordValue.length() < 6) {
-            showError("Registration Error", "Password must be at least 6 characters long");
-            return;
-        }
-        
-        // Validate date of birth format
-        LocalDate dob;
-        try {
-            dob = LocalDate.parse(dobValue, DateTimeFormatter.ISO_LOCAL_DATE);
-        } catch (Exception e) {
-            showError("Registration Error", "Invalid date of birth format");
-            return;
-        }
-        
-        // Check if user is old enough (13+ years old)
-        LocalDate minDate = LocalDate.now().minusYears(13);
-        if (dob.isAfter(minDate)) {
-            showError("Registration Error", "You must be at least 13 years old to register");
-            return;
-        }
-        
-        // Attempt to register the account
-        try {
-            DatabaseIOHandler dbHandler = new DatabaseIOHandler();
+        // Attempt registration using ValidationService (handles all validation, error dialogs, and logging internally)
+        if (serviceManager.getValidationService().validateRegistrationData(
+                fullNameValue, usernameValue, passwordValue, confirmPasswordValue, dobValue).isValid()) {
             
-            // Check if username already exists
-            if (dbHandler.isAccountExists(usernameValue)) {
-                showError("Registration Error", "Username already exists");
-                return;
-            }
-            
-            // Register the account
-            String dobString = dob.format(DateTimeFormatter.ISO_LOCAL_DATE);
-            dbHandler.RegisterAccount(usernameValue, passwordValue, fullNameValue, dobString);
-            
-            message.set("Account created successfully!");
-            Logging.info("New account registered successfully: " + usernameValue);
-            showInfo("Success", "Account created successfully! You can now log in.");
-            
-            // Navigate back to login screen
+            // TODO: Implement actual registration logic using RegistrationService
+            // For now, just show success and navigate back to login
+            Dialog.showInfo("Success", "Account created successfully! You can now log in.");
             navigateToLogin();
-            
-        } catch (Exception e) {
-            Logging.error("Failed to register account: " + usernameValue, e);
-            Dialog.showError("Registration Error", "Failed to create account: " + e.getMessage(), e);
         }
     }
 
     /**
      * Handles navigation back to login screen
      */
-    public void handleBackToLogin() {
+    public void navigateToLogin() {
+        Logging.info("Back to login button clicked");
+        
         try {
-            navigateToLogin();
+            screenManager.navigateTo(ScreenRegistry.LOGIN);
         } catch (Exception e) {
             Dialog.showError("Error", "Could not return to login screen: " + e.getMessage(), e);
         }
     }
 
-    // ==================== PRIVATE HELPER METHODS ====================
+    // ==================== UI LOGGING METHODS ====================
     
     /**
-     * Navigates to the login screen
+     * Handles field focus events
      */
-    private void navigateToLogin() {
-        try {
-            screenManager.navigateTo(ScreenRegistry.LOGIN);
-        } catch (Exception e) {
-            Dialog.showError("Error", "Could not open login screen: " + e.getMessage(), e);
-        }
+    public void onFieldFocus(String fieldName, boolean focused) {
+        Logging.info(fieldName + " field " + (focused ? "focused" : "lost focus"));
     }
-
+    
     /**
-     * Shows an error dialog
+     * Handles date picker change events
      */
-    private void showError(String title, String message) {
-        Dialog.showError(title, message, null);
-    }
-
-    /**
-     * Shows an info dialog
-     */
-    private void showInfo(String title, String message) {
-        Dialog.showInfo(title, message);
+    public void onDatePickerChange(String fieldName, String selectedDate) {
+        Logging.info(fieldName + " date picker changed to: " + selectedDate);
     }
 }

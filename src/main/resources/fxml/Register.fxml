@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="800" prefWidth="1500" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.RegisterController">
+<AnchorPane fx:id="mainContainer" prefHeight="800" prefWidth="1500" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.RegisterController">
 
     <!-- Title -->
     <Label layoutX="483.0" layoutY="80.0" prefHeight="32.0" prefWidth="435.0" styleClass="title" text="Online Multiplayer Board Game Platform" />
@@ -38,11 +38,11 @@
         <DatePicker fx:id="dobPicker" prefHeight="42.0" prefWidth="289.0" styleClass="date-picker" />
 
         <!-- Create Account Button -->
-        <Button fx:id="createAccountButton" onAction="#handleRegistration" styleClass="register-button" text="Create Account" />
+        <Button fx:id="createAccountButton" styleClass="register-button" text="Create Account" />
 
         <!-- Already have an account? -->
         <Label styleClass="login-text" text="Already have an account?" />
-        <Button fx:id="loginButton" onAction="#backToLogin" prefHeight="17.0" prefWidth="61.0" styleClass="sign-in-button" text="Sign in" />
+        <Button fx:id="backToLoginButton" prefHeight="17.0" prefWidth="100.0" styleClass="sign-in-button" text="Sign In" />
 
     </VBox>
     <stylesheets>

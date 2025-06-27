@@ -156,12 +156,6 @@ public class ScreenManager {
             T controller = loadResult.controller();
             Logging.info("Screen loaded successfully: " + screen.getFxmlPath());
 
-            // Apply styling if CSS is specified
-            if (screen.hasCss()) {
-                Logging.info("Loading CSS for screen: " + screen.getCssPath());
-                loadCss(screen.getCssPath());
-            }
-
             // Initialize ViewModel if specified
             if (screen.hasViewModel()) {
                 Logging.info("Initializing ViewModel for screen: " + screen.getFxmlPath());
@@ -171,6 +165,12 @@ public class ScreenManager {
             // Display the screen to user
             Logging.info("Displaying screen: " + screen.getFxmlPath());
             displayScreen(loadResult.root());
+            
+            // Apply styling if CSS is specified (after scene is created)
+            if (screen.hasCss()) {
+                Logging.info("Loading CSS for screen: " + screen.getCssPath());
+                loadCss(screen.getCssPath());
+            }
             
             Logging.info("Successfully navigated to screen: " + screen.getFxmlPath());
             return controller;
