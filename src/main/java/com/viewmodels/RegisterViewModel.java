@@ -12,7 +12,7 @@ import javafx.beans.property.*;
  *
  * @authors Clement Luo
  * @date June 1, 2025
- * @edited June 26, 2025
+ * @edited June 29, 2025
  * @since 1.0
  */
 public class RegisterViewModel {
@@ -60,12 +60,9 @@ public class RegisterViewModel {
         String confirmPasswordValue = confirmPassword.get();
         String dobValue = dateOfBirth.get();
         
-        // Attempt registration using ValidationService (handles all validation, error dialogs, and logging internally)
-        if (serviceManager.getValidationService().validateRegistrationData(
-                fullNameValue, usernameValue, passwordValue, confirmPasswordValue, dobValue).isValid()) {
-            
-            // TODO: Implement actual registration logic using RegistrationService
-            // For now, just show success and navigate back to login
+        // Attempt registration using LoginService (handles all validation, error dialogs, and logging internally)
+        if (serviceManager.getLoginService().register(usernameValue, passwordValue, fullNameValue, dobValue, confirmPasswordValue)) {
+            // Show success message and navigate back to login
             Dialog.showInfo("Success", "Account created successfully! You can now log in.");
             navigateToLogin();
         }

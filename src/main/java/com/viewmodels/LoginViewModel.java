@@ -14,7 +14,7 @@ import javafx.beans.property.*;
  *
  * @authors Clement Luo
  * @date May 17, 2025
- * @edited June 26, 2025
+ * @edited June 29, 2025
  * @since 1.0
  */
 public class LoginViewModel {
@@ -52,8 +52,17 @@ public class LoginViewModel {
      */
     public void handleLogin() {
         Logging.info("Login button clicked");
-        // Skip validation and always navigate to dashboard
-        navigateToDashboard();
+        
+        // Get values from UI components
+        String usernameValue = username.get();
+        String passwordValue = password.get();
+        
+        // Attempt login using LoginService (handles all validation, error dialogs, and logging internally)
+        if (serviceManager.getLoginService().login(usernameValue, passwordValue)) {
+            // Login successful, navigate to dashboard
+            navigateToDashboard();
+        }
+        // If login fails, LoginService will show error dialog, so we don't need to do anything here
     }
 
     /**
@@ -61,8 +70,16 @@ public class LoginViewModel {
      */
     public void handleGuestLogin() {
         Logging.info("Guest login button clicked");
-        // Skip validation and always navigate to dashboard
-        navigateToDashboard();
+        
+        // Get values from UI components
+        String guestUsernameValue = guestUsername.get();
+        
+        // Attempt guest login using LoginService (handles all validation, error dialogs, and logging internally)
+        if (serviceManager.getLoginService().guestLogin(guestUsernameValue)) {
+            // Guest login successful, navigate to dashboard
+            navigateToDashboard();
+        }
+        // If guest login fails, LoginService will show error dialog, so we don't need to do anything here
     }
 
     /**

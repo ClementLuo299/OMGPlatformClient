@@ -13,6 +13,10 @@ import java.time.Duration;
 import com.config.HTTPConfig;
 import com.google.gson.Gson;
 import com.entities.UserAccount;
+import com.network.requests.LoginRequest;
+import com.network.requests.RegistrationRequest;
+import com.network.responses.LoginResponse;
+import com.network.responses.RegistrationResponse;
 import javafx.application.Platform;
 
 /**
@@ -20,6 +24,8 @@ import javafx.application.Platform;
  *
  * @authors Clement Luo,
  * @date March 4, 2025
+ * @edited June 29, 2025
+ * @since 1.0
  */
 public class HTTPHandler {
     //HTTP client
@@ -31,60 +37,34 @@ public class HTTPHandler {
     /**
      * Registers an user account on the server.
      */
-    public static void register(String username, String password){
-        //Create user account object and convert to json
-        UserAccount user = new UserAccount(username, password);
-        String json = gson.toJson(user);
+    public static RegistrationResponse register(String username, String password, String fullName, String dateOfBirth) throws IOException {
+        URL url = new URL(HTTPConfig.getRegistrationUrl());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-        //Build HTTP request object
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(HTTPConfig.getRegistrationUrl()))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(json))
-                .timeout(Duration.ofSeconds(HTTPConfig.HTTP_REQUEST_TIMEOUT))
-                .build();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "application/json");
+        conn.setDoOutput(true);
 
-        //Send HTTP request asynchronously
-        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                        .thenAccept(response -> {
-                            int status = response.statusCode();
-                            String body = response.body();
+        // Create registration request object with correct field names
+        RegistrationRequest request = new RegistrationRequest(username, password, fullName, dateOfBirth);
+        String jsonInput = gson.toJson(request);
 
-                            Platform.runLater(() -> {
-                                if(status == HttpURLConnection.HTTP_CREATED) {
-                                    //Show success dialog
-                                    System.out.println("Success");
-                                }
-                                else {
-                                    //Show error
-                                    System.out.println("Fail " + body);
-                                }
-                            });
-                        })
-                        .exceptionally(e -> {
-                            Platform.runLater(() -> {
-                                Throwable cause = e.getCause();
-                                if(cause instanceof java.net.ConnectException) {
-                                    //Show error dialog
-                                    System.out.println("Unable to connect to server.");
-                                }
-                                else if(cause instanceof java.net.http.HttpTimeoutException) {
-                                    //Show error dialog
-                                    System.out.println("Request timed out");
-                                }
-                                else {
-                                    //Show error dialog
-                                    System.out.println("Unexpected error: " + e.getMessage());
-                                }
-                            });
-                            return null;
-                        });
+        try (OutputStream os = conn.getOutputStream()) {
+            byte[] input = jsonInput.getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = conn.getResponseCode();
+        InputStream is = (responseCode == 201) ? conn.getInputStream() : conn.getErrorStream();
+        String responseBody = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        
+        return new RegistrationResponse(responseCode, responseBody);
     }
 
     /**
-     *
+     * Authenticates a user with the provided credentials.
      */
-    public static String login(String username, String password) throws IOException {
+    public static LoginResponse login(String username, String password) throws IOException {
         URL url = new URL(HTTPConfig.getLoginUrl());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
@@ -101,17 +81,9 @@ public class HTTPHandler {
 
         int responseCode = conn.getResponseCode();
         InputStream is = (responseCode == 200) ? conn.getInputStream() : conn.getErrorStream();
-        return new String(is.readAllBytes(), StandardCharsets.UTF_8);
-    }
-
-    static class LoginRequest {
-        private final String username;
-        private final String password;
-
-        public LoginRequest(String username, String password) {
-            this.username = username;
-            this.password = password;
-        }
+        String responseBody = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+        
+        return new LoginResponse(responseCode, responseBody);
     }
 
     public static void main(String[] args) throws Exception {

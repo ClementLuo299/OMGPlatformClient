@@ -5,10 +5,12 @@ package com.config;
  *
  * @authors Clement Luo,
  * @date May 10, 2025
+ * @edited June 29, 2025
+ * @since 1.0
  */
 public class HTTPConfig {
     //URL of the server
-    private static final String SERVER_URL = "http://192.168.1.88:8080";
+    private static final String SERVER_URL = "http://192.168.2.82:8080";
 
     //User account endpoints
     private static final String USERS_URL = "/users";
