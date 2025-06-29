@@ -1,4 +1,4 @@
-package com.network.auth;
+package com.network;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

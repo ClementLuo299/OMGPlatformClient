@@ -1,4 +1,4 @@
-package com.network.auth;
+package com.network;
 
 import com.services.TokenService;
 import com.utils.error_handling.Logging;

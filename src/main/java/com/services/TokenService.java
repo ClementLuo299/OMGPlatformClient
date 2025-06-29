@@ -1,6 +1,6 @@
 package com.services;
 
-import com.network.auth.JWTToken;
+import com.network.JWTToken;
 import com.utils.error_handling.Logging;
 
 /**

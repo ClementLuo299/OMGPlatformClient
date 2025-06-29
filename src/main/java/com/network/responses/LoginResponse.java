@@ -3,7 +3,7 @@ package com.network.responses;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.network.auth.JWTToken;
+import com.network.JWTToken;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
