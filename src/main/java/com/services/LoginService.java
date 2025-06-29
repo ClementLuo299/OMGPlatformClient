@@ -19,9 +19,11 @@ import com.utils.error_handling.Logging;
 public class LoginService {
 
     private final ValidationService validationService;
+    private final TokenService tokenService;
 
-    public LoginService(ValidationService validationService) {
+    public LoginService(ValidationService validationService, TokenService tokenService) {
         this.validationService = validationService;
+        this.tokenService = tokenService;
     }
 
     /**
@@ -50,6 +52,14 @@ public class LoginService {
             
             // Check if login was successful based on HTTP status code
             if (response.isSuccess()) {
+                // Store JWT token if present in response
+                if (response.hasJWTToken()) {
+                    tokenService.setToken(response.getJWTToken());
+                    Logging.info("JWT token stored for user: '" + username + "'");
+                } else {
+                    Logging.warning("Login successful but no JWT token received for user: '" + username + "'");
+                }
+                
                 Logging.info("Login successful for user: '" + username + "'");
                 return true;
             } else {
@@ -141,6 +151,28 @@ public class LoginService {
      */
     public boolean register(String username) {
         return false;
+    }
+
+    /**
+     * Logs out the current user by clearing the JWT token.
+     * Handles all cleanup internally and shows appropriate dialogs.
+     *
+     * @return true if logout was successful, false otherwise
+     */
+    public boolean logout() {
+        Logging.info("Logout initiated for user: '" + tokenService.getCurrentUsername() + "'");
+        
+        try {
+            // Clear the JWT token
+            tokenService.clearToken();
+            
+            Logging.info("Logout successful");
+            return true;
+        } catch (Exception e) {
+            Logging.error("Logout failed with exception: " + e.getMessage(), e);
+            Dialog.showErrorCompact("Logout Error", "Failed to logout properly. Please try again.");
+            return false;
+        }
     }
 
     /**

@@ -85,8 +85,4 @@ public class HTTPHandler {
         
         return new LoginResponse(responseCode, responseBody);
     }
-
-    public static void main(String[] args) throws Exception {
-        login("bob5","pass");
-    }
 }
