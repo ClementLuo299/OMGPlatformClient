@@ -64,7 +64,8 @@ public class LoginService {
                 return true;
             } else {
                 Logging.warning("Login failed - Status: " + response.getStatusCode() + ", Response: " + response.getResponseBody());
-                Dialog.showErrorCompact("Login Error", "Invalid username or password: " + response.getResponseBody());
+                String errorMessage = response.getUserFriendlyErrorMessage();
+                Dialog.showErrorCompact("Login Error", errorMessage);
                 return false;
             }
         } catch (Exception e) {
@@ -133,7 +134,8 @@ public class LoginService {
                 return true;
             } else {
                 Logging.warning("Registration failed - Status: " + response.getStatusCode() + ", Response: " + response.getResponseBody());
-                Dialog.showErrorCompact("Registration Error", "Failed to register account: " + response.getResponseBody());
+                String errorMessage = response.getUserFriendlyErrorMessage();
+                Dialog.showErrorCompact("Registration Error", errorMessage);
                 return false;
             }
         } catch (Exception e) {
