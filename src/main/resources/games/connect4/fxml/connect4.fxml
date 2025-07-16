@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.games.modules.Connect4Module$Connect4Controller"
+      styleClass="game-container"
+      spacing="20"
+      alignment="CENTER">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Game Title -->
+    <Label text="Connect 4" styleClass="game-title"/>
+
+    <!-- Game Board -->
+    <GridPane styleClass="game-board" hgap="3" vgap="3" alignment="CENTER">
+        <!-- 6x7 grid will be populated dynamically -->
+    </GridPane>
+
+    <!-- Game Status -->
+    <VBox spacing="10" alignment="CENTER">
+        <Label fx:id="statusLabel" text="Player Red's turn" styleClass="status-label"/>
+        <Label fx:id="movesLabel" text="Moves: 0" styleClass="moves-label"/>
+    </VBox>
+
+    <!-- Game Controls -->
+    <HBox spacing="10" alignment="CENTER">
+        <Button text="New Game" fx:id="newGameBtn" styleClass="control-button"/>
+        <Button text="Reset" fx:id="resetBtn" styleClass="control-button"/>
+        <Button text="Back to Library" fx:id="backBtn" styleClass="control-button"/>
+    </HBox>
+
+</VBox> 

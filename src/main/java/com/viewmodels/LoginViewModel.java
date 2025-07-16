@@ -6,6 +6,8 @@ import com.core.screens.ScreenManager;
 //import com.gui_controllers.DashboardController;
 import com.utils.error_handling.Dialog;
 import com.utils.error_handling.Logging;
+import javafx.application.Platform;
+import java.util.concurrent.CompletableFuture;
 
 import javafx.beans.property.*;
 
@@ -57,12 +59,27 @@ public class LoginViewModel {
         String usernameValue = username.get();
         String passwordValue = password.get();
         
-        // Attempt login using LoginService (handles all validation, error dialogs, and logging internally)
-        if (serviceManager.getLoginService().login(usernameValue, passwordValue)) {
-            // Login successful, navigate to dashboard
-            navigateToDashboard();
-        }
-        // If login fails, LoginService will show error dialog, so we don't need to do anything here
+        // Show loading indicator
+        Dialog.showInfo("Processing", "Logging in... Please wait.");
+        
+        // Attempt login asynchronously to prevent UI freezing
+        CompletableFuture.supplyAsync(() -> {
+            return serviceManager.getLoginService().login(usernameValue, passwordValue);
+        }).thenAcceptAsync(success -> {
+            Platform.runLater(() -> {
+                if (success) {
+                    // Login successful, navigate to dashboard
+                    navigateToDashboard();
+                }
+                // If login fails, LoginService will show error dialog
+            });
+        }).exceptionally(throwable -> {
+            Platform.runLater(() -> {
+                Logging.error("Login failed with exception: " + throwable.getMessage(), throwable);
+                Dialog.showErrorCompact("Login Error", "Failed to login. Please try again.");
+            });
+            return null;
+        });
     }
 
     /**
@@ -74,12 +91,27 @@ public class LoginViewModel {
         // Get values from UI components
         String guestUsernameValue = guestUsername.get();
         
-        // Attempt guest login using LoginService (handles all validation, error dialogs, and logging internally)
-        if (serviceManager.getLoginService().guestLogin(guestUsernameValue)) {
-            // Guest login successful, navigate to dashboard
-            navigateToDashboard();
-        }
-        // If guest login fails, LoginService will show error dialog, so we don't need to do anything here
+        // Show loading indicator
+        Dialog.showInfo("Processing", "Logging in as guest... Please wait.");
+        
+        // Attempt guest login asynchronously to prevent UI freezing
+        CompletableFuture.supplyAsync(() -> {
+            return serviceManager.getLoginService().guestLogin(guestUsernameValue);
+        }).thenAcceptAsync(success -> {
+            Platform.runLater(() -> {
+                if (success) {
+                    // Guest login successful, navigate to dashboard
+                    navigateToDashboard();
+                }
+                // If guest login fails, LoginService will show error dialog
+            });
+        }).exceptionally(throwable -> {
+            Platform.runLater(() -> {
+                Logging.error("Guest login failed with exception: " + throwable.getMessage(), throwable);
+                Dialog.showErrorCompact("Guest Login Error", "Failed to login as guest. Please try again.");
+            });
+            return null;
+        });
     }
 
     /**

@@ -5,6 +5,10 @@ import com.network.responses.LoginResponse;
 import com.network.responses.RegistrationResponse;
 import com.utils.error_handling.Dialog;
 import com.utils.error_handling.Logging;
+import com.core.ServiceManager;
+import com.services.WebSocketService;
+import javafx.application.Platform;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Handles user authentication and account management operations.
@@ -59,6 +63,9 @@ public class LoginService {
                 } else {
                     Logging.warning("Login successful but no JWT token received for user: '" + username + "'");
                 }
+                
+                // Establish WebSocket connection after successful login
+                establishWebSocketConnection(username);
                 
                 Logging.info("Login successful for user: '" + username + "'");
                 return true;
@@ -165,6 +172,10 @@ public class LoginService {
         Logging.info("Logout initiated for user: '" + tokenService.getCurrentUsername() + "'");
         
         try {
+            // Disconnect WebSocket connection
+            WebSocketService webSocketService = ServiceManager.getInstance().getWebSocketService();
+            webSocketService.disconnect();
+            
             // Clear the JWT token
             tokenService.clearToken();
             
@@ -185,5 +196,32 @@ public class LoginService {
      */
     public boolean forgotPassword(String username) {
         return false;
+    }
+    
+    /**
+     * Establishes a WebSocket connection after successful login.
+     * This method is called automatically after successful authentication.
+     *
+     * @param username The username of the logged-in user
+     */
+    private void establishWebSocketConnection(String username) {
+        try {
+            Logging.info("🔌 Establishing WebSocket connection for user: '" + username + "'");
+            
+            WebSocketService webSocketService = ServiceManager.getInstance().getWebSocketService();
+            webSocketService.connect(username).thenAccept(success -> {
+                if (success) {
+                    Logging.info("✅ WebSocket connection established successfully for user: '" + username + "'");
+                } else {
+                    Logging.warning("❌ Failed to establish WebSocket connection for user: '" + username + "'");
+                }
+            }).exceptionally(throwable -> {
+                Logging.error("❌ Error establishing WebSocket connection: " + throwable.getMessage(), throwable);
+                return null;
+            });
+            
+        } catch (Exception e) {
+            Logging.error("❌ Failed to establish WebSocket connection: " + e.getMessage(), e);
+        }
     }
 }

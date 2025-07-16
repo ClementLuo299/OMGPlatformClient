@@ -4,6 +4,7 @@ import com.services.LoginService;
 import com.services.TokenService;
 import com.services.ValidationService;
 import com.services.LocalStorageService;
+import com.services.WebSocketService;
 
 /**
  * Central service manager for the application.
@@ -18,6 +19,7 @@ import com.services.LocalStorageService;
  * - `ValidationService`: Handles input validation for forms and user inputs.
  * - `TokenService`: Manages JWT tokens for user authentication.
  * - `LocalStorageService`: Handles secure local data storage on the client's computer.
+ * - `WebSocketService`: Handles WebSocket connections and real-time messaging.
  * 
  * @authors Clement Luo
  * @date May 18, 2025
@@ -31,6 +33,7 @@ public class ServiceManager {
     private ValidationService validationService;
     private TokenService tokenService;
     private LocalStorageService localStorageService;
+    private WebSocketService webSocketService;
 
     private ServiceManager() {
         initializeServices();
@@ -85,12 +88,22 @@ public class ServiceManager {
     }
 
     /**
+     * Gets the WebSocketService instance.
+     *
+     * @return the WebSocketService instance
+     */
+    public WebSocketService getWebSocketService() {
+        return webSocketService;
+    }
+
+    /**
      * Initializes all services. Called automatically during construction.
      */
     private void initializeServices() {
         validationService = new ValidationService();
         tokenService = new TokenService();
         localStorageService = LocalStorageService.getInstance();
+        webSocketService = new WebSocketService();
         loginService = new LoginService(validationService, tokenService);
     }
 }

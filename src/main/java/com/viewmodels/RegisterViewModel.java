@@ -6,6 +6,8 @@ import com.core.screens.ScreenManager;
 import com.utils.error_handling.Dialog;
 import com.utils.error_handling.Logging;
 import javafx.beans.property.*;
+import javafx.application.Platform;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Manages GUI state and logic for the registration screen
@@ -60,12 +62,28 @@ public class RegisterViewModel {
         String confirmPasswordValue = confirmPassword.get();
         String dobValue = dateOfBirth.get();
         
-        // Attempt registration using LoginService (handles all validation, error dialogs, and logging internally)
-        if (serviceManager.getLoginService().register(usernameValue, passwordValue, fullNameValue, dobValue, confirmPasswordValue)) {
-            // Show success message and navigate back to login
-            Dialog.showInfo("Success", "Account created successfully! You can now log in.");
-            navigateToLogin();
-        }
+        // Show loading indicator
+        Dialog.showInfo("Processing", "Creating your account... Please wait.");
+        
+        // Attempt registration asynchronously to prevent UI freezing
+        CompletableFuture.supplyAsync(() -> {
+            return serviceManager.getLoginService().register(usernameValue, passwordValue, fullNameValue, dobValue, confirmPasswordValue);
+        }).thenAcceptAsync(success -> {
+            Platform.runLater(() -> {
+                if (success) {
+                    // Show success message and navigate back to login
+                    Dialog.showInfo("Success", "Account created successfully! You can now log in.");
+                    navigateToLogin();
+                }
+                // If registration fails, LoginService will show error dialog
+            });
+        }).exceptionally(throwable -> {
+            Platform.runLater(() -> {
+                Logging.error("Registration failed with exception: " + throwable.getMessage(), throwable);
+                Dialog.showErrorCompact("Registration Error", "Failed to register account. Please try again.");
+            });
+            return null;
+        });
     }
 
     /**

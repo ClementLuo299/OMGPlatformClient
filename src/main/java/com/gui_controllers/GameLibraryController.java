@@ -1,5 +1,9 @@
 package com.gui_controllers;
 
+import com.games.GameModule;
+import com.games.GameRegistry;
+import com.games.GameOptions;
+import com.services.GameLauncherService;
 import com.viewmodels.GameLibraryViewModel;
 import com.utils.error_handling.Logging;
 
@@ -10,6 +14,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.util.List;
 
 /**
  * Controller for the Game Library screen, handling UI interactions and binding to ViewModel.
@@ -95,12 +103,17 @@ public class GameLibraryController {
     // ==================== DEPENDENCIES ====================
     
     private GameLibraryViewModel viewModel;
+    private GameRegistry gameRegistry;
+    private GameLauncherService gameLauncher;
     
     // ==================== INITIALIZATION ====================
     
     @FXML
     public void initialize() {
         Logging.info("Initializing GameLibraryController");
+        
+        // Initialize game services
+        initializeGameServices();
         
         // Set up UI bindings and event handlers
         setupNavigationButtons();
@@ -163,6 +176,23 @@ public class GameLibraryController {
     }
     
     /**
+     * Initialize game services and registry.
+     */
+    private void initializeGameServices() {
+        Logging.info("Initializing game services");
+        
+        // Initialize game registry
+        gameRegistry = GameRegistry.getInstance();
+        gameRegistry.initialize();
+        
+        // Get game launcher service
+        gameLauncher = GameLauncherService.getInstance();
+        
+        Logging.info("Game services initialized successfully");
+        Logging.info(gameRegistry.getGamesSummary());
+    }
+    
+    /**
      * Set up game button event handlers.
      */
     private void setupGameButtons() {
@@ -171,28 +201,30 @@ public class GameLibraryController {
         if (ticTacToeButton != null) {
             ticTacToeButton.setOnAction(event -> {
                 Logging.info("Tic Tac Toe button clicked");
-                viewModel.launchTicTacToe();
+                launchGame("tictactoe", GameModule.GameMode.LOCAL_MULTIPLAYER, 2);
             });
         }
         
         if (connect4Button != null) {
             connect4Button.setOnAction(event -> {
                 Logging.info("Connect 4 button clicked");
-                viewModel.launchConnect4();
+                launchGame("connect4", GameModule.GameMode.LOCAL_MULTIPLAYER, 2);
             });
         }
         
         if (checkersButton != null) {
             checkersButton.setOnAction(event -> {
                 Logging.info("Checkers button clicked");
-                viewModel.launchCheckers();
+                // TODO: Implement Checkers module
+                Logging.info("Checkers not yet implemented");
             });
         }
         
         if (whistButton != null) {
             whistButton.setOnAction(event -> {
                 Logging.info("Whist button clicked");
-                viewModel.launchWhist();
+                // TODO: Implement Whist module
+                Logging.info("Whist not yet implemented");
             });
         }
     }
@@ -318,6 +350,39 @@ public class GameLibraryController {
         }
         if (classicGamesFilterBtn != null) {
             classicGamesFilterBtn.getStyleClass().remove("selected");
+        }
+    }
+    
+    /**
+     * Launch a game with the specified parameters.
+     * 
+     * @param gameId The game ID to launch
+     * @param gameMode The game mode
+     * @param playerCount Number of players
+     */
+    private void launchGame(String gameId, GameModule.GameMode gameMode, int playerCount) {
+        Logging.info("🚀 Launching game: " + gameId + " with mode: " + gameMode.getDisplayName());
+        
+        try {
+            // Create game options
+            GameOptions gameOptions = new GameOptions();
+            gameOptions.setOption("launchTime", System.currentTimeMillis());
+            
+            // Get the current stage
+            Stage currentStage = (Stage) mainContainer.getScene().getWindow();
+            
+            // Launch the game
+            Scene gameScene = gameLauncher.launchGame(gameId, currentStage, gameMode, playerCount, gameOptions);
+            
+            if (gameScene != null) {
+                Logging.info("✅ Game launched successfully: " + gameId);
+                // The game scene is now set on the stage
+            } else {
+                Logging.error("❌ Failed to launch game: " + gameId);
+            }
+            
+        } catch (Exception e) {
+            Logging.error("❌ Error launching game: " + e.getMessage(), e);
         }
     }
 } 
