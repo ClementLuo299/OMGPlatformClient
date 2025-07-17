@@ -95,6 +95,7 @@ public class TicTacToeModule extends BaseGameModule {
         GameOptions options = new GameOptions();
         options.setOption("boardSize", 3);
         options.setOption("aiDifficulty", "medium");
+        options.setOption("timeLimit", 30);
         
         GameState gameState = new GameState(GAME_ID, GAME_NAME, GameMode.LOCAL_MULTIPLAYER, 2, options);
         
@@ -116,18 +117,6 @@ public class TicTacToeModule extends BaseGameModule {
             int movesCount = gameState.getIntStateValue("movesCount", 0);
             
             Logging.info("📊 Loaded game state - Current player: " + currentPlayer + ", Moves: " + movesCount);
-        }
-    }
-    
-    /**
-     * TicTacToe game controller (placeholder).
-     * This would be implemented as a separate controller class.
-     */
-    public static class TicTacToeController {
-        
-        public void initializeGame(GameMode gameMode, int playerCount, GameOptions gameOptions) {
-            Logging.info("🎯 Initializing TicTacToe game with " + playerCount + " players");
-            // Initialize the game logic here
         }
     }
 } 
