@@ -1,4 +1,4 @@
-package com.games.modules;
+package com.games.modules.tictactoe;
 
 import com.games.BaseGameModule;
 import com.games.GameModule;
@@ -53,6 +53,11 @@ public class TicTacToeModule extends BaseGameModule {
     @Override
     public GameDifficulty getDifficulty() {
         return GameDifficulty.EASY;
+    }
+    
+    @Override
+    public String getGameCategory() {
+        return "Classic";
     }
     
     @Override

@@ -56,6 +56,12 @@ public interface GameModule {
     GameDifficulty getDifficulty();
     
     /**
+     * Gets the category of the game.
+     * @return Game category (e.g., "Strategy", "Puzzle", "Card", "Classic")
+     */
+    String getGameCategory();
+    
+    /**
      * Checks if the game supports online multiplayer.
      * @return true if online multiplayer is supported
      */

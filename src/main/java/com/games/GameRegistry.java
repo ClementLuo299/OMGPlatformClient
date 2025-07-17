@@ -1,16 +1,15 @@
 package com.games;
 
-import com.games.modules.Connect4Module;
-import com.games.modules.TicTacToeModule;
 import com.services.GameLauncherService;
 import com.utils.error_handling.Logging;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Registry for automatically discovering and registering game modules.
- * Provides a centralized way to manage all available games.
+ * Now uses GameDiscoveryService for dynamic game discovery.
  *
  * @authors Clement Luo
  * @date January 2025
@@ -21,10 +20,12 @@ public class GameRegistry {
     private static GameRegistry instance;
     private final List<GameModule> availableGames;
     private final GameLauncherService gameLauncher;
+    private final GameDiscoveryService discoveryService;
     
     private GameRegistry() {
         this.availableGames = new ArrayList<>();
         this.gameLauncher = GameLauncherService.getInstance();
+        this.discoveryService = GameDiscoveryService.getInstance();
     }
     
     /**
@@ -39,37 +40,29 @@ public class GameRegistry {
     }
     
     /**
-     * Initializes the game registry and registers all available games.
+     * Initializes the game registry and discovers all available games.
      */
     public void initialize() {
         Logging.info("🎮 Initializing Game Registry...");
         
-        // Register all available game modules
-        registerGameModules();
+        // Initialize discovery service
+        discoveryService.initialize();
         
-        Logging.info("✅ Game Registry initialized with " + availableGames.size() + " games");
+        // Discover games asynchronously
+        CompletableFuture<List<GameModule>> discoveryFuture = discoveryService.discoverAllGames();
+        
+        discoveryFuture.thenAccept(games -> {
+            availableGames.clear();
+            availableGames.addAll(games);
+            Logging.info("✅ Game Registry initialized with " + availableGames.size() + " games");
+        }).exceptionally(throwable -> {
+            Logging.error("❌ Failed to initialize Game Registry: " + throwable.getMessage(), throwable);
+            return null;
+        });
     }
     
     /**
-     * Registers all available game modules.
-     */
-    private void registerGameModules() {
-        // Register TicTacToe
-        registerGame(new TicTacToeModule());
-        
-        // Register Connect4
-        registerGame(new Connect4Module());
-        
-        // TODO: Add more games here as they are developed
-        // registerGame(new CheckersModule());
-        // registerGame(new ChessModule());
-        // registerGame(new BattleshipModule());
-        // registerGame(new SnakeModule());
-        // registerGame(new TetrisModule());
-    }
-    
-    /**
-     * Registers a game module.
+     * Registers a game module (now handled by discovery service).
      * @param gameModule The game module to register
      */
     public void registerGame(GameModule gameModule) {
@@ -126,15 +119,7 @@ public class GameRegistry {
      * @return List of games with the specified difficulty
      */
     public List<GameModule> getGamesByDifficulty(GameModule.GameDifficulty difficulty) {
-        List<GameModule> filteredGames = new ArrayList<>();
-        
-        for (GameModule game : availableGames) {
-            if (game.getDifficulty() == difficulty) {
-                filteredGames.add(game);
-            }
-        }
-        
-        return filteredGames;
+        return discoveryService.getGamesByDifficulty(difficulty);
     }
     
     /**
@@ -143,29 +128,7 @@ public class GameRegistry {
      * @return List of games that support the specified mode
      */
     public List<GameModule> getGamesByMode(GameModule.GameMode gameMode) {
-        List<GameModule> filteredGames = new ArrayList<>();
-        
-        for (GameModule game : availableGames) {
-            boolean supportsMode = false;
-            
-            switch (gameMode) {
-                case SINGLE_PLAYER:
-                    supportsMode = game.supportsSinglePlayer();
-                    break;
-                case LOCAL_MULTIPLAYER:
-                    supportsMode = game.supportsLocalMultiplayer();
-                    break;
-                case ONLINE_MULTIPLAYER:
-                    supportsMode = game.supportsOnlineMultiplayer();
-                    break;
-            }
-            
-            if (supportsMode) {
-                filteredGames.add(game);
-            }
-        }
-        
-        return filteredGames;
+        return discoveryService.getGamesByMode(gameMode);
     }
     
     /**
@@ -249,17 +212,50 @@ public class GameRegistry {
      */
     public String getGamesSummary() {
         StringBuilder summary = new StringBuilder();
-        summary.append("🎮 Available Games (").append(getGameCount()).append("):\n");
+        summary.append("🎮 Game Registry Summary:\n");
+        summary.append("Total Games: ").append(getGameCount()).append("\n");
         
-        for (GameModule game : availableGames) {
-            summary.append("  • ").append(game.getGameName())
-                   .append(" (").append(game.getGameId()).append(")")
-                   .append(" - ").append(game.getGameDescription())
-                   .append(" [").append(game.getMinPlayers()).append("-").append(game.getMaxPlayers()).append(" players")
-                   .append(", ").append(game.getDifficulty().getDisplayName())
-                   .append(", ").append(game.getEstimatedDuration()).append(" min]\n");
+        // Group by category
+        summary.append("\n📂 By Category:\n");
+        for (String category : List.of("Classic", "Strategy", "Puzzle", "Card", "Arcade")) {
+            List<GameModule> categoryGames = discoveryService.getGamesByCategory(category);
+            if (!categoryGames.isEmpty()) {
+                summary.append("  ").append(category).append(": ").append(categoryGames.size()).append(" games\n");
+            }
+        }
+        
+        // Group by difficulty
+        summary.append("\n🎯 By Difficulty:\n");
+        for (GameModule.GameDifficulty difficulty : GameModule.GameDifficulty.values()) {
+            List<GameModule> difficultyGames = getGamesByDifficulty(difficulty);
+            if (!difficultyGames.isEmpty()) {
+                summary.append("  ").append(difficulty.getDisplayName()).append(": ").append(difficultyGames.size()).append(" games\n");
+            }
+        }
+        
+        // Group by mode
+        summary.append("\n🎲 By Game Mode:\n");
+        for (GameModule.GameMode mode : GameModule.GameMode.values()) {
+            List<GameModule> modeGames = getGamesByMode(mode);
+            if (!modeGames.isEmpty()) {
+                summary.append("  ").append(mode.getDisplayName()).append(": ").append(modeGames.size()).append(" games\n");
+            }
         }
         
         return summary.toString();
+    }
+    
+    /**
+     * Refreshes the game registry by rediscovering games.
+     * @return CompletableFuture that completes when refresh is done
+     */
+    public CompletableFuture<List<GameModule>> refreshGames() {
+        Logging.info("🔄 Refreshing Game Registry...");
+        return discoveryService.refreshGames().thenApply(games -> {
+            availableGames.clear();
+            availableGames.addAll(games);
+            Logging.info("✅ Game Registry refreshed with " + availableGames.size() + " games");
+            return games;
+        });
     }
 } 

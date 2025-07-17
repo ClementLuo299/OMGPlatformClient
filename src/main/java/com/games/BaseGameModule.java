@@ -88,6 +88,11 @@ public abstract class BaseGameModule implements GameModule {
     }
     
     @Override
+    public String getGameCategory() {
+        return "Classic"; // Default category - subclasses can override
+    }
+    
+    @Override
     public void onGameClose() {
         Logging.info("🔄 " + getGameName() + " closing - cleaning up resources");
         // Subclasses can override this to add specific cleanup

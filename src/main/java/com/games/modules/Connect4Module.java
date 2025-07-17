@@ -56,6 +56,11 @@ public class Connect4Module extends BaseGameModule {
     }
     
     @Override
+    public String getGameCategory() {
+        return "Strategy";
+    }
+    
+    @Override
     public boolean supportsOnlineMultiplayer() {
         return true;
     }
