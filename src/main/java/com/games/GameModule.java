@@ -15,7 +15,7 @@ public interface GameModule {
     
     /**
      * Gets the unique identifier for this game module.
-     * @return The game ID (e.g., "tictactoe", "connect4", "checkers")
+     * @return The game ID (e.g., "tictactoe", "checkers")
      */
     String getGameId();
     

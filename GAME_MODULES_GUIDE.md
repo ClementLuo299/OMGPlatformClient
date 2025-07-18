@@ -340,7 +340,7 @@ This organization groups all assets for each game in their own folder, making it
 
 ## Best Practices
 
-1. **Naming Convention**: Use lowercase, descriptive names for game IDs (e.g., "tictactoe", "connect4")
+1. **Naming Convention**: Use lowercase, descriptive names for game IDs (e.g., "tictactoe")
 
 2. **Error Handling**: Always wrap game launching in try-catch blocks and log errors appropriately
 
@@ -411,6 +411,6 @@ public void loadGameState(GameState gameState) {
 
 See the existing implementations for reference:
 - `TicTacToeModule` - Simple 3x3 grid game
-- `Connect4Module` - More complex board game
+- `ExampleGameModule` - Template for new games
 
 These examples demonstrate different approaches to game implementation and can serve as templates for your own games. 

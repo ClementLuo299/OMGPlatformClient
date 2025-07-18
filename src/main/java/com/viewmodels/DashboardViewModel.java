@@ -111,19 +111,7 @@ public class DashboardViewModel {
         }
     }
 
-    /**
-     * Handles Connect 4 game launch
-     */
-    public void handlePlayConnect4() {
-        Logging.info("Play Connect 4 button clicked");
-        
-        try {
-            // TODO: Implement Connect 4 game launch
-            Dialog.showInfo("Info", "Connect 4 game launch not implemented yet");
-        } catch (Exception e) {
-            Dialog.showError("Error", "Could not launch Connect 4: " + e.getMessage(), e);
-        }
-    }
+
 
     /**
      * Handles Checkers game launch
@@ -196,15 +184,15 @@ public class DashboardViewModel {
             totalGames.set("42"); // TODO: Get from user service
             winRate.set("64%"); // TODO: Get from user service
             currentRank.set("#156"); // TODO: Get from user service
-            bestGame.set("Connect 4"); // TODO: Get from user service
+            bestGame.set("Tic Tac Toe"); // TODO: Get from user service
             
             // Set sample activity for registered users
             activityList.clear();
             activityList.addAll(
-                "Played Connect 4 - Won",
+                "Played Tic Tac Toe - Won",
                 "Played Checkers - Lost",
                 "Played Whist - Won",
-                "Reached Level 12 in Connect 4"
+                "Reached Level 12 in Tic Tac Toe"
             );
         }
         
@@ -222,13 +210,13 @@ public class DashboardViewModel {
         totalGames.set("42");
         winRate.set("64%");
         currentRank.set("#156");
-        bestGame.set("Connect 4");
+        bestGame.set("Tic Tac Toe");
         
         activityList.addAll(
-            "Played Connect 4 - Won",
+            "Played Tic Tac Toe - Won",
             "Played Checkers - Lost",
             "Played Whist - Won",
-            "Reached Level 12 in Connect 4"
+            "Reached Level 12 in Tic Tac Toe"
         );
     }
 }

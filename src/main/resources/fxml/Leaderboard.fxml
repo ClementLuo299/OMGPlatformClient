@@ -144,73 +144,7 @@
                     </VBox>
                 </Tab>
                 
-                <!-- Connect 4 Tab -->
-                <Tab text="Connect 4" styleClass="leaderboard-tab">
-                    <VBox styleClass="tab-content">
-                        <!-- Connect 4 Rankings Header -->
-                        <HBox styleClass="ranking-header">
-                            <ImageView styleClass="game-icon" fitHeight="32" fitWidth="32">
-                                <Image url="@../icons/navigation/games.png" />
-                            </ImageView>
-                            <Label styleClass="ranking-title" text="Connect 4 Rankings" />
-                        </HBox>
-                        
-                        <!-- Connect 4 Leaderboard Tables -->
-                        <HBox styleClass="leaderboard-tables">
-                            <!-- Highest Level -->
-                            <VBox styleClass="leaderboard-section">
-                                <Label styleClass="section-title" text="Highest Level" />
-                                <TableView fx:id="c4LevelTable" styleClass="leaderboard-table">
-                                    <columns>
-                                        <TableColumn styleClass="rank-column" text="Rank" />
-                                        <TableColumn styleClass="player-column" text="Player" />
-                                        <TableColumn styleClass="level-column" text="Level" />
-                                    </columns>
-                                </TableView>
-                            </VBox>
-                            
-                            <!-- Most Wins -->
-                            <VBox styleClass="leaderboard-section">
-                                <Label styleClass="section-title" text="Most Wins" />
-                                <TableView fx:id="c4WinsTable" styleClass="leaderboard-table">
-                                    <columns>
-                                        <TableColumn styleClass="rank-column" text="Rank" />
-                                        <TableColumn styleClass="player-column" text="Player" />
-                                        <TableColumn styleClass="value-column" text="Wins" />
-                                    </columns>
-                                </TableView>
-                            </VBox>
-                            
-                            <!-- Best Player (Win Rate) -->
-                            <VBox styleClass="leaderboard-section">
-                                <Label styleClass="section-title" text="Best Players" />
-                                <TableView fx:id="c4BestTable" styleClass="leaderboard-table">
-                                    <columns>
-                                        <TableColumn styleClass="rank-column" text="Rank" />
-                                        <TableColumn styleClass="player-column" text="Player" />
-                                        <TableColumn styleClass="win-percent-column" text="Win %" />
-                                    </columns>
-                                </TableView>
-                            </VBox>
-                        </HBox>
-                        
-                        <!-- Connect 4 Tab - Most Games Played Section -->
-                        <HBox styleClass="leaderboard-section-full">
-                            <VBox>
-                                <Label styleClass="section-title" text="Most Games Played" />
-                                <TableView fx:id="connect4MostGamesTable" styleClass="leaderboard-table-wide">
-                                    <columns>
-                                        <TableColumn styleClass="rank-column" text="Rank" />
-                                        <TableColumn styleClass="player-column" text="Player" />
-                                        <TableColumn styleClass="games-column" text="Games" />
-                                        <TableColumn styleClass="win-percent-column" text="Win %" />
-                                        <TableColumn styleClass="level-column" text="Level" />
-                                    </columns>
-                                </TableView>
-                            </VBox>
-                        </HBox>
-                    </VBox>
-                </Tab>
+
                 
                 <!-- Checkers Tab -->
                 <Tab text="Checkers" styleClass="leaderboard-tab">

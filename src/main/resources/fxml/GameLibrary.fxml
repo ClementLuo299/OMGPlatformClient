@@ -101,20 +101,7 @@
             
             <!-- Game Cards Container -->
             <HBox styleClass="game-cards-container">
-                <!-- Connect 4 Card (First) -->
-                <VBox fx:id="connect4Card" styleClass="game-card">
-                    <ImageView fitHeight="106.0" fitWidth="124.0" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/game/connect_four_icon.png" />
-                    </ImageView>
-                    <Label styleClass="game-title" text="Connect 4" />
-                    <HBox styleClass="game-info">
-                        <Label styleClass="game-players" text="2 Players" />
-                        <Label styleClass="game-time" text="5-10 min" />
-                    </HBox>
-                    <Label styleClass="game-description" text="Classic strategy game where players drop colored discs to connect four in a row." wrapText="true" />
-                    <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
-                    <Button fx:id="connect4Button" styleClass="game-card-button" text="Play Now" />
-                </VBox>
+
                 
                 <!-- Checkers Card (Second) -->
                 <VBox fx:id="checkersCard" styleClass="game-card">

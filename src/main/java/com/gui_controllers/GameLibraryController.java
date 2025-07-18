@@ -66,9 +66,6 @@ public class GameLibraryController {
     private Button ticTacToeButton;
     
     @FXML
-    private Button connect4Button;
-    
-    @FXML
     private Button checkersButton;
     
     @FXML
@@ -90,9 +87,6 @@ public class GameLibraryController {
     // Game cards
     @FXML
     private VBox ticTacToeCard;
-    
-    @FXML
-    private VBox connect4Card;
     
     @FXML
     private VBox checkersCard;
@@ -202,13 +196,6 @@ public class GameLibraryController {
             ticTacToeButton.setOnAction(event -> {
                 Logging.info("Tic Tac Toe button clicked");
                 launchGame("tictactoe", GameModule.GameMode.LOCAL_MULTIPLAYER, 2);
-            });
-        }
-        
-        if (connect4Button != null) {
-            connect4Button.setOnAction(event -> {
-                Logging.info("Connect 4 button clicked");
-                launchGame("connect4", GameModule.GameMode.LOCAL_MULTIPLAYER, 2);
             });
         }
         

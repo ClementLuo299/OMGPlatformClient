@@ -169,19 +169,7 @@ public class GameLibraryViewModel {
         }
     }
     
-    /**
-     * Launch Connect 4 game.
-     */
-    public void launchConnect4() {
-        try {
-            Logging.info("Launching Connect 4 from game library");
-            // TODO: Add GAME_LOBBY to ScreenRegistry
-            Logging.info("Connect 4 launch not yet implemented");
-        } catch (Exception e) {
-            Logging.error("Failed to launch Connect 4: " + e.getMessage(), e);
-            throw e;
-        }
-    }
+
     
     /**
      * Launch Checkers game.

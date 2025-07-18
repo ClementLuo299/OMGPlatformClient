@@ -36,7 +36,6 @@ public class DashboardController {
     @FXML private ListView<String> activityList;
     
     // Game play buttons
-    @FXML private Button playConnect4Btn;
     @FXML private Button playCheckersBtn;
     @FXML private Button playWhistBtn;
     @FXML private Button playTicTacToeBtn;
@@ -85,7 +84,6 @@ public class DashboardController {
         signOutBtn.setOnAction(e -> viewModel.handleSignOut());
         
         // Game play buttons
-        playConnect4Btn.setOnAction(e -> viewModel.handlePlayConnect4());
         playCheckersBtn.setOnAction(e -> viewModel.handlePlayCheckers());
         playWhistBtn.setOnAction(e -> viewModel.handlePlayWhist());
         playTicTacToeBtn.setOnAction(e -> viewModel.handlePlayTicTacToe());

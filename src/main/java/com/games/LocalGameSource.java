@@ -1,8 +1,10 @@
 package com.games;
 
-import com.games.modules.tictactoe.TicTacToeModule;
-import com.games.modules.Connect4Module;
-import com.games.modules.example.ExampleGameModule;
+import com.games.modules.ExampleGameModule;
+import com.games.modules.SnakeGameModule;
+import com.games.modules.ChessModule;
+import com.games.modules.SolitaireModule;
+import com.games.modules.TetrisModule;
 import com.utils.error_handling.Logging;
 
 import java.util.ArrayList;
@@ -37,9 +39,11 @@ public class LocalGameSource implements GameDiscoveryService.GameSource {
         
         try {
             // Add known local games
-            games.add(new TicTacToeModule());
-            games.add(new Connect4Module());
             games.add(new ExampleGameModule());
+            games.add(new SnakeGameModule());
+            games.add(new ChessModule());
+            games.add(new SolitaireModule());
+            games.add(new TetrisModule());
             
             // TODO: Add more local games here as they are developed
             // games.add(new CheckersModule());

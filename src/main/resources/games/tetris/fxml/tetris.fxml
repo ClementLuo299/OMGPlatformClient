@@ -6,7 +6,7 @@
 
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.games.modules.Connect4Module$Connect4Controller"
+      fx:controller="com.games.modules.TetrisModule$TetrisController"
       styleClass="game-container"
       spacing="20"
       alignment="CENTER">
@@ -16,23 +16,17 @@
     </padding>
 
     <!-- Game Title -->
-    <Label text="Connect 4" styleClass="game-title"/>
+    <Label text="Tetris" styleClass="game-title"/>
 
-    <!-- Game Board -->
-    <GridPane styleClass="game-board" hgap="3" vgap="3" alignment="CENTER">
-        <!-- 6x7 grid will be populated dynamically -->
-    </GridPane>
-
-    <!-- Game Status -->
+    <!-- Game Content -->
     <VBox spacing="10" alignment="CENTER">
-        <Label fx:id="statusLabel" text="Player Red's turn" styleClass="status-label"/>
-        <Label fx:id="movesLabel" text="Moves: 0" styleClass="moves-label"/>
+        <Label fx:id="statusLabel" text="Tetris - Coming Soon!" styleClass="status-label"/>
+        <Label text="Arrange falling blocks to clear lines" styleClass="instruction-label"/>
     </VBox>
 
     <!-- Game Controls -->
     <HBox spacing="10" alignment="CENTER">
         <Button text="New Game" fx:id="newGameBtn" styleClass="control-button"/>
-        <Button text="Reset" fx:id="resetBtn" styleClass="control-button"/>
         <Button text="Back to Library" fx:id="backBtn" styleClass="control-button"/>
     </HBox>
 

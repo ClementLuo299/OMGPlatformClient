@@ -139,20 +139,7 @@
             <VBox styleClass="game-stats">
                 <Label styleClass="section-title" text="Your Games" />
                 
-                <!-- Connect 4 Stats -->
-                <VBox styleClass="game-stat-card">
-                    <HBox>
-                        <ImageView fitHeight="48" fitWidth="55" styleClass="game-icon">
-                            <Image url="@../icons/game/connect_four_icon.png" />
-                        </ImageView>
-                        <VBox>
-                            <Label styleClass="game-name" text="Connect 4" />
-                            <Label styleClass="game-details" text="Level 12 • 72% Win Rate" />
-                        </VBox>
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="playConnect4Btn" styleClass="play-button" text="Play" />
-                    </HBox>
-                </VBox>
+
 
                 <!-- Checkers Stats -->
                 <VBox styleClass="game-stat-card">

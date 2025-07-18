@@ -121,7 +121,6 @@ public List<GameModule> discoverGames() {
     
     // Existing games
     games.add(new TicTacToeModule());
-    games.add(new Connect4Module());
     
     // Your new game
     games.add(new MyGameModule());
@@ -157,7 +156,7 @@ The system is designed to support remote game discovery from servers:
 The system supports these game categories:
 
 - **Classic** - Traditional board games (TicTacToe, Checkers)
-- **Strategy** - Strategic thinking games (Connect4, Chess)
+- **Strategy** - Strategic thinking games (Chess)
 - **Puzzle** - Logic and puzzle games (Sudoku, Minesweeper)
 - **Card** - Card-based games (Solitaire, Poker)
 - **Arcade** - Fast-paced action games (Snake, Tetris)
