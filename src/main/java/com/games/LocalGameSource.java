@@ -1,14 +1,12 @@
 package com.games;
 
-
 import com.utils.error_handling.Logging;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Discovers games from the local classpath and modules directory.
- * This source finds games that are bundled with the application.
+ * Discovers games from the modules directory dynamically.
+ * This source scans the modules folder and loads game modules at runtime.
  * 
  * @authors Clement Luo
  * @date January 2025
@@ -30,26 +28,16 @@ public class LocalGameSource implements GameDiscoveryService.GameSource {
     
     @Override
     public List<GameModule> discoverGames() {
-        Logging.info("🔍 Discovering local games...");
-        List<GameModule> games = new ArrayList<>();
+        Logging.info("🔍 Discovering games from modules directory...");
         
         try {
-            // No local games currently available
-            // Games are now in separate modules
-            
-            // TODO: Add more local games here as they are developed
-            // games.add(new CheckersModule());
-            // games.add(new ChessModule());
-            // games.add(new BattleshipModule());
-            // games.add(new SnakeModule());
-            // games.add(new TetrisModule());
-            
-            Logging.info("✅ Discovered " + games.size() + " local games");
+            List<GameModule> games = ModuleLoader.loadAllModules();
+            Logging.info("✅ Discovered " + games.size() + " games from modules");
+            return games;
             
         } catch (Exception e) {
-            Logging.error("❌ Error discovering local games: " + e.getMessage(), e);
+            Logging.error("❌ Error discovering games from modules: " + e.getMessage(), e);
+            return new java.util.ArrayList<>();
         }
-        
-        return games;
     }
 } 
