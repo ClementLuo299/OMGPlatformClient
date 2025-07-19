@@ -6,8 +6,9 @@ import com.core.screens.ScreenManager;
 import com.games.GameModule;
 import com.games.GameRegistry;
 import com.games.GameState;
+import com.gui_controllers.dashboard.GameCard;
 import com.games.GameOptions;
-import com.gui_controllers.GameCard;
+
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.utils.error_handling.Dialog;

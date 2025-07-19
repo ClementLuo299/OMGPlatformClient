@@ -1,4 +1,4 @@
-package com.gui_controllers;
+package com.gui_controllers.dashboard;
 
 import com.games.GameModule;
 import javafx.fxml.FXML;

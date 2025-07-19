@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  *
  * @author Clement Luo
  * @date May 19, 2025
- * @edited June 26, 2025        
+ * @edited July 18, 2025        
  * @since 1.0
  */
 @UtilityClass
@@ -30,7 +30,7 @@ public class ScreenRegistry {
     public static final ScreenLoadable LOGIN = ScreenLoadable.of(
             "/fxml/Login.fxml",
             com.gui_controllers.LoginController.class,
-            "/css/login.css",
+            "/css/screens/login.css",
             () -> new com.viewmodels.LoginViewModel(
                     ServiceManager.getInstance(),
                     ScreenManager.getInstance())
@@ -40,7 +40,7 @@ public class ScreenRegistry {
     public static final ScreenLoadable REGISTER = ScreenLoadable.of(
             "/fxml/Register.fxml",
             com.gui_controllers.RegisterController.class,
-            "/css/register.css",
+            "/css/screens/register.css",
             () -> new com.viewmodels.RegisterViewModel(
                     ServiceManager.getInstance(),
                     ScreenManager.getInstance())
@@ -49,8 +49,8 @@ public class ScreenRegistry {
     /** Dashboard screen - main user hub after login */
     public static final ScreenLoadable DASHBOARD = ScreenLoadable.of(
             "/fxml/Dashboard.fxml",
-            com.gui_controllers.DashboardController.class,
-            "/css/dashboard.css",
+            com.gui_controllers.dashboard.DashboardController.class,
+            "/css/screens/dashboard.css",
             () -> new com.viewmodels.DashboardViewModel(
                     ServiceManager.getInstance(),
                     ScreenManager.getInstance())
@@ -59,8 +59,8 @@ public class ScreenRegistry {
     /** Game Library screen - displays available games */
     public static final ScreenLoadable GAME_LIBRARY = ScreenLoadable.of(
             "/fxml/GameLibrary.fxml",
-            com.gui_controllers.GameLibraryController.class,
-            "/css/library.css",
+            com.gui_controllers.game_library.GameLibraryController.class,
+            "/css/screens/library.css",
             () -> new com.viewmodels.GameLibraryViewModel()
     );
 
@@ -68,7 +68,7 @@ public class ScreenRegistry {
     public static final ScreenLoadable LEADERBOARD = ScreenLoadable.of(
             "/fxml/Leaderboard.fxml",
             com.gui_controllers.LeaderboardController.class,
-            "/css/leaderboard.css",
+            "/css/screens/leaderboard.css",
             () -> new com.viewmodels.LeaderboardViewModel()
     );
 
@@ -76,7 +76,7 @@ public class ScreenRegistry {
     public static final ScreenLoadable SETTINGS = ScreenLoadable.of(
             "/fxml/Setting.fxml",
             com.gui_controllers.SettingController.class,
-            "/css/setting.css",
+            "/css/screens/setting.css",
             () -> new com.viewmodels.SettingViewModel()
     );
 

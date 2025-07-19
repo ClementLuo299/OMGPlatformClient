@@ -46,7 +46,7 @@
 
     </VBox>
     <stylesheets>
-        <URL value="@../css/register.css" />
+        <URL value="@../css/screens/register.css" />
     </stylesheets>
 
 </AnchorPane>

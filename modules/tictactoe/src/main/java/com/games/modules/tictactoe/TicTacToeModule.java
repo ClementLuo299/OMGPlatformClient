@@ -2,6 +2,8 @@ package com.games.modules.tictactoe;
 
 import com.games.BaseGameModule;
 import com.games.GameModule;
+import com.games.GameModule.GameDifficulty;
+import com.games.GameModule.GameMode;
 import com.games.GameOptions;
 import com.games.GameState;
 import com.utils.error_handling.Logging;

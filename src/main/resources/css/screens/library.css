@@ -179,6 +179,70 @@
     -fx-background-color: transparent;
 }
 
+/* Enhanced UI Components */
+.status-text {
+    -fx-font-size: 14px;
+    -fx-text-fill: #64748B;
+    -fx-padding: 4px 0 0 0;
+}
+
+.refresh-button {
+    -fx-background-color: -fx-accent-color;
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.refresh-button:hover {
+    -fx-background-color: derive(-fx-accent-color, -10%);
+}
+
+/* Filter Section */
+.filter-section {
+    -fx-padding: 15px;
+    -fx-background-color: -fx-secondary-color;
+    -fx-background-radius: 8px;
+    -fx-spacing: 10px;
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -fx-text-color;
+}
+
+.filter-controls {
+    -fx-spacing: 15px;
+    -fx-alignment: center-left;
+}
+
+.filter-group {
+    -fx-spacing: 5px;
+}
+
+.filter-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748B;
+    -fx-font-weight: bold;
+}
+
+.filter-group .combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 4px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 4px;
+}
+
+.filter-group .text-field {
+    -fx-background-color: white;
+    -fx-background-radius: 4px;
+    -fx-border-color: #E2E8F0;
+    -fx-border-radius: 4px;
+    -fx-padding: 8px 12px;
+}
+
 /* Game Card Styling */
 .game-card {
     -fx-background-color: -fx-primary-color;

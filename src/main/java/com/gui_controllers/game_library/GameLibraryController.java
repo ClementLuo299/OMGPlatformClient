@@ -1,30 +1,33 @@
-package com.gui_controllers;
+package com.gui_controllers.game_library;
 
 import com.games.GameModule;
 import com.games.GameRegistry;
+import com.games.GameDiscoveryService;
 import com.games.GameOptions;
 import com.services.GameLauncherService;
 import com.viewmodels.GameLibraryViewModel;
-import com.gui_controllers.GameLibraryCard;
 import com.utils.error_handling.Logging;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
- * Controller for the Game Library screen, handling UI interactions and binding to ViewModel.
- * Manages the display of available games and navigation between screens.
+ * Enhanced Game Library Controller with advanced filtering, search, and dynamic game discovery.
+ * Combines the best features of both simple and dynamic game library controllers.
  *
  * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
  * @date March 27, 2025
@@ -68,7 +71,30 @@ public class GameLibraryController {
     @FXML
     private TilePane gameCardsContainer;
     
-    // Filter buttons
+    // Enhanced UI components
+    @FXML
+    private ProgressIndicator loadingIndicator;
+    
+    @FXML
+    private Label statusLabel;
+    
+    // Advanced filter controls
+    @FXML
+    private ComboBox<String> categoryFilter;
+    
+    @FXML
+    private ComboBox<GameModule.GameDifficulty> difficultyFilter;
+    
+    @FXML
+    private ComboBox<GameModule.GameMode> modeFilter;
+    
+    @FXML
+    private TextField searchField;
+    
+    @FXML
+    private Button refreshButton;
+    
+    // Legacy filter buttons (kept for backward compatibility)
     @FXML
     private Button allGamesFilterBtn;
     
@@ -85,25 +111,35 @@ public class GameLibraryController {
     
     private GameLibraryViewModel viewModel;
     private GameRegistry gameRegistry;
+    private GameDiscoveryService discoveryService;
     private GameLauncherService gameLauncher;
+    private ObservableList<GameModule> allGames;
+    private FilteredList<GameModule> filteredGames;
     
     // ==================== INITIALIZATION ====================
     
     @FXML
     public void initialize() {
-        Logging.info("Initializing GameLibraryController");
+        Logging.info("Initializing Enhanced GameLibraryController");
         
         // Initialize game services
         initializeGameServices();
         
         // Set up UI bindings and event handlers
         setupNavigationButtons();
-        setupFilterButtons();
+        setupAdvancedFilterControls();
+        setupSearchField();
+        setupRefreshButton();
+        setupLegacyFilterButtons();
         setupUIState();
         
-        // Game cards will be set up asynchronously after discovery completes
+        // Initialize game list
+        initializeGameList();
         
-        Logging.info("GameLibraryController initialized successfully");
+        // Start game discovery
+        discoverGames();
+        
+        Logging.info("Enhanced GameLibraryController initialized successfully");
     }
     
     /**
@@ -163,28 +199,14 @@ public class GameLibraryController {
     private void initializeGameServices() {
         Logging.info("Initializing game services");
         
-        // Initialize game registry
+        // Initialize game registry and discovery service
         gameRegistry = GameRegistry.getInstance();
+        discoveryService = GameDiscoveryService.getInstance();
         gameLauncher = GameLauncherService.getInstance();
         
-        // Initialize registry and wait for games to be discovered
+        // Initialize registry
         gameRegistry.initialize();
-        
-        // Wait a bit for async discovery to complete, then set up game cards
-        new Thread(() -> {
-            try {
-                // Wait for discovery to complete
-                Thread.sleep(2000);
-                
-                // Update UI on JavaFX thread
-                javafx.application.Platform.runLater(() -> {
-                    setupGameCards();
-                });
-                
-            } catch (InterruptedException e) {
-                Logging.error("❌ Interrupted while waiting for game discovery", e);
-            }
-        }).start();
+        discoveryService.initialize();
         
         Logging.info("Game services initialized successfully");
     }
@@ -219,10 +241,57 @@ public class GameLibraryController {
     }
     
     /**
-     * Set up filter button event handlers.
+     * Set up advanced filter controls.
      */
-    private void setupFilterButtons() {
-        Logging.info("Setting up filter buttons");
+    private void setupAdvancedFilterControls() {
+        Logging.info("Setting up advanced filter controls");
+        
+        if (categoryFilter != null) {
+            categoryFilter.getItems().addAll("All Categories", "Classic", "Strategy", "Puzzle", "Card", "Arcade", "Adventure", "Simulation");
+            categoryFilter.setValue("All Categories");
+            categoryFilter.setOnAction(event -> applyFilters());
+        }
+        
+        if (difficultyFilter != null) {
+            difficultyFilter.getItems().addAll(GameModule.GameDifficulty.values());
+            difficultyFilter.setValue(GameModule.GameDifficulty.EASY);
+            difficultyFilter.setOnAction(event -> applyFilters());
+        }
+        
+        if (modeFilter != null) {
+            modeFilter.getItems().addAll(GameModule.GameMode.values());
+            modeFilter.setValue(GameModule.GameMode.LOCAL_MULTIPLAYER);
+            modeFilter.setOnAction(event -> applyFilters());
+        }
+    }
+    
+    /**
+     * Set up search field.
+     */
+    private void setupSearchField() {
+        if (searchField != null) {
+            searchField.setPromptText("Search games...");
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
+        }
+    }
+    
+    /**
+     * Set up refresh button.
+     */
+    private void setupRefreshButton() {
+        if (refreshButton != null) {
+            refreshButton.setOnAction(event -> {
+                Logging.info("Refresh button clicked");
+                discoverGames();
+            });
+        }
+    }
+    
+    /**
+     * Set up legacy filter button event handlers.
+     */
+    private void setupLegacyFilterButtons() {
+        Logging.info("Setting up legacy filter buttons");
         
         if (allGamesFilterBtn != null) {
             allGamesFilterBtn.setOnAction(event -> {
@@ -253,6 +322,138 @@ public class GameLibraryController {
                 viewModel.filterClassicGames();
             });
         }
+    }
+    
+    /**
+     * Initialize the game list.
+     */
+    private void initializeGameList() {
+        allGames = FXCollections.observableArrayList();
+        filteredGames = new FilteredList<>(allGames, game -> true);
+        
+        // Bind filtered games to the UI
+        filteredGames.addListener((javafx.collections.ListChangeListener.Change<? extends GameModule> change) -> {
+            updateGameDisplay();
+        });
+    }
+    
+    /**
+     * Discover games from all sources.
+     */
+    private void discoverGames() {
+        Logging.info("Starting game discovery");
+        
+        // Show loading indicator
+        if (loadingIndicator != null) {
+            loadingIndicator.setVisible(true);
+        }
+        
+        if (statusLabel != null) {
+            statusLabel.setText("Discovering games...");
+        }
+        
+        // Start discovery
+        CompletableFuture<List<GameModule>> discoveryFuture = discoveryService.discoverAllGames();
+        
+        discoveryFuture.thenAccept(games -> {
+            Logging.info("Game discovery completed: " + games.size() + " games found");
+            
+            // Update UI on JavaFX thread
+            javafx.application.Platform.runLater(() -> {
+                allGames.clear();
+                allGames.addAll(games);
+                
+                // Hide loading indicator
+                if (loadingIndicator != null) {
+                    loadingIndicator.setVisible(false);
+                }
+                
+                if (statusLabel != null) {
+                    statusLabel.setText(games.size() + " games available");
+                }
+                
+                Logging.info("Game list updated with " + games.size() + " games");
+            });
+        }).exceptionally(throwable -> {
+            Logging.error("Game discovery failed: " + throwable.getMessage(), throwable);
+            
+            javafx.application.Platform.runLater(() -> {
+                if (loadingIndicator != null) {
+                    loadingIndicator.setVisible(false);
+                }
+                
+                if (statusLabel != null) {
+                    statusLabel.setText("Failed to load games");
+                }
+            });
+            
+            return null;
+        });
+    }
+    
+    /**
+     * Apply current filters to the game list.
+     */
+    private void applyFilters() {
+        if (filteredGames == null) return;
+        
+        filteredGames.setPredicate(game -> {
+            // Category filter
+            if (categoryFilter != null && categoryFilter.getValue() != null && 
+                !"All Categories".equals(categoryFilter.getValue())) {
+                if (!categoryFilter.getValue().equals(game.getGameCategory())) {
+                    return false;
+                }
+            }
+            
+            // Difficulty filter
+            if (difficultyFilter != null && difficultyFilter.getValue() != null) {
+                if (difficultyFilter.getValue() != game.getDifficulty()) {
+                    return false;
+                }
+            }
+            
+            // Mode filter
+            if (modeFilter != null && modeFilter.getValue() != null) {
+                switch (modeFilter.getValue()) {
+                    case SINGLE_PLAYER:
+                        if (!game.supportsSinglePlayer()) return false;
+                        break;
+                    case LOCAL_MULTIPLAYER:
+                        if (!game.supportsLocalMultiplayer()) return false;
+                        break;
+                    case ONLINE_MULTIPLAYER:
+                        if (!game.supportsOnlineMultiplayer()) return false;
+                        break;
+                }
+            }
+            
+            // Search filter
+            if (searchField != null && searchField.getText() != null && !searchField.getText().trim().isEmpty()) {
+                String searchTerm = searchField.getText().toLowerCase();
+                return game.getGameName().toLowerCase().contains(searchTerm) ||
+                       game.getGameDescription().toLowerCase().contains(searchTerm) ||
+                       game.getGameCategory().toLowerCase().contains(searchTerm);
+            }
+            
+            return true;
+        });
+    }
+    
+    /**
+     * Update the game display with current filtered games.
+     */
+    private void updateGameDisplay() {
+        if (gameCardsContainer == null) return;
+        
+        gameCardsContainer.getChildren().clear();
+        
+        for (GameModule game : filteredGames) {
+            GameLibraryCard gameCard = new GameLibraryCard(game, () -> handleGamePlay(game));
+            gameCardsContainer.getChildren().add(gameCard);
+        }
+        
+        Logging.info("Updated game display with " + filteredGames.size() + " games");
     }
     
     /**

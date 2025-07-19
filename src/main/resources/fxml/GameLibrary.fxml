@@ -5,6 +5,9 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -12,9 +15,10 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainContainer" prefHeight="800.0" prefWidth="1500" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.GameLibraryController">
+<BorderPane fx:id="mainContainer" prefHeight="800.0" prefWidth="1500" styleClass="main-container" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.game_library.GameLibraryController">
     <left>
         <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
             <!-- com.MainApplication Title -->
@@ -89,11 +93,47 @@
     <center>
         <VBox prefHeight="800.0" prefWidth="850.0" styleClass="content-area">
             <!-- Header Section -->
-            <HBox styleClass="games-header">
-                <Label styleClass="games-title" text="Game Library" />
+            <HBox styleClass="games-header" alignment="CENTER_LEFT" spacing="20">
+                <VBox styleClass="header-text">
+                    <Label styleClass="games-title" text="Game Library" />
+                    <Label fx:id="statusLabel" text="Loading games..." styleClass="status-text" />
+                </VBox>
+                
+                <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
+                
+                <ProgressIndicator fx:id="loadingIndicator" visible="false" />
+                
+                <Button fx:id="refreshButton" text="Refresh" styleClass="refresh-button" />
             </HBox>
             
-            <!-- Filter Buttons -->
+            <!-- Advanced Filter Section -->
+            <VBox styleClass="filter-section" spacing="10">
+                <Label text="Filters" styleClass="section-title" />
+                
+                <HBox styleClass="filter-controls" spacing="15" alignment="CENTER_LEFT">
+                    <VBox styleClass="filter-group" spacing="5">
+                        <Label text="Category" styleClass="filter-label" />
+                        <ComboBox fx:id="categoryFilter" prefWidth="150" />
+                    </VBox>
+                    
+                    <VBox styleClass="filter-group" spacing="5">
+                        <Label text="Difficulty" styleClass="filter-label" />
+                        <ComboBox fx:id="difficultyFilter" prefWidth="150" />
+                    </VBox>
+                    
+                    <VBox styleClass="filter-group" spacing="5">
+                        <Label text="Game Mode" styleClass="filter-label" />
+                        <ComboBox fx:id="modeFilter" prefWidth="150" />
+                    </VBox>
+                    
+                    <VBox styleClass="filter-group" spacing="5">
+                        <Label text="Search" styleClass="filter-label" />
+                        <TextField fx:id="searchField" prefWidth="200" />
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <!-- Legacy Filter Buttons -->
             <HBox styleClass="game-filters">
                 <Button fx:id="allGamesFilterBtn" styleClass="filter-button" text="All Games" />
                 <Button fx:id="cardGamesFilterBtn" styleClass="filter-button" text="Card Games" />
@@ -129,6 +169,6 @@
     </right>
     
     <stylesheets>
-        <URL value="@../css/library.css" />
+        <URL value="@../css/screens/library.css" />
     </stylesheets>
 </BorderPane>

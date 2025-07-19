@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="800.0" prefWidth="1500" styleClass="root-container" stylesheets="@../css/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.DashboardController">
+<HBox prefHeight="800.0" prefWidth="1500" styleClass="root-container" stylesheets="@../css/screens/dashboard.css" xmlns="http://javafx.com/javafx/21.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gui_controllers.dashboard.DashboardController">
     <!-- Left Sidebar Navigation -->
     <VBox fx:id="sidebar" prefHeight="800.0" prefWidth="250.0" styleClass="sidebar">
         <!-- com.MainApplication Title -->
@@ -81,10 +81,10 @@
     </VBox>
 
     <!-- Main Content Area -->
-    <VBox styleClass="content-area" stylesheets="@../css/dashboard.css" HBox.hgrow="ALWAYS">
-        <!-- Page Header -->
-        <HBox styleClass="page-header" stylesheets="@../css/dashboard.css">
-            <VBox stylesheets="@../css/dashboard.css">
+            <VBox styleClass="content-area" stylesheets="@../css/screens/dashboard.css" HBox.hgrow="ALWAYS">
+            <!-- Page Header -->
+            <HBox styleClass="page-header" stylesheets="@../css/screens/dashboard.css">
+                <VBox stylesheets="@../css/screens/dashboard.css">
                 <Label styleClass="page-title" text="Dashboard" />
                 <Label styleClass="page-subtitle" text="Welcome back to your gaming hub" />
             </VBox>

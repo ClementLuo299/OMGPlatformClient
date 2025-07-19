@@ -1,8 +1,8 @@
 package com.test;
 
 import com.games.GameRegistry;
+import com.gui_controllers.game_library.GameLibraryController;
 import com.games.GameModule;
-import com.gui_controllers.GameLibraryController;
 import com.utils.error_handling.Logging;
 
 import java.util.List;
