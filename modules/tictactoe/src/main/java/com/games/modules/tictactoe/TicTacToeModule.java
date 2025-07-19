@@ -7,6 +7,9 @@ import com.games.GameModule.GameMode;
 import com.games.GameOptions;
 import com.games.GameState;
 import com.utils.error_handling.Logging;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * TicTacToe game module implementation.
@@ -83,6 +86,18 @@ public class TicTacToeModule extends BaseGameModule {
     }
     
     @Override
+    public String getGameFxmlPath() {
+        // Override to use the correct resource path for the module
+        return "/games/tictactoe/fxml/tictactoe.fxml";
+    }
+    
+    @Override
+    public String getGameCssPath() {
+        // Override to use the correct resource path for the module
+        return "/games/tictactoe/css/tictactoe.css";
+    }
+    
+    @Override
     protected Class<?> getGameControllerClass() {
         return TicTacToeController.class;
     }
@@ -112,6 +127,83 @@ public class TicTacToeModule extends BaseGameModule {
         gameState.setStateValue("gameBoard", new String[3][3]); // 3x3 board
         
         return gameState;
+    }
+    
+    @Override
+    public Scene launchGame(Stage primaryStage, GameMode gameMode, int playerCount, GameOptions gameOptions) {
+        Logging.info("🎮 Launching " + getGameName() + " with mode: " + gameMode.getDisplayName() + ", players: " + playerCount);
+        
+        try {
+            // Load the game's FXML using the correct resource path
+            String fxmlPath = getGameFxmlPath();
+            Logging.info("📁 Loading FXML from: " + fxmlPath);
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            
+            // Create the scene
+            Scene scene = new Scene(loader.load());
+            
+            // Apply CSS if available
+            String cssPath = getGameCssPath();
+            if (cssPath != null && !cssPath.isEmpty()) {
+                try {
+                    String cssUrl = getClass().getResource(cssPath).toExternalForm();
+                    scene.getStylesheets().add(cssUrl);
+                    Logging.info("🎨 Applied CSS: " + cssUrl);
+                } catch (Exception e) {
+                    Logging.warning("⚠️ Could not load CSS: " + cssPath + " - " + e.getMessage());
+                }
+            }
+            
+            // Get the controller and initialize it
+            Object controller = loader.getController();
+            if (controller != null) {
+                initializeGameController(controller, gameMode, playerCount, gameOptions);
+            } else {
+                Logging.error("❌ Controller is null for " + getGameName());
+            }
+            
+            Logging.info("✅ " + getGameName() + " launched successfully");
+            return scene;
+            
+        } catch (Exception e) {
+            Logging.error("❌ Failed to launch " + getGameName() + ": " + e.getMessage(), e);
+            return null;
+        }
+    }
+    
+    /**
+     * Creates a TicTacToeScreenLoadable for integration with the main app's screen system.
+     * This method allows TicTacToe to be launched using the main application's ScreenManager
+     * while keeping all game-specific resources and configuration within the module.
+     * 
+     * @param gameMode The game mode
+     * @param playerCount Number of players
+     * @param gameOptions Game-specific options
+     * @return A TicTacToeScreenLoadable instance
+     */
+    public TicTacToeScreenLoadable createScreenLoadable(GameMode gameMode, int playerCount, GameOptions gameOptions) {
+        Logging.info("🎮 Creating TicTacToeScreenLoadable for " + getGameName());
+        return new TicTacToeScreenLoadable(gameMode, playerCount, gameOptions);
+    }
+    
+    /**
+     * Loads the TicTacToe screen using the module's own screen loader.
+     * This method provides a way to load the game screen with proper initialization
+     * while keeping all game-specific logic within the module.
+     * 
+     * @param gameMode The game mode
+     * @param playerCount Number of players
+     * @param gameOptions Game-specific options
+     * @return The screen load result
+     */
+    public com.core.screens.ScreenLoadResult<TicTacToeController> loadGameScreen(GameMode gameMode, int playerCount, GameOptions gameOptions) {
+        Logging.info("🎮 Loading TicTacToe game screen using module's screen loader");
+        
+        TicTacToeScreenLoadable screenLoadable = createScreenLoadable(gameMode, playerCount, gameOptions);
+        TicTacToeScreenLoader screenLoader = new TicTacToeScreenLoader();
+        
+        return screenLoader.loadTicTacToeScreen(screenLoadable);
     }
     
     @Override

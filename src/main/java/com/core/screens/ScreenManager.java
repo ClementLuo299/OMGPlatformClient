@@ -1,5 +1,6 @@
 package com.core.screens;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -9,6 +10,7 @@ import com.utils.error_handling.ErrorCategory;
 import com.utils.error_handling.ErrorSeverity;
 import com.utils.error_handling.Logging;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -111,6 +113,14 @@ public class ScreenManager {
         }
         return instance;
     }
+    
+    /**
+     * Gets the main stage managed by this ScreenManager.
+     * @return The main application stage
+     */
+    public Stage getMainStage() {
+        return mainStage;
+    }
 
     // ==================== PUBLIC NAVIGATION METHODS ====================
     
@@ -178,6 +188,69 @@ public class ScreenManager {
         } catch (Exception e) {
             String errorMsg = "Failed to navigate to screen: " + 
                             (screen != null ? screen.getFxmlPath() : "null");
+            Logging.error(errorMsg + ": " + e.getMessage(), e);
+            ErrorHandler.handleCriticalError(e, errorMsg);
+            throw e;
+        }
+    }
+    
+    /**
+     * Navigates to a game scene by loading the game's FXML and displaying it.
+     * This method properly integrates games into the main application's navigation system.
+     *
+     * @param gameFxmlPath The path to the game's FXML file
+     * @param gameCssPath The path to the game's CSS file (can be null)
+     * @param gameTitle The title to display for the game
+     * @param <T> Controller type inferred from FXML
+     * @return Controller instance for the game
+     * @throws IllegalArgumentException if gameFxmlPath is null
+     */
+    public <T> T navigateToGame(String gameFxmlPath, String gameCssPath, String gameTitle) {
+        try {
+            Logging.info("🎮 Navigating to game: " + gameFxmlPath);
+            
+            // Validate input parameters
+            if (gameFxmlPath == null || gameFxmlPath.trim().isEmpty()) {
+                throw new IllegalArgumentException("Game FXML path cannot be null or empty");
+            }
+            
+            // Load the game's FXML
+            Logging.info("Loading game FXML: " + gameFxmlPath);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(gameFxmlPath));
+            Parent gameRoot;
+            try {
+                gameRoot = loader.load();
+            } catch (IOException e) {
+                String errorMsg = "Failed to load game FXML: " + gameFxmlPath;
+                Logging.error(errorMsg + ": " + e.getMessage(), e);
+                ErrorHandler.handleCriticalError(e, errorMsg);
+                throw new RuntimeException(errorMsg, e);
+            }
+            
+            // Get the controller
+            T controller = loader.getController();
+            Logging.info("Game controller loaded: " + (controller != null ? controller.getClass().getSimpleName() : "null"));
+
+            // Display the game screen
+            Logging.info("Displaying game screen: " + gameFxmlPath);
+            displayScreen(gameRoot);
+            
+            // Set the window title
+            if (gameTitle != null && !gameTitle.trim().isEmpty()) {
+                mainStage.setTitle(gameTitle);
+            }
+            
+            // Apply CSS if specified
+            if (gameCssPath != null && !gameCssPath.trim().isEmpty()) {
+                Logging.info("Loading game CSS: " + gameCssPath);
+                loadCss(gameCssPath);
+            }
+            
+            Logging.info("✅ Successfully navigated to game: " + gameFxmlPath);
+            return controller;
+            
+        } catch (Exception e) {
+            String errorMsg = "Failed to navigate to game: " + gameFxmlPath;
             Logging.error(errorMsg + ": " + e.getMessage(), e);
             ErrorHandler.handleCriticalError(e, errorMsg);
             throw e;

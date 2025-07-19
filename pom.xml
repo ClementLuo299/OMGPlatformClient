@@ -132,6 +132,45 @@
       <resource>
         <directory>src/main/resources</directory>
       </resource>
+      <resource>
+        <directory>modules/tictactoe/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/chess/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/snake/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/solitaire/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/tetris/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/connect4/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/checkers/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/memory/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/puzzle/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/racing/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/simulation/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/adventure/src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>modules/example/src/main/resources</directory>
+      </resource>
     </resources>
     <plugins>
       <plugin>
@@ -161,6 +200,37 @@
             <include>**/*Tests.java</include>
           </includes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>modules/tictactoe/src/main/java</source>
+                <source>modules/chess/src/main/java</source>
+                <source>modules/snake/src/main/java</source>
+                <source>modules/solitaire/src/main/java</source>
+                <source>modules/tetris/src/main/java</source>
+                <source>modules/connect4/src/main/java</source>
+                <source>modules/checkers/src/main/java</source>
+                <source>modules/memory/src/main/java</source>
+                <source>modules/puzzle/src/main/java</source>
+                <source>modules/racing/src/main/java</source>
+                <source>modules/simulation/src/main/java</source>
+                <source>modules/adventure/src/main/java</source>
+                <source>modules/example/src/main/java</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

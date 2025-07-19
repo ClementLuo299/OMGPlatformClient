@@ -120,7 +120,7 @@ public class GameLibraryController {
     
     @FXML
     public void initialize() {
-        Logging.info("Initializing Enhanced GameLibraryController");
+        Logging.info("🎮 Initializing Enhanced GameLibraryController - Instance: " + System.identityHashCode(this));
         
         // Initialize game services
         initializeGameServices();
@@ -136,10 +136,13 @@ public class GameLibraryController {
         // Initialize game list
         initializeGameList();
         
+        // Set up game cards from existing registry
+        setupGameCards();
+        
         // Start game discovery
         discoverGames();
         
-        Logging.info("Enhanced GameLibraryController initialized successfully");
+        Logging.info("✅ Enhanced GameLibraryController initialized successfully - Instance: " + System.identityHashCode(this));
     }
     
     /**
@@ -215,9 +218,17 @@ public class GameLibraryController {
      * Set up dynamic game cards from discovered games.
      */
     private void setupGameCards() {
-        Logging.info("Setting up dynamic game cards");
+        Logging.info("🎮 Setting up dynamic game cards");
         
         try {
+            // Check if gameCardsContainer is available
+            if (gameCardsContainer == null) {
+                Logging.error("❌ gameCardsContainer is null - cannot set up game cards");
+                return;
+            }
+            
+            Logging.info("📦 gameCardsContainer found: " + gameCardsContainer.getClass().getSimpleName());
+            
             // Get all discovered games from registry
             List<GameModule> games = gameRegistry.getAllGames();
             
@@ -225,15 +236,25 @@ public class GameLibraryController {
             
             // Clear existing cards
             gameCardsContainer.getChildren().clear();
+            Logging.info("🧹 Cleared existing game cards");
             
             // Create game cards for each discovered game
             for (GameModule game : games) {
                 Logging.info("🎯 Creating card for: " + game.getGameName() + " (ID: " + game.getGameId() + ")");
-                GameLibraryCard gameCard = new GameLibraryCard(game, () -> handleGamePlay(game));
-                gameCardsContainer.getChildren().add(gameCard);
+                try {
+                    GameLibraryCard gameCard = new GameLibraryCard(game, () -> handleGamePlay(game));
+                    gameCardsContainer.getChildren().add(gameCard);
+                    Logging.info("✅ Added card for: " + game.getGameName());
+                } catch (Exception e) {
+                    Logging.error("❌ Failed to create card for " + game.getGameName() + ": " + e.getMessage(), e);
+                }
             }
             
-            Logging.info("✅ Created " + gameCardsContainer.getChildren().size() + " game cards");
+            Logging.info("✅ Created " + gameCardsContainer.getChildren().size() + " game cards total");
+            
+            // Check if the container is visible
+            Logging.info("👁️ gameCardsContainer visible: " + gameCardsContainer.isVisible());
+            Logging.info("👁️ gameCardsContainer managed: " + gameCardsContainer.isManaged());
             
         } catch (Exception e) {
             Logging.error("❌ Error setting up game cards: " + e.getMessage(), e);
@@ -372,6 +393,9 @@ public class GameLibraryController {
                     statusLabel.setText(games.size() + " games available");
                 }
                 
+                // Update the game display
+                updateGameDisplay();
+                
                 Logging.info("Game list updated with " + games.size() + " games");
             });
         }).exceptionally(throwable -> {
@@ -444,16 +468,26 @@ public class GameLibraryController {
      * Update the game display with current filtered games.
      */
     private void updateGameDisplay() {
-        if (gameCardsContainer == null) return;
+        Logging.info("🔄 Updating game display...");
+        
+        if (gameCardsContainer == null) {
+            Logging.error("❌ gameCardsContainer is null - cannot update display");
+            return;
+        }
+        
+        Logging.info("📊 Filtered games count: " + (filteredGames != null ? filteredGames.size() : "null"));
         
         gameCardsContainer.getChildren().clear();
         
-        for (GameModule game : filteredGames) {
-            GameLibraryCard gameCard = new GameLibraryCard(game, () -> handleGamePlay(game));
-            gameCardsContainer.getChildren().add(gameCard);
+        if (filteredGames != null) {
+            for (GameModule game : filteredGames) {
+                Logging.info("🎮 Creating card for game: " + game.getGameName());
+                GameLibraryCard gameCard = new GameLibraryCard(game, () -> handleGamePlay(game));
+                gameCardsContainer.getChildren().add(gameCard);
+            }
         }
         
-        Logging.info("Updated game display with " + filteredGames.size() + " games");
+        Logging.info("✅ Updated game display with " + (filteredGames != null ? filteredGames.size() : 0) + " games");
     }
     
     /**
@@ -565,21 +599,16 @@ public class GameLibraryController {
             GameOptions gameOptions = new GameOptions();
             gameOptions.setOption("launchTime", System.currentTimeMillis());
             
-            // Get the current stage
-            Stage currentStage = (Stage) mainContainer.getScene().getWindow();
-            
-            // Launch the game with default settings
-            Scene gameScene = gameLauncher.launchGame(
+            // Launch the game using the integrated method
+            boolean success = gameLauncher.launchGameIntegrated(
                 game.getGameId(), 
-                currentStage, 
                 GameModule.GameMode.LOCAL_MULTIPLAYER, 
                 game.getMinPlayers(), 
                 gameOptions
             );
             
-            if (gameScene != null) {
+            if (success) {
                 Logging.info("✅ Game launched successfully: " + game.getGameName());
-                // The game scene is now set on the stage
             } else {
                 Logging.error("❌ Failed to launch game: " + game.getGameName());
             }

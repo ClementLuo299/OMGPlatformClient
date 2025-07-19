@@ -84,7 +84,14 @@ public class SourceCodeGameSource implements GameDiscoveryService.GameSource {
             String moduleName = moduleDir.getName();
             Logging.info("🔍 Loading source code module: " + moduleName);
             
-            // Find Java source files
+            // Try to load the actual game module class first
+            GameModule actualModule = loadActualGameModule(moduleName);
+            if (actualModule != null) {
+                Logging.info("✅ Successfully loaded actual module: " + actualModule.getGameName() + " from " + moduleName);
+                return actualModule;
+            }
+            
+            // Fallback to parsing source files if actual module loading fails
             List<File> sourceFiles = findJavaSourceFiles(moduleDir);
             if (sourceFiles.isEmpty()) {
                 Logging.warning("⚠️ No Java source files found in: " + moduleName);
@@ -101,6 +108,46 @@ public class SourceCodeGameSource implements GameDiscoveryService.GameSource {
             
         } catch (Exception e) {
             Logging.error("❌ Error loading source module " + moduleDir.getName() + ": " + e.getMessage(), e);
+            return null;
+        }
+    }
+    
+    /**
+     * Try to load the actual game module class using reflection.
+     */
+    private GameModule loadActualGameModule(String moduleName) {
+        try {
+            // Try different possible class names
+            String[] possibleClassNames = {
+                "com.games.modules." + moduleName + "." + capitalize(moduleName) + "Module",
+                "com.games.modules." + moduleName + "." + capitalize(moduleName) + "GameModule",
+                "com.games.modules." + moduleName + "." + capitalize(moduleName) + "Game",
+                // Special case for tictactoe -> TicTacToe
+                "com.games.modules." + moduleName + ".TicTacToeModule"
+            };
+            
+            for (String className : possibleClassNames) {
+                try {
+                    Class<?> moduleClass = Class.forName(className);
+                    if (GameModule.class.isAssignableFrom(moduleClass)) {
+                        Object instance = moduleClass.getDeclaredConstructor().newInstance();
+                        Logging.info("✅ Loaded actual game module class: " + className);
+                        return (GameModule) instance;
+                    }
+                } catch (ClassNotFoundException e) {
+                    // Continue to next possible class name
+                    continue;
+                } catch (Exception e) {
+                    Logging.warning("⚠️ Error instantiating " + className + ": " + e.getMessage());
+                    continue;
+                }
+            }
+            
+            Logging.warning("⚠️ Could not find game module class in: " + moduleName);
+            return null;
+            
+        } catch (Exception e) {
+            Logging.error("❌ Error loading actual game module: " + e.getMessage(), e);
             return null;
         }
     }

@@ -1,6 +1,6 @@
 package com.games.modules.connect4;
 
-import com.games.GameMode;
+import com.games.GameModule.GameMode;
 import com.games.GameOptions;
 import com.utils.error_handling.Logging;
 

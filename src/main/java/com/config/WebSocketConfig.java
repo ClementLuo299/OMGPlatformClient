@@ -14,9 +14,9 @@ public class WebSocketConfig {
     private static final String WS_SERVER_URL = "ws://192.168.2.82:8080";
     
     // WebSocket endpoints
-    private static final String WS_GENERAL_ENDPOINT = "/ws";
-    private static final String WS_GAME_ENDPOINT = "/ws/game";
-    private static final String WS_CHAT_ENDPOINT = "/ws/chat";
+    private static final String WS_GENERAL_ENDPOINT = "/websocket";
+    private static final String WS_GAME_ENDPOINT = "/websocket/game";
+    private static final String WS_CHAT_ENDPOINT = "/websocket/chat";
     
     /**
      * Gets the general WebSocket URL for basic messaging

@@ -52,11 +52,6 @@ public abstract class BaseGameModule implements GameModule {
                 scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
             }
             
-            // Set up the stage
-            primaryStage.setTitle(getGameName() + " - " + gameMode.getDisplayName());
-            primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
-            
             // Get the controller and initialize it
             Object controller = loader.getController();
             if (controller != null) {

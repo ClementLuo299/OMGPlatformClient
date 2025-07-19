@@ -54,14 +54,21 @@ public class WebSocketService {
             return CompletableFuture.completedFuture(false);
         }
         
+        // Check if WebSocket is enabled
+        String wsUrl = WebSocketConfig.getGeneralWebSocketUrl();
+        if (wsUrl == null || wsUrl.isEmpty()) {
+            Logging.info("🔌 WebSocket connections are disabled");
+            return CompletableFuture.completedFuture(false);
+        }
+        
         this.currentUsername = username;
         
         return CompletableFuture.supplyAsync(() -> {
             try {
                 isConnecting.set(true);
-                Logging.info("🔌 Attempting to connect to WebSocket server: " + WebSocketConfig.getGeneralWebSocketUrl());
+                Logging.info("🔌 Attempting to connect to WebSocket server: " + wsUrl);
                 
-                URI uri = new URI(WebSocketConfig.getGeneralWebSocketUrl());
+                URI uri = new URI(wsUrl);
                 
                 // Configure SSL context to trust all certificates for development
                 SSLContext sslContext = SSLContext.getInstance("TLS");

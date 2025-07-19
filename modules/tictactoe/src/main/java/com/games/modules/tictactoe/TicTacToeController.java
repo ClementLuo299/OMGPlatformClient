@@ -12,7 +12,7 @@ import com.entities.UserAccount;
 import com.games.GameModule;
 import com.games.GameOptions;
 import com.games.GameState;
-import com.gui_controllers.GameLibraryController;
+import com.gui_controllers.game_library.GameLibraryController;
 import com.core.screens.ScreenManager;
 import com.config.ScreenRegistry;
 import com.utils.error_handling.Logging;
@@ -322,16 +322,28 @@ public class TicTacToeController implements Initializable {
      */
     @FXML
     private void onBackButtonClicked() {
+        Logging.info("🔙 Back button clicked - attempting to return to game library");
+        
         // Stop any active timers
         if (moveTimer != null) {
             moveTimer.stop();
+            Logging.info("⏸️ Timer stopped");
         }
         
         // Navigate back to game library
         try {
-            ScreenManager.getInstance().navigateTo(ScreenRegistry.GAME_LIBRARY);
+            Logging.info("🧭 Navigating to Game Library...");
+            ScreenManager screenManager = ScreenManager.getInstance();
+            Logging.info("📱 ScreenManager instance: " + (screenManager != null ? "found" : "null"));
+            
+            if (screenManager != null) {
+                screenManager.navigateTo(ScreenRegistry.GAME_LIBRARY);
+                Logging.info("✅ Navigation to Game Library initiated");
+            } else {
+                Logging.error("❌ ScreenManager is null");
+            }
         } catch (Exception e) {
-            Logging.error("Failed to navigate back to game library: " + e.getMessage(), e);
+            Logging.error("❌ Failed to navigate back to game library: " + e.getMessage(), e);
         }
     }
 
