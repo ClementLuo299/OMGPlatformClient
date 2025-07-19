@@ -34,8 +34,14 @@ public class GUIConfig {
     // Screen management settings
     public static final ScreenLoadable INITIAL_SCREEN = ScreenRegistry.LOGIN;
     public static final int SCREEN_CACHE_SIZE = 10;
-    public static final boolean ENABLE_SCREEN_CACHING = false; // Disabled to fix Game Library initialization issue
+    public static final boolean ENABLE_SCREEN_CACHING = true; // Re-enabled after Game Library initialization issue was resolved
 
-    // Preloaded screens - disabled to fix Game Library initialization issue
-    public static final List<ScreenLoadable> PRELOAD_SCREENS = List.of(); // Empty list to disable preloading
+    // Preloaded screens - re-enabled after Game Library initialization issue was resolved
+    public static final List<ScreenLoadable> PRELOAD_SCREENS = List.of(
+        ScreenRegistry.LOGIN,
+        ScreenRegistry.DASHBOARD,
+        ScreenRegistry.GAME_LIBRARY,
+        ScreenRegistry.LEADERBOARD,
+        ScreenRegistry.SETTINGS
+    );
 }
