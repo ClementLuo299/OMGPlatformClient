@@ -1,5 +1,6 @@
-package com.games;
+package com.games.sourcing;
 
+import com.games.GameModule;
 import com.utils.error_handling.Logging;
 
 import java.io.File;
@@ -15,7 +16,7 @@ import java.util.List;
  * 
  * @authors Clement Luo
  * @date July 18, 2025
- * @edited July 18, 2025
+ * @edited July 19, 2025
  * @since 1.0
  */
 public class ModuleLoader {

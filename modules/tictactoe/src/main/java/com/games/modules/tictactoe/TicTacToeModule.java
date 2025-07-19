@@ -1,9 +1,8 @@
 package com.games.modules.tictactoe;
 
-import com.games.BaseGameModule;
 import com.games.GameModule;
-import com.games.GameModule.GameDifficulty;
-import com.games.GameModule.GameMode;
+import com.games.enums.GameDifficulty;
+import com.games.enums.GameMode;
 import com.games.GameOptions;
 import com.games.GameState;
 import com.utils.error_handling.Logging;
@@ -19,7 +18,7 @@ import javafx.stage.Stage;
  * @date January 2025
  * @since 1.0
  */
-public class TicTacToeModule extends BaseGameModule {
+public class TicTacToeModule implements GameModule {
     
     private static final String GAME_ID = "tictactoe";
     private static final String GAME_NAME = "Tic Tac Toe";
@@ -81,33 +80,23 @@ public class TicTacToeModule extends BaseGameModule {
     }
     
     @Override
-    protected String getGameBasePath() {
-        return "/games/tictactoe";
-    }
-    
-    @Override
     public String getGameFxmlPath() {
-        // Override to use the correct resource path for the module
         return "/games/tictactoe/fxml/tictactoe.fxml";
     }
     
     @Override
     public String getGameCssPath() {
-        // Override to use the correct resource path for the module
         return "/games/tictactoe/css/tictactoe.css";
     }
     
     @Override
-    protected Class<?> getGameControllerClass() {
-        return TicTacToeController.class;
+    public String getGameIconPath() {
+        return "/games/tictactoe/icons/tic_tac_toe_icon.png";
     }
     
     @Override
-    protected void initializeGameController(Object controller, GameMode gameMode, int playerCount, GameOptions gameOptions) {
-        if (controller instanceof TicTacToeController) {
-            TicTacToeController ticTacToeController = (TicTacToeController) controller;
-            ticTacToeController.initializeGame(gameMode, playerCount, gameOptions);
-        }
+    public void onGameClose() {
+        Logging.info("🔄 " + getGameName() + " closing - cleaning up resources");
     }
     
     @Override
@@ -158,7 +147,10 @@ public class TicTacToeModule extends BaseGameModule {
             // Get the controller and initialize it
             Object controller = loader.getController();
             if (controller != null) {
-                initializeGameController(controller, gameMode, playerCount, gameOptions);
+                if (controller instanceof TicTacToeController) {
+                    TicTacToeController ticTacToeController = (TicTacToeController) controller;
+                    ticTacToeController.initializeGame(gameMode, playerCount, gameOptions);
+                }
             } else {
                 Logging.error("❌ Controller is null for " + getGameName());
             }

@@ -3,6 +3,8 @@ package com.services;
 import com.games.GameModule;
 import com.games.GameOptions;
 import com.games.GameState;
+import com.games.enums.GameDifficulty;
+import com.games.enums.GameMode;
 import com.utils.error_handling.Logging;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -119,7 +121,7 @@ public class GameLauncherService {
      * @param gameOptions Game-specific options
      * @return The game scene, or null if launch failed
      */
-    public Scene launchGame(String gameId, Stage primaryStage, GameModule.GameMode gameMode, 
+    public Scene launchGame(String gameId, Stage primaryStage, GameMode gameMode, 
                           int playerCount, GameOptions gameOptions) {
         
         Logging.info("🚀 Launching game: " + gameId + " with mode: " + gameMode.getDisplayName());
@@ -181,7 +183,7 @@ public class GameLauncherService {
      * @param gameOptions Game-specific options
      * @return true if the game was launched successfully
      */
-    public boolean launchGameIntegrated(String gameId, GameModule.GameMode gameMode, 
+    public boolean launchGameIntegrated(String gameId, GameMode gameMode, 
                                       int playerCount, GameOptions gameOptions) {
         
         Logging.info("🎮 Launching integrated game: " + gameId + " with mode: " + gameMode.getDisplayName());
@@ -232,7 +234,7 @@ public class GameLauncherService {
      * @param gameOptions Game-specific options
      * @return true if the game was launched successfully
      */
-    private boolean launchTicTacToeIntegrated(GameModule game, GameModule.GameMode gameMode, 
+    private boolean launchTicTacToeIntegrated(GameModule game, GameMode gameMode, 
                                             int playerCount, GameOptions gameOptions) {
         Logging.info("🎮 Launching TicTacToe using module-specific screen system");
         
@@ -276,7 +278,7 @@ public class GameLauncherService {
      * @param gameOptions Game-specific options
      * @return true if the game was launched successfully
      */
-    private boolean launchGenericGameIntegrated(GameModule game, GameModule.GameMode gameMode, 
+    private boolean launchGenericGameIntegrated(GameModule game, GameMode gameMode, 
                                               int playerCount, GameOptions gameOptions) {
         Logging.info("🎮 Launching generic game using main app's screen system");
         
@@ -318,13 +320,13 @@ public class GameLauncherService {
      * @param playerCount Number of players
      * @param gameOptions Game options
      */
-    private void initializeGameController(Object controller, GameModule.GameMode gameMode, 
+    private void initializeGameController(Object controller, GameMode gameMode, 
                                         int playerCount, GameOptions gameOptions) {
         try {
             // Use reflection to call the initializeGame method if it exists
             java.lang.reflect.Method initMethod = controller.getClass().getMethod(
                 "initializeGame", 
-                GameModule.GameMode.class, 
+                GameMode.class, 
                 int.class, 
                 GameOptions.class
             );
@@ -346,7 +348,7 @@ public class GameLauncherService {
      * @param gameMode The game mode to check
      * @return true if the game mode is supported
      */
-    private boolean isGameModeSupported(GameModule game, GameModule.GameMode gameMode) {
+    private boolean isGameModeSupported(GameModule game, GameMode gameMode) {
         switch (gameMode) {
             case SINGLE_PLAYER:
                 return game.supportsSinglePlayer();
@@ -487,8 +489,8 @@ public class GameLauncherService {
      * @param difficulty The difficulty level (null for any)
      * @return List of games matching the criteria
      */
-    public List<GameModule> getGamesByCriteria(GameModule.GameMode gameMode, Integer maxPlayers, 
-                                              GameModule.GameDifficulty difficulty) {
+    public List<GameModule> getGamesByCriteria(GameMode gameMode, Integer maxPlayers, 
+                                              GameDifficulty difficulty) {
         List<GameModule> filteredGames = new ArrayList<>();
         
         for (GameModule game : registeredGames.values()) {

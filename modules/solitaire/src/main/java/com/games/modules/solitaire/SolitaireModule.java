@@ -1,6 +1,5 @@
 package com.games.modules.solitaire;
 
-import com.games.BaseGameModule;
 import com.games.GameOptions;
 import com.games.GameState;
 import com.utils.error_handling.Logging;
@@ -13,7 +12,7 @@ import com.utils.error_handling.Logging;
  * @date January 2025
  * @since 1.0
  */
-public class SolitaireModule extends BaseGameModule {
+public class SolitaireModule implements GameModule {
     
     private static final String GAME_ID = "solitaire";
     private static final String GAME_NAME = "Solitaire";

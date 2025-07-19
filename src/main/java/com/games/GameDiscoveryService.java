@@ -1,5 +1,11 @@
 package com.games;
 
+import com.games.enums.GameDifficulty;
+import com.games.enums.GameMode;
+import com.games.sourcing.GameSource;
+import com.games.sourcing.LocalGameSource;
+import com.games.sourcing.RemoteGameSource;
+import com.games.sourcing.SourceCodeGameSource;
 import com.utils.error_handling.Logging;
 import com.utils.error_handling.SafeExecute;
 
@@ -13,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 
  * @authors Clement Luo
  * @date July 18, 2025
- * @edited July 18, 2025
+ * @edited July 19, 2025
  * @since 1.0
  */
 public class GameDiscoveryService {
@@ -159,7 +165,7 @@ public class GameDiscoveryService {
      * @param difficulty The game difficulty
      * @return List of games with the specified difficulty
      */
-    public List<GameModule> getGamesByDifficulty(GameModule.GameDifficulty difficulty) {
+    public List<GameModule> getGamesByDifficulty(GameDifficulty difficulty) {
         return discoveredGames.values().stream()
             .filter(game -> difficulty == game.getDifficulty())
             .toList();
@@ -170,7 +176,7 @@ public class GameDiscoveryService {
      * @param gameMode The game mode
      * @return List of games that support the specified mode
      */
-    public List<GameModule> getGamesByMode(GameModule.GameMode gameMode) {
+    public List<GameModule> getGamesByMode(GameMode gameMode) {
         return discoveredGames.values().stream()
             .filter(game -> {
                 switch (gameMode) {
@@ -181,28 +187,5 @@ public class GameDiscoveryService {
                 }
             })
             .toList();
-    }
-    
-    /**
-     * Interface for game sources that can discover games.
-     */
-    public interface GameSource {
-        /**
-         * Gets the name of this game source.
-         * @return The source name
-         */
-        String getName();
-        
-        /**
-         * Discovers games from this source.
-         * @return List of discovered game modules
-         */
-        List<GameModule> discoverGames();
-        
-        /**
-         * Checks if this source is available.
-         * @return true if the source is available
-         */
-        boolean isAvailable();
     }
 } 

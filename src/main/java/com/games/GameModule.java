@@ -8,7 +8,8 @@ import javafx.stage.Stage;
  * Each game should implement this interface to integrate with the game launcher.
  *
  * @authors Clement Luo
- * @date January 2025
+ * @date July 19, 2025
+ * @edited July 19, 2025
  * @since 1.0
  */
 public interface GameModule {
@@ -53,7 +54,7 @@ public interface GameModule {
      * Gets the difficulty level of the game.
      * @return Game difficulty
      */
-    GameDifficulty getDifficulty();
+    com.games.enums.GameDifficulty getDifficulty();
     
     /**
      * Gets the category of the game.
@@ -88,7 +89,7 @@ public interface GameModule {
      * @param gameOptions Additional game-specific options
      * @return The game scene
      */
-    Scene launchGame(Stage primaryStage, GameMode gameMode, int playerCount, GameOptions gameOptions);
+    Scene launchGame(Stage primaryStage, com.games.enums.GameMode gameMode, int playerCount, GameOptions gameOptions);
     
     /**
      * Gets the game's icon path (relative to resources).
@@ -125,43 +126,4 @@ public interface GameModule {
      * @param gameState The saved game state
      */
     void loadGameState(GameState gameState);
-    
-    /**
-     * Game difficulty levels
-     */
-    enum GameDifficulty {
-        EASY("Easy"),
-        MEDIUM("Medium"),
-        HARD("Hard"),
-        VARIABLE("Variable");
-        
-        private final String displayName;
-        
-        GameDifficulty(String displayName) {
-            this.displayName = displayName;
-        }
-        
-        public String getDisplayName() {
-            return displayName;
-        }
-    }
-    
-    /**
-     * Game modes
-     */
-    enum GameMode {
-        SINGLE_PLAYER("Single Player"),
-        LOCAL_MULTIPLAYER("Local Multiplayer"),
-        ONLINE_MULTIPLAYER("Online Multiplayer");
-        
-        private final String displayName;
-        
-        GameMode(String displayName) {
-            this.displayName = displayName;
-        }
-        
-        public String getDisplayName() {
-            return displayName;
-        }
-    }
 } 

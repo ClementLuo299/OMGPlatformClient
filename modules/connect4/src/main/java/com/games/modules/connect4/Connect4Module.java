@@ -1,6 +1,5 @@
 package com.games.modules.connect4;
 
-import com.games.BaseGameModule;
 import com.games.GameModule;
 import com.games.GameOptions;
 import com.games.GameState;
@@ -14,7 +13,7 @@ import com.utils.error_handling.Logging;
  * @date January 2025
  * @since 1.0
  */
-public class Connect4Module extends BaseGameModule {
+public class Connect4Module implements GameModule {
     
     private static final String GAME_ID = "connect4";
     private static final String GAME_NAME = "Connect Four";

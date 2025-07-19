@@ -1,6 +1,5 @@
 package com.games.modules.checkers;
 
-import com.games.BaseGameModule;
 import com.games.GameModule;
 import com.games.GameOptions;
 import com.games.GameState;
@@ -14,7 +13,7 @@ import com.utils.error_handling.Logging;
  * @date January 2025
  * @since 1.0
  */
-public class CheckersModule extends BaseGameModule {
+public class CheckersModule implements GameModule {
     
     private static final String GAME_ID = "checkers";
     private static final String GAME_NAME = "Checkers";

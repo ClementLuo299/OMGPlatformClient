@@ -4,6 +4,8 @@ import com.games.GameModule;
 import com.games.GameRegistry;
 import com.games.GameDiscoveryService;
 import com.games.GameOptions;
+import com.games.enums.GameDifficulty;
+import com.games.enums.GameMode;
 import com.services.GameLauncherService;
 import com.viewmodels.GameLibraryViewModel;
 import com.utils.error_handling.Logging;
@@ -83,10 +85,10 @@ public class GameLibraryController {
     private ComboBox<String> categoryFilter;
     
     @FXML
-    private ComboBox<GameModule.GameDifficulty> difficultyFilter;
+    private ComboBox<GameDifficulty> difficultyFilter;
     
     @FXML
-    private ComboBox<GameModule.GameMode> modeFilter;
+    private ComboBox<GameMode> modeFilter;
     
     @FXML
     private TextField searchField;
@@ -274,14 +276,14 @@ public class GameLibraryController {
         }
         
         if (difficultyFilter != null) {
-            difficultyFilter.getItems().addAll(GameModule.GameDifficulty.values());
-            difficultyFilter.setValue(GameModule.GameDifficulty.EASY);
+            difficultyFilter.getItems().addAll(GameDifficulty.values());
+            difficultyFilter.setValue(GameDifficulty.EASY);
             difficultyFilter.setOnAction(event -> applyFilters());
         }
         
         if (modeFilter != null) {
-            modeFilter.getItems().addAll(GameModule.GameMode.values());
-            modeFilter.setValue(GameModule.GameMode.LOCAL_MULTIPLAYER);
+            modeFilter.getItems().addAll(GameMode.values());
+            modeFilter.setValue(GameMode.LOCAL_MULTIPLAYER);
             modeFilter.setOnAction(event -> applyFilters());
         }
     }
@@ -602,7 +604,7 @@ public class GameLibraryController {
             // Launch the game using the integrated method
             boolean success = gameLauncher.launchGameIntegrated(
                 game.getGameId(), 
-                GameModule.GameMode.LOCAL_MULTIPLAYER, 
+                GameMode.LOCAL_MULTIPLAYER, 
                 game.getMinPlayers(), 
                 gameOptions
             );
@@ -625,7 +627,7 @@ public class GameLibraryController {
      * @param gameMode The game mode
      * @param playerCount Number of players
      */
-    private void launchGame(String gameId, GameModule.GameMode gameMode, int playerCount) {
+    private void launchGame(String gameId, GameMode gameMode, int playerCount) {
         Logging.info("🚀 Launching game: " + gameId + " with mode: " + gameMode.getDisplayName());
         
         try {

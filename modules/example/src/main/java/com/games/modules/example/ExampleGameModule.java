@@ -1,10 +1,14 @@
 package com.games.modules.example;
 
-import com.games.BaseGameModule;
 import com.games.GameModule;
+import com.games.enums.GameDifficulty;
+import com.games.enums.GameMode;
 import com.games.GameOptions;
 import com.games.GameState;
 import com.utils.error_handling.Logging;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * Example game module to demonstrate the dynamic game discovery system.
@@ -14,7 +18,7 @@ import com.utils.error_handling.Logging;
  * @date January 2025
  * @since 1.0
  */
-public class ExampleGameModule extends BaseGameModule {
+public class ExampleGameModule implements GameModule {
     
     private static final String GAME_ID = "example-game";
     private static final String GAME_NAME = "Example Game";
@@ -76,21 +80,56 @@ public class ExampleGameModule extends BaseGameModule {
     }
     
     @Override
-    protected String getGameBasePath() {
-        return "/games/example";
-    }
-    
-    @Override
-    protected Class<?> getGameControllerClass() {
-        return ExampleGameController.class;
-    }
-    
-    @Override
-    protected void initializeGameController(Object controller, GameMode gameMode, int playerCount, GameOptions gameOptions) {
-        if (controller instanceof ExampleGameController) {
-            ExampleGameController exampleController = (ExampleGameController) controller;
-            exampleController.initializeGame(gameMode, playerCount, gameOptions);
+    public Scene launchGame(Stage primaryStage, GameMode gameMode, int playerCount, GameOptions gameOptions) {
+        Logging.info("🎮 Launching " + getGameName() + " with mode: " + gameMode.getDisplayName() + ", players: " + playerCount);
+        
+        try {
+            // Load the game's FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(getGameFxmlPath()));
+            
+            // Create the scene
+            Scene scene = new Scene(loader.load());
+            
+            // Apply CSS if available
+            String cssPath = getGameCssPath();
+            if (cssPath != null && !cssPath.isEmpty()) {
+                scene.getStylesheets().add(getClass().getResource(cssPath).toExternalForm());
+            }
+            
+            // Get the controller and initialize it
+            Object controller = loader.getController();
+            if (controller != null && controller instanceof ExampleGameController) {
+                ExampleGameController exampleController = (ExampleGameController) controller;
+                exampleController.initializeGame(gameMode, playerCount, gameOptions);
+            }
+            
+            Logging.info("✅ " + getGameName() + " launched successfully");
+            return scene;
+            
+        } catch (Exception e) {
+            Logging.error("❌ Failed to launch " + getGameName() + ": " + e.getMessage(), e);
+            return null;
         }
+    }
+    
+    @Override
+    public String getGameIconPath() {
+        return "/games/example/icons/example_icon.png";
+    }
+    
+    @Override
+    public String getGameFxmlPath() {
+        return "/games/example/fxml/example.fxml";
+    }
+    
+    @Override
+    public String getGameCssPath() {
+        return "/games/example/css/example.css";
+    }
+    
+    @Override
+    public void onGameClose() {
+        Logging.info("🔄 " + getGameName() + " closing - cleaning up resources");
     }
     
     @Override

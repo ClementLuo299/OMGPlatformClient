@@ -1,5 +1,9 @@
 package com.entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 /**
@@ -7,7 +11,12 @@ import java.time.LocalDate;
  *
  * @authors Clement Luo, Irith Irith, Dylan Shiels, Fatin Abrar Ankon
  * @date March 4, 2025
+ * @edited July 19, 2025
+ * @since 1.0
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserAccount {
     private String username;
     private String password;
@@ -22,7 +31,6 @@ public class UserAccount {
     private int expInLevel;
     private int nextLevelThreshold;
 
-
     /**
      * Constructor that takes only required fields.
      */
@@ -30,32 +38,10 @@ public class UserAccount {
         this.username = username;
         this.password = password;
         this.created_date = LocalDate.now().toString();
-
         this.expInLevel = 0;
         this.nextLevelThreshold = 10;
         this.level = 0;
     }
-
-    /**
-     * Getters.
-     */
-    public String getUsername() {
-        return username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public String getFullName() {
-        return fullName;
-    }
-    public String getDob() {
-        return dob;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public int getExperienceLevel() {return level;}
-    public float getSessionIntensityLevel() {return sessionIntensityLevel;}
 
     /**
      * Checks if the player is online
@@ -68,43 +54,6 @@ public class UserAccount {
         return true;
     }
 
-    public int getLevel()  {
-        return this.level;
-    }
-
-    public int getExpInLevel ()  {
-        return this.expInLevel;
-    }
-
-    public int getNextLevelThreshold()  {
-        return this.nextLevelThreshold;
-    }
-
-
-    /**
-     * Setters.
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-    
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-    
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public void setSessionIntensityLevel(float sessionIntensityLevel) {this.sessionIntensityLevel = sessionIntensityLevel;}
     /**
      * Sets the Online status of this com.network.IO.User to true
      */
@@ -117,17 +66,5 @@ public class UserAccount {
      */
     public void logOff() {
         this.online = false;
-    }
-
-    public void setLevel(int num)  {
-        this.level = num;
-    }
-
-    public void setExpInLevel(int num)  {
-        this.expInLevel = num;
-    }
-
-    public void setNextLevelThreshold(int num)  {
-        this.nextLevelThreshold = num;
     }
 }

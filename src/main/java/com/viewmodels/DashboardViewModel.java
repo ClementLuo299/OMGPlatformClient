@@ -8,6 +8,8 @@ import com.games.GameRegistry;
 import com.games.GameState;
 import com.gui_controllers.dashboard.GameCard;
 import com.games.GameOptions;
+import com.games.enums.GameDifficulty;
+import com.games.enums.GameMode;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;

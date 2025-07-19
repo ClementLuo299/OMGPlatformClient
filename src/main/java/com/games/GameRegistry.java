@@ -1,5 +1,7 @@
 package com.games;
 
+import com.games.enums.GameDifficulty;
+import com.games.enums.GameMode;
 import com.services.GameLauncherService;
 import com.utils.error_handling.Logging;
 
@@ -119,7 +121,7 @@ public class GameRegistry {
      * @param difficulty The difficulty level to filter by
      * @return List of games with the specified difficulty
      */
-    public List<GameModule> getGamesByDifficulty(GameModule.GameDifficulty difficulty) {
+    public List<GameModule> getGamesByDifficulty(GameDifficulty difficulty) {
         return discoveryService.getGamesByDifficulty(difficulty);
     }
     
@@ -128,7 +130,7 @@ public class GameRegistry {
      * @param gameMode The game mode to filter by
      * @return List of games that support the specified mode
      */
-    public List<GameModule> getGamesByMode(GameModule.GameMode gameMode) {
+    public List<GameModule> getGamesByMode(GameMode gameMode) {
         return discoveryService.getGamesByMode(gameMode);
     }
     
@@ -188,7 +190,7 @@ public class GameRegistry {
      * @return List of games that support online multiplayer
      */
     public List<GameModule> getOnlineMultiplayerGames() {
-        return getGamesByMode(GameModule.GameMode.ONLINE_MULTIPLAYER);
+        return getGamesByMode(GameMode.ONLINE_MULTIPLAYER);
     }
     
     /**
@@ -196,7 +198,7 @@ public class GameRegistry {
      * @return List of games that support local multiplayer
      */
     public List<GameModule> getLocalMultiplayerGames() {
-        return getGamesByMode(GameModule.GameMode.LOCAL_MULTIPLAYER);
+        return getGamesByMode(GameMode.LOCAL_MULTIPLAYER);
     }
     
     /**
@@ -204,7 +206,7 @@ public class GameRegistry {
      * @return List of games that support single player
      */
     public List<GameModule> getSinglePlayerGames() {
-        return getGamesByMode(GameModule.GameMode.SINGLE_PLAYER);
+        return getGamesByMode(GameMode.SINGLE_PLAYER);
     }
     
     /**
@@ -227,7 +229,7 @@ public class GameRegistry {
         
         // Group by difficulty
         summary.append("\n🎯 By Difficulty:\n");
-        for (GameModule.GameDifficulty difficulty : GameModule.GameDifficulty.values()) {
+        for (GameDifficulty difficulty : GameDifficulty.values()) {
             List<GameModule> difficultyGames = getGamesByDifficulty(difficulty);
             if (!difficultyGames.isEmpty()) {
                 summary.append("  ").append(difficulty.getDisplayName()).append(": ").append(difficultyGames.size()).append(" games\n");
@@ -236,7 +238,7 @@ public class GameRegistry {
         
         // Group by mode
         summary.append("\n🎲 By Game Mode:\n");
-        for (GameModule.GameMode mode : GameModule.GameMode.values()) {
+        for (GameMode mode : GameMode.values()) {
             List<GameModule> modeGames = getGamesByMode(mode);
             if (!modeGames.isEmpty()) {
                 summary.append("  ").append(mode.getDisplayName()).append(": ").append(modeGames.size()).append(" games\n");

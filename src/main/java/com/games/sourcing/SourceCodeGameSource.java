@@ -1,5 +1,8 @@
-package com.games;
+package com.games.sourcing;
 
+import com.games.GameModule;
+import com.games.GameOptions;
+import com.games.GameState;
 import com.utils.error_handling.Logging;
 
 import java.io.File;
@@ -18,10 +21,10 @@ import java.util.stream.Stream;
  * 
  * @authors Clement Luo
  * @date July 18, 2025
- * @edited July 18, 2025
+ * @edited July 19, 2025
  * @since 1.0
  */
-public class SourceCodeGameSource implements GameDiscoveryService.GameSource {
+public class SourceCodeGameSource implements GameSource {
     
     private static final String SOURCE_NAME = "Source Code Games";
     private static final String MODULES_DIR = "modules";

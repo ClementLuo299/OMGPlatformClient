@@ -1,6 +1,5 @@
 package com.games.modules.puzzle;
 
-import com.games.BaseGameModule;
 import com.games.GameModule;
 import com.games.GameOptions;
 import com.games.GameState;
@@ -14,7 +13,7 @@ import com.utils.error_handling.Logging;
  * @date January 2025
  * @since 1.0
  */
-public class PuzzleModule extends BaseGameModule {
+public class PuzzleModule implements GameModule {
     
     private static final String GAME_ID = "puzzle";
     private static final String GAME_NAME = "Brain Teasers";

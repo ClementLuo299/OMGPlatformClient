@@ -1,5 +1,6 @@
 package com.games;
 
+import com.games.enums.GameMode;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +19,7 @@ public class GameState {
     private final String gameName;
     private final LocalDateTime saveTime;
     private final Map<String, Object> stateData;
-    private final GameModule.GameMode gameMode;
+    private final GameMode gameMode;
     private final int playerCount;
     private final GameOptions gameOptions;
     
@@ -31,7 +32,7 @@ public class GameState {
      * @param playerCount Number of players
      * @param gameOptions Game options
      */
-    public GameState(String gameId, String gameName, GameModule.GameMode gameMode, 
+    public GameState(String gameId, String gameName, GameMode gameMode, 
                     int playerCount, GameOptions gameOptions) {
         this.gameId = gameId;
         this.gameName = gameName;
@@ -70,7 +71,7 @@ public class GameState {
      * Gets the game mode.
      * @return The game mode
      */
-    public GameModule.GameMode getGameMode() {
+    public GameMode getGameMode() {
         return gameMode;
     }
     
