@@ -2,6 +2,7 @@ package com.games;
 
 import com.utils.error_handling.Logging;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,12 +33,12 @@ public class LocalGameSource implements GameDiscoveryService.GameSource {
         
         try {
             List<GameModule> games = ModuleLoader.loadAllModules();
-            Logging.info("✅ Discovered " + games.size() + " games from modules");
+            Logging.info("✅ Discovered " + games.size() + " games from modules directory");
             return games;
             
         } catch (Exception e) {
             Logging.error("❌ Error discovering games from modules: " + e.getMessage(), e);
-            return new java.util.ArrayList<>();
+            return new ArrayList<>();
         }
     }
 } 

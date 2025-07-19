@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
@@ -99,59 +101,11 @@
                 <Button fx:id="classicGamesFilterBtn" styleClass="filter-button" text="Classic Games" />
             </HBox>
             
-            <!-- Game Cards Container -->
-            <HBox styleClass="game-cards-container">
-
-                
-                <!-- Checkers Card (Second) -->
-                <VBox fx:id="checkersCard" styleClass="game-card">
-                    <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/game/checkers_icon.jpg" />
-                    </ImageView>
-                    <Label styleClass="game-title" text="Checkers" />
-                    <HBox styleClass="game-info">
-                        <Label styleClass="game-players" text="2 Players" />
-                        <Label styleClass="game-time" text="15-30 min" />
-                    </HBox>
-                    <Label styleClass="game-description" text="Traditional board game where players move diagonally and try to capture all opponent's pieces." wrapText="true" />
-                    <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
-                    <Button fx:id="checkersButton" styleClass="game-card-button" text="Play Now" />
-                </VBox>
-                
-                <!-- Whist Card Game (Third) -->
-                <VBox fx:id="whistCard" styleClass="game-card">
-                    <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/game/whist_icon.png" />
-                    </ImageView>
-                    <Label styleClass="game-title" text="Whist Card Game" />
-                    <HBox styleClass="game-info">
-                        <Label styleClass="game-players" text="2-4 Players" />
-                        <Label styleClass="game-time" text="20-45 min" />
-                    </HBox>
-                    <Label styleClass="game-description" text="Classic trick-taking card game played with a standard deck of 52 playing cards." wrapText="true" />
-                    <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
-                    <Button fx:id="whistButton" styleClass="game-card-button" text="Play Now" />
-                </VBox>
-                
-                <!-- Tic Tac Toe Card (Fourth) -->
-                <VBox fx:id="ticTacToeCard" styleClass="game-card">
-                    <ImageView fitHeight="100" fitWidth="100" preserveRatio="true" styleClass="game-image">
-                        <Image url="@../icons/game/tic_tac_toe_icon.png" />
-                    </ImageView>
-                    <Label styleClass="game-title" text="Tic Tac Toe" />
-                    <HBox styleClass="game-info">
-                        <Label styleClass="game-players" text="2 Players" />
-                        <Label styleClass="game-time" text="2-5 min" />
-                    </HBox>
-                    <Label styleClass="game-description" text="Classic game where players take turns marking X and O in a 3x3 grid to get three in a row." wrapText="true" />
-                    <VBox styleClass="game-card-spacer" VBox.vgrow="ALWAYS" />
-                    <Button fx:id="ticTacToeButton" styleClass="game-card-button" text="Play Now" />
-                </VBox>
-            </HBox>
-            
-            <GridPane fx:id="gamesGrid" styleClass="games-grid">
-                <!-- Dynamic game cards will be populated here if needed -->
-            </GridPane>
+            <!-- Dynamic Game Cards Container with Scrolling -->
+            <ScrollPane styleClass="game-cards-scroll-pane" VBox.vgrow="ALWAYS">
+                <TilePane fx:id="gameCardsContainer" styleClass="game-cards-container" 
+                          hgap="20" vgap="20" prefColumns="3" />
+            </ScrollPane>
         </VBox>
     </center>
     

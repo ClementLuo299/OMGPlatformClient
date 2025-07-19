@@ -5,6 +5,7 @@ import com.games.GameRegistry;
 import com.games.GameOptions;
 import com.services.GameLauncherService;
 import com.viewmodels.GameLibraryViewModel;
+import com.gui_controllers.GameLibraryCard;
 import com.utils.error_handling.Logging;
 
 import javafx.fxml.FXML;
@@ -13,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -25,7 +28,7 @@ import java.util.List;
  *
  * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels
  * @date March 27, 2025
- * @edited June 26, 2025
+ * @edited July 18, 2025
  * @since 1.0
  */
 public class GameLibraryController {
@@ -61,15 +64,9 @@ public class GameLibraryController {
     @FXML
     private ListView<?> availableMatchesList;
     
-    // Game card buttons
+    // Dynamic game cards container
     @FXML
-    private Button ticTacToeButton;
-    
-    @FXML
-    private Button checkersButton;
-    
-    @FXML
-    private Button whistButton;
+    private TilePane gameCardsContainer;
     
     // Filter buttons
     @FXML
@@ -83,16 +80,6 @@ public class GameLibraryController {
     
     @FXML
     private Button classicGamesFilterBtn;
-    
-    // Game cards
-    @FXML
-    private VBox ticTacToeCard;
-    
-    @FXML
-    private VBox checkersCard;
-    
-    @FXML
-    private VBox whistCard;
     
     // ==================== DEPENDENCIES ====================
     
@@ -111,9 +98,10 @@ public class GameLibraryController {
         
         // Set up UI bindings and event handlers
         setupNavigationButtons();
-        setupGameButtons();
         setupFilterButtons();
         setupUIState();
+        
+        // Game cards will be set up asynchronously after discovery completes
         
         Logging.info("GameLibraryController initialized successfully");
     }
@@ -177,42 +165,56 @@ public class GameLibraryController {
         
         // Initialize game registry
         gameRegistry = GameRegistry.getInstance();
-        gameRegistry.initialize();
-        
-        // Get game launcher service
         gameLauncher = GameLauncherService.getInstance();
         
+        // Initialize registry and wait for games to be discovered
+        gameRegistry.initialize();
+        
+        // Wait a bit for async discovery to complete, then set up game cards
+        new Thread(() -> {
+            try {
+                // Wait for discovery to complete
+                Thread.sleep(2000);
+                
+                // Update UI on JavaFX thread
+                javafx.application.Platform.runLater(() -> {
+                    setupGameCards();
+                });
+                
+            } catch (InterruptedException e) {
+                Logging.error("❌ Interrupted while waiting for game discovery", e);
+            }
+        }).start();
+        
         Logging.info("Game services initialized successfully");
-        Logging.info(gameRegistry.getGamesSummary());
     }
     
     /**
-     * Set up game button event handlers.
+     * Set up dynamic game cards from discovered games.
      */
-    private void setupGameButtons() {
-        Logging.info("Setting up game buttons");
+    private void setupGameCards() {
+        Logging.info("Setting up dynamic game cards");
         
-        if (ticTacToeButton != null) {
-            ticTacToeButton.setOnAction(event -> {
-                Logging.info("Tic Tac Toe button clicked");
-                launchGame("tictactoe", GameModule.GameMode.LOCAL_MULTIPLAYER, 2);
-            });
-        }
-        
-        if (checkersButton != null) {
-            checkersButton.setOnAction(event -> {
-                Logging.info("Checkers button clicked");
-                // TODO: Implement Checkers module
-                Logging.info("Checkers not yet implemented");
-            });
-        }
-        
-        if (whistButton != null) {
-            whistButton.setOnAction(event -> {
-                Logging.info("Whist button clicked");
-                // TODO: Implement Whist module
-                Logging.info("Whist not yet implemented");
-            });
+        try {
+            // Get all discovered games from registry
+            List<GameModule> games = gameRegistry.getAllGames();
+            
+            Logging.info("🎮 Found " + games.size() + " games to display");
+            
+            // Clear existing cards
+            gameCardsContainer.getChildren().clear();
+            
+            // Create game cards for each discovered game
+            for (GameModule game : games) {
+                Logging.info("🎯 Creating card for: " + game.getGameName() + " (ID: " + game.getGameId() + ")");
+                GameLibraryCard gameCard = new GameLibraryCard(game, () -> handleGamePlay(game));
+                gameCardsContainer.getChildren().add(gameCard);
+            }
+            
+            Logging.info("✅ Created " + gameCardsContainer.getChildren().size() + " game cards");
+            
+        } catch (Exception e) {
+            Logging.error("❌ Error setting up game cards: " + e.getMessage(), e);
         }
     }
     
@@ -337,6 +339,52 @@ public class GameLibraryController {
         }
         if (classicGamesFilterBtn != null) {
             classicGamesFilterBtn.getStyleClass().remove("selected");
+        }
+    }
+    
+    /**
+     * Refresh the game library display.
+     * Can be called manually to reload games.
+     */
+    public void refreshGameLibrary() {
+        Logging.info("🔄 Refreshing game library");
+        setupGameCards();
+    }
+    
+    /**
+     * Handle game play action for a specific game.
+     * 
+     * @param game The game module to launch
+     */
+    private void handleGamePlay(GameModule game) {
+        Logging.info("🎮 Play button clicked for game: " + game.getGameName());
+        
+        try {
+            // Create game options
+            GameOptions gameOptions = new GameOptions();
+            gameOptions.setOption("launchTime", System.currentTimeMillis());
+            
+            // Get the current stage
+            Stage currentStage = (Stage) mainContainer.getScene().getWindow();
+            
+            // Launch the game with default settings
+            Scene gameScene = gameLauncher.launchGame(
+                game.getGameId(), 
+                currentStage, 
+                GameModule.GameMode.LOCAL_MULTIPLAYER, 
+                game.getMinPlayers(), 
+                gameOptions
+            );
+            
+            if (gameScene != null) {
+                Logging.info("✅ Game launched successfully: " + game.getGameName());
+                // The game scene is now set on the stage
+            } else {
+                Logging.error("❌ Failed to launch game: " + game.getGameName());
+            }
+            
+        } catch (Exception e) {
+            Logging.error("❌ Error launching game: " + e.getMessage(), e);
         }
     }
     
