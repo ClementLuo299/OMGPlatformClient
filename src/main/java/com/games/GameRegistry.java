@@ -12,7 +12,8 @@ import java.util.concurrent.CompletableFuture;
  * Now uses GameDiscoveryService for dynamic game discovery.
  *
  * @authors Clement Luo
- * @date January 2025
+ * @date July 18, 2025
+ * @edited July 18, 2025
  * @since 1.0
  */
 public class GameRegistry {

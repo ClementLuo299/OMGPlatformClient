@@ -139,52 +139,8 @@
             <VBox styleClass="game-stats">
                 <Label styleClass="section-title" text="Your Games" />
                 
-
-
-                <!-- Checkers Stats -->
-                <VBox styleClass="game-stat-card">
-                    <HBox>
-                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/game/checkers_icon.jpg" />
-                        </ImageView>
-                        <VBox>
-                            <Label styleClass="game-name" text="Checkers" />
-                            <Label styleClass="game-details" text="Level 8 • 47% Win Rate" />
-                        </VBox>
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="playCheckersBtn" styleClass="play-button" text="Play" />
-                    </HBox>
-                </VBox>
-
-                <!-- Whist Stats -->
-                <VBox styleClass="game-stat-card">
-                    <HBox>
-                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/game/whist_icon.png" />
-                        </ImageView>
-                        <VBox>
-                            <Label styleClass="game-name" text="Whist" />
-                            <Label styleClass="game-details" text="Level 5 • 50% Win Rate" />
-                        </VBox>
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="playWhistBtn" styleClass="play-button" text="Play" />
-                    </HBox>
-                </VBox>
-                
-                <!-- Tic Tac Toe Stats -->
-                <VBox styleClass="game-stat-card">
-                    <HBox>
-                        <ImageView fitHeight="48" fitWidth="48" styleClass="game-icon">
-                            <Image url="@../icons/game/tic_tac_toe_icon.png" />
-                        </ImageView>
-                        <VBox>
-                            <Label styleClass="game-name" text="Tic Tac Toe" />
-                            <Label styleClass="game-details" text="Level 7 • 65% Win Rate" />
-                        </VBox>
-                        <Pane HBox.hgrow="ALWAYS" />
-                        <Button fx:id="playTicTacToeBtn" styleClass="play-button" text="Play" />
-                    </HBox>
-                </VBox>
+                <!-- Dynamic Games List -->
+                <ListView fx:id="gamesListView" styleClass="games-list" VBox.vgrow="ALWAYS" />
             </VBox>
         </HBox>
     </VBox>

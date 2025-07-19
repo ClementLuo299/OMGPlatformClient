@@ -3,18 +3,26 @@ package com.viewmodels;
 import com.config.ScreenRegistry;
 import com.core.ServiceManager;
 import com.core.screens.ScreenManager;
+import com.games.GameModule;
+import com.games.GameRegistry;
+import com.games.GameState;
+import com.games.GameOptions;
+import com.gui_controllers.GameCard;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import com.utils.error_handling.Dialog;
 import com.utils.error_handling.Logging;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import java.util.List;
 
 /**
  * Manages GUI state and logic for the dashboard screen
  *
  * @authors Clement Luo
  * @date June 1, 2025
- * @edited June 26, 2025
+ * @edited July 18, 2025
  * @since 1.0
  */
 public class DashboardViewModel {
@@ -28,6 +36,7 @@ public class DashboardViewModel {
     private final StringProperty currentRank = new SimpleStringProperty();
     private final StringProperty bestGame = new SimpleStringProperty();
     private final ObservableList<String> activityList = FXCollections.observableArrayList();
+    private final ObservableList<GameCard> gamesList = FXCollections.observableArrayList();
     private final BooleanProperty isGuest = new SimpleBooleanProperty(false);
 
     // ==================== DEPENDENCIES ====================
@@ -43,6 +52,9 @@ public class DashboardViewModel {
         
         // Initialize with default values
         initializeDefaultData();
+        
+        // Load games from registry
+        loadGamesFromRegistry();
     }
 
     // ==================== PROPERTY ACCESSORS ====================
@@ -54,6 +66,7 @@ public class DashboardViewModel {
     public StringProperty currentRankProperty() { return currentRank; }
     public StringProperty bestGameProperty() { return bestGame; }
     public ObservableList<String> getActivityList() { return activityList; }
+    public ObservableList<GameCard> getGamesList() { return gamesList; }
     public BooleanProperty isGuestProperty() { return isGuest; }
 
     // ==================== PUBLIC ACTION HANDLERS ====================
@@ -113,47 +126,7 @@ public class DashboardViewModel {
 
 
 
-    /**
-     * Handles Checkers game launch
-     */
-    public void handlePlayCheckers() {
-        Logging.info("Play Checkers button clicked");
-        
-        try {
-            // TODO: Implement Checkers game launch
-            Dialog.showInfo("Info", "Checkers game launch not implemented yet");
-        } catch (Exception e) {
-            Dialog.showError("Error", "Could not launch Checkers: " + e.getMessage(), e);
-        }
-    }
 
-    /**
-     * Handles Whist game launch
-     */
-    public void handlePlayWhist() {
-        Logging.info("Play Whist button clicked");
-        
-        try {
-            // TODO: Implement Whist game launch
-            Dialog.showInfo("Info", "Whist game launch not implemented yet");
-        } catch (Exception e) {
-            Dialog.showError("Error", "Could not launch Whist: " + e.getMessage(), e);
-        }
-    }
-
-    /**
-     * Handles Tic Tac Toe game launch
-     */
-    public void handlePlayTicTacToe() {
-        Logging.info("Play Tic Tac Toe button clicked");
-        
-        try {
-            // TODO: Implement Tic Tac Toe game launch
-            Dialog.showInfo("Info", "Tic Tac Toe game launch not implemented yet");
-        } catch (Exception e) {
-            Dialog.showError("Error", "Could not launch Tic Tac Toe: " + e.getMessage(), e);
-        }
-    }
 
     // ==================== PUBLIC METHODS ====================
     
@@ -218,5 +191,118 @@ public class DashboardViewModel {
             "Played Whist - Won",
             "Reached Level 12 in Tic Tac Toe"
         );
+    }
+    
+    /**
+     * Loads games from the GameRegistry and creates GameCard components
+     */
+    private void loadGamesFromRegistry() {
+        try {
+            GameRegistry registry = GameRegistry.getInstance();
+            List<GameModule> availableGames = registry.getAllGames();
+            
+            gamesList.clear();
+            
+            for (GameModule game : availableGames) {
+                GameCard gameCard = new GameCard(game, () -> handleGamePlay(game));
+                gamesList.add(gameCard);
+            }
+            
+            // If no games found, add a demo game to show the functionality
+            if (gamesList.isEmpty()) {
+                addDemoGame();
+            }
+            
+            Logging.info("🎮 Loaded " + gamesList.size() + " games for dashboard");
+        } catch (Exception e) {
+            Logging.error("❌ Failed to load games from registry: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Adds a demo game to show the dynamic loading functionality
+     */
+    private void addDemoGame() {
+        try {
+            // Create a demo game module
+            GameModule demoGame = new GameModule() {
+                @Override
+                public String getGameId() { return "demo-game"; }
+                
+                @Override
+                public String getGameName() { return "Demo Game"; }
+                
+                @Override
+                public String getGameDescription() { return "A demo game to show dynamic loading"; }
+                
+                @Override
+                public int getMinPlayers() { return 1; }
+                
+                @Override
+                public int getMaxPlayers() { return 4; }
+                
+                @Override
+                public int getEstimatedDuration() { return 10; }
+                
+                @Override
+                public GameDifficulty getDifficulty() { return GameDifficulty.EASY; }
+                
+                @Override
+                public String getGameCategory() { return "Demo"; }
+                
+                @Override
+                public boolean supportsOnlineMultiplayer() { return true; }
+                
+                @Override
+                public boolean supportsLocalMultiplayer() { return true; }
+                
+                @Override
+                public boolean supportsSinglePlayer() { return true; }
+                
+                @Override
+                public Scene launchGame(Stage primaryStage, GameMode gameMode, int playerCount, GameOptions gameOptions) {
+                    return null; // Demo only
+                }
+                
+                @Override
+                public String getGameIconPath() { return "/icons/games/default_game_icon.png"; }
+                
+                @Override
+                public String getGameFxmlPath() { return "/fxml/demo.fxml"; }
+                
+                @Override
+                public String getGameCssPath() { return "/css/demo.css"; }
+                
+                @Override
+                public void onGameClose() { }
+                
+                @Override
+                public GameState getGameState() { return new GameState(getGameId(), getGameName(), GameMode.SINGLE_PLAYER, 1, new GameOptions()); }
+                
+                @Override
+                public void loadGameState(GameState gameState) { }
+            };
+            
+            GameCard demoCard = new GameCard(demoGame, () -> handleGamePlay(demoGame));
+            gamesList.add(demoCard);
+            
+            Logging.info("🎮 Added demo game to dashboard");
+        } catch (Exception e) {
+            Logging.error("❌ Failed to add demo game: " + e.getMessage(), e);
+        }
+    }
+    
+    /**
+     * Handles game play action for a specific game
+     */
+    private void handleGamePlay(GameModule game) {
+        Logging.info("🎮 Play button clicked for game: " + game.getGameName());
+        
+        try {
+            // TODO: Implement game launch logic
+            Dialog.showInfo("Game Launch", "Launching " + game.getGameName() + "...");
+        } catch (Exception e) {
+            Dialog.showError("Error", "Could not launch " + game.getGameName() + ": " + e.getMessage(), e);
+        }
     }
 }

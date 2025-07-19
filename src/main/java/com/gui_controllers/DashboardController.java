@@ -11,7 +11,7 @@ import javafx.scene.layout.VBox;
  *
  * @authors Fatin Abrar Ankon, Clement Luo, Dylan Shiels, Jason Bakajika, Zaman Dogar
  * @date March 18, 2025
- * @edited June 26, 2025
+ * @edited July 18, 2025
  * @since 1.0
  */
 public class DashboardController {
@@ -35,10 +35,8 @@ public class DashboardController {
     @FXML private Label bestGame;
     @FXML private ListView<String> activityList;
     
-    // Game play buttons
-    @FXML private Button playCheckersBtn;
-    @FXML private Button playWhistBtn;
-    @FXML private Button playTicTacToeBtn;
+    // Dynamic games list
+    @FXML private ListView<GameCard> gamesListView;
 
     /**
      * Sets the view model and binds all UI components
@@ -59,6 +57,9 @@ public class DashboardController {
         
         // Initialize activity list
         initializeActivityList(viewModel);
+        
+        // Initialize games list
+        initializeGamesList(viewModel);
     }
     
     /**
@@ -82,11 +83,6 @@ public class DashboardController {
         leaderboardBtn.setOnAction(e -> viewModel.handleLeaderboardNavigation());
         settingsBtn.setOnAction(e -> viewModel.handleSettingsNavigation());
         signOutBtn.setOnAction(e -> viewModel.handleSignOut());
-        
-        // Game play buttons
-        playCheckersBtn.setOnAction(e -> viewModel.handlePlayCheckers());
-        playWhistBtn.setOnAction(e -> viewModel.handlePlayWhist());
-        playTicTacToeBtn.setOnAction(e -> viewModel.handlePlayTicTacToe());
     }
     
     /**
@@ -107,5 +103,25 @@ public class DashboardController {
      */
     private void initializeActivityList(DashboardViewModel viewModel) {
         activityList.setItems(viewModel.getActivityList());
+    }
+    
+    /**
+     * Initializes the games list with dynamic game cards
+     */
+    private void initializeGamesList(DashboardViewModel viewModel) {
+        gamesListView.setItems(viewModel.getGamesList());
+        
+        // Set cell factory to create GameCard components
+        gamesListView.setCellFactory(listView -> new ListCell<GameCard>() {
+            @Override
+            protected void updateItem(GameCard item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    setGraphic(item);
+                }
+            }
+        });
     }
 }

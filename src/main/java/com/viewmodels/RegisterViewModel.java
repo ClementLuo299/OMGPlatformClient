@@ -6,15 +6,13 @@ import com.core.screens.ScreenManager;
 import com.utils.error_handling.Dialog;
 import com.utils.error_handling.Logging;
 import javafx.beans.property.*;
-import javafx.application.Platform;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Manages GUI state and logic for the registration screen
  *
  * @authors Clement Luo
  * @date June 1, 2025
- * @edited June 29, 2025
+ * @edited July 18, 2025
  * @since 1.0
  */
 public class RegisterViewModel {
@@ -53,7 +51,7 @@ public class RegisterViewModel {
      * Handles user registration attempt
      */
     public void handleRegistration() {
-        Logging.info("Create account button clicked");
+        Logging.info("Create account button clicked - Synchronous registration");
         
         // Get values from UI components
         String fullNameValue = fullName.get();
@@ -62,28 +60,18 @@ public class RegisterViewModel {
         String confirmPasswordValue = confirmPassword.get();
         String dobValue = dateOfBirth.get();
         
-        // Show loading indicator
-        Dialog.showInfo("Processing", "Creating your account... Please wait.");
+        // Perform synchronous registration
+        boolean success = serviceManager.getLoginService().register(usernameValue, passwordValue, fullNameValue, dobValue, confirmPasswordValue);
         
-        // Attempt registration asynchronously to prevent UI freezing
-        CompletableFuture.supplyAsync(() -> {
-            return serviceManager.getLoginService().register(usernameValue, passwordValue, fullNameValue, dobValue, confirmPasswordValue);
-        }).thenAcceptAsync(success -> {
-            Platform.runLater(() -> {
-                if (success) {
-                    // Show success message and navigate back to login
-                    Dialog.showInfo("Success", "Account created successfully! You can now log in.");
-                    navigateToLogin();
-                }
-                // If registration fails, LoginService will show error dialog
-            });
-        }).exceptionally(throwable -> {
-            Platform.runLater(() -> {
-                Logging.error("Registration failed with exception: " + throwable.getMessage(), throwable);
-                Dialog.showErrorCompact("Registration Error", "Failed to register account. Please try again.");
-            });
-            return null;
-        });
+        if (success) {
+            // Registration successful, navigate to dashboard
+            try {
+                screenManager.navigateTo(ScreenRegistry.DASHBOARD);
+            } catch (Exception e) {
+                Logging.error("Could not navigate to dashboard: " + e.getMessage(), e);
+            }
+        }
+        // If registration fails, LoginService will show error dialog automatically
     }
 
     /**

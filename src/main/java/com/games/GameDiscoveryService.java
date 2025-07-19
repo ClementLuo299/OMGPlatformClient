@@ -12,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Supports both local game discovery and remote game fetching from servers.
  * 
  * @authors Clement Luo
- * @date January 2025
+ * @date July 18, 2025
+ * @edited July 18, 2025
  * @since 1.0
  */
 public class GameDiscoveryService {
@@ -20,12 +21,10 @@ public class GameDiscoveryService {
     private static GameDiscoveryService instance;
     private final Map<String, GameModule> discoveredGames;
     private final List<GameSource> gameSources;
-    private final GameRegistry gameRegistry;
     
     private GameDiscoveryService() {
         this.discoveredGames = new ConcurrentHashMap<>();
         this.gameSources = new ArrayList<>();
-        this.gameRegistry = GameRegistry.getInstance();
     }
     
     /**
@@ -45,7 +44,10 @@ public class GameDiscoveryService {
     public void initialize() {
         Logging.info("🔍 Initializing Game Discovery Service...");
         
-        // Add local game source
+        // Add source code game source (for uncompiled modules)
+        addGameSource(new SourceCodeGameSource());
+        
+        // Add local game source (for compiled modules)
         addGameSource(new LocalGameSource());
         
         // Add remote game source (if configured)
@@ -105,7 +107,8 @@ public class GameDiscoveryService {
                 // Register discovered games
                 for (GameModule game : allGames) {
                     discoveredGames.put(game.getGameId(), game);
-                    gameRegistry.registerGame(game);
+                    // Get registry instance when needed to avoid circular dependency
+                    GameRegistry.getInstance().registerGame(game);
                 }
                 
                 Logging.info("🎮 Total games discovered: " + allGames.size());

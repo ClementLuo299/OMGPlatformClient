@@ -14,7 +14,8 @@ import java.util.List;
  * This class handles the discovery and loading of game modules at runtime.
  * 
  * @authors Clement Luo
- * @date January 2025
+ * @date July 18, 2025
+ * @edited July 18, 2025
  * @since 1.0
  */
 public class ModuleLoader {
@@ -191,10 +192,47 @@ public class ModuleLoader {
                 return null;
             }
             
+            // Try to compile the source file on-the-fly
+            Class<?> compiledClass = tryCompileAndLoadSource(moduleDir, moduleName, className);
+            if (compiledClass != null) {
+                return compiledClass;
+            }
+            
+            // Fallback to direct class loading (less reliable)
             URLClassLoader classLoader = new URLClassLoader(new URL[]{srcDir.toURI().toURL()});
             String fullClassName = "com.games.modules." + moduleName.toLowerCase() + "." + className;
             
             return classLoader.loadClass(fullClassName);
+            
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    /**
+     * Attempts to compile and load a source file on-the-fly.
+     * 
+     * @param moduleDir The module directory
+     * @param moduleName The module name
+     * @param className The class name
+     * @return The compiled Class, or null if compilation failed
+     */
+    private static Class<?> tryCompileAndLoadSource(File moduleDir, String moduleName, String className) {
+        try {
+            // This is a simplified approach - in a real implementation, you might use
+            // javax.tools.JavaCompiler for on-the-fly compilation
+            // For now, we'll just check if the source file exists and return null
+            // This allows the SourceCodeGameSource to handle uncompiled modules
+            
+            File srcDir = new File(moduleDir, SRC_DIR);
+            File sourceFile = new File(srcDir, className + ".java");
+            
+            if (sourceFile.exists()) {
+                Logging.info("📝 Found source file: " + sourceFile.getName() + " (will be handled by SourceCodeGameSource)");
+                return null; // Let SourceCodeGameSource handle it
+            }
+            
+            return null;
             
         } catch (Exception e) {
             return null;
