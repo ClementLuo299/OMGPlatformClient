@@ -1,5 +1,6 @@
 package com.games.sourcing;
 
+import com.config.ModuleConfig;
 import com.games.GameModule;
 import com.utils.error_handling.Logging;
 
@@ -21,10 +22,6 @@ import java.util.List;
  */
 public class ModuleLoader {
     
-    private static final String MODULES_DIR = "modules";
-    private static final String CLASSES_DIR = "target/classes";
-    private static final String SRC_DIR = "src/main/java";
-    
     /**
      * Discovers and loads all available game modules from the modules directory.
      * 
@@ -34,7 +31,7 @@ public class ModuleLoader {
         List<GameModule> modules = new ArrayList<>();
         
         try {
-            File modulesDir = new File(MODULES_DIR);
+            File modulesDir = new File(ModuleConfig.MODULES_DIR);
             if (!modulesDir.exists() || !modulesDir.isDirectory()) {
                 Logging.warning("⚠️ Modules directory not found: " + modulesDir.getAbsolutePath());
                 return modules;
@@ -100,22 +97,9 @@ public class ModuleLoader {
      * @return The found Class, or null if not found
      */
     private static Class<?> findGameModuleClass(File moduleDir, String moduleName) {
-        // Try different possible class names
-        String[] possibleClassNames = {
-            moduleName + "Module",
-            capitalize(moduleName) + "Module",
-            moduleName + "GameModule",
-            capitalize(moduleName) + "GameModule"
-        };
-        
-        for (String className : possibleClassNames) {
-            Class<?> gameClass = tryLoadClass(moduleDir, moduleName, className);
-            if (gameClass != null) {
-                return gameClass;
-            }
-        }
-        
-        return null;
+        // Use the standardized Main class name
+        String className = ModuleConfig.MODULE_MAIN_CLASS_NAME;
+        return tryLoadClass(moduleDir, moduleName, className);
     }
     
     /**
@@ -141,7 +125,7 @@ public class ModuleLoader {
             }
             
             // Try to load from current classpath
-            String fullClassName = "com.games.modules." + moduleName.toLowerCase() + "." + className;
+            String fullClassName = ModuleConfig.MODULE_PACKAGE_PREFIX + moduleName.toLowerCase() + "." + className;
             return Class.forName(fullClassName);
             
         } catch (ClassNotFoundException e) {
@@ -163,13 +147,13 @@ public class ModuleLoader {
      */
     private static Class<?> tryLoadFromCompiledClasses(File moduleDir, String moduleName, String className) {
         try {
-            File classesDir = new File(moduleDir, CLASSES_DIR);
+            File classesDir = new File(moduleDir, ModuleConfig.CLASSES_DIR);
             if (!classesDir.exists()) {
                 return null;
             }
             
             URLClassLoader classLoader = new URLClassLoader(new URL[]{classesDir.toURI().toURL()});
-            String fullClassName = "com.games.modules." + moduleName.toLowerCase() + "." + className;
+            String fullClassName = ModuleConfig.MODULE_PACKAGE_PREFIX + moduleName.toLowerCase() + "." + className;
             
             return classLoader.loadClass(fullClassName);
             
@@ -188,7 +172,7 @@ public class ModuleLoader {
      */
     private static Class<?> tryLoadFromSource(File moduleDir, String moduleName, String className) {
         try {
-            File srcDir = new File(moduleDir, SRC_DIR);
+            File srcDir = new File(moduleDir, ModuleConfig.SRC_DIR);
             if (!srcDir.exists()) {
                 return null;
             }
@@ -201,7 +185,7 @@ public class ModuleLoader {
             
             // Fallback to direct class loading (less reliable)
             URLClassLoader classLoader = new URLClassLoader(new URL[]{srcDir.toURI().toURL()});
-            String fullClassName = "com.games.modules." + moduleName.toLowerCase() + "." + className;
+            String fullClassName = ModuleConfig.MODULE_PACKAGE_PREFIX + moduleName.toLowerCase() + "." + className;
             
             return classLoader.loadClass(fullClassName);
             
@@ -225,7 +209,7 @@ public class ModuleLoader {
             // For now, we'll just check if the source file exists and return null
             // This allows the SourceCodeGameSource to handle uncompiled modules
             
-            File srcDir = new File(moduleDir, SRC_DIR);
+            File srcDir = new File(moduleDir, ModuleConfig.SRC_DIR);
             File sourceFile = new File(srcDir, className + ".java");
             
             if (sourceFile.exists()) {
@@ -267,16 +251,5 @@ public class ModuleLoader {
         }
     }
     
-    /**
-     * Capitalizes the first letter of a string.
-     * 
-     * @param str The input string
-     * @return The capitalized string
-     */
-    private static String capitalize(String str) {
-        if (str == null || str.isEmpty()) {
-            return str;
-        }
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
-    }
+
 } 

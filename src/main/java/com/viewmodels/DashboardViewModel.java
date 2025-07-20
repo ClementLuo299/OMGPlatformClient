@@ -4,7 +4,7 @@ import com.config.ScreenRegistry;
 import com.core.ServiceManager;
 import com.core.screens.ScreenManager;
 import com.games.GameModule;
-import com.games.GameRegistry;
+import com.services.GameDiscoveryService;
 import com.games.GameState;
 import com.gui_controllers.dashboard.GameCard;
 import com.games.GameOptions;
@@ -197,12 +197,12 @@ public class DashboardViewModel {
     }
     
     /**
-     * Loads games from the GameRegistry and creates GameCard components
+     * Loads games from the GameDiscoveryService and creates GameCard components
      */
     private void loadGamesFromRegistry() {
         try {
-            GameRegistry registry = GameRegistry.getInstance();
-            List<GameModule> availableGames = registry.getAllGames();
+            GameDiscoveryService discoveryService = GameDiscoveryService.getInstance();
+            List<GameModule> availableGames = discoveryService.getAllDiscoveredGames();
             
             gamesList.clear();
             

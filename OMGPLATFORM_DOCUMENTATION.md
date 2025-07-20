@@ -74,8 +74,6 @@ OMGPlatform/
 │   │   ├── games/                    # Core game system
 │   │   │   ├── BaseGameModule.java   # Base class for game modules
 │   │   │   ├── GameModule.java       # Interface for game modules
-│   │   │   ├── GameRegistry.java     # Game registration and management
-│   │   │   ├── GameDiscoveryService.java # Dynamic game discovery
 │   │   │   ├── LocalGameSource.java  # Local game discovery
 │   │   │   ├── RemoteGameSource.java # Remote game discovery
 │   │   │   ├── ModuleLoader.java     # Dynamic module loading
@@ -84,6 +82,8 @@ OMGPlatform/
 │   │   ├── gui_controllers/          # JavaFX UI controllers
 │   │   ├── network/                  # Networking and authentication
 │   │   ├── services/                 # Core services
+│   │   │   ├── GameDiscoveryService.java # Dynamic game discovery
+│   │   │   ├── GameLauncherService.java  # Game launching and management
 │   │   ├── utils/                    # Utility classes
 │   │   └── viewmodels/               # View models
 │   └── resources/

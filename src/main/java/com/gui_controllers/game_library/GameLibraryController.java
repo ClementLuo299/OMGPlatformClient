@@ -1,8 +1,7 @@
 package com.gui_controllers.game_library;
 
 import com.games.GameModule;
-import com.games.GameRegistry;
-import com.games.GameDiscoveryService;
+import com.services.GameDiscoveryService;
 import com.games.GameOptions;
 import com.games.enums.GameDifficulty;
 import com.games.enums.GameMode;
@@ -112,7 +111,7 @@ public class GameLibraryController {
     // ==================== DEPENDENCIES ====================
     
     private GameLibraryViewModel viewModel;
-    private GameRegistry gameRegistry;
+    private GameDiscoveryService gameDiscoveryService;
     private GameDiscoveryService discoveryService;
     private GameLauncherService gameLauncher;
     private ObservableList<GameModule> allGames;
@@ -204,13 +203,13 @@ public class GameLibraryController {
     private void initializeGameServices() {
         Logging.info("Initializing game services");
         
-        // Initialize game registry and discovery service
-        gameRegistry = GameRegistry.getInstance();
+        // Initialize game discovery service and launcher
+        gameDiscoveryService = GameDiscoveryService.getInstance();
         discoveryService = GameDiscoveryService.getInstance();
         gameLauncher = GameLauncherService.getInstance();
         
-        // Initialize registry
-        gameRegistry.initialize();
+        // Initialize discovery service
+        gameDiscoveryService.initialize();
         discoveryService.initialize();
         
         Logging.info("Game services initialized successfully");
@@ -231,8 +230,8 @@ public class GameLibraryController {
             
             Logging.info("📦 gameCardsContainer found: " + gameCardsContainer.getClass().getSimpleName());
             
-            // Get all discovered games from registry
-            List<GameModule> games = gameRegistry.getAllGames();
+            // Get all discovered games from discovery service
+            List<GameModule> games = gameDiscoveryService.getAllDiscoveredGames();
             
             Logging.info("🎮 Found " + games.size() + " games to display");
             

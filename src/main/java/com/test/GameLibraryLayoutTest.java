@@ -1,6 +1,6 @@
 package com.test;
 
-import com.games.GameRegistry;
+import com.services.GameDiscoveryService;
 import com.games.GameModule;
 import com.utils.error_handling.Logging;
 
@@ -20,16 +20,16 @@ public class GameLibraryLayoutTest {
         Logging.info("🧪 Starting Game Library Layout Test...");
         
         try {
-            // Initialize game registry
-            GameRegistry registry = GameRegistry.getInstance();
-            registry.initialize();
+            // Initialize game discovery service
+            GameDiscoveryService discoveryService = GameDiscoveryService.getInstance();
+            discoveryService.initialize();
             
             // Wait for discovery to complete
             Logging.info("⏳ Waiting for game discovery to complete...");
             Thread.sleep(3000);
             
             // Get all games
-            List<GameModule> games = registry.getAllGames();
+            List<GameModule> games = discoveryService.getAllDiscoveredGames();
             
             Logging.info("🎮 Layout Test Results:");
             Logging.info("Total games for layout testing: " + games.size());

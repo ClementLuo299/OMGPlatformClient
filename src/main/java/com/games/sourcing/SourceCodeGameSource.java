@@ -1,9 +1,14 @@
 package com.games.sourcing;
 
+import com.config.ModuleConfig;
 import com.games.GameModule;
 import com.games.GameOptions;
 import com.games.GameState;
+import com.games.enums.GameDifficulty;
+import com.games.enums.GameMode;
 import com.utils.error_handling.Logging;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,18 +31,14 @@ import java.util.stream.Stream;
  */
 public class SourceCodeGameSource implements GameSource {
     
-    private static final String SOURCE_NAME = "Source Code Games";
-    private static final String MODULES_DIR = "modules";
-    private static final String SRC_DIR = "src/main/java";
-    
     @Override
     public String getName() {
-        return SOURCE_NAME;
+        return ModuleConfig.SOURCE_CODE_SOURCE_NAME;
     }
     
     @Override
     public boolean isAvailable() {
-        File modulesDir = new File(MODULES_DIR);
+        File modulesDir = new File(ModuleConfig.MODULES_DIR);
         return modulesDir.exists() && modulesDir.isDirectory();
     }
     
@@ -48,7 +49,7 @@ public class SourceCodeGameSource implements GameSource {
         List<GameModule> games = new ArrayList<>();
         
         try {
-            File modulesDir = new File(MODULES_DIR);
+            File modulesDir = new File(ModuleConfig.MODULES_DIR);
             if (!modulesDir.exists() || !modulesDir.isDirectory()) {
                 Logging.warning("⚠️ Modules directory not found: " + modulesDir.getAbsolutePath());
                 return games;
@@ -120,30 +121,22 @@ public class SourceCodeGameSource implements GameSource {
      */
     private GameModule loadActualGameModule(String moduleName) {
         try {
-            // Try different possible class names
-            String[] possibleClassNames = {
-                "com.games.modules." + moduleName + "." + capitalize(moduleName) + "Module",
-                "com.games.modules." + moduleName + "." + capitalize(moduleName) + "GameModule",
-                "com.games.modules." + moduleName + "." + capitalize(moduleName) + "Game",
-                // Special case for tictactoe -> TicTacToe
-                "com.games.modules." + moduleName + ".TicTacToeModule"
-            };
+            // Use the standardized Main class name
+            String className = "com.games.modules." + moduleName + "." + ModuleConfig.MODULE_MAIN_CLASS_NAME;
             
-            for (String className : possibleClassNames) {
-                try {
-                    Class<?> moduleClass = Class.forName(className);
-                    if (GameModule.class.isAssignableFrom(moduleClass)) {
-                        Object instance = moduleClass.getDeclaredConstructor().newInstance();
-                        Logging.info("✅ Loaded actual game module class: " + className);
-                        return (GameModule) instance;
-                    }
-                } catch (ClassNotFoundException e) {
-                    // Continue to next possible class name
-                    continue;
-                } catch (Exception e) {
-                    Logging.warning("⚠️ Error instantiating " + className + ": " + e.getMessage());
-                    continue;
+            try {
+                Class<?> moduleClass = Class.forName(className);
+                if (GameModule.class.isAssignableFrom(moduleClass)) {
+                    Object instance = moduleClass.getDeclaredConstructor().newInstance();
+                    Logging.info("✅ Loaded actual game module class: " + className);
+                    return (GameModule) instance;
                 }
+            } catch (ClassNotFoundException e) {
+                Logging.warning("⚠️ Could not find Main class in: " + moduleName);
+                return null;
+            } catch (Exception e) {
+                Logging.warning("⚠️ Error instantiating " + className + ": " + e.getMessage());
+                return null;
             }
             
             Logging.warning("⚠️ Could not find game module class in: " + moduleName);
@@ -165,7 +158,7 @@ public class SourceCodeGameSource implements GameSource {
         List<File> sourceFiles = new ArrayList<>();
         
         try {
-            Path srcPath = Paths.get(moduleDir.getAbsolutePath(), SRC_DIR);
+            Path srcPath = Paths.get(moduleDir.getAbsolutePath(), ModuleConfig.SRC_DIR);
             if (!Files.exists(srcPath)) {
                 return sourceFiles;
             }
@@ -228,23 +221,8 @@ public class SourceCodeGameSource implements GameSource {
      * @return true if it looks like a game module class
      */
     private boolean isGameModuleClass(String fileName, String moduleName) {
-        String baseName = fileName.replace(".java", "");
-        String[] patterns = {
-            baseName + "Module",
-            capitalize(moduleName) + "Module",
-            baseName + "GameModule",
-            capitalize(moduleName) + "GameModule",
-            baseName + "Game",
-            capitalize(moduleName) + "Game"
-        };
-        
-        for (String pattern : patterns) {
-            if (fileName.equals(pattern + ".java")) {
-                return true;
-            }
-        }
-        
-        return false;
+        // Use the standardized Main class name
+        return fileName.equals(ModuleConfig.MODULE_MAIN_CLASS_NAME + ".java");
     }
     
     /**
@@ -340,7 +318,7 @@ public class SourceCodeGameSource implements GameSource {
             public boolean supportsSinglePlayer() { return true; }
             
             @Override
-            public javafx.scene.Scene launchGame(javafx.stage.Stage primaryStage, GameMode gameMode, int playerCount, GameOptions gameOptions) {
+            public Scene launchGame(Stage primaryStage, GameMode gameMode, int playerCount, GameOptions gameOptions) {
                 Logging.info("🎮 Launching source code game: " + gameName);
                 // TODO: Implement actual game launch for source code games
                 return null;

@@ -1,6 +1,6 @@
 package com.test;
 
-import com.games.GameRegistry;
+import com.services.GameDiscoveryService;
 import com.games.GameModule;
 import com.utils.error_handling.Logging;
 
@@ -20,17 +20,17 @@ public class GameDiscoveryTest {
         Logging.info("🧪 Starting Game Discovery Test...");
         
         try {
-            // Get the game registry instance
-            GameRegistry registry = GameRegistry.getInstance();
+            // Get the game discovery service instance
+            GameDiscoveryService discoveryService = GameDiscoveryService.getInstance();
             
-            // Initialize the registry (this will discover games)
-            registry.initialize();
+            // Initialize the discovery service (this will discover games)
+            discoveryService.initialize();
             
             // Wait a bit for async discovery to complete
             Thread.sleep(2000);
             
             // Get all discovered games
-            List<GameModule> games = registry.getAllGames();
+            List<GameModule> games = discoveryService.getAllDiscoveredGames();
             
             Logging.info("🎮 Found " + games.size() + " games:");
             
@@ -48,7 +48,8 @@ public class GameDiscoveryTest {
             }
             
             // Print summary
-            Logging.info(registry.getGamesSummary());
+            Logging.info("🎮 Game Discovery Summary:");
+            Logging.info("Total Games: " + games.size());
             
         } catch (Exception e) {
             Logging.error("❌ Test failed: " + e.getMessage(), e);

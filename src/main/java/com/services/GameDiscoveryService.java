@@ -1,5 +1,6 @@
-package com.games;
+package com.services;
 
+import com.games.GameModule;
 import com.games.enums.GameDifficulty;
 import com.games.enums.GameMode;
 import com.games.sourcing.GameSource;
@@ -113,8 +114,6 @@ public class GameDiscoveryService {
                 // Register discovered games
                 for (GameModule game : allGames) {
                     discoveredGames.put(game.getGameId(), game);
-                    // Get registry instance when needed to avoid circular dependency
-                    GameRegistry.getInstance().registerGame(game);
                 }
                 
                 Logging.info("🎮 Total games discovered: " + allGames.size());

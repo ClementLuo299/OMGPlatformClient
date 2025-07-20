@@ -1,7 +1,10 @@
 package com.games.sourcing;
 
+import com.config.ModuleConfig;
 import com.games.GameModule;
 import com.utils.error_handling.Logging;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,31 +18,31 @@ import java.util.List;
  * @edited July 19, 2025
  * @since 1.0
  */
+@Getter
+@Setter
 public class RemoteGameSource implements GameSource {
     
-    private static final String SOURCE_NAME = "Remote Games";
-    private static final String DEFAULT_SERVER_URL = "https://api.omgplatform.com/games";
-    
     private final String serverUrl;
-    private boolean isEnabled;
+    @Setter
+    private boolean enabled;
     
     public RemoteGameSource() {
-        this(DEFAULT_SERVER_URL);
+        this(ModuleConfig.DEFAULT_REMOTE_SERVER_URL);
     }
     
     public RemoteGameSource(String serverUrl) {
         this.serverUrl = serverUrl;
-        this.isEnabled = false; // Disabled by default for now
+        this.enabled = false; // Disabled by default for now
     }
     
     @Override
     public String getName() {
-        return SOURCE_NAME;
+        return ModuleConfig.REMOTE_SOURCE_NAME;
     }
     
     @Override
     public boolean isAvailable() {
-        return isEnabled && serverUrl != null && !serverUrl.trim().isEmpty();
+        return enabled && serverUrl != null && !serverUrl.trim().isEmpty();
     }
     
     @Override
@@ -74,16 +77,8 @@ public class RemoteGameSource implements GameSource {
      * @param enabled true to enable, false to disable
      */
     public void setEnabled(boolean enabled) {
-        this.isEnabled = enabled;
+        this.enabled = enabled;
         Logging.info("🔄 Remote game source " + (enabled ? "enabled" : "disabled"));
-    }
-    
-    /**
-     * Gets the server URL for this source.
-     * @return The server URL
-     */
-    public String getServerUrl() {
-        return serverUrl;
     }
     
     /**
