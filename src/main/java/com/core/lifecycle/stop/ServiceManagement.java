@@ -1,9 +1,9 @@
 package com.core.lifecycle.stop;
 
 import com.utils.error_handling.ErrorHandler;
-import com.utils.error_handling.ErrorCategory;
-import com.utils.error_handling.ErrorSeverity;
 import com.utils.error_handling.Logging;
+import com.utils.error_handling.enums.ErrorCategory;
+import com.utils.error_handling.enums.ErrorSeverity;
 
 /**
  * Manages the shutdown of application services.

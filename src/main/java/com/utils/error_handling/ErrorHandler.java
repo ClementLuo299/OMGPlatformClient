@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.utils.error_handling.enums.ErrorCategory;
+import com.utils.error_handling.enums.ErrorSeverity;
+
 /**
  * Core error handling utility for the application.
  * Provides methods for handling critical and non-critical errors with user feedback,

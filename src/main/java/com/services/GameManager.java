@@ -20,15 +20,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date January 2025
  * @since 1.0
  */
-public class GameLauncherService {
+public class GameManager {
     
-    private static GameLauncherService instance;
+    private static GameManager instance;
     private final Map<String, GameModule> registeredGames;
     private final Map<String, GameState> savedGames;
     private GameModule currentGame;
     private Stage currentGameStage;
     
-    private GameLauncherService() {
+    private GameManager() {
         this.registeredGames = new ConcurrentHashMap<>();
         this.savedGames = new ConcurrentHashMap<>();
         this.currentGame = null;
@@ -36,12 +36,12 @@ public class GameLauncherService {
     }
     
     /**
-     * Gets the singleton instance of GameLauncherService.
-     * @return The GameLauncherService instance
+     * Gets the singleton instance of GameManager.
+     * @return The GameManager instance
      */
-    public static synchronized GameLauncherService getInstance() {
+    public static synchronized GameManager getInstance() {
         if (instance == null) {
-            instance = new GameLauncherService();
+            instance = new GameManager();
         }
         return instance;
     }

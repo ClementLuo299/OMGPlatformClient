@@ -1,4 +1,4 @@
-package com.utils.error_handling;
+package com.utils.error_handling.enums;
 
 /**
  * Error categories for better error management and classification.

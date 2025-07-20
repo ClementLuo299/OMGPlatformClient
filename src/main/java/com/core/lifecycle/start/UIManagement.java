@@ -4,9 +4,9 @@ import com.config.GUIConfig;
 import com.core.screens.ScreenManager;
 import com.core.screens.ScreenLoadable;
 import com.utils.error_handling.ErrorHandler;
-import com.utils.error_handling.ErrorCategory;
-import com.utils.error_handling.ErrorSeverity;
 import com.utils.error_handling.Logging;
+import com.utils.error_handling.enums.ErrorCategory;
+import com.utils.error_handling.enums.ErrorSeverity;
 
 import javafx.stage.Stage;
 

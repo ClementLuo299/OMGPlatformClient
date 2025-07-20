@@ -19,7 +19,8 @@ import java.security.cert.X509Certificate;
  * Handles connection establishment, message sending, and connection lifecycle.
  *
  * @authors Clement Luo
- * @date January 2025
+ * @date July 19, 2025
+ * @edited July 19, 2025
  * @since 1.0
  */
 public class WebSocketService {

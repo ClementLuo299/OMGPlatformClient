@@ -83,7 +83,7 @@ OMGPlatform/
 │   │   ├── network/                  # Networking and authentication
 │   │   ├── services/                 # Core services
 │   │   │   ├── GameDiscoveryService.java # Dynamic game discovery
-│   │   │   ├── GameLauncherService.java  # Game launching and management
+│   │   │   ├── GameManager.java          # Game launching and management
 │   │   ├── utils/                    # Utility classes
 │   │   └── viewmodels/               # View models
 │   └── resources/

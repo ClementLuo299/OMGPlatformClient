@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @authors Clement Luo
  * @date June 29, 2025
+ * @edited June 29, 2025
  * @since 1.0
  */
 public class AuthenticatedHTTPHandler {

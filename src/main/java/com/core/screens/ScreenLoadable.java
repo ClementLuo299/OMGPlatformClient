@@ -1,8 +1,8 @@
 package com.core.screens;
 
 import com.utils.error_handling.ErrorHandler;
-import com.utils.error_handling.ErrorCategory;
-import com.utils.error_handling.ErrorSeverity;
+import com.utils.error_handling.enums.ErrorCategory;
+import com.utils.error_handling.enums.ErrorSeverity;
 
 import lombok.Getter;
 import lombok.NonNull;
