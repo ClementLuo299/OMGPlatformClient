@@ -80,6 +80,14 @@ public class ScreenRegistry {
             () -> new com.viewmodels.SettingViewModel()
     );
 
+    /** Game Lobby screen - match creation and joining */
+    public static final ScreenLoadable GAME_LOBBY = ScreenLoadable.of(
+            "/fxml/GameLobby.fxml",
+            com.gui_controllers.GameLobbyController.class,
+            "/css/screens/lobby.css",
+            () -> new com.viewmodels.GameLobbyViewModel()
+    );
+
     // ==================== UTILITY METHODS ====================
     
     /**

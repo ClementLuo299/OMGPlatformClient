@@ -3,6 +3,7 @@ package com.gui_controllers.game_library;
 import com.game.GameManager;
 import com.game.GameModule;
 import com.game.GameOptions;
+import com.game.GameContext;
 import com.game.enums.GameDifficulty;
 import com.game.enums.GameMode;
 import com.services.GameSearchService;
@@ -589,33 +590,27 @@ public class GameLibraryController {
     
     /**
      * Handle game play action for a specific game.
+     * Navigates to the game lobby instead of directly launching the game.
      * 
-     * @param game The game module to launch
+     * @param game The game module to open lobby for
      */
     private void handleGamePlay(GameModule game) {
         Logging.info("🎮 Play button clicked for game: " + game.getGameName());
         
         try {
-            // Create game options
-            GameOptions gameOptions = new GameOptions();
-            gameOptions.setOption("launchTime", System.currentTimeMillis());
+            // Set the game context before navigating
+            GameContext.getInstance().setCurrentGame(game);
             
-            // Launch the game using the integrated method
-            boolean success = gameLauncher.launchGameIntegrated(
-                game.getGameId(), 
-                GameMode.LOCAL_MULTIPLAYER, 
-                game.getMinPlayers(), 
-                gameOptions
-            );
-            
-            if (success) {
-                Logging.info("✅ Game launched successfully: " + game.getGameName());
+            // Navigate to the game lobby instead of directly launching
+            if (viewModel != null) {
+                viewModel.navigateToGameLobby(game.getGameId());
+                Logging.info("✅ Navigated to game lobby for: " + game.getGameName());
             } else {
-                Logging.error("❌ Failed to launch game: " + game.getGameName());
+                Logging.error("❌ ViewModel is null, cannot navigate to lobby");
             }
             
         } catch (Exception e) {
-            Logging.error("❌ Error launching game: " + e.getMessage(), e);
+            Logging.error("❌ Error navigating to game lobby: " + e.getMessage(), e);
         }
     }
     

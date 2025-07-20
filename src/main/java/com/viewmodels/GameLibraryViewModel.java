@@ -199,6 +199,29 @@ public class GameLibraryViewModel {
         }
     }
     
+    /**
+     * Navigate to the game lobby for a specific game.
+     * 
+     * @param gameId The ID of the game to open lobby for
+     */
+    public void navigateToGameLobby(String gameId) {
+        try {
+            Logging.info("Navigating to game lobby for game: " + gameId);
+            ScreenManager sm = getScreenManager();
+            if (sm != null) {
+                // Store the game ID for the lobby to use
+                // TODO: Implement game context passing to lobby
+                sm.navigateTo(ScreenRegistry.GAME_LOBBY);
+                Logging.info("Successfully navigated to game lobby");
+            } else {
+                Logging.warning("Navigation delayed - ScreenManager not yet initialized");
+            }
+        } catch (Exception e) {
+            Logging.error("Failed to navigate to game lobby: " + e.getMessage(), e);
+            throw e;
+        }
+    }
+    
     // ==================== FILTER ACTIONS ====================
     
     /**
