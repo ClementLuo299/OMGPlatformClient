@@ -1,11 +1,11 @@
 package com.gui_controllers.game_library;
 
+import com.game.GameManager;
 import com.game.GameModule;
 import com.game.GameOptions;
 import com.game.enums.GameDifficulty;
 import com.game.enums.GameMode;
-import com.services.GameDiscoveryService;
-import com.services.GameManager;
+import com.services.GameSearchService;
 import com.viewmodels.GameLibraryViewModel;
 import com.utils.error_handling.Logging;
 
@@ -111,8 +111,8 @@ public class GameLibraryController {
     // ==================== DEPENDENCIES ====================
     
     private GameLibraryViewModel viewModel;
-    private GameDiscoveryService gameDiscoveryService;
-    private GameDiscoveryService discoveryService;
+    private GameSearchService gameDiscoveryService;
+    private GameSearchService discoveryService;
     private GameManager gameLauncher;
     private ObservableList<GameModule> allGames;
     private FilteredList<GameModule> filteredGames;
@@ -204,8 +204,8 @@ public class GameLibraryController {
         Logging.info("Initializing game services");
         
         // Initialize game discovery service and launcher
-        gameDiscoveryService = GameDiscoveryService.getInstance();
-        discoveryService = GameDiscoveryService.getInstance();
+        gameDiscoveryService = GameSearchService.getInstance();
+        discoveryService = GameSearchService.getInstance();
         gameLauncher = GameManager.getInstance();
         
         // Initialize discovery service

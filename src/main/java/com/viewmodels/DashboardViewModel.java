@@ -8,7 +8,7 @@ import com.game.GameOptions;
 import com.game.GameState;
 import com.game.enums.GameDifficulty;
 import com.game.enums.GameMode;
-import com.services.GameDiscoveryService;
+import com.services.GameSearchService;
 import com.gui_controllers.dashboard.GameCard;
 
 import javafx.scene.Scene;
@@ -201,7 +201,7 @@ public class DashboardViewModel {
      */
     private void loadGamesFromRegistry() {
         try {
-            GameDiscoveryService discoveryService = GameDiscoveryService.getInstance();
+            GameSearchService discoveryService = GameSearchService.getInstance();
             List<GameModule> availableGames = discoveryService.getAllDiscoveredGames();
             
             gamesList.clear();

@@ -1,7 +1,7 @@
 package com.test;
 
 import com.game.GameModule;
-import com.services.GameDiscoveryService;
+import com.services.GameSearchService;
 import com.utils.error_handling.Logging;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class GameLibraryLayoutTest {
         
         try {
             // Initialize game discovery service
-            GameDiscoveryService discoveryService = GameDiscoveryService.getInstance();
+            GameSearchService discoveryService = GameSearchService.getInstance();
             discoveryService.initialize();
             
             // Wait for discovery to complete

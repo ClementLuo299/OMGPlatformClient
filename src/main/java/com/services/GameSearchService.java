@@ -22,13 +22,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @edited July 19, 2025
  * @since 1.0
  */
-public class GameDiscoveryService {
+public class GameSearchService {
     
-    private static GameDiscoveryService instance;
+    private static GameSearchService instance;
     private final Map<String, GameModule> discoveredGames;
     private final List<GameSource> gameSources;
     
-    private GameDiscoveryService() {
+    private GameSearchService() {
         this.discoveredGames = new ConcurrentHashMap<>();
         this.gameSources = new ArrayList<>();
     }
@@ -37,9 +37,9 @@ public class GameDiscoveryService {
      * Gets the singleton instance of GameDiscoveryService.
      * @return The GameDiscoveryService instance
      */
-    public static synchronized GameDiscoveryService getInstance() {
+    public static synchronized GameSearchService getInstance() {
         if (instance == null) {
-            instance = new GameDiscoveryService();
+            instance = new GameSearchService();
         }
         return instance;
     }

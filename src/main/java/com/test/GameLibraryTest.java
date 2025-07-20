@@ -1,6 +1,6 @@
 package com.test;
 
-import com.services.GameDiscoveryService;
+import com.services.GameSearchService;
 import com.game.GameModule;
 import com.gui_controllers.game_library.GameLibraryController;
 import com.utils.error_handling.Logging;
@@ -25,7 +25,7 @@ public class GameLibraryTest {
             Logging.info("🎮 Simulating GameLibraryController initialization...");
             
             // Step 1: Initialize game discovery service (like GameLibraryController does)
-            GameDiscoveryService discoveryService = GameDiscoveryService.getInstance();
+            GameSearchService discoveryService = GameSearchService.getInstance();
             discoveryService.initialize();
             
             // Step 2: Wait for discovery to complete

@@ -1,8 +1,5 @@
-package com.services;
+package com.game;
 
-import com.game.GameModule;
-import com.game.GameOptions;
-import com.game.GameState;
 import com.game.enums.GameDifficulty;
 import com.game.enums.GameMode;
 import com.utils.error_handling.Logging;

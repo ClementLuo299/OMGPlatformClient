@@ -1,7 +1,7 @@
 package com.test;
 
 import com.game.GameModule;
-import com.services.GameDiscoveryService;
+import com.services.GameSearchService;
 import com.utils.error_handling.Logging;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class GameDiscoveryTest {
         
         try {
             // Get the game discovery service instance
-            GameDiscoveryService discoveryService = GameDiscoveryService.getInstance();
+            GameSearchService discoveryService = GameSearchService.getInstance();
             
             // Initialize the discovery service (this will discover games)
             discoveryService.initialize();
