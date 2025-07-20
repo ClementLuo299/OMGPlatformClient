@@ -1,9 +1,9 @@
 package com.games.modules.tictactoe;
 
 import com.core.screens.ScreenLoadable;
-import com.games.GameModule;
-import com.games.GameOptions;
-import com.games.enums.GameMode;
+import com.game.GameModule;
+import com.game.GameOptions;
+import com.game.enums.GameMode;
 import com.utils.error_handling.Logging;
 
 import java.util.function.Supplier;

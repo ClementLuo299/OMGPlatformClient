@@ -1,10 +1,10 @@
 package com.games.modules.example;
 
-import com.games.GameModule;
-import com.games.enums.GameDifficulty;
-import com.games.enums.GameMode;
-import com.games.GameOptions;
-import com.games.GameState;
+import com.game.GameModule;
+import com.game.enums.GameDifficulty;
+import com.game.enums.GameMode;
+import com.game.GameOptions;
+import com.game.GameState;
 import com.utils.error_handling.Logging;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

@@ -2,8 +2,8 @@ package com.games.modules.tictactoe;
 
 import com.core.screens.ScreenLoader;
 import com.core.screens.ScreenLoadResult;
-import com.games.GameModule;
-import com.games.GameOptions;
+import com.game.GameModule;
+import com.game.GameOptions;
 import com.utils.error_handling.Logging;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

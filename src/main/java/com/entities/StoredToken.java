@@ -1,9 +1,5 @@
 package com.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 /**
@@ -14,13 +10,67 @@ import java.time.LocalDateTime;
  * @edited July 19, 2025
  * @since 1.0
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class StoredToken {
     private String token;
     private String username;
     private LocalDateTime expiresAt;
+
+    /**
+     * Default constructor.
+     */
+    public StoredToken() {
+    }
+
+    /**
+     * Constructor with all fields.
+     */
+    public StoredToken(String token, String username, LocalDateTime expiresAt) {
+        this.token = token;
+        this.username = username;
+        this.expiresAt = expiresAt;
+    }
+
+    /**
+     * Gets the token.
+     */
+    public String getToken() {
+        return token;
+    }
+
+    /**
+     * Sets the token.
+     */
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    /**
+     * Gets the username.
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets the username.
+     */
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    /**
+     * Gets the expiration date/time.
+     */
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    /**
+     * Sets the expiration date/time.
+     */
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+    }
 
     @Override
     public String toString() {

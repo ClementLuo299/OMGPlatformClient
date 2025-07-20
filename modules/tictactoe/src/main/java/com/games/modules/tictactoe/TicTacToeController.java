@@ -9,10 +9,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import com.entities.UserAccount;
-import com.games.GameModule;
-import com.games.GameOptions;
-import com.games.GameState;
-import com.games.enums.GameMode;
+import com.game.GameModule;
+import com.game.GameOptions;
+import com.game.GameState;
+import com.game.enums.GameMode;
 import com.gui_controllers.game_library.GameLibraryController;
 import com.core.screens.ScreenManager;
 import com.config.ScreenRegistry;
