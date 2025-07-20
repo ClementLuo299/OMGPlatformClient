@@ -153,7 +153,7 @@ private static Class<?> findGameModuleClass(File moduleDir, String moduleName) {
 }
 ```
 
-### SourceCodeGameSource Changes
+### LocalGameSource Consolidation
 
 **Before (Complex):**
 ```java

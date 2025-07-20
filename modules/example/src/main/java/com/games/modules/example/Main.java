@@ -127,31 +127,17 @@ public class Main implements GameModule {
     
     @Override
     public GameState getGameState() {
-        return new GameState(GAME_ID, "Not Started", 0, 0);
-    }
-    
-    @Override
-    public void pauseGame() {
-        Logging.info("⏸️ " + GAME_NAME + " paused");
-    }
-    
-    @Override
-    public void resumeGame() {
-        Logging.info("▶️ " + GAME_NAME + " resumed");
-    }
-    
-    @Override
-    public void endGame() {
-        Logging.info("🏁 " + GAME_NAME + " ended");
-    }
-    
-    @Override
-    public void onGameClose() {
-        Logging.info("🔒 " + GAME_NAME + " closing - cleaning up resources");
+        return new GameState(GAME_ID, "Not Started", GameMode.SINGLE_PLAYER, 1, new GameOptions());
     }
     
     @Override
     public void loadGameState(GameState gameState) {
         Logging.info("📂 Loading game state for " + GAME_NAME);
     }
+    
+    @Override
+    public void onGameClose() {
+        Logging.info("🔒 " + GAME_NAME + " closing - cleaning up resources");
+    }   
+
 } 

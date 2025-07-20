@@ -1,7 +1,7 @@
 package com.test;
 
 import com.games.GameModule;
-import com.games.sourcing.ModuleLoader;
+import com.games.sourcing.LocalGameSource;
 import com.utils.error_handling.Logging;
 
 import java.util.List;
@@ -21,7 +21,9 @@ public class ModuleDiscoveryTest {
         
         try {
             // Test module loading
-            List<GameModule> modules = ModuleLoader.loadAllModules();
+            // Use LocalGameSource instead of ModuleLoader directly
+        LocalGameSource localSource = new LocalGameSource();
+        List<GameModule> modules = localSource.discoverGames();
             
             Logging.info("📊 Module Discovery Results:");
             Logging.info("Found " + modules.size() + " modules");

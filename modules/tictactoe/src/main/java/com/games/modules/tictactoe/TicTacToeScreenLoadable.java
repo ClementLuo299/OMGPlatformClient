@@ -3,6 +3,7 @@ package com.games.modules.tictactoe;
 import com.core.screens.ScreenLoadable;
 import com.games.GameModule;
 import com.games.GameOptions;
+import com.games.enums.GameMode;
 import com.utils.error_handling.Logging;
 
 import java.util.function.Supplier;
@@ -18,7 +19,7 @@ import java.util.function.Supplier;
  */
 public class TicTacToeScreenLoadable {
     
-    private final GameModule.GameMode gameMode;
+    private final GameMode gameMode;
     private final int playerCount;
     private final GameOptions gameOptions;
     
@@ -34,7 +35,7 @@ public class TicTacToeScreenLoadable {
      * @param playerCount Number of players
      * @param gameOptions Game-specific options
      */
-    public TicTacToeScreenLoadable(GameModule.GameMode gameMode, int playerCount, GameOptions gameOptions) {
+    public TicTacToeScreenLoadable(GameMode gameMode, int playerCount, GameOptions gameOptions) {
         this.gameMode = gameMode;
         this.playerCount = playerCount;
         this.gameOptions = gameOptions;
@@ -68,7 +69,7 @@ public class TicTacToeScreenLoadable {
      * Gets the game mode for this screen.
      * @return The game mode
      */
-    public GameModule.GameMode getGameMode() {
+    public GameMode getGameMode() {
         return gameMode;
     }
     

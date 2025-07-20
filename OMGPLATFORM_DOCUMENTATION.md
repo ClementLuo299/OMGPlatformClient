@@ -74,7 +74,7 @@ OMGPlatform/
 │   │   ├── games/                    # Core game system
 │   │   │   ├── BaseGameModule.java   # Base class for game modules
 │   │   │   ├── GameModule.java       # Interface for game modules
-│   │   │   ├── LocalGameSource.java  # Local game discovery
+│   │   │   ├── LocalGameSource.java  # Local game discovery (compiled + source)
 │   │   │   ├── RemoteGameSource.java # Remote game discovery
 │   │   │   ├── ModuleLoader.java     # Dynamic module loading
 │   │   │   ├── GameState.java        # Game state management
@@ -111,7 +111,7 @@ OMGPlatform/
 
 1. **GameDiscoveryService** - Main service that orchestrates game discovery
 2. **GameSource Interface** - Abstract interface for different game sources
-3. **LocalGameSource** - Discovers games from the local modules directory
+3. **LocalGameSource** - Discovers games from the local modules directory (compiled + source)
 4. **RemoteGameSource** - Discovers games from remote servers (future)
 5. **ModuleLoader** - Dynamic module discovery and loading utility
 6. **DynamicGameLibraryController** - UI controller that automatically displays discovered games
@@ -161,9 +161,9 @@ The core utility class that handles dynamic module discovery and loading.
 - `findGameModuleClass()`: Finds the main game module class
 - `tryLoadClass()`: Attempts to load classes from different sources
 
-#### 2. LocalGameSource (`src/main/java/com/games/LocalGameSource.java`)
+#### 2. LocalGameSource (`src/main/java/com/games/sourcing/LocalGameSource.java`)
 
-Updated to use the ModuleLoader for dynamic discovery.
+Updated to handle both compiled modules and source code parsing. Merged functionality from SourceCodeGameSource for unified local game discovery.
 
 **Changes:**
 - No longer imports specific game modules

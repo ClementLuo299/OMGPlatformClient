@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * Utility class for dynamically loading game modules from the modules directory.
- * This class handles the discovery and loading of game modules at runtime.
+ * This class provides core loading functionality used by LocalGameSource.
  * 
  * @authors Clement Luo
  * @date July 18, 2025
@@ -23,42 +23,8 @@ import java.util.List;
 public class ModuleLoader {
     
     /**
-     * Discovers and loads all available game modules from the modules directory.
-     * 
-     * @return List of loaded GameModule instances
-     */
-    public static List<GameModule> loadAllModules() {
-        List<GameModule> modules = new ArrayList<>();
-        
-        try {
-            File modulesDir = new File(ModuleConfig.MODULES_DIR);
-            if (!modulesDir.exists() || !modulesDir.isDirectory()) {
-                Logging.warning("⚠️ Modules directory not found: " + modulesDir.getAbsolutePath());
-                return modules;
-            }
-            
-            File[] moduleDirs = modulesDir.listFiles(File::isDirectory);
-            if (moduleDirs == null) {
-                Logging.warning("⚠️ Could not list modules directory");
-                return modules;
-            }
-            
-            for (File moduleDir : moduleDirs) {
-                GameModule module = loadModule(moduleDir);
-                if (module != null) {
-                    modules.add(module);
-                }
-            }
-            
-        } catch (Exception e) {
-            Logging.error("❌ Error loading modules: " + e.getMessage(), e);
-        }
-        
-        return modules;
-    }
-    
-    /**
      * Loads a single game module from a module directory.
+     * This is a utility method for loading compiled modules.
      * 
      * @param moduleDir The module directory
      * @return The loaded GameModule, or null if loading failed
@@ -118,12 +84,6 @@ public class ModuleLoader {
                 return gameClass;
             }
             
-            // Try to load from source (for development)
-            gameClass = tryLoadFromSource(moduleDir, moduleName, className);
-            if (gameClass != null) {
-                return gameClass;
-            }
-            
             // Try to load from current classpath
             String fullClassName = ModuleConfig.MODULE_PACKAGE_PREFIX + moduleName.toLowerCase() + "." + className;
             return Class.forName(fullClassName);
@@ -163,68 +123,6 @@ public class ModuleLoader {
     }
     
     /**
-     * Attempts to load a class from source files in the module.
-     * 
-     * @param moduleDir The module directory
-     * @param moduleName The module name
-     * @param className The class name
-     * @return The loaded Class, or null if not found
-     */
-    private static Class<?> tryLoadFromSource(File moduleDir, String moduleName, String className) {
-        try {
-            File srcDir = new File(moduleDir, ModuleConfig.SRC_DIR);
-            if (!srcDir.exists()) {
-                return null;
-            }
-            
-            // Try to compile the source file on-the-fly
-            Class<?> compiledClass = tryCompileAndLoadSource(moduleDir, moduleName, className);
-            if (compiledClass != null) {
-                return compiledClass;
-            }
-            
-            // Fallback to direct class loading (less reliable)
-            URLClassLoader classLoader = new URLClassLoader(new URL[]{srcDir.toURI().toURL()});
-            String fullClassName = ModuleConfig.MODULE_PACKAGE_PREFIX + moduleName.toLowerCase() + "." + className;
-            
-            return classLoader.loadClass(fullClassName);
-            
-        } catch (Exception e) {
-            return null;
-        }
-    }
-    
-    /**
-     * Attempts to compile and load a source file on-the-fly.
-     * 
-     * @param moduleDir The module directory
-     * @param moduleName The module name
-     * @param className The class name
-     * @return The compiled Class, or null if compilation failed
-     */
-    private static Class<?> tryCompileAndLoadSource(File moduleDir, String moduleName, String className) {
-        try {
-            // This is a simplified approach - in a real implementation, you might use
-            // javax.tools.JavaCompiler for on-the-fly compilation
-            // For now, we'll just check if the source file exists and return null
-            // This allows the SourceCodeGameSource to handle uncompiled modules
-            
-            File srcDir = new File(moduleDir, ModuleConfig.SRC_DIR);
-            File sourceFile = new File(srcDir, className + ".java");
-            
-            if (sourceFile.exists()) {
-                Logging.info("📝 Found source file: " + sourceFile.getName() + " (will be handled by SourceCodeGameSource)");
-                return null; // Let SourceCodeGameSource handle it
-            }
-            
-            return null;
-            
-        } catch (Exception e) {
-            return null;
-        }
-    }
-    
-    /**
      * Instantiates a GameModule from a Class.
      * 
      * @param gameClass The game module class
@@ -250,6 +148,4 @@ public class ModuleLoader {
             return null;
         }
     }
-    
-
 } 

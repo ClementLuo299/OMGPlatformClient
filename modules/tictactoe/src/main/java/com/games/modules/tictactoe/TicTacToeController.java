@@ -12,6 +12,7 @@ import com.entities.UserAccount;
 import com.games.GameModule;
 import com.games.GameOptions;
 import com.games.GameState;
+import com.games.enums.GameMode;
 import com.gui_controllers.game_library.GameLibraryController;
 import com.core.screens.ScreenManager;
 import com.config.ScreenRegistry;
@@ -105,7 +106,7 @@ public class TicTacToeController implements Initializable {
     private int timeRemaining = 30;
     
     // Game module integration
-    private GameModule.GameMode gameMode;
+    private GameMode gameMode;
     private int playerCount;
     private GameOptions gameOptions;
 
@@ -182,7 +183,7 @@ public class TicTacToeController implements Initializable {
     /**
      * Initialize the game with parameters from the game module framework
      */
-    public void initializeGame(GameModule.GameMode gameMode, int playerCount, GameOptions gameOptions) {
+    public void initializeGame(GameMode gameMode, int playerCount, GameOptions gameOptions) {
         this.gameMode = gameMode;
         this.playerCount = playerCount;
         this.gameOptions = gameOptions;

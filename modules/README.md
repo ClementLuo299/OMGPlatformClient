@@ -9,7 +9,7 @@ Each game module follows this structure:
 modules/
 ├── [game-name]/
 │   ├── src/main/java/com/games/modules/[game-name]/
-│   │   └── [GameName]Module.java
+│   │   └── Main.java
 │   ├── src/main/resources/games/[game-name]/
 │   │   ├── css/
 │   │   ├── fxml/
@@ -20,38 +20,20 @@ modules/
 ## 🎮 Available Games
 
 ### Core Games
-- **Tetris** - Classic falling block puzzle game
-- **Snake** - Classic snake movement game
 - **TicTacToe** - Classic X's and O's game
-- **Connect Four** - Strategic column dropping game
-- **Chess** - Classic strategic board game
-- **Solitaire** - Classic card game
-
-### New Test Games
-- **Checkers** - Classic diagonal piece movement game
-- **Brain Teasers** - Collection of logic puzzles
-- **Memory Match** - Card matching memory game
-- **Speed Racer** - High-speed racing game
-- **Quest Explorer** - Story-driven adventure game
-- **Life Simulator** - World building simulation game
 - **Example Game** - Template game for development
 
 ## 🎯 Game Categories
 
-- **Strategy**: Chess, Checkers, Connect Four
-- **Puzzle**: Tetris, Brain Teasers
-- **Card**: Solitaire, Memory Match
-- **Arcade**: Snake, Speed Racer
-- **Adventure**: Quest Explorer
-- **Simulation**: Life Simulator
-- **Classic**: TicTacToe, Example Game
+- **Classic**: TicTacToe
+- **Template**: Example Game
 
 ## 📊 Game Statistics
 
-- **Total Games**: 13
-- **Single Player**: 13 games
-- **Local Multiplayer**: 13 games
-- **Online Multiplayer**: 13 games
+- **Total Games**: 2
+- **Single Player**: 2 games
+- **Local Multiplayer**: 2 games
+- **Online Multiplayer**: 2 games
 - **Average Duration**: 15-20 minutes
 - **Player Range**: 1-8 players
 
@@ -59,7 +41,7 @@ modules/
 
 ### Module Loading
 - Games are discovered automatically from the `modules/` directory
-- Each module must extend `BaseGameModule`
+- Each module must implement the `GameModule` interface
 - Modules are loaded asynchronously during startup
 - Failed modules are logged but don't prevent other games from loading
 
@@ -83,7 +65,7 @@ To add a new game:
 
 1. Create a new directory in `modules/`
 2. Follow the standard module structure
-3. Extend `BaseGameModule` in your game class
+3. Implement the `GameModule` interface in your `Main.java` class
 4. Implement required methods
 5. Add resources (FXML, CSS, icons) as needed
 6. Test the module discovery
@@ -112,9 +94,9 @@ Each game module must implement:
 
 1. Platform scans `modules/` directory
 2. Identifies directories as potential modules
-3. Looks for `*Module.java` classes
+3. Looks for `Main.java` classes
 4. Instantiates and validates modules
-5. Registers valid modules with GameRegistry
+5. Registers valid modules with GameDiscoveryService
 6. Updates UI with discovered games
 
 ## 📈 Performance
@@ -128,4 +110,4 @@ Each game module must implement:
 ---
 
 *Last updated: January 2025*
-*Total modules: 13* 
+*Total modules: 2* 

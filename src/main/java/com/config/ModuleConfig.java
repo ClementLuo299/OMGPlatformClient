@@ -23,6 +23,11 @@ public class ModuleConfig {
     public static final String CLASSES_DIR = "target/classes";
     public static final String SRC_DIR = "src/main/java";
     
+    // Resource directories
+    public static final String ICONS_DIR = "icons";
+    public static final String FXML_DIR = "fxml";
+    public static final String CSS_DIR = "css";
+    
     // Module package structure
     public static final String MODULE_PACKAGE_PREFIX = "com.games.modules.";
     

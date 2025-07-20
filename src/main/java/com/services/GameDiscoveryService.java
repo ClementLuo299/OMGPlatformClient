@@ -6,7 +6,7 @@ import com.games.enums.GameMode;
 import com.games.sourcing.GameSource;
 import com.games.sourcing.LocalGameSource;
 import com.games.sourcing.RemoteGameSource;
-import com.games.sourcing.SourceCodeGameSource;
+
 import com.utils.error_handling.Logging;
 import com.utils.error_handling.SafeExecute;
 
@@ -51,10 +51,9 @@ public class GameDiscoveryService {
     public void initialize() {
         Logging.info("🔍 Initializing Game Discovery Service...");
         
-        // Add source code game source (for uncompiled modules)
-        addGameSource(new SourceCodeGameSource());
+
         
-        // Add local game source (for compiled modules)
+        // Add local game source (for both compiled and uncompiled modules)
         addGameSource(new LocalGameSource());
         
         // Add remote game source (if configured)
