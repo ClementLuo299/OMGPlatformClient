@@ -6,12 +6,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.omg</groupId>
-    <artifactId>omg-gdk</artifactId>
+    <artifactId>omg-platform</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>OMG Platform Game Development Kit</name>
-    <description>Game Development Kit for OMG Platform</description>
+    <name>OMG Platform</name>
+    <description>Online Multiplayer Gaming Platform</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -121,7 +121,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.omg.gdk.GDKMain</mainClass>
+                            <mainClass>com.MainApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -150,7 +150,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.omg.gdk.GDKMain</mainClass>
+                                    <mainClass>com.MainApplication</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -163,6 +163,16 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.1.2</version>
+            </plugin>
+
+            <!-- JavaFX Maven Plugin -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>com.MainApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
     </build>
