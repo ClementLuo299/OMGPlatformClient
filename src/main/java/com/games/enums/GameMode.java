@@ -6,6 +6,7 @@ package com.games.enums;
  *
  * @authors Clement Luo
  * @date July 19, 2025
+ * @edited July 19, 2025
  * @since 1.0
  */
 public enum GameMode {

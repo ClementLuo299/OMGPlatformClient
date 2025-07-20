@@ -1,4 +1,4 @@
-package com.games.sourcing;
+package com.utils;
 
 import com.config.ModuleConfig;
 import com.games.GameModule;
