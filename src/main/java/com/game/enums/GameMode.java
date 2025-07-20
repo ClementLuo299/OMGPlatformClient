@@ -1,4 +1,4 @@
-package com.games.enums;
+package com.game.enums;
 
 /**
  * Game modes that define how a game can be played.

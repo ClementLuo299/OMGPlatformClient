@@ -1,7 +1,7 @@
 package com.utils;
 
 import com.config.ModuleConfig;
-import com.games.GameModule;
+import com.game.GameModule;
 import com.utils.error_handling.Logging;
 
 import java.io.File;

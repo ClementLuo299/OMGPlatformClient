@@ -3,13 +3,13 @@ package com.viewmodels;
 import com.config.ScreenRegistry;
 import com.core.ServiceManager;
 import com.core.screens.ScreenManager;
-import com.games.GameModule;
+import com.game.GameModule;
+import com.game.GameOptions;
+import com.game.GameState;
+import com.game.enums.GameDifficulty;
+import com.game.enums.GameMode;
 import com.services.GameDiscoveryService;
-import com.games.GameState;
 import com.gui_controllers.dashboard.GameCard;
-import com.games.GameOptions;
-import com.games.enums.GameDifficulty;
-import com.games.enums.GameMode;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;

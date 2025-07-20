@@ -1,4 +1,4 @@
-package com.games;
+package com.game;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -54,7 +54,7 @@ public interface GameModule {
      * Gets the difficulty level of the game.
      * @return Game difficulty
      */
-    com.games.enums.GameDifficulty getDifficulty();
+    com.game.enums.GameDifficulty getDifficulty();
     
     /**
      * Gets the category of the game.
@@ -89,7 +89,7 @@ public interface GameModule {
      * @param gameOptions Additional game-specific options
      * @return The game scene
      */
-    Scene launchGame(Stage primaryStage, com.games.enums.GameMode gameMode, int playerCount, GameOptions gameOptions);
+    Scene launchGame(Stage primaryStage, com.game.enums.GameMode gameMode, int playerCount, GameOptions gameOptions);
     
     /**
      * Gets the game's icon path (relative to resources).

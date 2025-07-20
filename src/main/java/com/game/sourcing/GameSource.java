@@ -1,8 +1,8 @@
-package com.games.sourcing;
-
-import com.games.GameModule;
+package com.game.sourcing;
 
 import java.util.List;
+
+import com.game.GameModule;
 
 /**
  * Interface for game sources that can discover games.

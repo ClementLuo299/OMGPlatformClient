@@ -1,9 +1,10 @@
-package com.games;
+package com.game;
 
-import com.games.enums.GameMode;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.game.enums.GameMode;
 
 /**
  * Represents the state of a game for saving and loading purposes.

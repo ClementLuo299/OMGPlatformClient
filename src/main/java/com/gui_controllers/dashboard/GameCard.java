@@ -1,6 +1,7 @@
 package com.gui_controllers.dashboard;
 
-import com.games.GameModule;
+import com.game.GameModule;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

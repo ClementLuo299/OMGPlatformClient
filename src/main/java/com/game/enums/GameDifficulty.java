@@ -1,4 +1,4 @@
-package com.games.enums;
+package com.game.enums;
 
 /**
  * Game difficulty levels.

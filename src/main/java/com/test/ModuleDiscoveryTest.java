@@ -1,7 +1,7 @@
 package com.test;
 
-import com.games.GameModule;
-import com.games.sourcing.LocalGameSource;
+import com.game.GameModule;
+import com.game.sourcing.LocalGameSource;
 import com.utils.error_handling.Logging;
 
 import java.util.List;

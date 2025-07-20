@@ -1,12 +1,11 @@
 package com.services;
 
-import com.games.GameModule;
-import com.games.enums.GameDifficulty;
-import com.games.enums.GameMode;
-import com.games.sourcing.GameSource;
-import com.games.sourcing.LocalGameSource;
-import com.games.sourcing.RemoteGameSource;
-
+import com.game.GameModule;
+import com.game.enums.GameDifficulty;
+import com.game.enums.GameMode;
+import com.game.sourcing.GameSource;
+import com.game.sourcing.LocalGameSource;
+import com.game.sourcing.RemoteGameSource;
 import com.utils.error_handling.Logging;
 import com.utils.error_handling.SafeExecute;
 

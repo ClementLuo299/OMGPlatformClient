@@ -1,10 +1,10 @@
 package com.gui_controllers.game_library;
 
-import com.games.GameModule;
+import com.game.GameModule;
+import com.game.GameOptions;
+import com.game.enums.GameDifficulty;
+import com.game.enums.GameMode;
 import com.services.GameDiscoveryService;
-import com.games.GameOptions;
-import com.games.enums.GameDifficulty;
-import com.games.enums.GameMode;
 import com.services.GameLauncherService;
 import com.viewmodels.GameLibraryViewModel;
 import com.utils.error_handling.Logging;

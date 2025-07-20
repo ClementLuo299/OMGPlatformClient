@@ -1,7 +1,7 @@
-package com.games.sourcing;
+package com.game.sourcing;
 
 import com.config.ModuleConfig;
-import com.games.GameModule;
+import com.game.GameModule;
 import com.utils.error_handling.Logging;
 import lombok.Getter;
 import lombok.Setter;
